@@ -1,6 +1,8 @@
-package Model;
+package com.nistagram.profileMicroservice.model;
 
 public class VerificationRequest {
+
+	private Long id;
 	private String name;
 	private String surname;
 	private VerificationCategory category;
@@ -9,11 +11,19 @@ public class VerificationRequest {
 		super();
 	}
 
-	public VerificationRequest(String name, String surname, VerificationCategory category) {
-		super();
+	public VerificationRequest(Long id, String name, String surname, VerificationCategory category) {
+		this.id = id;
 		this.name = name;
 		this.surname = surname;
 		this.category = category;
+	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
 	}
 
 	public String getName() {

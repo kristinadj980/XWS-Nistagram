@@ -1,10 +1,11 @@
-package Model;
+package com.nistagram.profileMicroservice.model;
 
 import java.util.Date;
 import java.util.List;
 
 public class Post {
-	
+
+	private Long id;
 	private String description;
 	private List<Profile> likes;
 	private List<Profile> dislikes;
@@ -15,8 +16,8 @@ public class Post {
 		super();
 	}
 
-	public Post(String description, List<Profile> likes, List<Profile> dislikes, String comment, Date date) {
-		super();
+	public Post(Long id, String description, List<Profile> likes, List<Profile> dislikes, String comment, Date date) {
+		this.id = id;
 		this.description = description;
 		this.likes = likes;
 		this.dislikes = dislikes;
@@ -63,7 +64,12 @@ public class Post {
 	public void setDate(Date date) {
 		this.date = date;
 	}
-	
-	
 
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
 }

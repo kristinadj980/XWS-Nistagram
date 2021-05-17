@@ -1,7 +1,8 @@
-package Model;
+package com.nistagram.profileMicroservice.model;
 
 public class FriendRequest {
-	
+
+	private Long id;
 	private Profile profile;
 	private FriendRequestStatus friendRequestStatus;
 	
@@ -9,8 +10,8 @@ public class FriendRequest {
 		super();
 	}
 
-	public FriendRequest(Profile profile, FriendRequestStatus friendRequestStatus) {
-		super();
+	public FriendRequest(Long id, Profile profile, FriendRequestStatus friendRequestStatus) {
+		this.id = id;
 		this.profile = profile;
 		this.friendRequestStatus = friendRequestStatus;
 	}
@@ -30,7 +31,12 @@ public class FriendRequest {
 	public void setFriendRequestStatus(FriendRequestStatus friendRequestStatus) {
 		this.friendRequestStatus = friendRequestStatus;
 	}
-	
-	
 
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
 }

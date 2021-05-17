@@ -1,8 +1,10 @@
-package Model;
+package com.nistagram.profileMicroservice.model;
 
 import java.util.Date;
 
 public class Person {
+
+	private Long id;
 	private String username;
 	private String name;
 	private String surname;
@@ -17,9 +19,8 @@ public class Person {
 		super();
 	}
 
-	public Person(String username, String name, String surname, String email, String password, String phoneNumber,
-			String role, Date birthDate, Gender gender) {
-		super();
+	public Person(Long id, String username, String name, String surname, String email, String password, String phoneNumber, String role, Date birthDate, Gender gender) {
+		this.id = id;
 		this.username = username;
 		this.name = name;
 		this.surname = surname;

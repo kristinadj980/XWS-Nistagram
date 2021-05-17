@@ -1,6 +1,7 @@
-package Model;
+package com.nistagram.profileMicroservice.model;
 
 public class Notification {
+	private Long id;
 	private Boolean status;
 	private Profile profile;
 	
@@ -8,8 +9,8 @@ public class Notification {
 		super();
 	}
 
-	public Notification(Boolean status, Profile profile) {
-		super();
+	public Notification(Long id, Boolean status, Profile profile) {
+		this.id = id;
 		this.status = status;
 		this.profile = profile;
 	}
@@ -29,7 +30,12 @@ public class Notification {
 	public void setProfile(Profile profile) {
 		this.profile = profile;
 	}
-	
-	
 
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
 }

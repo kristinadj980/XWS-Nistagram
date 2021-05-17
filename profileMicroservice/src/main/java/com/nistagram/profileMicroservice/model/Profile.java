@@ -1,9 +1,11 @@
-package Model;
+package com.nistagram.profileMicroservice.model;
 
+import java.util.Date;
 import java.util.List;
 
 public class Profile extends Person{
-	
+
+	private Long id;
 	private ProfileStatus profileStatus;
 	private List<Post> favourites;
 	private List<Profile> closeFriends;
@@ -17,11 +19,9 @@ public class Profile extends Person{
 	public Profile() {
 		super();
 	}
-	
-	public Profile(ProfileStatus profileStatus, List<Post> favourites, List<Profile> closeFriends, String website,
-			String biography, List<Profile> followers, List<Profile> mutedFriends, List<Profile> blockedUsers,
-			RequestStatus agentRequestStatus) {
-		super();
+
+	public Profile(Long id, ProfileStatus profileStatus, List<Post> favourites, List<Profile> closeFriends, String website, String biography, List<Profile> followers, List<Profile> mutedFriends, List<Profile> blockedUsers, RequestStatus agentRequestStatus) {
+		this.id = id;
 		this.profileStatus = profileStatus;
 		this.favourites = favourites;
 		this.closeFriends = closeFriends;
@@ -32,8 +32,21 @@ public class Profile extends Person{
 		this.blockedUsers = blockedUsers;
 		this.agentRequestStatus = agentRequestStatus;
 	}
-	
-	
+
+	public Profile(Long id, String username, String name, String surname, String email, String password, String phoneNumber, String role, Date birthDate, Gender gender, Long id1, ProfileStatus profileStatus, List<Post> favourites, List<Profile> closeFriends, String website, String biography, List<Profile> followers, List<Profile> mutedFriends, List<Profile> blockedUsers, RequestStatus agentRequestStatus) {
+		super(id, username, name, surname, email, password, phoneNumber, role, birthDate, gender);
+		this.id = id1;
+		this.profileStatus = profileStatus;
+		this.favourites = favourites;
+		this.closeFriends = closeFriends;
+		this.website = website;
+		this.biography = biography;
+		this.followers = followers;
+		this.mutedFriends = mutedFriends;
+		this.blockedUsers = blockedUsers;
+		this.agentRequestStatus = agentRequestStatus;
+	}
+
 	public ProfileStatus getProfileStatus() {
 		return profileStatus;
 	}
@@ -105,9 +118,12 @@ public class Profile extends Person{
 	public void setAgentRequestStatus(RequestStatus agentRequestStatus) {
 		this.agentRequestStatus = agentRequestStatus;
 	}
-	
-	
-	
-	
 
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
 }
