@@ -5,21 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="2946d697-1e7a-493c-9fb3-0e4557c825aa" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/encodings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/profileMicroservice/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/profileMicroservice/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/profileMicroservice/src/main/java/com/nistagram/profileMicroservice/model/Administrator.java" beforeDir="false" afterPath="$PROJECT_DIR$/profileMicroservice/src/main/java/com/nistagram/profileMicroservice/model/Administrator.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/profileMicroservice/src/main/java/com/nistagram/profileMicroservice/model/FriendRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/profileMicroservice/src/main/java/com/nistagram/profileMicroservice/model/FriendRequest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/profileMicroservice/src/main/java/com/nistagram/profileMicroservice/model/FriendRequestStatus.java" beforeDir="false" afterPath="$PROJECT_DIR$/profileMicroservice/src/main/java/com/nistagram/profileMicroservice/model/FriendRequestStatus.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/profileMicroservice/src/main/java/com/nistagram/profileMicroservice/model/Gender.java" beforeDir="false" afterPath="$PROJECT_DIR$/profileMicroservice/src/main/java/com/nistagram/profileMicroservice/model/Gender.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/profileMicroservice/src/main/java/com/nistagram/profileMicroservice/model/Notification.java" beforeDir="false" afterPath="$PROJECT_DIR$/profileMicroservice/src/main/java/com/nistagram/profileMicroservice/model/Notification.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/profileMicroservice/src/main/java/com/nistagram/profileMicroservice/model/Person.java" beforeDir="false" afterPath="$PROJECT_DIR$/profileMicroservice/src/main/java/com/nistagram/profileMicroservice/model/Person.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/profileMicroservice/src/main/java/com/nistagram/profileMicroservice/model/Post.java" beforeDir="false" afterPath="$PROJECT_DIR$/profileMicroservice/src/main/java/com/nistagram/profileMicroservice/model/Post.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/profileMicroservice/src/main/java/com/nistagram/profileMicroservice/model/Profile.java" beforeDir="false" afterPath="$PROJECT_DIR$/profileMicroservice/src/main/java/com/nistagram/profileMicroservice/model/Profile.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/profileMicroservice/src/main/java/com/nistagram/profileMicroservice/model/ProfileStatus.java" beforeDir="false" afterPath="$PROJECT_DIR$/profileMicroservice/src/main/java/com/nistagram/profileMicroservice/model/ProfileStatus.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/profileMicroservice/src/main/java/com/nistagram/profileMicroservice/model/RequestStatus.java" beforeDir="false" afterPath="$PROJECT_DIR$/profileMicroservice/src/main/java/com/nistagram/profileMicroservice/model/RequestStatus.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/profileMicroservice/src/main/java/com/nistagram/profileMicroservice/model/VerificationCategory.java" beforeDir="false" afterPath="$PROJECT_DIR$/profileMicroservice/src/main/java/com/nistagram/profileMicroservice/model/VerificationCategory.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/profileMicroservice/src/main/java/com/nistagram/profileMicroservice/model/VerificationRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/profileMicroservice/src/main/java/com/nistagram/profileMicroservice/model/VerificationRequest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/profileMicroservice/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/profileMicroservice/src/main/resources/application.properties" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -54,7 +44,7 @@
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/media-microservice" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.selected.package.eslint" value="(autodetect)" />
     <property name="project.structure.last.edited" value="Modules" />
@@ -66,7 +56,7 @@
       <recent name="com.nistagram.profileMicroservice.service.implService" />
     </key>
   </component>
-  <component name="RunManager">
+  <component name="RunManager" selected="Application.MediaMicroserviceApplication">
     <configuration default="true" type="ArquillianJUnit" factoryName="" nameIsGenerated="true">
       <option name="arquillianRunConfiguration">
         <value>
@@ -78,6 +68,19 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="MediaMicroserviceApplication" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.example.mediamicroservice.MediaMicroserviceApplication" />
+      <module name="media-microservice" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.example.mediamicroservice.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="ProfileMicroserviceApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
       <module name="profileMicroservice" />
       <option name="SPRING_BOOT_MAIN_CLASS" value="com.nistagram.profileMicroservice.ProfileMicroserviceApplication" />
@@ -85,6 +88,11 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Application.MediaMicroserviceApplication" />
+      </list>
+    </recent_temporary>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
