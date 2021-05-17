@@ -1,18 +1,61 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
   <component name="ChangeListManager">
     <list default="true" id="2946d697-1e7a-493c-9fb3-0e4557c825aa" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/profileMicroservice/src/main/java/Model/Administrator.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/profileMicroservice/src/main/java/Model/FriendRequest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/profileMicroservice/src/main/java/Model/FriendRequestStatus.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/profileMicroservice/src/main/java/Model/Gender.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/profileMicroservice/src/main/java/Model/Notification.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/profileMicroservice/src/main/java/Model/Person.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/profileMicroservice/src/main/java/Model/Post.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/profileMicroservice/src/main/java/Model/Profile.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/profileMicroservice/src/main/java/Model/ProfileStatus.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/profileMicroservice/src/main/java/Model/RequestStatus.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/profileMicroservice/src/main/java/Model/VerificationCategory.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/profileMicroservice/src/main/java/Model/VerificationRequest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/userMicroservices/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/userMicroservices/.mvn/wrapper/MavenWrapperDownloader.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/userMicroservices/.mvn/wrapper/maven-wrapper.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/userMicroservices/.mvn/wrapper/maven-wrapper.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/userMicroservices/mvnw" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/userMicroservices/mvnw.cmd" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/userMicroservices/pom.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/userMicroservices/src/main/java/com/nistagram/userMicroservices/ServletInitializer.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/userMicroservices/src/main/java/com/nistagram/userMicroservices/UserMicroservicesApplication.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/userMicroservices/src/main/java/com/nistagram/userMicroservices/model/Administrator.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/userMicroservices/src/main/java/com/nistagram/userMicroservices/model/Agent.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/userMicroservices/src/main/java/com/nistagram/userMicroservices/model/Gender.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/userMicroservices/src/main/java/com/nistagram/userMicroservices/model/Person.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/userMicroservices/src/main/java/com/nistagram/userMicroservices/model/Profile.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/userMicroservices/src/main/resources/application.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/userMicroservices/src/test/java/com/nistagram/userMicroservices/UserMicroservicesApplicationTests.java" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+        <option value="Interface" />
+      </list>
+    </option>
+  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="ProjectId" id="1scyjrMVBNF4wHWLBm67yIRjvpP" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="1" id="Add" />
+  </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
@@ -22,18 +65,35 @@
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/searchMicroservice" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.selected.package.eslint" value="(autodetect)" />
+    <property name="project.structure.last.edited" value="Modules" />
+    <property name="project.structure.proportion" value="0.15" />
+    <property name="project.structure.side.proportion" value="0.2" />
+  </component>
+  <component name="RecentsManager">
+    <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
+      <recent name="com.nistagram.profileMicroservice.service.implService" />
+    </key>
   </component>
   <component name="RunManager">
-    <configuration default="true" type="ArquillianJUnit" factoryName="" nameIsGenerated="true">
+    <configuration default="true" type="ArquillianTestNG" factoryName="" nameIsGenerated="true">
       <option name="arquillianRunConfiguration">
         <value>
           <option name="containerStateName" value="" />
         </value>
       </option>
-      <option name="TEST_OBJECT" value="class" />
+      <option name="TEST_OBJECT" value="CLASS" />
+      <properties />
+      <listeners />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="ProfileMicroserviceApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+      <module name="profileMicroservice" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.nistagram.profileMicroservice.ProfileMicroserviceApplication" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -49,10 +109,22 @@
       <updated>1621186310658</updated>
       <workItem from="1621186313950" duration="50000" />
       <workItem from="1621202109405" duration="1394000" />
+      <workItem from="1621248107712" duration="3581000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
 </project>
