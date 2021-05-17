@@ -1,12 +1,25 @@
 package com.example.demo.model;
 
+import javax.persistence.*;
 import java.util.List;
 
 public class Profile extends Person {
-	
-	private ProfileStatus profileStatus;;
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "id", nullable = false)
+	private Long id;
+
+	@Enumerated(EnumType.ORDINAL)
+	private ProfileStatus profileStatus;
+
+	@Column(name = "website", nullable = false)
 	private String website;
+
+	@Column(name = "biography", nullable = false)
 	private String biography;
+
+
 	private List<Profile> followers;
 	
 	public Profile() {

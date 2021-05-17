@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/XWS-Nistagram.iml" filepath="$PROJECT_DIR$/.idea/XWS-Nistagram.iml" />
       <module fileurl="file://$PROJECT_DIR$/profileMicroservice/profileMicroservice.iml" filepath="$PROJECT_DIR$/profileMicroservice/profileMicroservice.iml" />
+      <module fileurl="file://$PROJECT_DIR$/searchMicroservice/searchMicroservice.iml" filepath="$PROJECT_DIR$/searchMicroservice/searchMicroservice.iml" />
     </modules>
   </component>
 </project>

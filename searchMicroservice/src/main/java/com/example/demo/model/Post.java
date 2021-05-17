@@ -1,22 +1,38 @@
 package com.example.demo.model;
 
+import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
 
+@Entity
 public class Post {
-	
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "id", nullable = false)
+	private Long id;
+
+	@Column(name = "description", nullable = false)
 	private String description;
-	private	List<Profile> like;
-	private List<Profile> dislike;
+
+	@ManyToMany(targetEntity = Profile.class,  cascade = CascadeType.ALL)
+	private	List<Profile> likes;
+
+	@ManyToMany(targetEntity = Profile.class,  cascade = CascadeType.ALL)
+	private List<Profile> dislikes;
+
+	@Column(name = "comment", nullable = false)
 	private String comment;
+
+	@Column(name = "date", nullable = false)
 	private Date date;
 	
 	
-	public Post(String description, List<Profile> like, List<Profile> dislike, String comment, Date date) {
+	public Post(String description, List<Profile> likes, List<Profile> dislikes, String comment, Date date) {
 		super();
 		this.description = description;
-		this.like = like;
-		this.dislike = dislike;
+		this.likes = likes;
+		this.dislikes = dislikes;
 		this.comment = comment;
 		this.date = date;
 	}
@@ -32,23 +48,23 @@ public class Post {
 	}
 
 
-	public List<Profile> getLike() {
-		return like;
+	public List<Profile> getLikes() {
+		return likes;
 	}
 
 
-	public void setLike(List<Profile> like) {
-		this.like = like;
+	public void setLikes(List<Profile> likes) {
+		this.likes = likes;
 	}
 
 
-	public List<Profile> getDislike() {
-		return dislike;
+	public List<Profile> getDislikes() {
+		return dislikes;
 	}
 
 
-	public void setDislike(List<Profile> dislike) {
-		this.dislike = dislike;
+	public void setDislikes(List<Profile> dislikes) {
+		this.dislikes = dislikes;
 	}
 
 

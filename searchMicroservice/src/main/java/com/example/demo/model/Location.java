@@ -1,13 +1,27 @@
 package com.example.demo.model;
 
 
+import javax.persistence.*;
 
+@Entity
 public class Location{
-	
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "id", nullable = false)
+	private Long id;
+
+	@Column(name = "city")
 	private String city;
+
+	@Column(name = "street")
 	private String street;
+
+	@Column(name = "streetNumber")
 	private String streetNumber;
-	private String Country;
+
+	@Column(name = "country")
+	private String country;
 
 	
 	public Location() {
@@ -19,7 +33,7 @@ public class Location{
 		this.city = city;
 		this.street = street;
 		this.streetNumber = streetNumber;
-		Country = country;
+		country = country;
 	}
 
 
@@ -54,12 +68,12 @@ public class Location{
 
 
 	public String getCountry() {
-		return Country;
+		return country;
 	}
 
 
 	public void setCountry(String country) {
-		Country = country;
+		country = country;
 	}
 	
 	
