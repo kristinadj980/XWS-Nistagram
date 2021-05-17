@@ -1,8 +1,17 @@
 package com.nistagram.profileMicroservice.model;
 
+import javax.persistence.*;
+
 public class Notification {
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+
+	@Column(name = "status", nullable = false)
 	private Boolean status;
+
+	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private Profile profile;
 	
 	public Notification() {

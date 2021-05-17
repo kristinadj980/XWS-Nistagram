@@ -1,20 +1,24 @@
 package com.nistagram.profileMicroservice.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.Entity;
+import javax.persistence.OneToMany;
 import java.util.List;
+
 
 public class Administrator extends Person {
 
-	private Long id;
 	private List<VerificationRequest> verificationRequests;
 
 	public Administrator() {
 		super();
 	}
 
-	public Administrator(List<VerificationRequest> verificationRequests, Long id) {
+	public Administrator(List<VerificationRequest> verificationRequests) {
 		super();
 		this.verificationRequests = verificationRequests;
-		this.id = id;
 	}
 
 	public List<VerificationRequest> getVerificationRequests() {
@@ -23,14 +27,6 @@ public class Administrator extends Person {
 
 	public void setVerificationRequests(List<VerificationRequest> verificationRequests) {
 		this.verificationRequests = verificationRequests;
-	}
-
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
 	}
 
 }

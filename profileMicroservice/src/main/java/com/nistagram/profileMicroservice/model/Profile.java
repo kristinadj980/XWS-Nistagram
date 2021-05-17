@@ -1,39 +1,46 @@
 package com.nistagram.profileMicroservice.model;
 
+import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
 
 public class Profile extends Person{
 
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+
+	@Enumerated(EnumType.ORDINAL)
 	private ProfileStatus profileStatus;
+
+	@ManyToMany(targetEntity = Post.class,  cascade = CascadeType.ALL)
 	private List<Post> favourites;
+
 	private List<Profile> closeFriends;
+
+	@Column(name = "website", nullable = false)
 	private String website;
+
+	@Column(name = "biography", nullable = false)
 	private String biography;
+
+	@OneToMany(mappedBy = "profile", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	private List<Notification> notifications;
+
 	private List<Profile> followers;
 	private List<Profile> mutedFriends;
 	private List<Profile> blockedUsers;
+
+	@OneToMany(mappedBy = "profile", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	private List<FriendRequest> friendRequests;
+
 	private RequestStatus agentRequestStatus;
 	
 	public Profile() {
 		super();
 	}
 
-	public Profile(Long id, ProfileStatus profileStatus, List<Post> favourites, List<Profile> closeFriends, String website, String biography, List<Profile> followers, List<Profile> mutedFriends, List<Profile> blockedUsers, RequestStatus agentRequestStatus) {
-		this.id = id;
-		this.profileStatus = profileStatus;
-		this.favourites = favourites;
-		this.closeFriends = closeFriends;
-		this.website = website;
-		this.biography = biography;
-		this.followers = followers;
-		this.mutedFriends = mutedFriends;
-		this.blockedUsers = blockedUsers;
-		this.agentRequestStatus = agentRequestStatus;
-	}
-
-	public Profile(Long id, String username, String name, String surname, String email, String password, String phoneNumber, String role, Date birthDate, Gender gender, Long id1, ProfileStatus profileStatus, List<Post> favourites, List<Profile> closeFriends, String website, String biography, List<Profile> followers, List<Profile> mutedFriends, List<Profile> blockedUsers, RequestStatus agentRequestStatus) {
+	public Profile(Long id, String username, String name, String surname, String email, String password, String phoneNumber, String role, Date birthDate, Gender gender, Long id1, ProfileStatus profileStatus, List<Post> favourites, List<Profile> closeFriends, String website, String biography, List<Notification> notifications, List<Profile> followers, List<Profile> mutedFriends, List<Profile> blockedUsers, List<FriendRequest> friendRequests, RequestStatus agentRequestStatus) {
 		super(id, username, name, surname, email, password, phoneNumber, role, birthDate, gender);
 		this.id = id1;
 		this.profileStatus = profileStatus;
@@ -41,10 +48,28 @@ public class Profile extends Person{
 		this.closeFriends = closeFriends;
 		this.website = website;
 		this.biography = biography;
+		this.notifications = notifications;
 		this.followers = followers;
 		this.mutedFriends = mutedFriends;
 		this.blockedUsers = blockedUsers;
+		this.friendRequests = friendRequests;
 		this.agentRequestStatus = agentRequestStatus;
+	}
+
+	public List<Notification> getNotifications() {
+		return notifications;
+	}
+
+	public void setNotifications(List<Notification> notifications) {
+		this.notifications = notifications;
+	}
+
+	public List<FriendRequest> getFriendRequests() {
+		return friendRequests;
+	}
+
+	public void setFriendRequests(List<FriendRequest> friendRequests) {
+		this.friendRequests = friendRequests;
 	}
 
 	public ProfileStatus getProfileStatus() {

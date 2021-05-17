@@ -1,18 +1,47 @@
 package com.nistagram.profileMicroservice.model;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
+import javax.persistence.*;
 import java.util.Date;
 
+@Entity
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Person {
 
+	@Id
+	@SequenceGenerator(name = "mySeqGenV2", sequenceName = "mySeqV2", initialValue = 1, allocationSize = 1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "mySeqGenV2")
+	@Column(name = "id", nullable = false)
 	private Long id;
+
+	@Column(name = "username", nullable = false, unique = true)
 	private String username;
+
+	@Column(name = "username", nullable = false)
 	private String name;
+
+	@Column(name = "Surname", nullable = false)
 	private String surname;
+
+	@Column(name = "email", nullable = false, unique = true)
 	private String email;
+
+	@Column(name = "password", nullable = false)
 	private String password;
+
+	@Column(name = "phoneNumber", nullable = false)
 	private String phoneNumber;
+
+	@Column(name = "role", nullable = false)
 	private String role;
+
+	@Column(name = "birthDate", nullable = false)
 	private Date birthDate;
+
+	@Enumerated(EnumType.ORDINAL)
 	private Gender gender;
 	
 	public Person() {

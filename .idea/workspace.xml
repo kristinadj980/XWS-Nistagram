@@ -5,11 +5,20 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="2946d697-1e7a-493c-9fb3-0e4557c825aa" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/artifacts/profileMicroservice_war_exploded.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/artifacts/profileMicroservice_war_exploded.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/encodings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/profileMicroservice/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/profileMicroservice/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/profileMicroservice/src/main/java/com/nistagram/profileMicroservice/model/Administrator.java" beforeDir="false" afterPath="$PROJECT_DIR$/profileMicroservice/src/main/java/com/nistagram/profileMicroservice/model/Administrator.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/profileMicroservice/src/main/java/com/nistagram/profileMicroservice/model/FriendRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/profileMicroservice/src/main/java/com/nistagram/profileMicroservice/model/FriendRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/profileMicroservice/src/main/java/com/nistagram/profileMicroservice/model/Notification.java" beforeDir="false" afterPath="$PROJECT_DIR$/profileMicroservice/src/main/java/com/nistagram/profileMicroservice/model/Notification.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/profileMicroservice/src/main/java/com/nistagram/profileMicroservice/model/Person.java" beforeDir="false" afterPath="$PROJECT_DIR$/profileMicroservice/src/main/java/com/nistagram/profileMicroservice/model/Person.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/profileMicroservice/src/main/java/com/nistagram/profileMicroservice/model/Post.java" beforeDir="false" afterPath="$PROJECT_DIR$/profileMicroservice/src/main/java/com/nistagram/profileMicroservice/model/Post.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/profileMicroservice/src/main/java/com/nistagram/profileMicroservice/model/Profile.java" beforeDir="false" afterPath="$PROJECT_DIR$/profileMicroservice/src/main/java/com/nistagram/profileMicroservice/model/Profile.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/profileMicroservice/src/main/java/com/nistagram/profileMicroservice/model/VerificationRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/profileMicroservice/src/main/java/com/nistagram/profileMicroservice/model/VerificationRequest.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -105,7 +114,7 @@
       <workItem from="1621186313950" duration="50000" />
       <workItem from="1621202109405" duration="1394000" />
       <workItem from="1621248107712" duration="3581000" />
-      <workItem from="1621253563931" duration="1348000" />
+      <workItem from="1621253563931" duration="4020000" />
     </task>
     <servers />
   </component>

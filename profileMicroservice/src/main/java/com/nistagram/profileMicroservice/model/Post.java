@@ -1,15 +1,28 @@
 package com.nistagram.profileMicroservice.model;
 
+import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
 
 public class Post {
 
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+
+	@Column(name = "description", nullable = false)
 	private String description;
+
+	@ManyToMany(targetEntity = Profile.class,  cascade = CascadeType.ALL)
 	private List<Profile> likes;
+
+	@ManyToMany(targetEntity = Profile.class,  cascade = CascadeType.ALL)
 	private List<Profile> dislikes;
+
+	@Column(name = "comment", nullable = false)
 	private String comment;
+
+	@Column(name = "date", nullable = false)
 	private Date date;
 	
 	public Post() {
