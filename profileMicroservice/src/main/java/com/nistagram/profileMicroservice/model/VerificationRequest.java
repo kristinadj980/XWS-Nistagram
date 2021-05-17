@@ -1,10 +1,20 @@
 package com.nistagram.profileMicroservice.model;
 
+import javax.persistence.*;
+
 public class VerificationRequest {
 
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+
+	@Column(name = "name", nullable = false)
 	private String name;
+
+	@Column(name = "surname", nullable = false)
 	private String surname;
+
+	@Enumerated(EnumType.ORDINAL)
 	private VerificationCategory category;
 	
 	public VerificationRequest() {
