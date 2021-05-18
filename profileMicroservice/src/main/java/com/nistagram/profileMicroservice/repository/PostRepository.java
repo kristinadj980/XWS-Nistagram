@@ -1,4 +1,8 @@
 package com.nistagram.profileMicroservice.repository;
 
-public interface PostRepository {
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import com.nistagram.profileMicroservice.model.Post;
+
+public interface PostRepository extends JpaRepository<Post, Long> {
 }

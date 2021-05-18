@@ -1,9 +1,11 @@
 package com.nistagram.profileMicroservice.model;
 
 import javax.persistence.*;
-import java.util.Date;
+
+import java.time.LocalDate;
 import java.util.List;
 
+@Entity
 public class Post {
 
 	@Id
@@ -23,13 +25,13 @@ public class Post {
 	private String comment;
 
 	@Column(name = "date", nullable = false)
-	private Date date;
+	private LocalDate date;
 	
 	public Post() {
 		super();
 	}
 
-	public Post(Long id, String description, List<Profile> likes, List<Profile> dislikes, String comment, Date date) {
+	public Post(Long id, String description, List<Profile> likes, List<Profile> dislikes, String comment, LocalDate date) {
 		this.id = id;
 		this.description = description;
 		this.likes = likes;
@@ -70,11 +72,11 @@ public class Post {
 		this.comment = comment;
 	}
 
-	public Date getDate() {
+	public LocalDate getDate() {
 		return date;
 	}
 
-	public void setDate(Date date) {
+	public void setDate(LocalDate date) {
 		this.date = date;
 	}
 

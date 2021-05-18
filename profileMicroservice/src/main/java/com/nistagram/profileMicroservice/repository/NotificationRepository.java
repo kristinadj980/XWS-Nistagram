@@ -1,4 +1,8 @@
 package com.nistagram.profileMicroservice.repository;
 
-public interface NotificationRepository {
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import com.nistagram.profileMicroservice.model.Notification;
+
+public interface NotificationRepository extends JpaRepository<Notification, Long>{
 }

@@ -9,7 +9,7 @@ public class Tag {
 
 	  @Id
 	  @GeneratedValue(strategy = GenerationType.IDENTITY)
-	  private Long id;
+	  private Long tag_id;
 
 	  @Column(name = "name",nullable = false)
 	  private String name;
@@ -17,7 +17,7 @@ public class Tag {
 	@ManyToMany(cascade = { CascadeType.ALL })
 	@JoinTable(
 			name = "tag_posts",
-			joinColumns = { @JoinColumn(name = "id") },
+			joinColumns = { @JoinColumn(name = "tag_id") },
 			inverseJoinColumns = { @JoinColumn(name = "id") }
 	)
 	public List<Post> posts;
@@ -26,7 +26,7 @@ public class Tag {
 	@ManyToMany(cascade = { CascadeType.ALL })
 	@JoinTable(
 			name = "tag_stories",
-			joinColumns = { @JoinColumn(name = "id") },
+			joinColumns = { @JoinColumn(name = "tag_id") },
 			inverseJoinColumns = { @JoinColumn(name = "id") }
 	)
 	public List<Story> stories;

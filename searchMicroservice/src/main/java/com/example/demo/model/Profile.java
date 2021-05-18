@@ -1,13 +1,16 @@
 package com.example.demo.model;
 
 import javax.persistence.*;
+
+
 import java.util.List;
 
+@Entity
+@DiscriminatorValue("Profile")
 public class Profile extends Person {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id", nullable = false)
 	private Long id;
 
 	@Enumerated(EnumType.ORDINAL)
@@ -19,7 +22,7 @@ public class Profile extends Person {
 	@Column(name = "biography", nullable = false)
 	private String biography;
 
-
+	@ManyToMany(targetEntity = Profile.class,  cascade = CascadeType.ALL)
 	private List<Profile> followers;
 	
 	public Profile() {

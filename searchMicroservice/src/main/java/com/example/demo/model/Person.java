@@ -13,7 +13,6 @@ public class Person {
 	@Id
 	@SequenceGenerator(name = "mySeqGenV2", sequenceName = "mySeqV2", initialValue = 1, allocationSize = 1)
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "mySeqGenV2")
-	@Column(name = "id", nullable = false)
 	private Long id;
 
 	@Column(name = "username", nullable = false, unique = true)

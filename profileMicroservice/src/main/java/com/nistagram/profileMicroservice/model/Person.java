@@ -4,8 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import javax.persistence.*;
-import java.util.Date;
 
+import java.time.LocalDate;
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
@@ -20,7 +20,7 @@ public class Person {
 	@Column(name = "username", nullable = false, unique = true)
 	private String username;
 
-	@Column(name = "username", nullable = false)
+	@Column(name = "name", nullable = false)
 	private String name;
 
 	@Column(name = "Surname", nullable = false)
@@ -39,7 +39,7 @@ public class Person {
 	private String role;
 
 	@Column(name = "birthDate", nullable = false)
-	private Date birthDate;
+	private LocalDate birthDate;
 
 	@Enumerated(EnumType.ORDINAL)
 	private Gender gender;
@@ -48,7 +48,8 @@ public class Person {
 		super();
 	}
 
-	public Person(Long id, String username, String name, String surname, String email, String password, String phoneNumber, String role, Date birthDate, Gender gender) {
+	public Person(Long id, String username, String name, String surname, String email, String password, String phoneNumber, String role,
+			LocalDate birthDate, Gender gender) {
 		this.id = id;
 		this.username = username;
 		this.name = name;
@@ -117,11 +118,11 @@ public class Person {
 		this.role = role;
 	}
 
-	public Date getBirthDate() {
+	public LocalDate getBirthDate() {
 		return birthDate;
 	}
 
-	public void setBirthDate(Date birthDate) {
+	public void setBirthDate(LocalDate birthDate) {
 		this.birthDate = birthDate;
 	}
 

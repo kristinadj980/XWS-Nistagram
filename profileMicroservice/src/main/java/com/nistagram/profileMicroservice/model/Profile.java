@@ -1,9 +1,13 @@
 package com.nistagram.profileMicroservice.model;
 
 import javax.persistence.*;
+
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
+@Entity
+@DiscriminatorValue("Profile")
 public class Profile extends Person{
 
 	@Id
@@ -16,6 +20,7 @@ public class Profile extends Person{
 	@ManyToMany(targetEntity = Post.class,  cascade = CascadeType.ALL)
 	private List<Post> favourites;
 
+	@ManyToMany(targetEntity = Profile.class,  cascade = CascadeType.ALL)
 	private List<Profile> closeFriends;
 
 	@Column(name = "website", nullable = false)
@@ -27,8 +32,13 @@ public class Profile extends Person{
 	@OneToMany(mappedBy = "profile", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private List<Notification> notifications;
 
+	@ManyToMany(targetEntity = Profile.class,  cascade = CascadeType.ALL)
 	private List<Profile> followers;
+	
+	@ManyToMany(targetEntity = Profile.class,  cascade = CascadeType.ALL)
 	private List<Profile> mutedFriends;
+	
+	@ManyToMany(targetEntity = Profile.class,  cascade = CascadeType.ALL)
 	private List<Profile> blockedUsers;
 
 	@OneToMany(mappedBy = "profile", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
@@ -40,7 +50,10 @@ public class Profile extends Person{
 		super();
 	}
 
-	public Profile(Long id, String username, String name, String surname, String email, String password, String phoneNumber, String role, Date birthDate, Gender gender, Long id1, ProfileStatus profileStatus, List<Post> favourites, List<Profile> closeFriends, String website, String biography, List<Notification> notifications, List<Profile> followers, List<Profile> mutedFriends, List<Profile> blockedUsers, List<FriendRequest> friendRequests, RequestStatus agentRequestStatus) {
+	public Profile(Long id, String username, String name, String surname, String email, String password, String phoneNumber, 
+			String role, LocalDate birthDate, Gender gender, Long id1, ProfileStatus profileStatus, List<Post> favourites,
+			List<Profile> closeFriends, String website, String biography, List<Notification> notifications, List<Profile> followers,
+			List<Profile> mutedFriends, List<Profile> blockedUsers, List<FriendRequest> friendRequests, RequestStatus agentRequestStatus) {
 		super(id, username, name, surname, email, password, phoneNumber, role, birthDate, gender);
 		this.id = id1;
 		this.profileStatus = profileStatus;

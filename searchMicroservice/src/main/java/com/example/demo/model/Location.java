@@ -1,39 +1,45 @@
 package com.example.demo.model;
 
 
+import java.util.List;
+
 import javax.persistence.*;
+
 
 @Entity
 public class Location{
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id", nullable = false)
 	private Long id;
 
-	@Column(name = "city")
+	@Column(name = "city", nullable = false)
 	private String city;
 
-	@Column(name = "street")
+	@Column(name = "street", nullable = false)
 	private String street;
 
-	@Column(name = "streetNumber")
+	@Column(name = "streetNumber", nullable = false)
 	private String streetNumber;
 
-	@Column(name = "country")
+	@Column(name = "country", nullable = false)
 	private String country;
 
-	
+	@OneToMany(mappedBy = "location", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	public List<Post> post;
+	   
+	   
+	   public Location(String city, String street, String streetNumber, String country, List<Post> post) {
+			super();
+			this.city = city;
+			this.street = street;
+			this.streetNumber = streetNumber;
+			this.country = country;
+			this.post = post;
+		}
+
 	public Location() {
-		
-	}
-	
-	public Location(String city, String street, String streetNumber, String country) {
-		super();
-		this.city = city;
-		this.street = street;
-		this.streetNumber = streetNumber;
-		country = country;
+
 	}
 
 
@@ -73,7 +79,17 @@ public class Location{
 
 
 	public void setCountry(String country) {
-		country = country;
+		this.country = country;
+	}
+
+
+	public List<Post> getPost() {
+		return post;
+	}
+
+
+	public void setPost(List<Post> post) {
+		this.post = post;
 	}
 	
 	

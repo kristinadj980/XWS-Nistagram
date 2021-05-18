@@ -2,6 +2,7 @@ package com.nistagram.profileMicroservice.model;
 
 import javax.persistence.*;
 
+@Entity
 public class Notification {
 
 	@Id

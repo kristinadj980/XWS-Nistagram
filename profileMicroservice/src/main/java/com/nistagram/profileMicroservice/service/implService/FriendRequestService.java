@@ -1,4 +1,6 @@
 package com.nistagram.profileMicroservice.service.implService;
 
-public class FriendRequestService {
+import com.nistagram.profileMicroservice.service.IFriendRequestService;
+
+public class FriendRequestService implements IFriendRequestService{
 }
