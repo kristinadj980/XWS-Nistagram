@@ -1,22 +1,55 @@
 package com.example.mediamicroservice.model;
 
-import java.util.Date;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 
+import java.util.Date;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+
+import javax.persistence.*;
+import javax.persistence.InheritanceType;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
+@Entity
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Person {
-   private Long id;
-   private String username;
-   private String name;
-   private String surname;
-   private String email;
-   private String password;
-   private String role;
-   private int phoneNumber;
-   private Date birthDate;
-   private Gender gender;
-   
-   
-   public Person(Long id, String username, String name, String surname, String email, String password, String role,
-			int phoneNumber, Date birthDate, Gender gender) {
+	@Id
+	@SequenceGenerator(name = "mySeqGenV2", sequenceName = "mySeqV2", initialValue = 1, allocationSize = 1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "mySeqGenV2")
+	@Column(name = "id", nullable = false)
+	private Long id;
+
+	@Column(name = "username", nullable = false, unique = true)
+	private String username;
+
+	@Column(name = "name", nullable = false)
+	private String name;
+
+	@Column(name = "Surname", nullable = false)
+	private String surname;
+
+	@Column(name = "email", nullable = false, unique = true)
+	private String email;
+
+	@Column(name = "password", nullable = false)
+	private String password;
+
+	@Column(name = "phoneNumber", nullable = false)
+	private String phoneNumber;
+
+	@Column(name = "role", nullable = false)
+	private String role;
+
+	@Column(name = "birthDate", nullable = false)
+	private Date birthDate;
+
+	@Enumerated(EnumType.ORDINAL)
+	private Gender gender;
+
+
+
+	public Person(Long id, String username, String name, String surname, String email, String password, String role,
+			String phoneNumber, Date birthDate, Gender gender) {
 		super();
 		this.id = id;
 		this.username = username;
@@ -90,11 +123,11 @@ public class Person {
 		this.role = role;
 	}
 	
-	public int getPhoneNumber() {
+	public String getPhoneNumber() {
 		return phoneNumber;
 	}
 	
-	public void setPhoneNumber(int phoneNumber) {
+	public void setPhoneNumber(String phoneNumber) {
 		this.phoneNumber = phoneNumber;
 	}
 	

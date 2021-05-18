@@ -1,27 +1,51 @@
 package com.example.mediamicroservice.model;
 
+import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
 
+@Entity
 public class Story {
 
+
+	    @Id
+		@GeneratedValue(strategy = GenerationType.IDENTITY)
+		@Column(name = "id", nullable = false)
+		private Long id;
+
+	   @Column(name = "description", nullable = false)
 	   private String description;
-	   private Date startTime;
+
+	  @Column(name = "startTime", nullable = false)
+	  private Date startTime;
+
+	@Column(name = "endTime", nullable = false)
 	   private Date endTime;
+
+	 @Column(name = "visible", nullable = false)
 	   private boolean visible;
+
+	@Column(name = "date", nullable = false)
 	   private Date date;
+
+	@Column(name = "highlighted", nullable = false)
 	   private boolean highlighted;
+
+	  @Column(name = "numberOfInappContent", nullable = false)
 	   private int numberOfInappropriateContent;
 	   
 	   public List<Media> media;
 	   public List<Tag> tag;
+
+	  @Column(name = "location", nullable = false)
 	   public Location location;
 	   
 	   
 	   
-	   public Story(String description, Date startTime, Date endTime, boolean visible, Date date, boolean highlighted,
+	   public Story(Long id,String description, Date startTime, Date endTime, boolean visible, Date date, boolean highlighted,
 			int numberOfInappropriateContent, List<Media> media, List<Tag> tag, Location location) {
 			super();
+			this.id=id;
 			this.description = description;
 			this.startTime = startTime;
 			this.endTime = endTime;
@@ -35,6 +59,13 @@ public class Story {
 	}
 
 
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
 
 	public String getDescription() {
 		return description;

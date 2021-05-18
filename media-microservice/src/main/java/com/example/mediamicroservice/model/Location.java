@@ -1,13 +1,27 @@
 package com.example.mediamicroservice.model;
 
 import java.util.List;
+import javax.persistence.*;
 
+@Entity
 public class Location {
-	  
-	   private String city;
-	   private String street;
-	   private String streetNumber;
-	   private String country;
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "id", nullable = false)
+	private Long id;
+
+	@Column(name = "city")
+	private String city;
+
+	@Column(name = "street")
+	private String street;
+
+	@Column(name = "streetNumber")
+	private String streetNumber;
+
+	@Column(name = "country")
+	private String country;
 	   
 	   public List<Story> story;
 	   public List<Post> post;

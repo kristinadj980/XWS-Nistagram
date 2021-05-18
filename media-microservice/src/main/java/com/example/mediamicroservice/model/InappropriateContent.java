@@ -1,8 +1,16 @@
 package com.example.mediamicroservice.model;
 
+import javax.persistence.*;
+
+@Entity
 public class InappropriateContent {
-	   
+
+		@Id
+		@GeneratedValue(strategy = GenerationType.IDENTITY)
+		private Long id;
+	   @Column(name = "description")
 	   private String description;
+	   @Column(name = "status")
 	   private RequestStatus status;
 	   
 	   public Post[] post;

@@ -4,24 +4,16 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2946d697-1e7a-493c-9fb3-0e4557c825aa" name="Default Changelist" comment="">
-
-      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/encodings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
-
-      <change beforePath="$PROJECT_DIR$/.idea/artifacts/profileMicroservice_war_exploded.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/artifacts/profileMicroservice_war_exploded.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/encodings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+    <list default="true" id="9f6fb2f6-8be4-464d-967c-cd8186db4d81" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/searchMicroservice/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/searchMicroservice/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/searchMicroservice/src/main/java/com/example/demo/model/Location.java" beforeDir="false" afterPath="$PROJECT_DIR$/searchMicroservice/src/main/java/com/example/demo/model/Location.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/searchMicroservice/src/main/java/com/example/demo/model/Person.java" beforeDir="false" afterPath="$PROJECT_DIR$/searchMicroservice/src/main/java/com/example/demo/model/Person.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/searchMicroservice/src/main/java/com/example/demo/model/Post.java" beforeDir="false" afterPath="$PROJECT_DIR$/searchMicroservice/src/main/java/com/example/demo/model/Post.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/searchMicroservice/src/main/java/com/example/demo/model/Profile.java" beforeDir="false" afterPath="$PROJECT_DIR$/searchMicroservice/src/main/java/com/example/demo/model/Profile.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/searchMicroservice/src/main/java/com/example/demo/model/Tag.java" beforeDir="false" afterPath="$PROJECT_DIR$/searchMicroservice/src/main/java/com/example/demo/model/Tag.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/media-microservice/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/media-microservice/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/media-microservice/src/main/java/com/example/mediamicroservice/model/InappropriateContent.java" beforeDir="false" afterPath="$PROJECT_DIR$/media-microservice/src/main/java/com/example/mediamicroservice/model/InappropriateContent.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/media-microservice/src/main/java/com/example/mediamicroservice/model/Location.java" beforeDir="false" afterPath="$PROJECT_DIR$/media-microservice/src/main/java/com/example/mediamicroservice/model/Location.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/media-microservice/src/main/java/com/example/mediamicroservice/model/Person.java" beforeDir="false" afterPath="$PROJECT_DIR$/media-microservice/src/main/java/com/example/mediamicroservice/model/Person.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/media-microservice/src/main/java/com/example/mediamicroservice/model/Post.java" beforeDir="false" afterPath="$PROJECT_DIR$/media-microservice/src/main/java/com/example/mediamicroservice/model/Post.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/media-microservice/src/main/java/com/example/mediamicroservice/model/Profile.java" beforeDir="false" afterPath="$PROJECT_DIR$/media-microservice/src/main/java/com/example/mediamicroservice/model/Profile.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/media-microservice/src/main/java/com/example/mediamicroservice/model/Story.java" beforeDir="false" afterPath="$PROJECT_DIR$/media-microservice/src/main/java/com/example/mediamicroservice/model/Story.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/media-microservice/src/main/java/com/example/mediamicroservice/model/Tag.java" beforeDir="false" afterPath="$PROJECT_DIR$/media-microservice/src/main/java/com/example/mediamicroservice/model/Tag.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -59,20 +51,17 @@
     <property name="last_opened_file_path" value="$PROJECT_DIR$/media-microservice" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.selected.package.eslint" value="(autodetect)" />
-    <property name="project.structure.last.edited" value="Project" />
+    <property name="project.structure.last.edited" value="Modules" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.2" />
+    <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
   </component>
   <component name="RecentsManager">
     <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
       <recent name="com.nistagram.profileMicroservice.service.implService" />
     </key>
   </component>
-
-  <component name="RunManager" selected="Application.SearchMicroserviceApplication">
-
   <component name="RunManager" selected="Application.MediaMicroserviceApplication">
-
     <configuration default="true" type="ArquillianJUnit" factoryName="" nameIsGenerated="true">
       <option name="arquillianRunConfiguration">
         <value>
@@ -84,21 +73,25 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-
-    <configuration name="SearchMicroserviceApplication" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="com.example.demo.SearchMicroserviceApplication" />
-      <module name="searchMicroservice" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="com.example.demo.repository.*" />
-
     <configuration name="MediaMicroserviceApplication" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="com.example.mediamicroservice.MediaMicroserviceApplication" />
       <module name="media-microservice" />
       <extension name="coverage">
         <pattern>
           <option name="PATTERN" value="com.example.mediamicroservice.*" />
-
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="SearchMicroserviceApplication" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.example.demo.SearchMicroserviceApplication" />
+      <module name="searchMicroservice" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.example.demo.repository.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
@@ -115,11 +108,8 @@
     </configuration>
     <recent_temporary>
       <list>
-
-        <item itemvalue="Application.SearchMicroserviceApplication" />
-
         <item itemvalue="Application.MediaMicroserviceApplication" />
-
+        <item itemvalue="Application.SearchMicroserviceApplication" />
       </list>
     </recent_temporary>
   </component>

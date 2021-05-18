@@ -1,14 +1,29 @@
 package com.example.mediamicroservice.model;
 
+import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
 
 public class Profile extends Person {
+	   @Id
+	   @GeneratedValue(strategy = GenerationType.IDENTITY)
+	   private Long id;
+
+	   @Enumerated(EnumType.ORDINAL)
 	   private ProfileStatus profileStatus;
+
+	   @ManyToMany(targetEntity = Post.class,  cascade = CascadeType.ALL)
 	   private List<Post> favourites;
+
 	   private List<Profile> closeFriends;
-	   private String website;
-	   private String biography;
+
+		@Column(name = "website", nullable = false)
+		private String website;
+
+		@Column(name = "biography", nullable = false)
+		private String biography;
+
+
 	   private List<Profile> followers;
 	   private List<Profile> mutedFriends;
 	   private List<Profile> blockedUsers;
@@ -18,7 +33,7 @@ public class Profile extends Person {
 	   
 	   
 		public Profile(Long id, String username, String name, String surname, String email, String password, String role,
-				int phoneNumber, Date birthDate, Gender gender, ProfileStatus profileStatus, List<Post> favourites,
+				String phoneNumber, Date birthDate, Gender gender, ProfileStatus profileStatus, List<Post> favourites,
 				List<Profile> closeFriends, String website, String biography, List<Profile> followers,
 				List<Profile> mutedFriends, List<Profile> blockedUsers, Story[] story, Post[] post) {
 			super(id, username, name, surname, email, password, role, phoneNumber, birthDate, gender);

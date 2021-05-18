@@ -1,8 +1,17 @@
 package com.example.mediamicroservice.model;
 
+import javax.persistence.*;
 import java.util.List;
 
+@Entity
 public class Tag {
+
+
+	  @Id
+	  @GeneratedValue(strategy = GenerationType.IDENTITY)
+	  private Long id;
+
+	  @Column(name = "name",nullable = false)
 	  private String name;
 	   
 	   public List<Post> post;

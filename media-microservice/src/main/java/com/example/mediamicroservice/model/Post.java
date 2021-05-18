@@ -1,23 +1,40 @@
 package com.example.mediamicroservice.model;
 
-import java.util.Collection;
+import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
 
+@Entity
 public class Post{
-	 private String description;
+
+	    @Id
+		@GeneratedValue(strategy = GenerationType.IDENTITY)
+		private Long id;
+
+	   @Column(name = "description", nullable = false)
+	   private String description;
+
+	   @ManyToMany(targetEntity = Profile.class,  cascade = CascadeType.ALL)
 	   private List<Profile> like;
+
+	   @ManyToMany(targetEntity = Profile.class,  cascade = CascadeType.ALL)
 	   private List<Profile> dislike;
+
+	   @Column(name = "comment", nullable = false)
 	   private String comment;
-	   private java.util.Date date;
+
+	   @Column(name = "date", nullable = false)
+	   private Date date;
 	   
-	   public java.util.Collection<Media> media;
+	   public List<Media> media;
+	   @Column(name = "location", nullable = false)
 	   public Location location;
 	   public Tag[] tag;
 	   
-	   public Post(String description, List<Profile> like, List<Profile> dislike, String comment, Date date,
-			Collection<Media> media, Location location, Tag[] tag) {
+	   public Post(Long id,String description, List<Profile> like, List<Profile> dislike, String comment, Date date,
+			List<Media> media, Location location, Tag[] tag) {
 			super();
+			this.id=id;
 			this.description = description;
 			this.like = like;
 			this.dislike = dislike;
@@ -26,6 +43,14 @@ public class Post{
 			this.media = media;
 			this.location = location;
 			this.tag = tag;
+	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
 	}
 
 	public String getDescription() {
@@ -60,7 +85,7 @@ public class Post{
 		this.comment = comment;
 	}
 
-	public java.util.Date getDate() {
+	public Date getDate() {
 		return date;
 	}
 
@@ -68,11 +93,11 @@ public class Post{
 		this.date = date;
 	}
 
-	public java.util.Collection<Media> getMedia() {
+	public List<Media> getMedia() {
 		return media;
 	}
 
-	public void setMedia(java.util.Collection<Media> media) {
+	public void setMedia(List<Media> media) {
 		this.media = media;
 	}
 
