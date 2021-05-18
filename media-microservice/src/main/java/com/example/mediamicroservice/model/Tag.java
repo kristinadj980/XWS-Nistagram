@@ -13,20 +13,36 @@ public class Tag {
 
 	  @Column(name = "name",nullable = false)
 	  private String name;
-	   
-	   public List<Post> post;
-	   public List<Story> story;
+
+	@ManyToMany(cascade = { CascadeType.ALL })
+	@JoinTable(
+			name = "tag_posts",
+			joinColumns = { @JoinColumn(name = "id") },
+			inverseJoinColumns = { @JoinColumn(name = "id") }
+	)
+	public List<Post> posts;
+
+
+	@ManyToMany(cascade = { CascadeType.ALL })
+	@JoinTable(
+			name = "tag_stories",
+			joinColumns = { @JoinColumn(name = "id") },
+			inverseJoinColumns = { @JoinColumn(name = "id") }
+	)
+	public List<Story> stories;
 	   
 	   
 	   
 	   public Tag(String name, List<Post> post, List<Story> story) {
 			super();
 			this.name = name;
-			this.post = post;
-			this.story = story;
+			this.posts = post;
+			this.stories = story;
 	}
 
+	public Tag() {
 
+	}
 
 	public String getName() {
 		return name;
@@ -41,25 +57,25 @@ public class Tag {
 
 
 	public List<Post> getPost() {
-		return post;
+		return posts;
 	}
 
 
 
 	public void setPost(List<Post> post) {
-		this.post = post;
+		this.posts = post;
 	}
 
 
 
 	public List<Story> getStory() {
-		return story;
+		return stories;
 	}
 
 
 
 	public void setStory(List<Story> story) {
-		this.story = story;
+		this.stories = story;
 	}
 	   
 	   

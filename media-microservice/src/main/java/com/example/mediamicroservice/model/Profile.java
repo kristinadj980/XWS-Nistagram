@@ -1,9 +1,11 @@
 package com.example.mediamicroservice.model;
 
 import javax.persistence.*;
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 
+@Entity
+@DiscriminatorValue("Profile")
 public class Profile extends Person {
 	   @Id
 	   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -15,6 +17,7 @@ public class Profile extends Person {
 	   @ManyToMany(targetEntity = Post.class,  cascade = CascadeType.ALL)
 	   private List<Post> favourites;
 
+	   @ManyToMany(targetEntity = Profile.class,  cascade = CascadeType.ALL)
 	   private List<Profile> closeFriends;
 
 		@Column(name = "website", nullable = false)
@@ -23,19 +26,26 @@ public class Profile extends Person {
 		@Column(name = "biography", nullable = false)
 		private String biography;
 
-
+	@ManyToMany(targetEntity = Profile.class,  cascade = CascadeType.ALL)
 	   private List<Profile> followers;
+
+	@ManyToMany(targetEntity = Profile.class,  cascade = CascadeType.ALL)
 	   private List<Profile> mutedFriends;
-	   private List<Profile> blockedUsers;
-	   
-	   public Story[] story;
-	   public Post[] post;
+
+	@ManyToMany(targetEntity = Profile.class,  cascade = CascadeType.ALL)
+	private List<Profile> blockedUsers;
+
+	@ManyToMany(targetEntity = Story.class,  cascade = CascadeType.ALL)
+	   public List<Story> stories;
+
+	@ManyToMany(targetEntity = Post.class,  cascade = CascadeType.ALL)
+	   public List<Post> posts;
 	   
 	   
 		public Profile(Long id, String username, String name, String surname, String email, String password, String role,
-				String phoneNumber, Date birthDate, Gender gender, ProfileStatus profileStatus, List<Post> favourites,
-				List<Profile> closeFriends, String website, String biography, List<Profile> followers,
-				List<Profile> mutedFriends, List<Profile> blockedUsers, Story[] story, Post[] post) {
+					   String phoneNumber, LocalDate birthDate, Gender gender, ProfileStatus profileStatus, List<Post> favourites,
+					   List<Profile> closeFriends, String website, String biography, List<Profile> followers,
+					   List<Profile> mutedFriends, List<Profile> blockedUsers, List<Story> story , List<Post>post) {
 			super(id, username, name, surname, email, password, role, phoneNumber, birthDate, gender);
 			this.profileStatus = profileStatus;
 			this.favourites = favourites;
@@ -45,12 +55,15 @@ public class Profile extends Person {
 			this.followers = followers;
 			this.mutedFriends = mutedFriends;
 			this.blockedUsers = blockedUsers;
-			this.story = story;
-			this.post = post;
+			this.stories = story;
+			this.posts = post;
 		}
 
+	public Profile() {
 
-		public ProfileStatus getProfileStatus() {
+	}
+
+	public ProfileStatus getProfileStatus() {
 			return profileStatus;
 		}
 
@@ -130,23 +143,23 @@ public class Profile extends Person {
 		}
 
 
-		public Story[] getStory() {
-			return story;
+		public List<Story> getStory() {
+			return stories;
 		}
 
 
-		public void setStory(Story[] story) {
-			this.story = story;
+		public void setStory(List<Story> story) {
+			this.stories = story;
 		}
 
 
-		public Post[] getPost() {
-			return post;
+		public List<Post> getPost() {
+			return posts;
 		}
 
 
-		public void setPost(Post[] post) {
-			this.post = post;
+		public void setPost(List<Post> post) {
+			this.posts = post;
 		}
 
    

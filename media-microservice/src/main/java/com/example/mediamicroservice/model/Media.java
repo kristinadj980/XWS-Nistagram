@@ -1,22 +1,32 @@
 package com.example.mediamicroservice.model;
 
+import javax.persistence.*;
+
+@Entity
 public class Media {
-   
-   private int id;
-   
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+   private Long id;
+
+	@Column(name = "name", nullable = false, unique = true)
    private String name;
 
-	public Media(int id, String name) {
+	public Media(Long id, String name) {
 		super();
 		this.id = id;
 		this.name = name;
 	}
 
-	public int getId() {
+	public Media() {
+
+	}
+
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 

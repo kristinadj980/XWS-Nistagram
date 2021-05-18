@@ -7,14 +7,12 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="profileMicroservice" />
-
-        <module name="searchMicroservice" />
-
         <module name="media-microservice" />
-
+        <module name="demo" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
+      <module name="demo" target="16" />
       <module name="media-microservice" target="16" />
       <module name="profileMicroservice" target="16" />
       <module name="searchMicroservice" target="16" />
@@ -22,6 +20,7 @@
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="demo" options="-parameters" />
       <module name="media-microservice" options="-parameters" />
       <module name="profileMicroservice" options="-parameters" />
       <module name="searchMicroservice" options="-parameters" />

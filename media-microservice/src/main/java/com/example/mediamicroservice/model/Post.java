@@ -1,6 +1,7 @@
 package com.example.mediamicroservice.model;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
@@ -24,15 +25,19 @@ public class Post{
 	   private String comment;
 
 	   @Column(name = "date", nullable = false)
-	   private Date date;
-	   
+	   private LocalDate date;
+
+	   @ManyToMany(targetEntity = Media.class,  cascade = CascadeType.ALL)
 	   public List<Media> media;
-	   @Column(name = "location", nullable = false)
+
+	   @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	   public Location location;
-	   public Tag[] tag;
+
+	   @ManyToMany(mappedBy = "posts")
+	   public List<Tag> tags;
 	   
-	   public Post(Long id,String description, List<Profile> like, List<Profile> dislike, String comment, Date date,
-			List<Media> media, Location location, Tag[] tag) {
+	   public Post(Long id,String description, List<Profile> like, List<Profile> dislike, String comment, LocalDate date,
+			List<Media> media, Location location, List<Tag> tags) {
 			super();
 			this.id=id;
 			this.description = description;
@@ -42,7 +47,7 @@ public class Post{
 			this.date = date;
 			this.media = media;
 			this.location = location;
-			this.tag = tag;
+			this.tags = tags;
 	}
 
 	public Long getId() {
@@ -85,11 +90,11 @@ public class Post{
 		this.comment = comment;
 	}
 
-	public Date getDate() {
+	public LocalDate getDate() {
 		return date;
 	}
 
-	public void setDate(java.util.Date date) {
+	public void setDate(LocalDate date) {
 		this.date = date;
 	}
 
@@ -109,12 +114,12 @@ public class Post{
 		this.location = location;
 	}
 
-	public Tag[] getTag() {
-		return tag;
+	public List<Tag> getTag() {
+		return tags;
 	}
 
-	public void setTag(Tag[] tag) {
-		this.tag = tag;
+	public void setTag(List<Tag> tag) {
+		this.tags = tag;
 	}
 	   
 	   

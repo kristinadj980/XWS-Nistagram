@@ -1,28 +1,38 @@
 package com.example.mediamicroservice.model;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 public class InappropriateContent {
 
-		@Id
-		@GeneratedValue(strategy = GenerationType.IDENTITY)
-		private Long id;
-	   @Column(name = "description")
+	   @Id
+	   @GeneratedValue(strategy = GenerationType.IDENTITY)
+	   private Long id;
+
+	   @Column(name = "description", nullable = false)
 	   private String description;
-	   @Column(name = "status")
+
+	   @Column(name = "status", nullable = false)
 	   private RequestStatus status;
+
+	   @ManyToMany(targetEntity = Post.class,  cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	   public List<Post> post;
+
+	   @ManyToMany(targetEntity = Story.class,  cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	   public List<Story> story;
 	   
-	   public Post[] post;
-	   public Story[] story;
-	   
-	   public InappropriateContent(String description, RequestStatus status, Post[] post, Story[] story) {
+	   public InappropriateContent(String description, RequestStatus status, List<Post> post, List<Story> story) {
 			super();
 			this.description = description;
 			this.status = status;
 			this.post = post;
 			this.story = story;
 		}
+
+	public InappropriateContent() {
+
+	}
 
 	public String getDescription() {
 		return description;
@@ -40,19 +50,19 @@ public class InappropriateContent {
 		this.status = status;
 	}
 
-	public Post[] getPost() {
+	public List<Post> getPost() {
 		return post;
 	}
 
-	public void setPost(Post[] post) {
+	public void setPost(List<Post> post) {
 		this.post = post;
 	}
 
-	public Story[] getStory() {
+	public List<Story> getStory() {
 		return story;
 	}
 
-	public void setStory(Story[] story) {
+	public void setStory(List<Story> story) {
 		this.story = story;
 	}
 	   

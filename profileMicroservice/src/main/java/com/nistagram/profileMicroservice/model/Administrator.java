@@ -2,14 +2,14 @@ package com.nistagram.profileMicroservice.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-import javax.persistence.DiscriminatorValue;
-import javax.persistence.Entity;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 import java.util.List;
 
-
+@Entity
+@DiscriminatorValue("Administrator")
 public class Administrator extends Person {
 
+	@ManyToMany(targetEntity = VerificationRequest.class,  cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private List<VerificationRequest> verificationRequests;
 
 	public Administrator() {

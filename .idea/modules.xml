@@ -3,9 +3,9 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/XWS-Nistagram.iml" filepath="$PROJECT_DIR$/.idea/XWS-Nistagram.iml" />
+      <module fileurl="file://$PROJECT_DIR$/searchMicroservice/demo.iml" filepath="$PROJECT_DIR$/searchMicroservice/demo.iml" />
       <module fileurl="file://$PROJECT_DIR$/media-microservice/media-microservice.iml" filepath="$PROJECT_DIR$/media-microservice/media-microservice.iml" />
       <module fileurl="file://$PROJECT_DIR$/profileMicroservice/profileMicroservice.iml" filepath="$PROJECT_DIR$/profileMicroservice/profileMicroservice.iml" />
-      <module fileurl="file://$PROJECT_DIR$/searchMicroservice/searchMicroservice.iml" filepath="$PROJECT_DIR$/searchMicroservice/searchMicroservice.iml" />
     </modules>
   </component>
 </project>

@@ -2,6 +2,7 @@ package com.example.mediamicroservice.model;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 
+import java.time.LocalDate;
 import java.util.Date;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 
@@ -41,7 +42,7 @@ public class Person {
 	private String role;
 
 	@Column(name = "birthDate", nullable = false)
-	private Date birthDate;
+	private LocalDate birthDate;
 
 	@Enumerated(EnumType.ORDINAL)
 	private Gender gender;
@@ -49,7 +50,7 @@ public class Person {
 
 
 	public Person(Long id, String username, String name, String surname, String email, String password, String role,
-			String phoneNumber, Date birthDate, Gender gender) {
+			String phoneNumber, LocalDate birthDate, Gender gender) {
 		super();
 		this.id = id;
 		this.username = username;
@@ -131,11 +132,11 @@ public class Person {
 		this.phoneNumber = phoneNumber;
 	}
 	
-	public Date getBirthDate() {
+	public LocalDate getBirthDate() {
 		return birthDate;
 	}
 	
-	public void setBirthDate(Date birthDate) {
+	public void setBirthDate(LocalDate birthDate) {
 		this.birthDate = birthDate;
 	}
 	

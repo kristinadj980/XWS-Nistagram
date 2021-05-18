@@ -33,12 +33,15 @@ public class Story {
 
 	  @Column(name = "numberOfInappContent", nullable = false)
 	   private int numberOfInappropriateContent;
-	   
-	   public List<Media> media;
-	   public List<Tag> tag;
 
-	  @Column(name = "location", nullable = false)
-	   public Location location;
+	@ManyToMany(targetEntity = Media.class,  cascade = CascadeType.ALL)
+	   public List<Media> medias;
+
+	@ManyToMany(mappedBy = "stories")
+	   public List<Tag> tags;
+
+	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	public Location location;
 	   
 	   
 	   
@@ -53,11 +56,14 @@ public class Story {
 			this.date = date;
 			this.highlighted = highlighted;
 			this.numberOfInappropriateContent = numberOfInappropriateContent;
-			this.media = media;
-			this.tag = tag;
+			this.medias = media;
+			this.tags = tag;
 			this.location = location;
 	}
 
+	public Story() {
+
+	}
 
 	public Long getId() {
 		return id;
@@ -152,25 +158,25 @@ public class Story {
 
 
 	public List<Media> getMedia() {
-		return media;
+		return medias;
 	}
 
 
 
 	public void setMedia(List<Media> media) {
-		this.media = media;
+		this.medias = media;
 	}
 
 
 
 	public List<Tag> getTag() {
-		return tag;
+		return tags;
 	}
 
 
 
 	public void setTag(List<Tag> tag) {
-		this.tag = tag;
+		this.tags = tag;
 	}
 
 

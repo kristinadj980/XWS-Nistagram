@@ -11,20 +11,23 @@ public class Location {
 	@Column(name = "id", nullable = false)
 	private Long id;
 
-	@Column(name = "city")
+	@Column(name = "city", nullable = false)
 	private String city;
 
-	@Column(name = "street")
+	@Column(name = "street", nullable = false)
 	private String street;
 
-	@Column(name = "streetNumber")
+	@Column(name = "streetNumber", nullable = false)
 	private String streetNumber;
 
-	@Column(name = "country")
+	@Column(name = "country", nullable = false)
 	private String country;
-	   
-	   public List<Story> story;
-	   public List<Post> post;
+
+	@OneToMany(mappedBy = "location", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	public List<Story> story;
+
+	@OneToMany(mappedBy = "location", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	public List<Post> post;
 	   
 	   
 	   public Location(String city, String street, String streetNumber, String country, List<Story> story,
@@ -37,6 +40,10 @@ public class Location {
 			this.story = story;
 			this.post = post;
 		}
+
+	public Location() {
+
+	}
 
 
 	public String getCity() {
