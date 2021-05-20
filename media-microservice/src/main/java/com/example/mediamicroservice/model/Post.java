@@ -15,11 +15,17 @@ public class Post{
 	   @Column(name = "description", nullable = false)
 	   private String description;
 
-	   @ManyToMany(targetEntity = Profile.class,  cascade = CascadeType.ALL)
-	   private List<Profile> like;
+	   @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	   @JoinTable(name = "post_likes",
+	   joinColumns = @JoinColumn(name = "post_id", referencedColumnName = "id"),
+	   inverseJoinColumns = @JoinColumn(name = "likes_id", referencedColumnName = "id"))
+	   private List<Profile> likes;
 
-	   @ManyToMany(targetEntity = Profile.class,  cascade = CascadeType.ALL)
-	   private List<Profile> dislike;
+	   @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	   @JoinTable(name = "post_dislikes",
+	   joinColumns = @JoinColumn(name = "post_id", referencedColumnName = "id"),
+	   inverseJoinColumns = @JoinColumn(name = "dislikes_id", referencedColumnName = "id"))
+	   private List<Profile> dislikes;
 
 	   @Column(name = "comment", nullable = false)
 	   private String comment;
@@ -27,8 +33,11 @@ public class Post{
 	   @Column(name = "date", nullable = false)
 	   private LocalDate date;
 
-	   @ManyToMany(targetEntity = Media.class,  cascade = CascadeType.ALL)
-	   public List<Media> media;
+	   @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	   @JoinTable(name = "post_media",
+	   joinColumns = @JoinColumn(name = "post_id", referencedColumnName = "id"),
+	   inverseJoinColumns = @JoinColumn(name = "media_id", referencedColumnName = "id"))
+	   public List<Media> medias;
 
 	   @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	   public Location location;
@@ -36,16 +45,16 @@ public class Post{
 	   @ManyToMany(mappedBy = "posts")
 	   public List<Tag> tags;
 	   
-	   public Post(Long id,String description, List<Profile> like, List<Profile> dislike, String comment, LocalDate date,
-			List<Media> media, Location location, List<Tag> tags) {
+	   public Post(Long id,String description, List<Profile> likes, List<Profile> dislikes, String comment, LocalDate date,
+			List<Media> medias, Location location, List<Tag> tags) {
 			super();
 			this.id=id;
 			this.description = description;
-			this.like = like;
-			this.dislike = dislike;
+			this.likes = likes;
+			this.dislikes = dislikes;
 			this.comment = comment;
 			this.date = date;
-			this.media = media;
+			this.medias = medias;
 			this.location = location;
 			this.tags = tags;
 	}
@@ -67,19 +76,19 @@ public class Post{
 	}
 
 	public List<Profile> getLike() {
-		return like;
+		return likes;
 	}
 
 	public void setLike(List<Profile> like) {
-		this.like = like;
+		this.likes = like;
 	}
 
 	public List<Profile> getDislike() {
-		return dislike;
+		return dislikes;
 	}
 
 	public void setDislike(List<Profile> dislike) {
-		this.dislike = dislike;
+		this.dislikes = dislike;
 	}
 
 	public String getComment() {
@@ -99,11 +108,11 @@ public class Post{
 	}
 
 	public List<Media> getMedia() {
-		return media;
+		return medias;
 	}
 
 	public void setMedia(List<Media> media) {
-		this.media = media;
+		this.medias = media;
 	}
 
 	public Location getLocation() {

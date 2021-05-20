@@ -16,10 +16,16 @@ public class InappropriateContent {
 	   @Column(name = "status", nullable = false)
 	   private RequestStatus status;
 
-	   @ManyToMany(targetEntity = Post.class,  cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	   @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	   @JoinTable(name = "inappropriateContent_post",
+	    joinColumns = @JoinColumn(name = "inappropriateContent_id", referencedColumnName = "id"),
+	    inverseJoinColumns = @JoinColumn(name = "post_id", referencedColumnName = "id"))
 	   public List<Post> post;
 
-	   @ManyToMany(targetEntity = Story.class,  cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	   @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	   @JoinTable(name = "inappropriateContent_story",
+	    joinColumns = @JoinColumn(name = "inappropriateContent_id", referencedColumnName = "id"),
+	    inverseJoinColumns = @JoinColumn(name = "story_id", referencedColumnName = "id"))
 	   public List<Story> story;
 	   
 	   public InappropriateContent(String description, RequestStatus status, List<Post> post, List<Story> story) {

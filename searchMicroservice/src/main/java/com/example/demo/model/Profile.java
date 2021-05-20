@@ -22,7 +22,10 @@ public class Profile extends Person {
 	@Column(name = "biography", nullable = false)
 	private String biography;
 
-	@ManyToMany(targetEntity = Profile.class,  cascade = CascadeType.ALL)
+	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@JoinTable(name = "profile_followers",
+	joinColumns = @JoinColumn(name = "profile_id", referencedColumnName = "id"),
+	inverseJoinColumns = @JoinColumn(name = "followers_id", referencedColumnName = "id"))
 	private List<Profile> followers;
 	
 	public Profile() {

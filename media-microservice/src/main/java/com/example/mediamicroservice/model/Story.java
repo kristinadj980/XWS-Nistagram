@@ -34,10 +34,13 @@ public class Story {
 	  @Column(name = "numberOfInappContent", nullable = false)
 	   private int numberOfInappropriateContent;
 
-	@ManyToMany(targetEntity = Media.class,  cascade = CascadeType.ALL)
+	   @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	   @JoinTable(name = "story_medias",
+	   joinColumns = @JoinColumn(name = "story_id", referencedColumnName = "id"),
+	   inverseJoinColumns = @JoinColumn(name = "medias_id", referencedColumnName = "id"))
 	   public List<Media> medias;
 
-	@ManyToMany(mappedBy = "stories")
+	   @ManyToMany(mappedBy = "stories")
 	   public List<Tag> tags;
 
 	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)

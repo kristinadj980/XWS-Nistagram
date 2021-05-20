@@ -8,7 +8,10 @@ import java.util.List;
 @DiscriminatorValue("Administrator")
 public class Administrator extends Person {
 
-	@ManyToMany(targetEntity = VerificationRequest.class,  cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@JoinTable(name = "administrator_verificationRequests",
+    joinColumns = @JoinColumn(name = "administrator_id", referencedColumnName = "id"),
+    inverseJoinColumns = @JoinColumn(name = "verificationRequests_id", referencedColumnName = "id"))
 	private List<VerificationRequest> verificationRequests;
 
 	public Administrator() {

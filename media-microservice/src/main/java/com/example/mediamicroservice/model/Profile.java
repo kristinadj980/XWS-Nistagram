@@ -14,10 +14,16 @@ public class Profile extends Person {
 	   @Enumerated(EnumType.ORDINAL)
 	   private ProfileStatus profileStatus;
 
-	   @ManyToMany(targetEntity = Post.class,  cascade = CascadeType.ALL)
+	   @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	   @JoinTable(name = "profile_favourites",
+	   joinColumns = @JoinColumn(name = "profile_id", referencedColumnName = "id"),
+	   inverseJoinColumns = @JoinColumn(name = "favourites_id", referencedColumnName = "id"))
 	   private List<Post> favourites;
 
-	   @ManyToMany(targetEntity = Profile.class,  cascade = CascadeType.ALL)
+	   @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	   @JoinTable(name = "profile_closeFriends",
+	   joinColumns = @JoinColumn(name = "profile_id", referencedColumnName = "id"),
+	   inverseJoinColumns = @JoinColumn(name = "closeFriends_id", referencedColumnName = "id"))
 	   private List<Profile> closeFriends;
 
 		@Column(name = "website", nullable = false)
@@ -26,19 +32,34 @@ public class Profile extends Person {
 		@Column(name = "biography", nullable = false)
 		private String biography;
 
-	@ManyToMany(targetEntity = Profile.class,  cascade = CascadeType.ALL)
+	   @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	   @JoinTable(name = "profile_followers",
+	   joinColumns = @JoinColumn(name = "profile_id", referencedColumnName = "id"),
+	   inverseJoinColumns = @JoinColumn(name = "followers_id", referencedColumnName = "id"))
 	   private List<Profile> followers;
 
-	@ManyToMany(targetEntity = Profile.class,  cascade = CascadeType.ALL)
+	   @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	   @JoinTable(name = "profile_mutedFriends",
+	   joinColumns = @JoinColumn(name = "profile_id", referencedColumnName = "id"),
+	   inverseJoinColumns = @JoinColumn(name = "mutedFriends_id", referencedColumnName = "id"))
 	   private List<Profile> mutedFriends;
 
-	@ManyToMany(targetEntity = Profile.class,  cascade = CascadeType.ALL)
-	private List<Profile> blockedUsers;
+	   @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	   @JoinTable(name = "profile_blockedUsers",
+	   joinColumns = @JoinColumn(name = "profile_id", referencedColumnName = "id"),
+	   inverseJoinColumns = @JoinColumn(name = "blockedUsers_id", referencedColumnName = "id"))
+	   private List<Profile> blockedUsers;
 
-	@ManyToMany(targetEntity = Story.class,  cascade = CascadeType.ALL)
+	   @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	   @JoinTable(name = "profile_stories",
+	   joinColumns = @JoinColumn(name = "profile_id", referencedColumnName = "id"),
+	   inverseJoinColumns = @JoinColumn(name = "stories_id", referencedColumnName = "id"))
 	   public List<Story> stories;
 
-	@ManyToMany(targetEntity = Post.class,  cascade = CascadeType.ALL)
+	   @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	   @JoinTable(name = "profile_posts",
+	   joinColumns = @JoinColumn(name = "profile_id", referencedColumnName = "id"),
+	   inverseJoinColumns = @JoinColumn(name = "posts_id", referencedColumnName = "id"))
 	   public List<Post> posts;
 	   
 	   

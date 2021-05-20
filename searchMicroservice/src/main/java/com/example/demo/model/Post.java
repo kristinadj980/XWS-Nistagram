@@ -16,10 +16,16 @@ public class Post {
 	@Column(name = "description", nullable = false)
 	private String description;
 
-	@ManyToMany(targetEntity = Profile.class,  cascade = CascadeType.ALL)
+	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@JoinTable(name = "post_likes",
+	joinColumns = @JoinColumn(name = "post_id", referencedColumnName = "id"),
+	inverseJoinColumns = @JoinColumn(name = "likes_id", referencedColumnName = "id"))
 	private	List<Profile> likes;
 
-	@ManyToMany(targetEntity = Profile.class,  cascade = CascadeType.ALL)
+	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@JoinTable(name = "post_dislikes",
+	joinColumns = @JoinColumn(name = "post_id", referencedColumnName = "id"),
+	inverseJoinColumns = @JoinColumn(name = "dislikes_id", referencedColumnName = "id"))
 	private List<Profile> dislikes;
 
 	@Column(name = "comment", nullable = false)
