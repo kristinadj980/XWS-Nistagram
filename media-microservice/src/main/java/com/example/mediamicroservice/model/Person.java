@@ -2,18 +2,24 @@ package com.example.mediamicroservice.model;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 
+import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.Collection;
 import java.util.Date;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 
 import javax.persistence.*;
 import javax.persistence.InheritanceType;
+
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
-public class Person {
+public class Person implements UserDetails {
 	@Id
 	@SequenceGenerator(name = "mySeqGenV2", sequenceName = "mySeqV2", initialValue = 1, allocationSize = 1)
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "mySeqGenV2")
@@ -146,6 +152,31 @@ public class Person {
 	
 	public void setGender(Gender gender) {
 		this.gender = gender;
+	}
+
+	public Collection<? extends GrantedAuthority> getAuthorities() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public boolean isAccountNonExpired() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	public boolean isAccountNonLocked() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	public boolean isCredentialsNonExpired() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	public boolean isEnabled() {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 

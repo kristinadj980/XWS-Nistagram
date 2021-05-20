@@ -66,12 +66,12 @@ public class Profile extends Person{
 		super();
 	}
 
-	public Profile(Long id, String username, String name, String surname, String email, String password, String phoneNumber, 
-			String role, LocalDate birthDate, Gender gender, Long id1, ProfileStatus profileStatus, List<Post> favourites,
-			List<Profile> closeFriends, String website, String biography, List<Notification> notifications, List<Profile> followers,
-			List<Profile> mutedFriends, List<Profile> blockedUsers, List<FriendRequest> friendRequests, RequestStatus agentRequestStatus) {
-		super(id, username, name, surname, email, password, phoneNumber, role, birthDate, gender);
-		this.id = id1;
+	public Profile(Long id, ProfileStatus profileStatus, List<Post> favourites, List<Profile> closeFriends,
+			String website, String biography, List<Notification> notifications, List<Profile> followers,
+			List<Profile> mutedFriends, List<Profile> blockedUsers, List<FriendRequest> friendRequests,
+			RequestStatus agentRequestStatus) {
+		super();
+		this.id = id;
 		this.profileStatus = profileStatus;
 		this.favourites = favourites;
 		this.closeFriends = closeFriends;
@@ -83,6 +83,13 @@ public class Profile extends Person{
 		this.blockedUsers = blockedUsers;
 		this.friendRequests = friendRequests;
 		this.agentRequestStatus = agentRequestStatus;
+	}
+
+	
+	public Profile(Long id, String username, String name, String surname, String email, String password,
+			String phoneNumber, String role, LocalDate birthDate, Gender gender, List<Authority> authorities) {
+		super(id, username, name, surname, email, password, phoneNumber, role, birthDate, gender, authorities);
+		// TODO Auto-generated constructor stub
 	}
 
 	public List<Notification> getNotifications() {
