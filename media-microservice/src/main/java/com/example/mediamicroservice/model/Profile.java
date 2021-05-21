@@ -7,9 +7,6 @@ import java.util.List;
 @Entity
 @DiscriminatorValue("Profile")
 public class Profile extends Person {
-	   @Id
-	   @GeneratedValue(strategy = GenerationType.IDENTITY)
-	   private Long id;
 
 	   @Enumerated(EnumType.ORDINAL)
 	   private ProfileStatus profileStatus;
@@ -63,22 +60,13 @@ public class Profile extends Person {
 	   public List<Post> posts;
 	   
 	   
-		public Profile(Long id, String username, String name, String surname, String email, String password, String role,
-					   String phoneNumber, LocalDate birthDate, Gender gender, ProfileStatus profileStatus, List<Post> favourites,
-					   List<Profile> closeFriends, String website, String biography, List<Profile> followers,
-					   List<Profile> mutedFriends, List<Profile> blockedUsers, List<Story> story , List<Post>post) {
-			super(id, username, name, surname, email, password, role, phoneNumber, birthDate, gender);
-			this.profileStatus = profileStatus;
-			this.favourites = favourites;
-			this.closeFriends = closeFriends;
-			this.website = website;
-			this.biography = biography;
-			this.followers = followers;
-			this.mutedFriends = mutedFriends;
-			this.blockedUsers = blockedUsers;
-			this.stories = story;
-			this.posts = post;
-		}
+		
+
+	public Profile(Long id, String username, String name, String surname, String email, String password, String role,
+			String phoneNumber, LocalDate birthDate, Gender gender) {
+		super(id, username, name, surname, email, password, role, phoneNumber, birthDate, gender);
+		// TODO Auto-generated constructor stub
+	}
 
 	public Profile() {
 
