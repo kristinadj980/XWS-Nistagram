@@ -10,70 +10,74 @@ import java.util.List;
 @DiscriminatorValue("Profile")
 public class Profile extends Person{
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
-
 	@Enumerated(EnumType.ORDINAL)
-	private ProfileStatus profileStatus;
+	private ProfileStatus profileStatus;  
 
-	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-	@JoinTable(name = "profile_favourites",
-	joinColumns = @JoinColumn(name = "profile_id", referencedColumnName = "id"),
-	inverseJoinColumns = @JoinColumn(name = "favourites_id", referencedColumnName = "id"))
-	private List<Post> favourites;
+	//@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	//@JoinTable(name = "profile_favourites",
+	//joinColumns = @JoinColumn(name = "profile_id", referencedColumnName = "id"),
+	//inverseJoinColumns = @JoinColumn(name = "favourites_id", referencedColumnName = "id"))
+	//private List<Post> favourites;
 
 	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@JoinTable(name = "profile_closeFriends",
 	joinColumns = @JoinColumn(name = "profile_id", referencedColumnName = "id"),
 	inverseJoinColumns = @JoinColumn(name = "closeFriends_id", referencedColumnName = "id"))
-	private List<Profile> closeFriends;
+	private List<Profile> closeFriends;  
 
-	@Column(name = "website", nullable = false)
+	@Column(name = "website", nullable = false)  
 	private String website;
 
-	@Column(name = "biography", nullable = false)
+	@Column(name = "biography", nullable = false)  
 	private String biography;
 
 	@OneToMany(mappedBy = "profile", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	private List<Notification> notifications;
+	private List<Notification> notifications;  
 
 	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@JoinTable(name = "profile_followers",
 	joinColumns = @JoinColumn(name = "profile_id", referencedColumnName = "id"),
 	inverseJoinColumns = @JoinColumn(name = "followers_id", referencedColumnName = "id"))
-	private List<Profile> followers;
+	private List<Profile> followers; 
 	
 	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@JoinTable(name = "profile_mutedFriends",
 	joinColumns = @JoinColumn(name = "profile_id", referencedColumnName = "id"),
 	inverseJoinColumns = @JoinColumn(name = "mutedFriends_id", referencedColumnName = "id"))
-	private List<Profile> mutedFriends;
+	private List<Profile> mutedFriends;  
 	
 	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@JoinTable(name = "profile_blockedUsers",
 	joinColumns = @JoinColumn(name = "profile_id", referencedColumnName = "id"),
 	inverseJoinColumns = @JoinColumn(name = "blockedUsers_id", referencedColumnName = "id"))
-	private List<Profile> blockedUsers;
+	private List<Profile> blockedUsers;  
 
 	@OneToMany(mappedBy = "profile", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	private List<FriendRequest> friendRequests;
+	private List<FriendRequest> friendRequests;  
 
 	@Enumerated(EnumType.ORDINAL)
-	private RequestStatus agentRequestStatus;
+	private RequestStatus agentRequestStatus;  
+	
+	@Column
+	private Boolean allowedTags; 
+	
+	@Column
+	private Boolean allowedMessages;  
+	
+	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	private VerificationRequest verificationRequest;
 	
 	public Profile() {
 		super();
 	}
 
-	public Profile(Long id, ProfileStatus profileStatus, List<Post> favourites, List<Profile> closeFriends,
-			String website, String biography, List<Notification> notifications, List<Profile> followers,
-			List<Profile> mutedFriends, List<Profile> blockedUsers, List<FriendRequest> friendRequests,
-			RequestStatus agentRequestStatus) {
+
+	public Profile(ProfileStatus profileStatus, List<Profile> closeFriends, String website, String biography,
+			List<Notification> notifications, List<Profile> followers, List<Profile> mutedFriends,
+			List<Profile> blockedUsers, List<FriendRequest> friendRequests, RequestStatus agentRequestStatus,
+			Boolean allowedTags, Boolean allowedMessages, VerificationRequest verificationRequest) {
 		super();
-		this.id = id;
 		this.profileStatus = profileStatus;
-		this.favourites = favourites;
 		this.closeFriends = closeFriends;
 		this.website = website;
 		this.biography = biography;
@@ -83,12 +87,14 @@ public class Profile extends Person{
 		this.blockedUsers = blockedUsers;
 		this.friendRequests = friendRequests;
 		this.agentRequestStatus = agentRequestStatus;
+		this.allowedTags = allowedTags;
+		this.allowedMessages = allowedMessages;
+		this.verificationRequest = verificationRequest;
 	}
 
-	
 	public Profile(Long id, String username, String name, String surname, String email, String password,
-			String phoneNumber, String role, LocalDate birthDate, Gender gender, List<Authority> authorities) {
-		super(id, username, name, surname, email, password, phoneNumber, role, birthDate, gender, authorities);
+			String phoneNumber, String role, LocalDate birthDate, Gender gender) {
+		super(id, username, name, surname, email, password, phoneNumber, role, birthDate, gender);
 		// TODO Auto-generated constructor stub
 	}
 
@@ -114,14 +120,6 @@ public class Profile extends Person{
 	
 	public void setProfileStatus(ProfileStatus profileStatus) {
 		this.profileStatus = profileStatus;
-	}
-	
-	public List<Post> getFavourites() {
-		return favourites;
-	}
-	
-	public void setFavourites(List<Post> favourites) {
-		this.favourites = favourites;
 	}
 	
 	public List<Profile> getCloseFriends() {
@@ -180,11 +178,4 @@ public class Profile extends Person{
 		this.agentRequestStatus = agentRequestStatus;
 	}
 
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
 }
