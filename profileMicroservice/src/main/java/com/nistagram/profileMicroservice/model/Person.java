@@ -50,21 +50,12 @@ public class Person implements UserDetails{
 	@Enumerated(EnumType.ORDINAL)
 	private Gender gender;
 	
-	@ManyToMany(fetch = FetchType.EAGER,cascade = CascadeType.REFRESH)
-    @JoinTable(name = "user_authority",
-            joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "authority_id", referencedColumnName = "id"))
-    private List<Authority> authorities;
-	
 	public Person() {
 		super();
 	}
 
-	
-
 	public Person(Long id, String username, String name, String surname, String email, String password,
-			String phoneNumber, String role, LocalDate birthDate, Gender gender,
-			List<com.nistagram.profileMicroservice.model.Authority> authorities) {
+			String phoneNumber, String role, LocalDate birthDate, Gender gender) {
 		super();
 		this.id = id;
 		this.username = username;
@@ -76,10 +67,7 @@ public class Person implements UserDetails{
 		this.role = role;
 		this.birthDate = birthDate;
 		this.gender = gender;
-		this.authorities = authorities;
 	}
-
-
 
 	public String getUsername() {
 		return username;
@@ -184,11 +172,9 @@ public class Person implements UserDetails{
 	}
 
 
-
 	public Long getId() {
 		return id;
 	}
-
 
 
 	public void setId(Long id) {
@@ -196,10 +182,4 @@ public class Person implements UserDetails{
 	}
 
 
-
-	public void setAuthorities(List<Authority> authorities) {
-		this.authorities = authorities;
-	}
-
-    
 }
