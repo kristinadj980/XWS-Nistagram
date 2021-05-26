@@ -28,22 +28,24 @@ public class Post {
 	inverseJoinColumns = @JoinColumn(name = "dislikes_id", referencedColumnName = "id"))
 	private List<Profile> dislikes;
 
-	@Column(name = "comment", nullable = false)
-	private String comment;
-
 	@Column(name = "date", nullable = false)
 	private LocalDate date;
 	
 	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	   public Location location;
 	
+	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@JoinTable(name = "post_tags",
+	joinColumns = @JoinColumn(name = "post_id", referencedColumnName = "id"),
+	inverseJoinColumns = @JoinColumn(name = "tag_id", referencedColumnName = "id"))
+	private	List<Tag> tags;
 	
-	public Post(String description, List<Profile> likes, List<Profile> dislikes, String comment, LocalDate date, Location location) {
+	
+	public Post(String description, List<Profile> likes, List<Profile> dislikes, LocalDate date, Location location) {
 		super();
 		this.description = description;
 		this.likes = likes;
 		this.dislikes = dislikes;
-		this.comment = comment;
 		this.date = date;
 		this.location = location;
 	}
@@ -96,16 +98,6 @@ public class Post {
 
 	public void setDislikes(List<Profile> dislikes) {
 		this.dislikes = dislikes;
-	}
-
-
-	public String getComment() {
-		return comment;
-	}
-
-
-	public void setComment(String comment) {
-		this.comment = comment;
 	}
 
 
