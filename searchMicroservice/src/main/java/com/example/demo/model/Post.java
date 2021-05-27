@@ -31,84 +31,84 @@ public class Post {
 	@Column(name = "date", nullable = false)
 	private LocalDate date;
 	
-	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	   public Location location;
-	
-	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-	@JoinTable(name = "post_tags",
-	joinColumns = @JoinColumn(name = "post_id", referencedColumnName = "id"),
-	inverseJoinColumns = @JoinColumn(name = "tag_id", referencedColumnName = "id"))
-	private	List<Tag> tags;
+	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	private Location location;
 	
 	
-	public Post(String description, List<Profile> likes, List<Profile> dislikes, LocalDate date, Location location) {
+
+	public Post() {
 		super();
+	}
+
+	public Post(Long id, String description, List<Profile> likes, List<Profile> dislikes, LocalDate date,
+			Location location) {
+		super();
+		this.id = id;
 		this.description = description;
 		this.likes = likes;
 		this.dislikes = dislikes;
 		this.date = date;
 		this.location = location;
+		//this.tags = tags;
 	}
-
 
 	public Long getId() {
 		return id;
 	}
 
-
 	public void setId(Long id) {
 		this.id = id;
 	}
-
-
-	public Location getLocation() {
-		return location;
-	}
-
-
-	public void setLocation(Location location) {
-		this.location = location;
-	}
-
 
 	public String getDescription() {
 		return description;
 	}
 
-
 	public void setDescription(String description) {
 		this.description = description;
 	}
-
 
 	public List<Profile> getLikes() {
 		return likes;
 	}
 
-
 	public void setLikes(List<Profile> likes) {
 		this.likes = likes;
 	}
-
 
 	public List<Profile> getDislikes() {
 		return dislikes;
 	}
 
-
 	public void setDislikes(List<Profile> dislikes) {
 		this.dislikes = dislikes;
 	}
-
 
 	public LocalDate getDate() {
 		return date;
 	}
 
-
 	public void setDate(LocalDate date) {
 		this.date = date;
 	}
+
+	public Location getLocation() {
+		return location;
+	}
+
+	public void setLocation(Location location) {
+		this.location = location;
+	}
+
+	/*public List<Tag> getTags() {
+		return tags;
+	}
+
+	public void setTags(List<Tag> tags) {
+		this.tags = tags;
+	}*/
+	
+	
 	
 	
 }

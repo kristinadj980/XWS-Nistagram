@@ -9,10 +9,6 @@ import java.util.List;
 @DiscriminatorValue("Profile")
 public class Profile extends Person {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
-
 	@Enumerated(EnumType.ORDINAL)
 	private ProfileStatus profileStatus;
 

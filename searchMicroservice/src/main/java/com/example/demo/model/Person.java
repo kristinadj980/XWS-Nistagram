@@ -22,6 +22,16 @@ public class Person {
 		
 	}
 	
+	
+	
+	public Person(Long id, String username) {
+		super();
+		this.id = id;
+		this.username = username;
+	}
+
+
+
 	public Long getId() {
 		return id;
 	}

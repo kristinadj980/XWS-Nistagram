@@ -17,13 +17,14 @@ services:
       DATABASE_PASSWORD: bazabaza
       DATABASE_DOMAIN: mysql
       DATABASE_SCHEMA: mediaMicroservice
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka:8761/eureka/
     depends_on:
       - mysql
       - eureka
    
-  profileMicroservice:
-    image: profileMicroservice
-    container_name: profileMicroservice
+  profile-microservice:
+    image: profile-microservice
+    container_name: profile-microservice
     build:
       context: ./profileMicroservice
       dockerfile: Dockerfile
@@ -37,13 +38,14 @@ services:
       DATABASE_PASSWORD: bazabaza
       DATABASE_DOMAIN: mysql
       DATABASE_SCHEMA: profileMicroservice
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka:8761/eureka/
     depends_on:
       - mysql
       - eureka
       
-  searchMicroservice:
-    image: searchMicroservice
-    container_name: searchMicroservice
+  search-microservice:
+    image: search-microservice
+    container_name: search-microservice
     build:
       context: ./searchMicroservice
       dockerfile: Dockerfile
@@ -57,6 +59,7 @@ services:
       DATABASE_PASSWORD: bazabaza
       DATABASE_DOMAIN: mysql
       DATABASE_SCHEMA: searchMicroservice
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka:8761/eureka/
     depends_on:
       - mysql 
       - eureka  
@@ -77,6 +80,7 @@ services:
       DATABASE_PASSWORD: bazabaza
       DATABASE_DOMAIN: mysql
       DATABASE_SCHEMA: securityMicroservice
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka:8761/eureka/
     depends_on:
       - mysql      
       - eureka  
@@ -95,8 +99,8 @@ services:
     depends_on:
       - eureka
       - media-microservice
-      - profileMicroservice
-      - searchMicroservice
+      - profile-microservice
+      - search-microservice
       - security-microservice
       
       

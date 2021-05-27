@@ -13,16 +13,7 @@ public class AuthFilter extends ZuulFilter {
     @Autowired
     private AuthClient authClient;
 
-    @Override
-    public String filterType() {
-        return "pre";
-    }
-
-    @Override
-    public int filterOrder() {
-        return 1;
-    }
-
+   
    
     private void setFailedRequest(String body, int code) {
         RequestContext ctx = RequestContext.getCurrentContext();
@@ -45,5 +36,19 @@ public class AuthFilter extends ZuulFilter {
 		return null;
 	}
 
+
+
+	@Override
+	public String filterType() {
+		// TODO Auto-generated method stub
+		return "pre";
+	}
+
+
+
+	@Override
+	public int filterOrder() {
+		return 1;
+	}
 
 }
