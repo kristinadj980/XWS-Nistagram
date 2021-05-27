@@ -1,6 +1,6 @@
 version: "3.8"
-services:
 
+services:
   media-microservice:
     image: media-microservice
     container_name: media-microservice
@@ -16,9 +16,102 @@ services:
       DATABASE_USERNAME: root
       DATABASE_PASSWORD: bazabaza
       DATABASE_DOMAIN: mysql
-      DATABASE_SCHEMA: nistagram
+      DATABASE_SCHEMA: mediaMicroservice
     depends_on:
       - mysql
+      - eureka
+   
+  profileMicroservice:
+    image: profileMicroservice
+    container_name: profileMicroservice
+    build:
+      context: ./profileMicroservice
+      dockerfile: Dockerfile
+    tty: true
+    networks:
+      - demo
+    ports:
+      - "8087:8087"
+    environment:
+      DATABASE_USERNAME: root
+      DATABASE_PASSWORD: bazabaza
+      DATABASE_DOMAIN: mysql
+      DATABASE_SCHEMA: profileMicroservice
+    depends_on:
+      - mysql
+      - eureka
+      
+  searchMicroservice:
+    image: searchMicroservice
+    container_name: searchMicroservice
+    build:
+      context: ./searchMicroservice
+      dockerfile: Dockerfile
+    tty: true
+    networks:
+      - demo
+    ports:
+      - "8088:8088"
+    environment:
+      DATABASE_USERNAME: root
+      DATABASE_PASSWORD: bazabaza
+      DATABASE_DOMAIN: mysql
+      DATABASE_SCHEMA: searchMicroservice
+    depends_on:
+      - mysql 
+      - eureka  
+      
+  security-microservice:
+    image: security-microservice
+    container_name: security-microservice
+    build:
+      context: ./security-microservice
+      dockerfile: Dockerfile
+    tty: true
+    networks:
+      - demo
+    ports:
+      - "8090:8090"
+    environment:
+      DATABASE_USERNAME: root
+      DATABASE_PASSWORD: bazabaza
+      DATABASE_DOMAIN: mysql
+      DATABASE_SCHEMA: securityMicroservice
+    depends_on:
+      - mysql      
+      - eureka  
+   
+  zuul:    
+    image: zuul
+    container_name: zuul
+    build: ./zuul
+    environment:
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka:8761/eureka/
+    tty: true
+    networks:
+      - demo
+    ports:
+      - "8083:8083"
+    depends_on:
+      - eureka
+      - media-microservice
+      - profileMicroservice
+      - searchMicroservice
+      - security-microservice
+      
+      
+  eureka:
+    image: eureka
+    container_name: eureka
+    build:
+      context: ./eureka
+      dockerfile: Dockerfile
+    tty: true
+    networks:
+      - demo
+    ports:
+      - "8761:8761"
+ 
       
   mysql:
     image: mysql:8.0.19
