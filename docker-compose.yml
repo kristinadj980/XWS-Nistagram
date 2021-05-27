@@ -47,7 +47,7 @@ services:
     image: search-microservice
     container_name: search-microservice
     build:
-      context: ./searchMicroservice
+      context: ./search-microservice
       dockerfile: Dockerfile
     tty: true
     networks:
