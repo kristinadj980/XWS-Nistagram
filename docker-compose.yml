@@ -16,11 +16,9 @@ services:
       DATABASE_USERNAME: root
       DATABASE_PASSWORD: bazabaza
       DATABASE_DOMAIN: mysql
-      DATABASE_SCHEMA: mediaMicroservice
-      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka:8761/eureka/
+      DATABASE_SCHEMA: mediaMicroservice?createDatabaseIfNotExist=true&serverTimezone=UTC
     depends_on:
       - mysql
-      - eureka
    
   profile-microservice:
     image: profile-microservice
@@ -29,6 +27,7 @@ services:
       context: ./profileMicroservice
       dockerfile: Dockerfile
     tty: true
+    restart: on-failure
     networks:
       - demo
     ports:
@@ -37,11 +36,9 @@ services:
       DATABASE_USERNAME: root
       DATABASE_PASSWORD: bazabaza
       DATABASE_DOMAIN: mysql
-      DATABASE_SCHEMA: profileMicroservice
-      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka:8761/eureka/
+      DATABASE_SCHEMA: profileMicroservice?createDatabaseIfNotExist=true&serverTimezone=UTC
     depends_on:
       - mysql
-      - eureka
       
   search-microservice:
     image: search-microservice
@@ -58,11 +55,9 @@ services:
       DATABASE_USERNAME: root
       DATABASE_PASSWORD: bazabaza
       DATABASE_DOMAIN: mysql
-      DATABASE_SCHEMA: searchMicroservice
-      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka:8761/eureka/
+      DATABASE_SCHEMA: searchMicroservice?createDatabaseIfNotExist=true&serverTimezone=UTC
     depends_on:
-      - mysql 
-      - eureka  
+      - mysql
       
   security-microservice:
     image: security-microservice
@@ -79,43 +74,9 @@ services:
       DATABASE_USERNAME: root
       DATABASE_PASSWORD: bazabaza
       DATABASE_DOMAIN: mysql
-      DATABASE_SCHEMA: securityMicroservice
-      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka:8761/eureka/
+      DATABASE_SCHEMA: securityMicroservice?createDatabaseIfNotExist=true&serverTimezone=UTC
     depends_on:
-      - mysql      
-      - eureka  
-   
-  zuul:    
-    image: zuul
-    container_name: zuul
-    build: ./zuul
-    environment:
-      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka:8761/eureka/
-    tty: true
-    networks:
-      - demo
-    ports:
-      - "8083:8083"
-    depends_on:
-      - eureka
-      - media-microservice
-      - profile-microservice
-      - search-microservice
-      - security-microservice
-      
-      
-  eureka:
-    image: eureka
-    container_name: eureka
-    build:
-      context: ./eureka
-      dockerfile: Dockerfile
-    tty: true
-    networks:
-      - demo
-    ports:
-      - "8761:8761"
- 
+      - mysql 
       
   mysql:
     image: mysql:8.0.19

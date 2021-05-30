@@ -8,9 +8,9 @@ import java.util.List;
 @Entity
 public class Post{
 
-	    @Id
-		@GeneratedValue(strategy = GenerationType.IDENTITY)
-		private Long id;
+	   @Id
+	   @GeneratedValue(strategy = GenerationType.IDENTITY)
+	   private Long id;
 
 	   @Column(name = "description", nullable = false)
 	   private String description;
@@ -27,8 +27,11 @@ public class Post{
 	   inverseJoinColumns = @JoinColumn(name = "dislikes_id", referencedColumnName = "id"))
 	   private List<Profile> dislikes;
 
-	   @Column(name = "comment", nullable = false)
-	   private String comment;
+	   @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+		@JoinTable(name = "post_comments",
+		joinColumns = @JoinColumn(name = "post_id", referencedColumnName = "id"),
+		inverseJoinColumns = @JoinColumn(name = "comment_id", referencedColumnName = "id"))
+		private List<Comment> comments;
 
 	   @Column(name = "date", nullable = false)
 	   private LocalDate date;
@@ -39,25 +42,36 @@ public class Post{
 	   inverseJoinColumns = @JoinColumn(name = "media_id", referencedColumnName = "id"))
 	   public List<Media> medias;
 
-	   @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	   public Location location;
+	   @ManyToOne
+	    @JoinColumn(name="location_id")
+		public Location location;
 
-	   @ManyToMany(mappedBy = "posts")
-	   public List<Tag> tags;
+	   @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+		@JoinTable(name = "post_tags",
+		joinColumns = @JoinColumn(name = "post_id", referencedColumnName = "id"),
+		inverseJoinColumns = @JoinColumn(name = "tag_id", referencedColumnName = "id"))
+		public List<Tag> tags;
 	   
-	   public Post(Long id,String description, List<Profile> likes, List<Profile> dislikes, String comment, LocalDate date,
-			List<Media> medias, Location location, List<Tag> tags) {
-			super();
-			this.id=id;
-			this.description = description;
-			this.likes = likes;
-			this.dislikes = dislikes;
-			this.comment = comment;
-			this.date = date;
-			this.medias = medias;
-			this.location = location;
-			this.tags = tags;
+	
+	public Post() {
+		super();
 	}
+
+	
+	public Post(Long id, String description, List<Profile> likes, List<Profile> dislikes, List<Comment> comments,
+			LocalDate date, List<Media> medias, Location location, List<Tag> tags) {
+		super();
+		this.id = id;
+		this.description = description;
+		this.likes = likes;
+		this.dislikes = dislikes;
+		this.comments = comments;
+		this.date = date;
+		this.medias = medias;
+		this.location = location;
+		this.tags = tags;
+	}
+
 
 	public Long getId() {
 		return id;
@@ -91,13 +105,56 @@ public class Post{
 		this.dislikes = dislike;
 	}
 
-	public String getComment() {
-		return comment;
+	
+	public List<Profile> getLikes() {
+		return likes;
 	}
 
-	public void setComment(String comment) {
-		this.comment = comment;
+
+	public void setLikes(List<Profile> likes) {
+		this.likes = likes;
 	}
+
+
+	public List<Profile> getDislikes() {
+		return dislikes;
+	}
+
+
+	public void setDislikes(List<Profile> dislikes) {
+		this.dislikes = dislikes;
+	}
+
+
+	public List<Comment> getComments() {
+		return comments;
+	}
+
+
+	public void setComments(List<Comment> comments) {
+		this.comments = comments;
+	}
+
+
+	public List<Media> getMedias() {
+		return medias;
+	}
+
+
+	public void setMedias(List<Media> medias) {
+		this.medias = medias;
+	}
+
+
+	public List<Tag> getTags() {
+		return tags;
+	}
+
+
+	public void setTags(List<Tag> tags) {
+		this.tags = tags;
+	}
+
 
 	public LocalDate getDate() {
 		return date;

@@ -7,5 +7,5 @@ RUN mvn package -DskipTests
 FROM openjdk:8-jdk-alpine AS appRuntime
 WORKDIR /app
 COPY --from=appBuild /usr/src/search-microservice/target/search-microservice-0.0.1-SNAPSHOT.jar ./
-EXPOSE 8080
+EXPOSE 8088
 CMD java -jar search-microservice-0.0.1-SNAPSHOT.jar

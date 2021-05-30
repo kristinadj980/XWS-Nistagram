@@ -16,28 +16,33 @@ public class InappropriateContent {
 	   @Column(name = "status", nullable = false)
 	   private RequestStatus status;
 
-	   @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-	   @JoinTable(name = "inappropriateContent_post",
-	    joinColumns = @JoinColumn(name = "inappropriateContent_id", referencedColumnName = "id"),
-	    inverseJoinColumns = @JoinColumn(name = "post_id", referencedColumnName = "id"))
-	   public List<Post> post;
+	   @OneToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+	   @JoinColumn(name = "post_id", referencedColumnName = "id")
+	   public Post post;
 
-	   @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-	   @JoinTable(name = "inappropriateContent_story",
-	    joinColumns = @JoinColumn(name = "inappropriateContent_id", referencedColumnName = "id"),
-	    inverseJoinColumns = @JoinColumn(name = "story_id", referencedColumnName = "id"))
-	   public List<Story> story;
-	   
-	   public InappropriateContent(String description, RequestStatus status, List<Post> post, List<Story> story) {
-			super();
-			this.description = description;
-			this.status = status;
-			this.post = post;
-			this.story = story;
-		}
+	   @OneToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+	   @JoinColumn(name = "story_id", referencedColumnName = "id")
+	   public Story story;
 
 	public InappropriateContent() {
+		super();
+	}
 
+	public InappropriateContent(Long id, String description, RequestStatus status, Post post, Story story) {
+		super();
+		this.id = id;
+		this.description = description;
+		this.status = status;
+		this.post = post;
+		this.story = story;
+	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
 	}
 
 	public String getDescription() {
@@ -56,22 +61,20 @@ public class InappropriateContent {
 		this.status = status;
 	}
 
-	public List<Post> getPost() {
+	public Post getPost() {
 		return post;
 	}
 
-	public void setPost(List<Post> post) {
+	public void setPost(Post post) {
 		this.post = post;
 	}
 
-	public List<Story> getStory() {
+	public Story getStory() {
 		return story;
 	}
 
-	public void setStory(List<Story> story) {
+	public void setStory(Story story) {
 		this.story = story;
 	}
-	   
-	   
 	   
 }

@@ -6,42 +6,36 @@ import java.util.List;
 @Entity
 public class Tag {
 
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 
-	  @Id
-	  @GeneratedValue(strategy = GenerationType.IDENTITY)
-	  private Long tag_id;
+	@Column(name = "name",nullable = false)
+	private String name;
 
-	  @Column(name = "name",nullable = false)
-	  private String name;
-
-	@ManyToMany(cascade = { CascadeType.ALL })
-	@JoinTable(
-			name = "tag_posts",
-			joinColumns = { @JoinColumn(name = "tag_id") },
-			inverseJoinColumns = { @JoinColumn(name = "id") }
-	)
+	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@JoinTable(name = "tag_posts",
+	joinColumns = @JoinColumn(name = "tag_id", referencedColumnName = "id"),
+	inverseJoinColumns = @JoinColumn(name = "post_id", referencedColumnName = "id"))
 	public List<Post> posts;
 
 
-	@ManyToMany(cascade = { CascadeType.ALL })
-	@JoinTable(
-			name = "tag_stories",
-			joinColumns = { @JoinColumn(name = "tag_id") },
-			inverseJoinColumns = { @JoinColumn(name = "id") }
-	)
+	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@JoinTable(name = "tag_posts",
+	joinColumns = @JoinColumn(name = "tag_id", referencedColumnName = "id"),
+	inverseJoinColumns = @JoinColumn(name = "story_id", referencedColumnName = "id"))
 	public List<Story> stories;
 	   
-	   
-	   
-	   public Tag(String name, List<Post> post, List<Story> story) {
-			super();
-			this.name = name;
-			this.posts = post;
-			this.stories = story;
-	}
 
 	public Tag() {
 
+	}   
+	   
+	public Tag(String name, List<Post> post, List<Story> story) {
+		super();
+		this.name = name;
+		this.posts = post;
+		this.stories = story;
 	}
 
 	public String getName() {
@@ -77,6 +71,5 @@ public class Tag {
 	public void setStory(List<Story> story) {
 		this.stories = story;
 	}
-	   
 	   
 }
