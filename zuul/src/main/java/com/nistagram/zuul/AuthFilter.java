@@ -1,11 +1,15 @@
 package com.nistagram.zuul;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.netflix.zuul.ZuulFilter;
 import com.netflix.zuul.context.RequestContext;
 import com.netflix.zuul.exception.ZuulException;
+
+import feign.FeignException;
 
 @Component
 public class AuthFilter extends ZuulFilter {
@@ -14,7 +18,21 @@ public class AuthFilter extends ZuulFilter {
     private AuthClient authClient;
 
    
-   
+    @Override
+    public String filterType() {
+        return "pre";
+    }
+
+    @Override
+    public int filterOrder() {
+        return 1;
+    }
+
+    @Override
+    public boolean shouldFilter() {
+        return true;
+    }
+    
     private void setFailedRequest(String body, int code) {
         RequestContext ctx = RequestContext.getCurrentContext();
         ctx.setResponseStatusCode(code);
@@ -23,32 +41,30 @@ public class AuthFilter extends ZuulFilter {
             ctx.setSendZuulResponse(false);
         }
     }
-
     
+    @Override
+    public Object run() {  //izmeniti
 
-	public boolean shouldFilter() {
-		// TODO Auto-generated method stub
-		return false;
-	}
+        RequestContext ctx = RequestContext.getCurrentContext();
+        HttpServletRequest request = ctx.getRequest();
 
-	public Object run() throws ZuulException {
-		// TODO Auto-generated method stub
-		return null;
-	}
+        if (request.getHeader("email") == null) {
+            return null;
+        };
 
+        String email = request.getHeader("email");
+        try {
+            //authClient.verify(email);
 
+            ctx.addZuulRequestHeader("username", email);
+            ctx.addZuulRequestHeader("role", "ROLE_KORISNIK");
 
-	@Override
-	public String filterType() {
-		// TODO Auto-generated method stub
-		return "pre";
-	}
+        } catch (FeignException.NotFound e) {
+            setFailedRequest("Consumer does not exist!", 403);
+        }
 
-
-
-	@Override
-	public int filterOrder() {
-		return 1;
-	}
+        return null;
+    }
+   
 
 }
