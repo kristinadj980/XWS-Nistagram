@@ -1,13 +1,16 @@
 package com.nistagram.zuul;
 
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.google.common.net.HttpHeaders;
 import com.netflix.zuul.ZuulFilter;
 import com.netflix.zuul.context.RequestContext;
 import com.netflix.zuul.exception.ZuulException;
+import org.apache.commons.codec.binary.Base64;
 
 import feign.FeignException;
 
@@ -45,7 +48,7 @@ public class AuthFilter extends ZuulFilter {
     @Override
     public Object run() {  //izmeniti
 
-        RequestContext ctx = RequestContext.getCurrentContext();
+    	RequestContext ctx = RequestContext.getCurrentContext();
         HttpServletRequest request = ctx.getRequest();
 
         if (request.getHeader("email") == null) {
@@ -61,8 +64,7 @@ public class AuthFilter extends ZuulFilter {
 
         } catch (FeignException.NotFound e) {
             setFailedRequest("Consumer does not exist!", 403);
-        }
-
+        }      
         return null;
     }
    
