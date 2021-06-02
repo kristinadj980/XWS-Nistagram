@@ -10,7 +10,17 @@ services:
       - demo
     ports:
       - "8761:8761"
-
+  
+  
+  frontend:
+    build: ./frontend
+    container_name: frontend
+    restart: on-failure
+    ports:
+      - "8081:8081"
+    networks:
+      - demo
+  
   media-microservice:
     image: media-microservice
     container_name: media-microservice

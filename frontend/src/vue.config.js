@@ -6,9 +6,10 @@ module.exports = {
     "runtimeCompiler": true,
   
     devServer: {
+      port:8081,
       proxy: {
         '^/api': {
-          target: 'http://localhost:8083',
+          target: 'http://localhost:8081',
           ws: true,
          
           changeOrigin: true

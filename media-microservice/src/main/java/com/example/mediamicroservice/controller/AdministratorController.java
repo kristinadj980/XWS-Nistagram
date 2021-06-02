@@ -12,14 +12,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 
 @RestController
-@RequestMapping(value = "/api/hello", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/hello", produces = MediaType.APPLICATION_JSON_VALUE)
 public class AdministratorController {
 	
 	@GetMapping("/hello")
-    ResponseEntity<String> getMyAccount()
+    public String  getMyAccount()
     {
-        
-        System.out.println("ghj");
-        return (ResponseEntity<String>) ResponseEntity.ok();
+        String ssd="mrs";
+        System.out.println("AAAAAAAAAAAA");
+        return ssd;
     }
 }

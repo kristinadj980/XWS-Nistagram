@@ -9,7 +9,6 @@ import org.springframework.context.annotation.Bean;
 
 @SpringBootApplication
 @EnableEurekaClient
-@EnableFeignClients
 @EnableZuulProxy
 public class ZuulApplication {
 
@@ -17,8 +16,8 @@ public class ZuulApplication {
 		SpringApplication.run(ZuulApplication.class, args);
 	}
 
-	@Bean
+	/*@Bean
 	public AuthFilter authenticationFilter() {
 		return new AuthFilter();
-	}
+	}*/
 }
