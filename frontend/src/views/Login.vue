@@ -7,7 +7,7 @@
             <h3>Sign In</h3>
 
             <div class="form-group">
-                <label style="color:white">Email address</label>
+                <label style="color:white">Username</label>
                 <input type="email" class="form-control form-control-lg" required />
                 <label style="color:white">Password</label>
                 <input type="password" class="form-control form-control-lg" required />
@@ -37,7 +37,7 @@ export default {
        
   loginUser : function() {
            
-            this.axios.get('http://localhost:8083/mediaMicroservice/hello/hello').then(response => {
+            this.axios.post('http://localhost:8083/profileMicroservice/api/auth/login').then(response => {
                     alert("ok.");
                     
                     console.log(response); 

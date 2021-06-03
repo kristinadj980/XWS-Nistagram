@@ -11,6 +11,7 @@ import com.nistagram.profileMicroservice.service.IProfileService;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -66,5 +67,12 @@ public class ProfileService implements IProfileService {
         }
         
         return profile;
+	}
+
+	
+	@Override
+	public Profile findById(Long id) {
+		return profileRepository.findById(id).orElseGet(null);
+		
 	}
 }
