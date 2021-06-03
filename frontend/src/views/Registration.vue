@@ -74,110 +74,16 @@ export default {
             city:'',
             country:'',
             phone:'',
+            birthDate: '',
         }
 
     },
     methods:{
-       validEmail: function (email) {
-       var re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-       return re.test(email);
-       },
-       validPhone: function (phone) {
-        var res = /^\d{10}$/;
-        return res.test(phone);
-       },
-       validLettersName: function (name) {
-        var res = /^[a-zA-Z]+$/;
-        return res.test(name);
-       },
-       validLettersSurname: function (surname) {
-        var res = /^[a-zA-Z]+$/;
-        return res.test(surname);
-       },
-       validLettersCountry: function (country) {
-        var res = /^[a-zA-Z]+$/;
-        return res.test(country);
-       },
-       validLettersCity: function (city) {
-        var res = /^[a-zA-Z]+(\s[a-zA-Z]+)?$/;
-        return res.test(city);
-       },
-       validLettersStreet: function (street) {
-        var res = /^[a-zA-Z]+(\s[a-zA-Z]+)?$/;
-        return res.test(street);
-       },
          registerUser: function(){
-              const addressInfo ={
-               street: this.street,
-               number: this.streetNumber,
-               town: this.city,
-               country: this.country
-          }
-            const userInfo ={
-                email : this.email,
-                password : this.password,
-                confirmPassword : this.passwordConf,
-                name : this.name,
-                surname : this.surname,
-                phoneNumber : this.phone,
-                address : addressInfo
-            }
-            let token = localStorage.getItem('token').substring(1, localStorage.getItem('token').length-1);
-            if(!this.validLettersName(this.name)){
-                alert("Please enter valid name!")
-                return;
-            }
-            if(!this.validLettersSurname(this.surname)){
-                alert("Please enter valid surname!")
-                return;
-            }
-            if (this.email == "") {
-             alert("Please enter email!")
-             return;
-            }
-            if (!this.validEmail(this.email)) {
-             alert("Please enter valid email!")
-             return;
-            }
-             if(!this.validPhone(this.phone)){
-                alert("Please enter valid phone number (10 digits)!")
-                return;
-            }
-             if(!this.validLettersCountry(this.country)){
-                alert("Please enter valid conutry!")
-                return;
-            }
-             if(!this.validLettersCity(this.city)){
-                alert("Please enter valid city!")
-                return;
-            }
-            if(!this.validLettersStreet(this.street)){
-                alert("Please enter valid street!")
-                return;
-            }
-            if(this.streetNumber == ""){
-                alert("Please enter streetNumber!")
-                return;
-            }
-            if(this.streetNumber < 0){
-                alert("Please enter valid streetNumber!")
-                return;
-            }
-             if(this.password != this.passwordConf) {
-            alert("Passwords must be equal!")
-            return;
-            }
-            if(this.password == ""){
-                alert("Please enter password!")
-                return;
-            }
-            alert("OK?");
-            this.axios.post('/profileMicroservice/api/auth/register',userInfo,{ 
-                         headers: {
-                                'Authorization': 'Bearer ' + token,
-                        }})
+           
+            this.axios.get('http://localhost:8083/mediaMicroservice/hello/hello')
                 .then(response => {
-                       alert("Please check your email for validation link, so you could login!");
+                       alert(response.data);
                         this.$router.push('/login') 
                         console.log(response.data);
                 })

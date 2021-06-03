@@ -11,7 +11,7 @@ Vue.use(VueRouter)
 Vue.prototype.$axios = axios;
 Vue.config.productionTip = false
 
-const baseURL = 'http://localhost:8081/api';
+const baseURL = 'http://localhost:8080';
 if (typeof baseURL !== 'undefined') {
   Vue.axios.defaults.baseURL = baseURL;
 }

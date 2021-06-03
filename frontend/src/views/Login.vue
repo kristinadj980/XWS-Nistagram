@@ -37,12 +37,7 @@ export default {
        
   loginUser : function() {
            
-            
-            let token = localStorage.getItem('token').substring(1, localStorage.getItem('token').length-1);
-            this.axios.get('/mediaMicroservice/hello/hello',{ 
-                         headers: {
-                                'Authorization': 'Bearer ' + token,
-                }}).then(response => {
+            this.axios.get('http://localhost:8083/mediaMicroservice/hello/hello').then(response => {
                     alert("ok.");
                     
                     console.log(response); 
