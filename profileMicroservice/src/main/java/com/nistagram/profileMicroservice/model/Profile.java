@@ -92,11 +92,31 @@ public class Profile extends Person{
 		this.verificationRequest = verificationRequest;
 	}
 
+	
+
+	
+
+
 	public Profile(Long id, String username, String name, String surname, String email, String password,
-			String phoneNumber, String role, LocalDate birthDate, Gender gender) {
-		super(id, username, name, surname, email, password, phoneNumber, role, birthDate, gender);
+			String phoneNumber, String role, LocalDate birthDate, Gender gender, List<Authority> authorities,
+			boolean enabled) {
+		super(id, username, name, surname, email, password, phoneNumber, role, birthDate, gender, authorities, enabled);
 		// TODO Auto-generated constructor stub
+		this.profileStatus = profileStatus;
+		this.closeFriends = closeFriends;
+		this.website = website;
+		this.biography = biography;
+		this.notifications = notifications;
+		this.followers = followers;
+		this.mutedFriends = mutedFriends;
+		this.blockedUsers = blockedUsers;
+		this.friendRequests = friendRequests;
+		this.agentRequestStatus = agentRequestStatus;
+		this.allowedTags = allowedTags;
+		this.allowedMessages = allowedMessages;
+		this.verificationRequest = verificationRequest;
 	}
+
 
 	public List<Notification> getNotifications() {
 		return notifications;

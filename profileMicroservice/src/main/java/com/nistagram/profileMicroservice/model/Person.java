@@ -50,12 +50,23 @@ public class Person implements UserDetails{
 	@Enumerated(EnumType.ORDINAL)
 	private Gender gender;
 	
+	@ManyToMany(fetch = FetchType.EAGER,cascade = CascadeType.REFRESH)
+    @JoinTable(name = "user_authority",
+            joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "authority_id", referencedColumnName = "id"))
+    private List<Authority> authorities;
+	
+	@Column(name = "enabled")
+	private boolean enabled;
+	
 	public Person() {
 		super();
 	}
 
+
 	public Person(Long id, String username, String name, String surname, String email, String password,
-			String phoneNumber, String role, LocalDate birthDate, Gender gender) {
+			String phoneNumber, String role, LocalDate birthDate, Gender gender, List<Authority> authorities,
+			boolean enabled) {
 		super();
 		this.id = id;
 		this.username = username;
@@ -67,7 +78,10 @@ public class Person implements UserDetails{
 		this.role = role;
 		this.birthDate = birthDate;
 		this.gender = gender;
+		this.authorities = authorities;
+		this.enabled = enabled;
 	}
+
 
 	public String getUsername() {
 		return username;
@@ -170,6 +184,10 @@ public class Person implements UserDetails{
 		// TODO Auto-generated method stub
 		return false;
 	}
+	
+	public void setEnabled(boolean enabled) {
+		this.enabled = enabled;
+	}
 
 
 	public Long getId() {
@@ -181,5 +199,9 @@ public class Person implements UserDetails{
 		this.id = id;
 	}
 
-
+	public void setAuthorities(List<Authority> authorities) {
+		this.authorities = authorities;
+	}
+	
+	
 }
