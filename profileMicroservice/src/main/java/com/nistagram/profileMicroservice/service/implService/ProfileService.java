@@ -59,6 +59,12 @@ public class ProfileService implements IProfileService {
         }
         profile.setAuthorities(auth);
         profile.setEnabled(false);
-        return profileRepository.save(profile);
+        try {
+        	profileRepository.save(profile);
+        }catch(Exception e) {
+        	System.out.println(e.getMessage());
+        }
+        
+        return profile;
 	}
 }

@@ -75,15 +75,28 @@ export default {
             country:'',
             phone:'',
             birthDate: '',
+            gender: 'male',
+            username: '',
         }
 
     },
     methods:{
          registerUser: function(){
            
-            this.axios.get('http://localhost:8083/mediaMicroservice/hello/hello')
+            const userInfo ={
+                email : this.email,
+                password : this.password,
+                confirmPassword : this.passwordConf,
+                username : this.username,
+                name : this.name,
+                surname : this.surname,
+                phoneNumber : this.phone,
+                birthDate :this.birthDate,
+                gender : this.gender,
+            }
+            this.axios.post('http://localhost:8083/profileMicroservice/api/auth/register',userInfo)
                 .then(response => {
-                       alert(response.data);
+                       alert("Please check your email for validation link, so you could login!");
                         this.$router.push('/login') 
                         console.log(response.data);
                 })

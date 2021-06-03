@@ -25,10 +25,10 @@ public class Profile extends Person{
 	inverseJoinColumns = @JoinColumn(name = "closeFriends_id", referencedColumnName = "id"))
 	private List<Profile> closeFriends;  
 
-	@Column(name = "website", nullable = false)  
+	@Column(name = "website")  
 	private String website;
 
-	@Column(name = "biography", nullable = false)  
+	@Column(name = "biography")  
 	private String biography;
 
 	@OneToMany(mappedBy = "profile", fetch = FetchType.LAZY, cascade = CascadeType.ALL)

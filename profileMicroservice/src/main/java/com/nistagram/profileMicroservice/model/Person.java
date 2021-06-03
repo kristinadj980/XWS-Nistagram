@@ -41,7 +41,7 @@ public class Person implements UserDetails{
 	@Column(name = "phoneNumber", nullable = false)
 	private String phoneNumber;
 
-	@Column(name = "role", nullable = false)
+	@Column(name = "role")
 	private String role;
 
 	@Column(name = "birthDate", nullable = false)

@@ -31,7 +31,7 @@ public class JwtTokenAuthenticationFilter extends OncePerRequestFilter {
 		
 		// TODO Auto-generated method stub
 		
-String header = request.getHeader(jwtConfig.getHeader());
+		String header = request.getHeader(jwtConfig.getHeader());
 		
 		if(header == null || !header.startsWith(jwtConfig.getPrefix())) {
 			chain.doFilter(request, response);

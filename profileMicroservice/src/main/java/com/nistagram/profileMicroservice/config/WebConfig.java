@@ -9,8 +9,14 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @EnableWebMvc
 public class WebConfig  implements WebMvcConfigurer{
 	// Za svrhe razvoja konfigurisemo dozvolu za CORS kako ne bismo morali @CrossOrigin anotaciju da koristimo nad svakim kontrolerom
-    @Override
-    public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/**").allowedOrigins("http://localhost:8081","http://localhost:8080","http://localhost:8083");
-    }
+	 @Override
+	    public void addCorsMappings(CorsRegistry corsRegistry) {
+	        corsRegistry.addMapping("/**")
+	                .allowedOrigins("http://localhost:8081")
+	                .allowedMethods("*")
+	                .maxAge(3600L)
+	                .allowedHeaders("*")
+	                .exposedHeaders("Authorization")
+	                .allowCredentials(true);
+	    }
 }
