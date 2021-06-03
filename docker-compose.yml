@@ -17,7 +17,7 @@ services:
     container_name: frontend
     restart: on-failure
     ports:
-      - "8081:8081"
+      - "8081:8080"
     networks:
       - demo
   
@@ -87,27 +87,6 @@ services:
       - eureka-serviceregistry
       - mysql
       
-  security-microservice:
-    image: security-microservice
-    container_name: security-microservice
-    build:
-      context: ./security-microservice
-      dockerfile: Dockerfile
-    tty: true
-    restart: on-failure
-    networks:
-      - demo
-    ports:
-      - "8090:8090"
-    environment:
-      DATABASE_USERNAME: root
-      DATABASE_PASSWORD: bazabaza
-      DATABASE_DOMAIN: mysql
-      DATABASE_SCHEMA: securityMicroservice?createDatabaseIfNotExist=true&serverTimezone=UTC
-      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-serviceregistry:8761/eureka/
-    depends_on:
-      - eureka-serviceregistry
-      - mysql 
     
   zuul:
     image: zuul
@@ -125,7 +104,6 @@ services:
       - profile-microservice
       - media-microservice
       - search-microservice
-      - security-microservice
       
   mysql:
     image: mysql:8.0.19
