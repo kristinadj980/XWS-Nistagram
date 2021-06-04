@@ -8,19 +8,19 @@
 
             <div class="form-group">
                 <label style="color:white">Username</label>
-                <input type="email" class="form-control form-control-lg" required />
+                <input type="username" class="form-control form-control-lg" v-model="username" required />
                 <label style="color:white">Password</label>
-                <input type="password" class="form-control form-control-lg" required />
+                <input type="password" class="form-control form-control-lg" required v-model="password"/>
             </div>
 
             
             <button style="color:white" type="submit" class="button" v-on:click = "loginUser">Sign In</button>
 
-            
+           
 
        
     </div>
-  
+   
 </div>   
 </template>
 
@@ -29,24 +29,56 @@ export default {
     name: 'Login',
      data() {
     return {
-       promotions :[],
+       password:'',
+       username:'',
+       authority:""
      
     }
   },
   methods:{
        
   loginUser : function() {
-           
-            this.axios.post('http://localhost:8083/profileMicroservice/api/auth/login').then(response => {
-                    alert("ok.");
+  const loginInfo ={
+                username : this.username,
+                password : this.password,
+            }
+            localStorage.removeItem('token');
+
+            this.axios.post('http://localhost:8083/profileMicroservice/api/auth/login',loginInfo)
+                .then(response => {
+                    localStorage.setItem('token', JSON.stringify(response.data.accessToken));
+                    console.log("aaaaaaaaaaaa");
+                    console.log(response.data.token);
+                     console.log("aaaaaaaaaaaa");
                     
-                    console.log(response); 
-                }).catch(res => {
-                       alert("Please try later.");
-                        console.log(res);
-                });
-      },
-       
+                    let token = localStorage.getItem('token').substring(1, localStorage.getItem('token').length-1);
+                    this.axios.get('http://localhost:8083/profileMicroservice/api/auth/authority',{  
+                         headers: {
+                                'Authorization': 'Bearer ' + token,
+                        }
+                    }).then(response => {
+                        
+                            this.authority = response.data.authorities[0].authority;
+                            alert("OK?")
+                            if(this.authority==="ROLE_REGISTRED_USER") {
+                                  //  window.location.href = '/userProfile';
+                                }
+                        
+                           
+                            else alert("Error has occured."); 
+
+                    }).catch(res => {
+                                alert("NOT OK");
+                                 
+                                    console.log(res);
+                            });
+
+                            })
+                .catch(response => {
+                       alert("Please enter valid data!");
+                        console.log(response);
+                 });   
+        },  
     
   }
 }

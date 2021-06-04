@@ -33,4 +33,9 @@ public class PersonService implements IPersonService, UserDetailsService {
 			return person;
 		}
 	}
+
+	@Override
+	public Person findById(Long id) {
+		return personRepository.findById(id).orElseGet(null);
+	}
 }

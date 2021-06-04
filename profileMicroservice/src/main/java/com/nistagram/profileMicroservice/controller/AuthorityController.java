@@ -24,6 +24,7 @@ import com.nistagram.profileMicroservice.model.Person;
 import com.nistagram.profileMicroservice.model.Profile;
 import com.nistagram.profileMicroservice.security.TokenUtils;
 import com.nistagram.profileMicroservice.security.auth.JwtAuthenticationRequest;
+import com.nistagram.profileMicroservice.service.implService.PersonService;
 import com.nistagram.profileMicroservice.service.implService.ProfileService;
 
 
@@ -34,12 +35,14 @@ public class AuthorityController {
 	
 	private final TokenUtils tokenUtils;
 	private final ProfileService profileService;
+	private final PersonService personService;
 	private final AuthenticationManager authenticationManager;
 
 	@Autowired
-	public AuthorityController(TokenUtils tokenUtils,ProfileService profileService,AuthenticationManager authenticationManager) {
+	public AuthorityController(TokenUtils tokenUtils,ProfileService profileService,PersonService personService,AuthenticationManager authenticationManager) {
 		this.tokenUtils = tokenUtils;
 		this.profileService = profileService;
+		this.personService= personService;
 		this.authenticationManager=authenticationManager;
 	}
 	
@@ -47,16 +50,21 @@ public class AuthorityController {
 	@PostMapping("/login")
 	public ResponseEntity<UserTokenState> createAuthenticationToken(@RequestBody JwtAuthenticationRequest authenticationRequest,
 			HttpServletResponse response) {
+		System.out.println(authenticationRequest.getUsername());
+		System.out.println(authenticationRequest.getPassword());
+		System.out.println("DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD");
 		Authentication authentication = authenticationManager
 				.authenticate(new UsernamePasswordAuthenticationToken(authenticationRequest.getUsername(),
 						authenticationRequest.getPassword()));  //pokusavamo autentifikaciju
        
+		System.out.println("DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD");
 		// Ubaci korisnika u trenutni security kontekst
 		SecurityContextHolder.getContext().setAuthentication(authentication);
-		
+		System.out.println("LLLLLLLLLLLLLLLLLLLLLLLLLLLLLL");
 		// Kreiraj token za tog korisnika
 		Person person = (Person) authentication.getPrincipal();
 		String jwt = tokenUtils.generateToken(person.getUsername());
+		System.out.println("KKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKK");
 		int expiresIn = tokenUtils.getExpiredIn();
 		// Vrati token kao odgovor na uspesnu autentifikaciju
 		return ResponseEntity.ok(new UserTokenState(jwt, expiresIn));
@@ -68,8 +76,9 @@ public class AuthorityController {
     {
         Authentication currentUser = SecurityContextHolder.getContext().getAuthentication();
         
-        Profile user = (Profile)currentUser.getPrincipal();
-        Profile userWithId = profileService.findById(user.getId());
+        System.out.println(currentUser.getCredentials());
+        Person user = (Person)currentUser.getPrincipal();
+        Person userWithId = personService.findById(user.getId());
 
         return (ResponseEntity<Person>) (userWithId == null ?
                 new ResponseEntity<>(HttpStatus.NOT_FOUND) :
