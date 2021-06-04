@@ -53,27 +53,37 @@ public class AuthorityController {
 		System.out.println(authenticationRequest.getUsername());
 		System.out.println(authenticationRequest.getPassword());
 		System.out.println("DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD");
-		Authentication authentication = authenticationManager
-				.authenticate(new UsernamePasswordAuthenticationToken(authenticationRequest.getUsername(),
-						authenticationRequest.getPassword()));  //pokusavamo autentifikaciju
-       
-		System.out.println("DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD");
+		try {
+			Authentication authentication = authenticationManager
+					.authenticate(new UsernamePasswordAuthenticationToken(authenticationRequest.getUsername(),
+							authenticationRequest.getPassword()));  //pokusavamo autentifikaciju
+	       System.out.println("********************************");
+	       
+	       
+		} catch (Exception e) {
+			// TODO: handle exception
+			System.out.println(e.getMessage());
+		}
+		
+		
 		// Ubaci korisnika u trenutni security kontekst
-		SecurityContextHolder.getContext().setAuthentication(authentication);
+		//SecurityContextHolder.getContext().setAuthentication(authentication);
 		System.out.println("LLLLLLLLLLLLLLLLLLLLLLLLLLLLLL");
 		// Kreiraj token za tog korisnika
-		Person person = (Person) authentication.getPrincipal();
-		String jwt = tokenUtils.generateToken(person.getUsername());
+		//Person person = (Person) authentication.getPrincipal();
+		//String jwt = tokenUtils.generateToken(person.getUsername());
 		System.out.println("KKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKK");
 		int expiresIn = tokenUtils.getExpiredIn();
 		// Vrati token kao odgovor na uspesnu autentifikaciju
+		String jwt = "";
 		return ResponseEntity.ok(new UserTokenState(jwt, expiresIn));
 	}
 	
 	@GetMapping("/authority")
-    //@PreAuthorize("hasAnyRole('ROLE_REGISTRED_USER)")
+	@PreAuthorize("hasRole('REGISTRED_USER')")
     ResponseEntity<Person> getMyAccount()
     {
+		System.out.println("******************");
         Authentication currentUser = SecurityContextHolder.getContext().getAuthentication();
         
         System.out.println(currentUser.getCredentials());

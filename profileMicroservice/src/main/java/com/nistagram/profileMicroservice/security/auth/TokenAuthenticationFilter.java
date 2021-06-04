@@ -29,16 +29,16 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter{
 	public void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
 			throws IOException, ServletException {
 
-		String email;
+		String username;
 		String authToken = tokenUtils.getToken(request);
 
 		if (authToken != null) {
 			// uzmi username iz tokena
-			email = tokenUtils.getEmailFromToken(authToken);
+			username = tokenUtils.getEmailFromToken(authToken);
 			
-			if (email != null) {
+			if (username != null) {
 				// uzmi user-a na osnovu username-a
-				UserDetails userDetails = userDetailsService.loadUserByUsername(email);
+				UserDetails userDetails = userDetailsService.loadUserByUsername(username);
 				
 				// proveri da li je prosledjeni token validan
 				if (tokenUtils.validateToken(authToken, userDetails)) {

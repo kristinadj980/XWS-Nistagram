@@ -33,10 +33,10 @@ public class TokenUtils {
 	
 	private SignatureAlgorithm SIGNATURE_ALGORITHM = SignatureAlgorithm.HS512;
 	
-	public String generateToken(String email) {
+	public String generateToken(String username) {
 		return Jwts.builder()
 				.setIssuer(APP_NAME)
-				.setSubject(email)
+				.setSubject(username)
 				.setAudience(generateAudience())
 				.setIssuedAt(new Date())
 				.setExpiration(generateExpirationDate())
@@ -75,20 +75,20 @@ public boolean canTokenBeRefreshed(String token, Date lastPasswordReset) {
 	
 	// Funkcija za validaciju JWT tokena
 	public Boolean validateToken(String token, UserDetails userDetails) {
-		final String email = getEmailFromToken(token);
+		final String username = getEmailFromToken(token);
 		
-		return (email != null && email.equals(userDetails.getUsername()));
+		return (username != null && username.equals(userDetails.getUsername()));
 	}
 
 	public String getEmailFromToken(String token) {
-		String email;
+		String username;
 		try {
 			final Claims claims = this.getAllClaimsFromToken(token);
-			email = claims.getSubject();
+			username = claims.getSubject();
 		} catch (Exception e) {
-			email = null;
+			username = null;
 		}
-		return email;
+		return username;
 	}
 
 	public Date getIssuedAtDateFromToken(String token) {

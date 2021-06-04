@@ -99,7 +99,10 @@ public class Profile extends Person{
 
 	public Profile(Long id, String username, String name, String surname, String email, String password,
 			String phoneNumber, String role, LocalDate birthDate, Gender gender, List<Authority> authorities,
-			boolean enabled) {
+			boolean enabled,ProfileStatus profileStatus, List<Profile> closeFriends, String website, String biography,
+			List<Notification> notifications, List<Profile> followers, List<Profile> mutedFriends,
+			List<Profile> blockedUsers, List<FriendRequest> friendRequests, RequestStatus agentRequestStatus,
+			Boolean allowedTags, Boolean allowedMessages, VerificationRequest verificationRequest) {
 		super(id, username, name, surname, email, password, phoneNumber, role, birthDate, gender, authorities, enabled);
 		// TODO Auto-generated constructor stub
 		this.profileStatus = profileStatus;
@@ -196,6 +199,12 @@ public class Profile extends Person{
 	
 	public void setAgentRequestStatus(RequestStatus agentRequestStatus) {
 		this.agentRequestStatus = agentRequestStatus;
+	}
+	
+	@Override
+	public String getUsername() {
+		// TODO Auto-generated method stub
+		return this.getUsername();
 	}
 
 }

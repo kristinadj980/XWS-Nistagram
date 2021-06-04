@@ -32,14 +32,14 @@ public class TokenBasedAuthentication extends AbstractAuthenticationToken {
 		return true;
 	}
 
+	@Override
 	public Object getCredentials() {
-		// TODO Auto-generated method stub
-		return null;
+		return token;
 	}
 
-	public Object getPrincipal() {
-		// TODO Auto-generated method stub
-		return null;
+	@Override
+	public UserDetails getPrincipal() {
+		return principle;
 	}
 
 
