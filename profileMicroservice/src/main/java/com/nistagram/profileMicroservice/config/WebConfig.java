@@ -11,12 +11,6 @@ public class WebConfig  implements WebMvcConfigurer{
 	// Za svrhe razvoja konfigurisemo dozvolu za CORS kako ne bismo morali @CrossOrigin anotaciju da koristimo nad svakim kontrolerom
 	 @Override
 	    public void addCorsMappings(CorsRegistry corsRegistry) {
-	        corsRegistry.addMapping("/**")
-	                .allowedOrigins("http://localhost:8081")
-	                .allowedMethods("*")
-	                .maxAge(3600L)
-	                .allowedHeaders("*")
-	                .exposedHeaders("Authorization")
-	                .allowCredentials(true);
+		 corsRegistry.addMapping("/**").allowedOrigins("http://localhost:8081");
 	    }
 }

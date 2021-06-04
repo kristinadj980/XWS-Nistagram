@@ -2,12 +2,15 @@ package com.nistagram.profileMicroservice.model;
 
 import javax.persistence.*;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
 @Entity
 @DiscriminatorValue("Profile")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Profile extends Person{
 
 	@Enumerated(EnumType.ORDINAL)
@@ -201,10 +204,10 @@ public class Profile extends Person{
 		this.agentRequestStatus = agentRequestStatus;
 	}
 	
-	@Override
+	/*@Override
 	public String getUsername() {
 		// TODO Auto-generated method stub
 		return this.getUsername();
-	}
+	}*/
 
 }
