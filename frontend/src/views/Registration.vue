@@ -101,7 +101,9 @@ export default {
                         console.log(response.data);
                 })
                 .catch(response => {
-                    alert(response.response.data.message);
+                    console.log(response.data)
+                    alert("Eror")
+                   // alert(response.response.data.message);
                  });    
       
         }

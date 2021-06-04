@@ -46,57 +46,48 @@ public class AuthorityController {
 		this.authenticationManager=authenticationManager;
 	}
 	
-	// Endpoint za login korisnika
 	@PostMapping("/login")
 	public ResponseEntity<UserTokenState> createAuthenticationToken(@RequestBody JwtAuthenticationRequest authenticationRequest,
 			HttpServletResponse response) {
-		System.out.println(authenticationRequest.getUsername());
-		System.out.println(authenticationRequest.getPassword());
-		System.out.println("DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD");
-		try {
-			Authentication authentication = authenticationManager
-					.authenticate(new UsernamePasswordAuthenticationToken(authenticationRequest.getUsername(),
-							authenticationRequest.getPassword()));  //pokusavamo autentifikaciju
-	       System.out.println("********************************");
-	       
-	       
-		} catch (Exception e) {
-			// TODO: handle exception
-			System.out.println(e.getMessage());
-		}
 		
 		
-		// Ubaci korisnika u trenutni security kontekst
-		//SecurityContextHolder.getContext().setAuthentication(authentication);
-		System.out.println("LLLLLLLLLLLLLLLLLLLLLLLLLLLLLL");
-		// Kreiraj token za tog korisnika
-		//Person person = (Person) authentication.getPrincipal();
-		//String jwt = tokenUtils.generateToken(person.getUsername());
-		System.out.println("KKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKK");
+		Authentication authentication = authenticationManager
+				.authenticate(new UsernamePasswordAuthenticationToken(authenticationRequest.getUsername(),
+						authenticationRequest.getPassword()));
+		SecurityContextHolder.getContext().setAuthentication(authentication);
+	    Person person = (Person) authentication.getPrincipal();
+		String jwt = tokenUtils.generateToken(person.getUsername());
 		int expiresIn = tokenUtils.getExpiredIn();
-		// Vrati token kao odgovor na uspesnu autentifikaciju
-		String jwt = "";
+		
+		
 		return ResponseEntity.ok(new UserTokenState(jwt, expiresIn));
 	}
 	
 	@GetMapping("/authority")
 	@PreAuthorize("hasRole('REGISTRED_USER')")
-    ResponseEntity<Person> getMyAccount()
+    public ResponseEntity<Person> getMyAccount()
     {
-		System.out.println("******************");
-        Authentication currentUser = SecurityContextHolder.getContext().getAuthentication();
-        
-        System.out.println(currentUser.getCredentials());
-        Person user = (Person)currentUser.getPrincipal();
-        Person userWithId = personService.findById(user.getId());
+		Person userWithId = new Person();
+		try {
+			 Authentication currentUser = SecurityContextHolder.getContext().getAuthentication();
+		        
+		        System.out.println(currentUser.getCredentials());
+		        Person user = (Person)currentUser.getPrincipal();
+		        userWithId = personService.findById(user.getId());
 
-        return (ResponseEntity<Person>) (userWithId == null ?
-                new ResponseEntity<>(HttpStatus.NOT_FOUND) :
-                ResponseEntity.ok(userWithId));
+		       
+		} catch (Exception e) {
+			// TODO: handle exception
+			System.out.println("ERRRRROR");
+			System.out.println(e.getStackTrace());
+		}
+		
+		 return (ResponseEntity<Person>) (userWithId == null ?
+	                new ResponseEntity<>(HttpStatus.NOT_FOUND) :
+	                ResponseEntity.ok(userWithId));
+       
     }
 	
-	
-	// Endpoint za registraciju novog korisnika
 		@PostMapping("/register")
 		public ResponseEntity<String> registerUser(@RequestBody PersonRequestDTO userRequest, UriComponentsBuilder ucBuilder) {
 			

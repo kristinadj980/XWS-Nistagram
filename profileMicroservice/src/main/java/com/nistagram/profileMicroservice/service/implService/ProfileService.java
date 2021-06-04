@@ -59,9 +59,10 @@ public class ProfileService implements IProfileService {
             auth.add(authority);
         }
         profile.setAuthorities(auth);
-        profile.setEnabled(false);
+        profile.setEnabled(true);
         try {
         	profileRepository.save(profile);
+        	System.out.println("SACUVAOOOO");
         }catch(Exception e) {
         	System.out.println(e.getMessage());
         }

@@ -36,6 +36,11 @@ public class Authority implements GrantedAuthority, Serializable{
 		super();
 	}
 
+	@Override
+    public String getAuthority() {
+        return name;
+    }
+
     public void setName(String name) {
         this.name = name;
     }
@@ -53,9 +58,4 @@ public class Authority implements GrantedAuthority, Serializable{
     public void setId(Long id) {
         this.id = id;
     }
-
-	public String getAuthority() {
-		// TODO Auto-generated method stub
-		return null;
-	}
 }
