@@ -74,7 +74,7 @@ public class ProfileService implements IProfileService {
 	
 	@Override
 	public Profile findById(Long id) {
-		return profileRepository.findById(id).orElseGet(null);
+		return profileRepository.findById(id).get();
 		
 	}
 

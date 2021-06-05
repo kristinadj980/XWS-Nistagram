@@ -33,6 +33,12 @@ public class EditProfileDTO {
 	
 	
 	
+	
+	
+	public EditProfileDTO() {
+		super();
+	}
+
 	public EditProfileDTO(String username, String name, String surname, String email, String password,
 			String phoneNumber, LocalDate birthDate, Gender gender, String website, String biography,
 			String confirmPassword) {

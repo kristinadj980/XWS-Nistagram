@@ -21,6 +21,7 @@ import com.nistagram.profileMicroservice.model.Gender;
 import com.nistagram.profileMicroservice.model.Person;
 import com.nistagram.profileMicroservice.model.Profile;
 import com.nistagram.profileMicroservice.repository.ProfileRepository;
+import com.nistagram.profileMicroservice.service.implService.PersonService;
 import com.nistagram.profileMicroservice.service.implService.ProfileService;
 
 
@@ -30,31 +31,34 @@ import com.nistagram.profileMicroservice.service.implService.ProfileService;
 public class ProfileController {
 	
 	@Autowired
-	ProfileService profileService;
+	private final ProfileService profileService;
 	
-	@Autowired
-	ProfileRepository profileRepository;
+
 	
-	
-	public ProfileController(ProfileService profileService, ProfileRepository profileRepository) {
+	public ProfileController(ProfileService profileService) {
 		super();
 		this.profileService = profileService;
-		this.profileRepository = profileRepository;
 	}
 
 	@GetMapping("/account")
-	@PreAuthorize("hasRole('ROLE_REGISTRED_USER')")
+	@PreAuthorize("hasRole('REGISTRED_USER')")
 	public ResponseEntity<EditProfileDTO> getMyAccount() {
+		System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
 		Authentication currentUser = SecurityContextHolder.getContext().getAuthentication();
+		System.out.println("BBBBBBBBBBBBBBBBBBBBBBBBBBBBBB");
 		Person person = (Person) currentUser.getPrincipal();
+		System.out.println("CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC");
 		Profile profile = profileService.findById(person.getId());
+		System.out.println("DDDDDDDDDDDDDDDDDDDDDDDDDDDDD");
+		System.out.println(profile.getEmail());
 		EditProfileDTO editProfileDTO = new EditProfileDTO(profile.getUsername(), profile.getName(), profile.getSurname(), profile.getEmail(), profile.getPhoneNumber(),
 				profile.getBirthDate(), profile.getGender(), profile.getWebsite(), profile.getBiography());
+		System.out.println(editProfileDTO.getEmail());
 		return (ResponseEntity<EditProfileDTO>) (profile == null ? new ResponseEntity<>(HttpStatus.NOT_FOUND) : ResponseEntity.ok(editProfileDTO));
 	}
 
 	@PostMapping("/update")
-	@PreAuthorize("hasRole('ROLE_REGISTRED_USER')")
+	@PreAuthorize("hasRole('REGISTRED_USER')")
 	public ResponseEntity<String> updateProfileInfo(@RequestBody EditProfileDTO editProfileDTO) {
 		try {
 			profileService.update(editProfileDTO);
