@@ -93,4 +93,13 @@ public class ProfileService implements IProfileService {
 
 	    profileRepository.save(profile);
 	}
+
+	@Override
+	public void updatePassword(EditProfileDTO editProfileDTO) {
+		Profile profile = (Profile) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		profile.setPassword(passwordEncoder.encode(editProfileDTO.getConfirmPassword()));
+		
+		profileRepository.save(profile);
+		
+	}
 }

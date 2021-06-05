@@ -25,6 +25,8 @@ import com.nistagram.profileMicroservice.service.implService.PersonService;
 import com.nistagram.profileMicroservice.service.implService.ProfileService;
 
 
+
+
 @RestController
 @RequestMapping(value = "/api/profile", produces = MediaType.APPLICATION_JSON_VALUE)
 @CrossOrigin(origins = "*", allowedHeaders = "*")
@@ -63,6 +65,17 @@ public class ProfileController {
 		try {
 			profileService.update(editProfileDTO);
 			return new ResponseEntity<>("Profile successfully updated!", HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<>("Something went wrong!", HttpStatus.BAD_REQUEST);
+		}
+	}
+	
+	@PostMapping("/updatePassword")
+	@PreAuthorize("hasRole('REGISTRED_USER')")
+	public ResponseEntity<String> updatePassword(@RequestBody EditProfileDTO editProfileDTO) {
+		try {
+			profileService.updatePassword(editProfileDTO);
+			return new ResponseEntity<>("Password successfully updated!", HttpStatus.OK);
 		} catch (Exception e) {
 			return new ResponseEntity<>("Something went wrong!", HttpStatus.BAD_REQUEST);
 		}

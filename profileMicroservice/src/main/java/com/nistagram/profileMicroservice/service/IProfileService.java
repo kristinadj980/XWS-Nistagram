@@ -12,4 +12,5 @@ public interface IProfileService {
 	Profile save(PersonRequestDTO userRequest);
 	Profile findById(Long id);
 	void update(EditProfileDTO editProfileDTO);
+	void updatePassword(EditProfileDTO editProfileDTO);
 }
