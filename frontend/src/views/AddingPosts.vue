@@ -1,5 +1,5 @@
 <template>
-    <div id="profile">
+    <div id="addingPosts">
         <div class="homepage_style ">
            <span style="float: left; margin: 15px;">
                 <img class="image_style space_style" title="Nistagram" style="width: 50px; height: 50px; margin-right:10px;"
@@ -22,17 +22,24 @@
                 </span>
         </div>
         <b-card class="content_surface">
-
+            <form th:action="@{/users/save}"
+            th:object="${user}" method="post"
+            enctype="multipart/form-data"
+            >
+            <label>Photos: </label>
+            <input type="file" name="image" accept="image/png, image/jpeg" id="file" ref="file" v-on:change="handleFileUpload()">
+            </form>
+            <b-button variant="outline-danger"  v-on:click = "saveMedia"><b-icon icon="plus-circle" aria-hidden="true"></b-icon> Share post</b-button>
         </b-card>
     </div>
 </template>
 
 <script>
 export default {
-    name: 'Profile', 
+    name: 'AddingPosts',
     data() {
     return {
-        searchData: "",
+        file: '',
         }
     },
     methods:{
@@ -48,10 +55,35 @@ export default {
         },
         addPosts : function() {
             window.location.href = "/addingPosts";
-        }
+        },
+        saveMedia : function() {
+            let token = localStorage.getItem('token').substring(1, localStorage.getItem('token').length-1);
+            let formData = new FormData();
+            formData.append('file', this.file);
+
+            this.axios.post('http://localhost:8083/mediaMicroservice/post/saveImage',formData ,{
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                    'Authorization': 'Bearer ' + token
+                }
+                }).then(response => {
+                       alert("Please check your email for validation link, so you could login!");
+                        this.$router.push('/login') 
+                        console.log(response.data);
+                })
+                .catch(response => {
+                    console.log(response.data)
+                    alert("Eror")
+                   // alert(response.response.data.message);
+                 });  
+        },
+        handleFileUpload(){
+            this.file = this.$refs.file.files[0];
+        },
     }
 }
 </script>
+
 <style scoped>
     .image_style{
         height: 400px;

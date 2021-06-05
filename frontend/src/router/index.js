@@ -5,6 +5,7 @@ import Login from '../views/Login.vue'
 import Registration from '../views/Registration.vue'
 import Homepage from '../views/Homepage.vue'
 import Profile from '../views/Profile.vue'
+import AddingPosts from '../views/AddingPosts.vue'
 
 Vue.use(VueRouter)
 
@@ -41,6 +42,11 @@ const routes = [
     path: '/profile',
     name: 'Profile',
     component: Profile
+  },
+  {
+    path: '/addingPosts',
+    name: 'AddingPosts',
+    component: AddingPosts
   },
 ]
 

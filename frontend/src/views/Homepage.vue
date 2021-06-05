@@ -8,12 +8,12 @@
                     <b-icon icon="house" aria-hidden="true"></b-icon>Home</b-button>
                 <b-button  pill variant="outline-danger" class = "btn btn-lg space_style" v-on:click = "showProfile">
                     <b-icon icon="person" aria-hidden="true"></b-icon>Profile</b-button>
-                <b-button pill variant="outline-danger" class = "btn btn-lg space_style" v-on:click = "showProfile">
+                <b-button pill variant="outline-danger" class = "btn btn-lg space_style" v-on:click = "addPosts">
                     <b-icon icon="image" aria-hidden="true"></b-icon> Add post</b-button>
                 <b-input-group class=" serach_look">
                     <b-form-input placeholder="search.."></b-form-input>
                     <b-input-group-append>
-                    <b-button variant="outline-danger"><b-icon icon="search" aria-hidden="true"></b-icon></b-button>
+                    <b-button variant="outline-danger" ><b-icon icon="search" aria-hidden="true"></b-icon></b-button>
                     </b-input-group-append>
                 </b-input-group>
             </span>
@@ -46,6 +46,9 @@ export default {
             localStorage.removeItem('token');
             window.location.href = "/login";
         },
+        addPosts : function() {
+            window.location.href = "/addingPosts";
+        }
     }
 }
 </script>
