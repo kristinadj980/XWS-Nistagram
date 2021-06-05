@@ -8,18 +8,24 @@ public class PostDTO {
 	private LocationDTO location;
 	private List<TagDTO> tags;
 	private List<MediaDTO> medias;
+	private String username;
+	private Long userId;
 	
 	public PostDTO() {
 		super();
 	}
 
-	public PostDTO(String description, LocationDTO location, List<TagDTO> tags, List<MediaDTO> medias) {
+	public PostDTO(String description, LocationDTO location, List<TagDTO> tags, List<MediaDTO> medias, String username,
+			Long userId) {
 		super();
 		this.description = description;
 		this.location = location;
 		this.tags = tags;
 		this.medias = medias;
+		this.username = username;
+		this.userId = userId;
 	}
+
 
 	public String getDescription() {
 		return description;
@@ -52,5 +58,20 @@ public class PostDTO {
 	public void setMedias(List<MediaDTO> medias) {
 		this.medias = medias;
 	}
-	
+
+	public String getUsername() {
+		return username;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
+	}
+
+	public Long getUserId() {
+		return userId;
+	}
+
+	public void setUserId(Long userId) {
+		this.userId = userId;
+	}
 }

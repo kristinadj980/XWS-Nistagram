@@ -3,13 +3,15 @@ package com.example.mediamicroservice.dto;
 public class MediaDTO {
 	
 	private String name;
+	private String fileName;
 
 	public MediaDTO() {
 	}
 	
-	public MediaDTO(String name) {
+	public MediaDTO(String name, String fileName) {
 		super();
 		this.name = name;
+		this.fileName = fileName;
 	}
 
 	public String getName() {
@@ -19,7 +21,13 @@ public class MediaDTO {
 	public void setName(String name) {
 		this.name = name;
 	}
-	
-	
+
+	public String getFileName() {
+		return fileName;
+	}
+
+	public void setFileName(String fileName) {
+		this.fileName = fileName;
+	}
 	
 }

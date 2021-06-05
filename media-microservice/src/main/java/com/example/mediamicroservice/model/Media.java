@@ -7,19 +7,23 @@ public class Media {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-   private Long id;
+    private Long id;
 
-	@Column(name = "name", nullable = false, unique = true)
-   private String name;
-
-	public Media(Long id, String name) {
-		super();
-		this.id = id;
-		this.name = name;
-	}
+	@Column(name = "name")
+    private String name;
+	
+	@Column(name = "fileName")
+	private String fileName;
 
 	public Media() {
 
+	}
+
+	public Media(Long id, String name, String fileName) {
+		super();
+		this.id = id;
+		this.name = name;
+		this.fileName = fileName;
 	}
 
 	public Long getId() {
@@ -37,6 +41,12 @@ public class Media {
 	public void setName(String name) {
 		this.name = name;
 	}
-	
 
+	public String getFileName() {
+		return fileName;
+	}
+
+	public void setFileName(String fileName) {
+		this.fileName = fileName;
+	}
 }

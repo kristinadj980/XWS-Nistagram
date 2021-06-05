@@ -38,7 +38,7 @@ public class PostController {
 	private static String uploadDir = "user-photos";
 
 	@PostMapping("/saveImage")
-    public String saveImage(@RequestParam("file") MultipartFile multipartFile) throws IOException {
+    public String saveImage(@RequestParam("file") MultipartFile multipartFile ) throws IOException {
 		Authentication currentUser = SecurityContextHolder.getContext().getAuthentication();
 		Person person = (Person) currentUser.getPrincipal();
 		System.out.println(person.getName() + "******************************" +person.getUsername());

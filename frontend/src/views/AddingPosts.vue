@@ -40,7 +40,22 @@ export default {
     data() {
     return {
         file: '',
+        user:'',
         }
+    },
+    mounted() {
+         let token = localStorage.getItem('token').substring(1, localStorage.getItem('token').length-1);
+          this.axios.get('http://localhost:8083/profileMicroservice/api/profile/loggedUserInfo',{ 
+             headers: {
+                 'Authorization': 'Bearer ' + token,
+             }
+         }).then(response => {
+              this.user = response.data;
+              alert("Success")
+         }).catch(res => {
+               alert(Error)
+                console.log(res);
+            });
     },
     methods:{
         showHomepage: function(){
@@ -67,15 +82,15 @@ export default {
                     'Authorization': 'Bearer ' + token
                 }
                 }).then(response => {
-                       alert("Please check your email for validation link, so you could login!");
-                        this.$router.push('/login') 
-                        console.log(response.data);
-                })
-                .catch(response => {
+                       alert("Success!");
+                       console.log(response.data)
+                  
+                    })
+                    .catch(response => {
                     console.log(response.data)
                     alert("Eror")
                    // alert(response.response.data.message);
-                 });  
+                    });  
         },
         handleFileUpload(){
             this.file = this.$refs.file.files[0];
