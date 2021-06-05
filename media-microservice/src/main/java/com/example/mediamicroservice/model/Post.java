@@ -42,7 +42,7 @@ public class Post{
 	   inverseJoinColumns = @JoinColumn(name = "media_id", referencedColumnName = "id"))
 	   public List<Media> medias;
 
-	   @ManyToOne
+	   @ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
 	    @JoinColumn(name="location_id")
 		public Location location;
 

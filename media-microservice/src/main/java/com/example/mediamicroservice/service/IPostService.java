@@ -1,8 +1,9 @@
 package com.example.mediamicroservice.service;
 
 import com.example.mediamicroservice.dto.PostDTO;
+import com.example.mediamicroservice.model.Post;
 
 public interface IPostService {
 	
-	PostDTO addNewPost(PostDTO postDTO);
+	Post addNewPost(PostDTO postDTO);
 }

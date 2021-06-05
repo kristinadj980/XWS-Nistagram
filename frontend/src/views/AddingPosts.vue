@@ -66,7 +66,7 @@
                 ></b-form-tags>
                 <b-button 
                 variant="outline-secondary"  
-                v-on:click = "saveMedia"
+               
                 style="margin-top: 8% !important;
                 color: #692d5a;
                 width: 240px;"
@@ -97,9 +97,11 @@ export default {
         file: '',
         user:'',
         locations: [],
-        selectedLocation: [],
+        selectedLocation:[''],
         description: "",
-        tags: [],
+        tags: [''],
+        fileName:'',
+        medias:[],
         }
     },
     mounted() {
@@ -144,24 +146,52 @@ export default {
             let formData = new FormData();
             formData.append('file', this.file);
 
-            this.axios.post('http://localhost:8083/mediaMicroservice/post/saveImage',formData ,{
+            
+            this.axios.post('http://localhost:8083/mediaMicroservice/post/saveImage',formData,{
                 headers: {
                     'Content-Type': 'multipart/form-data',
                     'Authorization': 'Bearer ' + token
                 }
                 }).then(response => {
+                        this.fileName = response.data
+                       //alert(this.fileName)
+                       //alert("Success")
                        console.log(response.data)
+                       this.postPicture();
+                       
                   
                     })
                     .catch(response => {
                     console.log(response.data)
                     alert("Eror")
-                   // alert(response.response.data.message);
+                    
                     });  
+        },
+        postPicture :function(){  
+            const postInfo= {
+                description : this.description,
+                location : this.selectedLocation,
+                //tags : this.tags,
+                username: this.user.username,
+                userId: this.user.id,
+                fileName : this.fileName,
+                 }
+          
+
+          this.axios.post('http://localhost:8083/mediaMicroservice/post/addNewPost',postInfo,{ 
+                }).then(response => {
+                    alert("Picture is posted!");
+
+                    console.log(response);                
+                }).catch(res => {
+                    alert(res.response.data.message);
+
+                });
         },
         handleFileUpload(){
             this.file = this.$refs.file.files[0];
         },
+
     }
 }
 </script>

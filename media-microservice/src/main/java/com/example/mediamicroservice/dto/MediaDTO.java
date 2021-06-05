@@ -13,6 +13,8 @@ public class MediaDTO {
 		this.name = name;
 		this.fileName = fileName;
 	}
+	 
+	
 
 	public String getName() {
 		return name;

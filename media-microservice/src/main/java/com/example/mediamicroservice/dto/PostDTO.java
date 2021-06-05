@@ -5,27 +5,26 @@ import java.util.List;
 public class PostDTO {
 	
 	private String description;
-	private LocationDTO location;
+	private String location;
 	private List<TagDTO> tags;
-	private List<MediaDTO> medias;
 	private String username;
 	private Long userId;
+	private String fileName;
 	
 	public PostDTO() {
 		super();
 	}
 
-	public PostDTO(String description, LocationDTO location, List<TagDTO> tags, List<MediaDTO> medias, String username,
-			Long userId) {
+	public PostDTO(String description, String location, List<TagDTO> tags, String username,
+			Long userId, String fileName) {
 		super();
 		this.description = description;
 		this.location = location;
 		this.tags = tags;
-		this.medias = medias;
 		this.username = username;
 		this.userId = userId;
+		this.fileName = fileName;
 	}
-
 
 	public String getDescription() {
 		return description;
@@ -35,11 +34,11 @@ public class PostDTO {
 		this.description = description;
 	}
 
-	public LocationDTO getLocation() {
+	public String getLocation() {
 		return location;
 	}
 
-	public void setLocation(LocationDTO location) {
+	public void setLocation(String location) {
 		this.location = location;
 	}
 
@@ -49,14 +48,6 @@ public class PostDTO {
 
 	public void setTags(List<TagDTO> tags) {
 		this.tags = tags;
-	}
-
-	public List<MediaDTO> getMedias() {
-		return medias;
-	}
-
-	public void setMedias(List<MediaDTO> medias) {
-		this.medias = medias;
 	}
 
 	public String getUsername() {
@@ -74,4 +65,13 @@ public class PostDTO {
 	public void setUserId(Long userId) {
 		this.userId = userId;
 	}
+
+	public String getFileName() {
+		return fileName;
+	}
+
+	public void setFileName(String fileName) {
+		this.fileName = fileName;
+	}
+
 }

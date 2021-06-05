@@ -19,6 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.example.mediamicroservice.dto.PostDTO;
 import com.example.mediamicroservice.model.Person;
+import com.example.mediamicroservice.model.Post;
 import com.example.mediamicroservice.service.implService.PostService;
 import com.example.mediamicroservice.utils.MediaUpload;
 
@@ -39,20 +40,18 @@ public class PostController {
 
 	@PostMapping("/saveImage")
     public String saveImage(@RequestParam("file") MultipartFile multipartFile ) throws IOException {
-		Authentication currentUser = SecurityContextHolder.getContext().getAuthentication();
-		Person person = (Person) currentUser.getPrincipal();
-		System.out.println(person.getName() + "******************************" +person.getUsername());
+		
         String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename().replaceAll("\\s", "")); 
-        uploadDir = "user-photos/"+person.getId();
+        uploadDir = "user-photos";
         MediaUpload.saveFile(uploadDir, fileName, multipartFile);
         return fileName;
     }
 	
 	@PostMapping("/addNewPost")
-	public ResponseEntity<PostDTO> addNewPost(@RequestBody PostDTO postDTO) {
-		
-		PostDTO response = postService.addNewPost(postDTO);
-		return (ResponseEntity<PostDTO>) (response == null ? new ResponseEntity<>(HttpStatus.NOT_FOUND) : ResponseEntity.ok(response));
+	public ResponseEntity<Post> addNewPost(@RequestBody PostDTO postDTO) {
+        Post response = postService.addNewPost(postDTO);
+        
+		return (ResponseEntity<Post>) (response == null ? new ResponseEntity<>(HttpStatus.NOT_FOUND) : ResponseEntity.ok(response));
 		
 	}
 	
