@@ -21,17 +21,72 @@
                     <b-button pill variant="outline-danger" class = "btn btn-lg btn-light" style="margin-right:20px;" v-on:click = "logOut">Log Out</b-button>
                 </span>
         </div>
-        <b-card class="content_surface">
-            <form th:action="@{/users/save}"
-            th:object="${user}" method="post"
-            enctype="multipart/form-data"
-            >
-            <label>Photos: </label>
+       <form>
+            <h4 style="left: 10px;">Choose image </h4>
             <input type="file" name="image" accept="image/png, image/jpeg" id="file" ref="file" v-on:change="handleFileUpload()">
-            </form>
-            <b-button variant="outline-danger"  v-on:click = "saveMedia"><b-icon icon="plus-circle" aria-hidden="true"></b-icon> Share post</b-button>
-        </b-card>
-    </div>
+            <h4 for="textarea-large" 
+            class="text-left" 
+            style="margin-bottom:2%; 
+                margin-top: 5% !important;">Description for your image:</h4>
+                <b-col sm="12">
+                    <b-form-textarea
+                    id="textarea-large"
+                    v-model="description"
+                    placeholder="type here.."
+                    ></b-form-textarea>
+                </b-col>
+                <h4 
+                style="margin-bottom:2%; 
+                margin-top: 5% !important;">
+                    Choose location
+                </h4>
+                <input 
+                list="my-list-id" 
+                v-model="selectedLocation" 
+                class="input_style" 
+                placeholder="enter location.."
+                style="margin-top: 1% !important; width:500px;">
+                    <datalist id="my-list-id">
+                        <option v-for="location in locations" v-bind:key="location.id">
+                            {{ location.country }}, {{location.city}},  {{location.street}}, {{location.objectName}} 
+                        </option>
+                    </datalist>
+                <h4 
+                style="margin-bottom:2%; 
+                margin-top: 5% !important;">
+                    Add tags
+                </h4>
+                <b-form-tags
+                    v-model="tags"
+                    tag-variant="danger"
+                    size="lg"
+                    style="background: #999a8d;"
+                    separator=" "
+                    placeholder="Enter new tags separated by space"
+                ></b-form-tags>
+                <b-button 
+                variant="outline-secondary"  
+                v-on:click = "saveMedia"
+                style="margin-top: 8% !important;
+                color: #692d5a;
+                width: 240px;"
+                >
+                <b-icon icon="x-circle" aria-hidden="true"></b-icon> 
+                Back
+                </b-button>
+                <b-button 
+                variant="outline-secondary"  
+                v-on:click = "saveMedia"
+                style="margin-top: -13% !important;
+                margin-left: 52%;
+                color: #692d5a;
+                width: 240px;"
+                >
+                <b-icon icon="plus-circle" aria-hidden="true"></b-icon> 
+                Share post
+                </b-button>
+  </form>
+  </div>
 </template>
 
 <script>
@@ -41,6 +96,10 @@ export default {
     return {
         file: '',
         user:'',
+        locations: [],
+        selectedLocation: [],
+        description: "",
+        tags: [],
         }
     },
     mounted() {
@@ -51,7 +110,16 @@ export default {
              }
          }).then(response => {
               this.user = response.data;
-              alert("Success")
+         }).catch(res => {
+               alert(Error)
+                console.log(res);
+            });
+        this.axios.get('http://localhost:8083/mediaMicroservice/location/getLocations',{ 
+             headers: {
+                 'Authorization': 'Bearer ' + token,
+             }
+         }).then(response => {
+              this.locations = response.data;
          }).catch(res => {
                alert(Error)
                 console.log(res);
@@ -82,7 +150,6 @@ export default {
                     'Authorization': 'Bearer ' + token
                 }
                 }).then(response => {
-                       alert("Success!");
                        console.log(response.data)
                   
                     })
@@ -135,4 +202,21 @@ export default {
         margin-left: 190%;
         margin-top: -8%;
     }
+    form{
+        margin-left: 60px;
+        width: 500px;
+    }
+    #addingPosts {
+        font-family: Avenir, Helvetica, Arial, sans-serif;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        text-align: left;
+        color: #692d5a;
+        margin: auto;
+        margin-top: 40px;
+        margin-bottom: 40px;
+        width: 40%;
+        border: 4px solid #692d5a;
+        padding: 40px;
+        }
 </style>
