@@ -9,10 +9,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import com.example.mediamicroservice.dto.PostDTO;
 
-@FeignClient(name = "eureka-profile-service")
+
 public interface ProfileConnection {
 	
-	@GetMapping("/getMyPosts/{username}")
-	public ResponseEntity<List<PostDTO>> getMyPosts(@PathVariable String username);
+	
 
 }

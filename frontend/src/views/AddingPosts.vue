@@ -18,7 +18,7 @@
                 </b-input-group>
             </span>
                 <span  style="float:right;margin:15px">
-                    <b-button pill variant="outline-danger" class = "btn btn-lg btn-light" style="margin-right:20px;" v-on:click = "logOut">Log Out</b-button>
+                    <b-button pill variant="outline-danger" class = "btn btn-lg btn-light" style="margin-right:20px;" v-on:click = "findPosts">Log Out</b-button>
                 </span>
         </div>
        <form>
@@ -192,6 +192,21 @@ export default {
         handleFileUpload(){
             this.file = this.$refs.file.files[0];
         },
+        findPosts:function(){
+             let token = localStorage.getItem('token').substring(1, localStorage.getItem('token').length-1);
+             this.axios.get('http://localhost:8083/profileMicroservice/api/profile/find',{ 
+             headers: {
+                 'Authorization': 'Bearer ' + token,
+             }
+         }).then(response => {
+             alert("OK")
+             console.log(response.data)
+              //this.posts = response.data;
+         }).catch(res => {
+               alert(Error)
+                console.log(res);
+            });
+        }
 
     }
 }
