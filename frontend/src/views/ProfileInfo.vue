@@ -11,7 +11,7 @@
                 <b-button pill variant="outline-danger" class = "btn btn-lg space_style" v-on:click = "showProfile">
                     <b-icon icon="image" aria-hidden="true"></b-icon> Add post</b-button>
                 <b-button pill variant="outline-danger" class = "btn btn-lg space_style" v-on:click = "editProfile">
-                    <b-icon icon="image" aria-hidden="true"></b-icon> Edit profile</b-button>
+                    <b-icon icon="gear" aria-hidden="true"></b-icon> Edit profile</b-button>
                 <b-input-group class=" serach_look">
                     <b-form-input placeholder="search.."></b-form-input>
                     <b-input-group-append>
@@ -90,8 +90,49 @@
                                         <b-form-input v-model="profile.biography" label="Biography" filled placeholder="Enter the biography"></b-form-input>
                                     </h5>
                                     <b-row style="float: left; margin: 30px;">
-                                        <b-button class="btn btn-info btn-lg space_style" style="background-color:#003d66; width:5cm;" v-on:click = "cancel">Cancel</b-button>
-                                        <b-button class="btn btn-info btn-lg space_style" style="background-color:#003d66; width:5cm;" v-on:click = "update">Update</b-button>
+                                        <b-button class="btn btn-info btn-lg space_style" style="background-color:#f08080; width:5cm;" v-on:click = "cancel">Cancel</b-button>
+                                        <b-button class="btn btn-info btn-lg space_style" style="background-color:#f08080; width:5cm;" v-on:click = "update">Update</b-button>
+                                    </b-row>
+                                </div>
+                            </b-modal>
+                            <b-modal ref="modal-ref2" id="modal-2" title="Edit profile info" hide-footer>
+                                <div>
+                                    <h5 class ="text-justify top-buffer">
+                                        <div class="mb-4">
+                                        <label for="password">Current Password</label>
+                                        <VuePassword
+                                            v-model="profile.currentPassword"
+                                            id="password1"
+                                            placeholder="Enter your current password"
+                                            :badge="false" 
+                                            :toggle="true"
+                                        />
+                                        </div>
+                                    </h5>
+                                    <h5 class ="text-justify top-buffer">
+                                        <div class="mb-4">
+                                        <label for="password">New Password:</label>
+                                        <VuePassword
+                                            v-model="profile.newPassword"
+                                            id="password1"
+                                            placeholder="Enter your current password"
+                                           
+                                        />
+                                        </div>
+                                    </h5>
+                                    <h5 class ="text-justify top-buffer">
+                                        <div class="mb-4">
+                                        <label for="password">Repeat New Password:</label>
+                                        <VuePassword
+                                            v-model="profile.repeatNewPassword"
+                                            id="password1"
+                                            placeholder="Enter your current password"
+                                        />
+                                        </div>
+                                    </h5>
+                                    <b-row style="float: left; margin: 30px;">
+                                        <b-button class="btn btn-info btn-lg space_style" style="background-color:#f08080; width:5cm;" v-on:click = "cancelPassword">Cancel</b-button>
+                                        <b-button class="btn btn-info btn-lg space_style" style="background-color:#f08080; width:5cm;" v-on:click = "updatePassword">Update</b-button>
                                     </b-row>
                                 </div>
                             </b-modal>
@@ -104,8 +145,13 @@
 </template>
 
 <script>
+import VuePassword from 'vue-password'
+
 export default {
     name: 'ProfileInfo', 
+    components: {
+    VuePassword,
+  },
     data() {
     return {
         profile: "",
@@ -117,7 +163,11 @@ export default {
         birthDate: "",
         gender: "",
         website: "",
-        biography: ""
+        biography: "",
+        password : "",
+        currentPassword : "",
+        newPassword : "",
+        repeatNewPassword : ""
 
         }
     },
@@ -136,6 +186,9 @@ export default {
     
    },
     methods:{
+        toggle () {
+        this.show = !this.show
+        },
         showHomepage: function(){
            window.location.href = "/homepage";
         },
@@ -151,6 +204,9 @@ export default {
         },
         cancel() {
             this.$refs['modal-ref'].hide();
+        },
+         cancelPassword() {
+            this.$refs['modal-ref2'].hide();
         },
          update : function(){
             let token = localStorage.getItem('token').substring(1, localStorage.getItem('token').length-1);
@@ -181,6 +237,29 @@ export default {
                 })
             
         },
+        updatePassword : function () {
+            if(this.profile.newPassword != this.profile.repeatNewPassword) {
+            alert("New passwords are not equals!")
+            return;
+            }
+            const changePassword ={
+                password : this.profile.currentPassword,
+                confirmPassword : this.profile.newPassword
+            } 
+            let token = localStorage.getItem('token').substring(1, localStorage.getItem('token').length-1);
+            this.axios.post('http://localhost:8083/profileMicroservice/api/profile/updatePassword',changePassword, { 
+                headers: {
+                    'Authorization': 'Bearer ' + token,
+                }})
+                .then(response => {
+                    alert("Successfully edited password.")
+                        console.log(response);
+                })
+                .catch(response => {
+                    alert("Please, try later.")
+                    console.log(response);
+                })
+        }
     }
 }
 </script>

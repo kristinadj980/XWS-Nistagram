@@ -11,7 +11,7 @@
                 <b-button pill variant="outline-danger" class = "btn btn-lg space_style" v-on:click = "showProfile">
                     <b-icon icon="image" aria-hidden="true"></b-icon> Add post</b-button>
                 <b-button pill variant="outline-danger" class = "btn btn-lg space_style" v-on:click = "editProfile">
-                    <b-icon icon="image" aria-hidden="true"></b-icon> Edit profile</b-button>
+                    <b-icon icon="gear" aria-hidden="true"></b-icon> Edit profile</b-button>
                 <b-input-group class=" serach_look">
                     <b-form-input placeholder="search.."></b-form-input>
                     <b-input-group-append>
