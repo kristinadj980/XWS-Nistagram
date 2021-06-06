@@ -21,8 +21,14 @@ public class LocationDTO {
 		this.country = country;
 		this.objectName = objectName;
 	}
-	
-	
+
+	public LocationDTO(String city, String street, String country, String objectName) {
+		super();
+		this.city = city;
+		this.street = street;
+		this.country = country;
+		this.objectName = objectName;
+	}
 
 	public Long getId() {
 		return id;

@@ -10,6 +10,7 @@ public class PostDTO {
 	private String username;
 	private Long userId;
 	private String fileName;
+	private LocationDTO locationDTO;
 	
 	public PostDTO() {
 		super();
@@ -24,6 +25,22 @@ public class PostDTO {
 		this.username = username;
 		this.userId = userId;
 		this.fileName = fileName;
+	}
+
+	public PostDTO(String description, String location, String username, String fileName) {
+		super();
+		this.description = description;
+		this.location = location;
+		this.username = username;
+		this.fileName = fileName;
+	}
+
+	public PostDTO(String description, String username, String fileName, LocationDTO locationDTO) {
+		super();
+		this.description = description;
+		this.username = username;
+		this.fileName = fileName;
+		this.locationDTO = locationDTO;
 	}
 
 	public String getDescription() {
@@ -73,5 +90,15 @@ public class PostDTO {
 	public void setFileName(String fileName) {
 		this.fileName = fileName;
 	}
+
+	public LocationDTO getLocationDTO() {
+		return locationDTO;
+	}
+
+	public void setLocationDTO(LocationDTO locationDTO) {
+		this.locationDTO = locationDTO;
+	}
+	
+	
 
 }

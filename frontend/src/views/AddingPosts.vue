@@ -102,6 +102,7 @@ export default {
         tags: [''],
         fileName:'',
         medias:[],
+        posts:[],
         }
     },
     mounted() {
