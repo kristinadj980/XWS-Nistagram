@@ -10,6 +10,8 @@
                     <b-icon icon="person" aria-hidden="true"></b-icon>Profile</b-button>
                 <b-button pill variant="outline-danger" class = "btn btn-lg space_style" v-on:click = "addPosts">
                     <b-icon icon="image" aria-hidden="true"></b-icon> Add post</b-button>
+                <b-button pill variant="outline-danger" class = "btn btn-lg space_style" v-on:click = "editProfile">
+                    <b-icon icon="gear" aria-hidden="true"></b-icon> Edit profile</b-button>
                 <b-input-group class=" serach_look">
                     <b-form-input placeholder="search.."></b-form-input>
                     <b-input-group-append>
@@ -49,6 +51,9 @@ export default {
         addPosts : function() {
             window.location.href = "/addingPosts";
         }
+        editProfile: function(){
+            window.location.href="/profileInfo";
+        },
     }
 }
 </script>
@@ -85,7 +90,8 @@ export default {
 
     }
     .serach_look{
-        margin-left: 190%;
+         margin-left: 150%;
+        width: 50%;
         margin-top: -8%;
     }
 </style>
