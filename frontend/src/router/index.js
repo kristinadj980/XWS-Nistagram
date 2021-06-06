@@ -49,6 +49,7 @@ const routes = [
     name: 'AddingPosts',
     component: AddingPosts
   },
+  {
     path: '/profileInfo',
     name: 'ProfileInfo',
     component: ProfileInfo

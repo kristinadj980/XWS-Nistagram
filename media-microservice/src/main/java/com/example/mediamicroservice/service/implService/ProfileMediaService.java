@@ -29,26 +29,19 @@ public class ProfileMediaService implements IProfileMediaService {
 	@Override
 	public void addPostToProfile(PostDTO postDTO, Post post) {
 		ProfileMedia profileMedia = new ProfileMedia();
-        ProfileMedia media2 = findByUsername(postDTO.getUsername());
-        List<Post> posts2 = new ArrayList<Post>();
-        if(media2 != null) {
+        ProfileMedia existingProfile = findByUsername(postDTO.getUsername());
+        List<Post> posts = new ArrayList<Post>();
+        
+        if(existingProfile != null) {
         	
-        	List<Post> posts = new ArrayList<Post>();
-            posts = media2.getPosts();
-        	if(posts != null) {
+            posts = existingProfile.getPosts();
         	posts.add(post);
-        	media2.setPosts(posts);
-        	profileMediaRepository.save(media2);
-        	}else {
-        		posts.add(post);
-        		media2.setPosts(posts);
-            	profileMediaRepository.save(media2);
-        	}
+        	existingProfile.setPosts(posts);
         	
         }else {
         	profileMedia.setUsername(postDTO.getUsername());
-        	posts2.add(post);
-        	profileMedia.setPosts(posts2);
+        	posts.add(post);
+        	profileMedia.setPosts(posts);
         	profileMediaRepository.save(profileMedia);
         }
 	}

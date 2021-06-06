@@ -50,7 +50,7 @@ export default {
         },
         addPosts : function() {
             window.location.href = "/addingPosts";
-        }
+        },
         editProfile: function(){
             window.location.href="/profileInfo";
         },
