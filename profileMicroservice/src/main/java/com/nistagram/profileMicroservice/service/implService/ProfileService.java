@@ -1,7 +1,7 @@
 package com.nistagram.profileMicroservice.service.implService;
+import com.nistagram.profileMicroservice.dto.EditProfileDTO;
 import com.nistagram.profileMicroservice.dto.PersonRequestDTO;
 import com.nistagram.profileMicroservice.model.Authority;
-import com.nistagram.profileMicroservice.model.Gender;
 import com.nistagram.profileMicroservice.model.Profile;
 import com.nistagram.profileMicroservice.repository.AuthorityRepository;
 import com.nistagram.profileMicroservice.repository.ProfileRepository;
@@ -11,9 +11,10 @@ import com.nistagram.profileMicroservice.service.IProfileService;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
+
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -73,7 +74,32 @@ public class ProfileService implements IProfileService {
 	
 	@Override
 	public Profile findById(Long id) {
-		return profileRepository.findById(id).orElseGet(null);
+		return profileRepository.findById(id).get();
+		
+	}
+
+	@Override
+	public void update(EditProfileDTO editProfileDTO) {
+		Profile profile = (Profile) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		profile.setName(editProfileDTO.getName());
+		profile.setSurname(editProfileDTO.getSurname());
+		profile.setBiography(editProfileDTO.getBiography());
+		profile.setBirthDate(editProfileDTO.getBirthDate());
+		profile.setEmail(editProfileDTO.getEmail());
+		profile.setGender(editProfileDTO.getGender());
+		profile.setUsername(editProfileDTO.getUsername());
+		profile.setWebsite(editProfileDTO.getWebsite());
+		profile.setPhoneNumber(editProfileDTO.getPhoneNumber());
+
+	    profileRepository.save(profile);
+	}
+
+	@Override
+	public void updatePassword(EditProfileDTO editProfileDTO) {
+		Profile profile = (Profile) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		profile.setPassword(passwordEncoder.encode(editProfileDTO.getConfirmPassword()));
+		
+		profileRepository.save(profile);
 		
 	}
 }
