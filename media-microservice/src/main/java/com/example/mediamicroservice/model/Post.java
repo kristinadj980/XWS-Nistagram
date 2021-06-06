@@ -19,13 +19,13 @@ public class Post{
 	   @JoinTable(name = "post_likes",
 	   joinColumns = @JoinColumn(name = "post_id", referencedColumnName = "id"),
 	   inverseJoinColumns = @JoinColumn(name = "likes_id", referencedColumnName = "id"))
-	   private List<Profile> likes;
+	   private List<ProfileMedia> likes;
 
 	   @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	   @JoinTable(name = "post_dislikes",
 	   joinColumns = @JoinColumn(name = "post_id", referencedColumnName = "id"),
 	   inverseJoinColumns = @JoinColumn(name = "dislikes_id", referencedColumnName = "id"))
-	   private List<Profile> dislikes;
+	   private List<ProfileMedia> dislikes;
 
 	   @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 		@JoinTable(name = "post_comments",
@@ -58,7 +58,7 @@ public class Post{
 	}
 
 	
-	public Post(Long id, String description, List<Profile> likes, List<Profile> dislikes, List<Comment> comments,
+	public Post(Long id, String description, List<ProfileMedia> likes, List<ProfileMedia> dislikes, List<Comment> comments,
 			LocalDate date, List<Media> medias, Location location, List<Tag> tags) {
 		super();
 		this.id = id;
@@ -89,39 +89,39 @@ public class Post{
 		this.description = description;
 	}
 
-	public List<Profile> getLike() {
+	public List<ProfileMedia> getLike() {
 		return likes;
 	}
 
-	public void setLike(List<Profile> like) {
+	public void setLike(List<ProfileMedia> like) {
 		this.likes = like;
 	}
 
-	public List<Profile> getDislike() {
+	public List<ProfileMedia> getDislike() {
 		return dislikes;
 	}
 
-	public void setDislike(List<Profile> dislike) {
+	public void setDislike(List<ProfileMedia> dislike) {
 		this.dislikes = dislike;
 	}
 
 	
-	public List<Profile> getLikes() {
+	public List<ProfileMedia> getLikes() {
 		return likes;
 	}
 
 
-	public void setLikes(List<Profile> likes) {
+	public void setLikes(List<ProfileMedia> likes) {
 		this.likes = likes;
 	}
 
 
-	public List<Profile> getDislikes() {
+	public List<ProfileMedia> getDislikes() {
 		return dislikes;
 	}
 
 
-	public void setDislikes(List<Profile> dislikes) {
+	public void setDislikes(List<ProfileMedia> dislikes) {
 		this.dislikes = dislikes;
 	}
 

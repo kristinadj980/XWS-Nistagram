@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.mediamicroservice.dto.PostDTO;
-import com.example.mediamicroservice.model.Person;
+
 import com.example.mediamicroservice.model.Post;
 import com.example.mediamicroservice.service.implService.PostService;
 import com.example.mediamicroservice.utils.MediaUpload;

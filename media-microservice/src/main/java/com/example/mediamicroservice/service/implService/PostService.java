@@ -7,8 +7,10 @@ import com.example.mediamicroservice.dto.TagDTO;
 import com.example.mediamicroservice.model.Location;
 import com.example.mediamicroservice.model.Media;
 import com.example.mediamicroservice.model.Post;
+import com.example.mediamicroservice.model.ProfileMedia;
 import com.example.mediamicroservice.model.Tag;
 import com.example.mediamicroservice.repository.PostRepository;
+import com.example.mediamicroservice.repository.ProfileMediaRepository;
 import com.example.mediamicroservice.service.IPostService;
 
 import java.time.LocalDate;
@@ -23,11 +25,15 @@ public class PostService implements IPostService {
 	
 	
 	private final PostRepository postRepository;
+	private final ProfileMediaService profileMediaService;
+	private final ProfileMediaRepository profileMediaRepository;
 	
 	@Autowired
-	public PostService(PostRepository postRepository) {
+	public PostService(PostRepository postRepository,ProfileMediaService profileMediaService, ProfileMediaRepository profileMediaRepository) {
 		super();
 		this.postRepository = postRepository;
+		this.profileMediaService = profileMediaService;
+		this.profileMediaRepository = profileMediaRepository;
 	}
 
 	@Override
@@ -57,7 +63,12 @@ public class PostService implements IPostService {
         post.setMedia(medias);
         post.setDate(LocalDate.now());
         
+        profileMediaService.addPostToProfile(postDTO, post);
+        
+      
 		return postRepository.save(post);
 	}
+
+
 	
 }
