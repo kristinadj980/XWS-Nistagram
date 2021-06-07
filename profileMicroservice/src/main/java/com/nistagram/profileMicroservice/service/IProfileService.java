@@ -16,4 +16,5 @@ public interface IProfileService {
 	void update(EditProfileDTO editProfileDTO);
 	void updatePassword(EditProfileDTO editProfileDTO);
 	List<Profile> findAll();
+	void updateProfileStatus(String username);
 }

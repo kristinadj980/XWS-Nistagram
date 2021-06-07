@@ -49,7 +49,7 @@ public class ProfileController {
 		Person person = (Person) currentUser.getPrincipal();
 		Profile profile = profileService.findById(person.getId());
 		EditProfileDTO editProfileDTO = new EditProfileDTO(profile.getUsername(), profile.getName(), profile.getSurname(), profile.getEmail(), profile.getPhoneNumber(),
-				profile.getBirthDate(), profile.getGender(), profile.getWebsite(), profile.getBiography());
+				profile.getBirthDate(), profile.getGender(), profile.getWebsite(), profile.getBiography(), profile.getProfileStatus());
 		
 		return (ResponseEntity<EditProfileDTO>) (profile == null ? new ResponseEntity<>(HttpStatus.NOT_FOUND) : ResponseEntity.ok(editProfileDTO));
 
@@ -135,6 +135,15 @@ public class ProfileController {
 		return new ResponseEntity(profileService.findByUsername(username), HttpStatus.OK); 
 	}
 	
-	
+	@PostMapping("/updateProfileStatus")
+	@PreAuthorize("hasRole('REGISTRED_USER')")
+	public ResponseEntity updateProfileStatus(@RequestBody EditProfileDTO editProfileDTO) {
+		try {
+			profileService.updateProfileStatus(editProfileDTO.getUsername());
+			return new ResponseEntity<>(HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+	}
 	
 }

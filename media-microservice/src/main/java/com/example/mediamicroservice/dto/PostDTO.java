@@ -1,5 +1,6 @@
 package com.example.mediamicroservice.dto;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class PostDTO {
@@ -10,6 +11,7 @@ public class PostDTO {
 	private String username;
 	private Long userId;
 	private String fileName;
+	private LocalDateTime date;
 	private LocationDTO locationDTO;
     private List<byte[]> imageBytes;
 	
@@ -53,12 +55,13 @@ public class PostDTO {
 		this.fileName = fileName;
 	}
 
-	public PostDTO(String description, String username, String fileName, LocationDTO locationDTO) {
+	public PostDTO(String description, String username, String fileName, LocationDTO locationDTO, LocalDateTime date) {
 		super();
 		this.description = description;
 		this.username = username;
 		this.fileName = fileName;
 		this.locationDTO = locationDTO;
+		this.date = date;
 	}
 	public PostDTO(String description, String username, String fileName, LocationDTO locationDTO, List<byte[]> imageBytes) {
 		super();
@@ -132,5 +135,14 @@ public class PostDTO {
 	public void setImageBytes(List<byte[]> imageBytes) {
 		this.imageBytes = imageBytes;
 	}
+
+	public LocalDateTime getDate() {
+		return date;
+	}
+
+	public void setDate(LocalDateTime date) {
+		this.date = date;
+	}
+	
 	
 }

@@ -13,7 +13,11 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.io.IOUtils;
@@ -60,7 +64,7 @@ public class PostService implements IPostService {
         List<Media> medias = new ArrayList<Media>();
         medias.add(media);
         post.setMedia(medias);
-        post.setDate(LocalDate.now());
+        post.setDate(LocalDateTime.now());
         profileMediaService.addPostToProfile(postDTO, post);
         
         Post p = postRepository.save(post);
@@ -83,14 +87,28 @@ public class PostService implements IPostService {
 				LocationDTO locationDTO = new LocationDTO(post.getLocation().getCity(), post.getLocation().getStreet(),post.getLocation().getCountry(),
 						post.getLocation().getObjectName());
 			
-				myPosts.add(new PostDTO(post.getDescription(),username,m.getFileName(),locationDTO));
+				myPosts.add(new PostDTO(post.getDescription(),username,m.getFileName(),locationDTO, post.getDate()));
 			}
 		}
 		
-		return getImagesFiles(myPosts);
+		List<PostDTO> allPosts = getImagesFiles(myPosts);
+		
+		return sortByDate(allPosts);
 	}
 
-	 public List<PostDTO> getImagesFiles(List<PostDTO> posts) {
+	 private List<PostDTO> sortByDate(List<PostDTO> allPosts) {
+		//List<PatientSearchDTO> myPatients =  getMyPatients();
+			
+		 Collections.sort(allPosts, new Comparator<PostDTO>() {
+			@Override
+			public int compare(PostDTO o1, PostDTO o2) {
+				return o2.getDate().compareTo(o1.getDate());
+			}
+		 });
+		return allPosts;
+	}
+
+	public List<PostDTO> getImagesFiles(List<PostDTO> posts) {
 		 List<PostDTO> postsDto = new ArrayList<>();
 	     if (posts != null) {
 	    	 String filePath = new File("").getAbsolutePath();

@@ -13,21 +13,20 @@
                 <b-button pill variant="outline-danger" class = "btn btn-lg space_style" v-on:click = "editProfile">
                     <b-icon icon="gear" aria-hidden="true"></b-icon> Edit profile</b-button>
                 <b-input-group class=" serach_look">
-                    <b-form-input placeholder="search.."></b-form-input>
                     <b-input-group-append>
                         <input 
                         list="my-list-id" 
                         v-model="selectedUser" 
                         class="input_style" 
                         placeholder="enter username..."
-                        style="margin-top: 1% !important; width:500px;">
+                        style="margin-top: 3% !important; width:400px; height:35px;">
                             <datalist id="my-list-id">
                         <option v-for="user in users" v-bind:key="user.id">
                             {{ user.username }} 
                         </option>
                     </datalist>
                     <router-link :to="{ name: 'GeneralProfiles', params: {selectedUsername: this.selectedUser}}" class="search-btn">
-                       <b-button variant="outline-danger"><b-icon icon="search" aria-hidden="true"></b-icon></b-button>
+                       <b-button style="margin-top: -15% !important;  margin-left: 100% !important;" variant="outline-danger"><b-icon icon="search" aria-hidden="true"></b-icon></b-button>
                     </router-link>
     
                     </b-input-group-append>

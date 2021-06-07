@@ -1,8 +1,8 @@
 package com.example.mediamicroservice.model;
 
 import javax.persistence.*;
-import java.time.LocalDate;
-import java.util.Date;
+
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -34,7 +34,7 @@ public class Post{
 		private List<Comment> comments;
 
 	   @Column(name = "date", nullable = false)
-	   private LocalDate date;
+	   private LocalDateTime  date;
 
 	   @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	   @JoinTable(name = "post_media",
@@ -59,7 +59,7 @@ public class Post{
 
 	
 	public Post(Long id, String description, List<ProfileMedia> likes, List<ProfileMedia> dislikes, List<Comment> comments,
-			LocalDate date, List<Media> medias, Location location, List<Tag> tags) {
+			LocalDateTime  date, List<Media> medias, Location location, List<Tag> tags) {
 		super();
 		this.id = id;
 		this.description = description;
@@ -156,11 +156,11 @@ public class Post{
 	}
 
 
-	public LocalDate getDate() {
+	public LocalDateTime  getDate() {
 		return date;
 	}
 
-	public void setDate(LocalDate date) {
+	public void setDate(LocalDateTime  date) {
 		this.date = date;
 	}
 

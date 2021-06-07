@@ -3,6 +3,7 @@ import com.nistagram.profileMicroservice.dto.EditProfileDTO;
 import com.nistagram.profileMicroservice.dto.PersonRequestDTO;
 import com.nistagram.profileMicroservice.model.Authority;
 import com.nistagram.profileMicroservice.model.Profile;
+import com.nistagram.profileMicroservice.model.ProfileStatus;
 import com.nistagram.profileMicroservice.repository.AuthorityRepository;
 import com.nistagram.profileMicroservice.repository.ProfileRepository;
 import com.nistagram.profileMicroservice.service.IProfileService;
@@ -50,6 +51,7 @@ public class ProfileService implements IProfileService {
         profile.setGender(userRequest.getGender());
         profile.setUsername(userRequest.getUsername());
         profile.setBirthDate(userRequest.getBirthDate());
+        profile.setProfileStatus(ProfileStatus.publicProfile);
         Authority authority = authService.findByname("ROLE_REGISTRED_USER");
         List<Authority> auth = new ArrayList<Authority>();
         if(authority==null) {
@@ -111,5 +113,16 @@ public class ProfileService implements IProfileService {
 	@Override
 	public Profile findByUsername(String username) {
 		return profileRepository.findByUsername(username);
+	}
+
+	@Override
+	public void updateProfileStatus(String username) {
+		Profile profile = findByUsername(username);
+		if(profile.getProfileStatus().equals(ProfileStatus.privateProfile))
+			profile.setProfileStatus(ProfileStatus.publicProfile);
+		else
+			profile.setProfileStatus(ProfileStatus.privateProfile);
+	
+		profileRepository.save(profile);
 	}
 }

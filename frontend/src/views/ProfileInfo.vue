@@ -13,9 +13,22 @@
                 <b-button pill variant="outline-danger" class = "btn btn-lg space_style" v-on:click = "editProfile">
                     <b-icon icon="gear" aria-hidden="true"></b-icon> Edit profile</b-button>
                 <b-input-group class=" serach_look">
-                    <b-form-input placeholder="search.."></b-form-input>
                     <b-input-group-append>
-                    <b-button variant="outline-danger"><b-icon icon="search" aria-hidden="true"></b-icon></b-button>
+                        <input 
+                        list="my-list-id" 
+                        v-model="selectedUser" 
+                        class="input_style" 
+                        placeholder="enter username..."
+                        style="margin-top: 3% !important; width:400px; height:35px;">
+                            <datalist id="my-list-id">
+                        <option v-for="user in users" v-bind:key="user.id">
+                            {{ user.username }} 
+                        </option>
+                    </datalist>
+                    <router-link :to="{ name: 'GeneralProfiles', params: {selectedUsername: this.selectedUser}}" class="search-btn">
+                       <b-button style="margin-top: -15% !important;  margin-left: 100% !important;" variant="outline-danger"><b-icon icon="search" aria-hidden="true"></b-icon></b-button>
+                    </router-link>
+    
                     </b-input-group-append>
                 </b-input-group>
             </span>
@@ -24,14 +37,16 @@
                 </span>
         </div>
         <b-card class="content_surface">
-            <div class="custom-control custom-switch">
-                <input type="checkbox" class="custom-control-input" id="customSwitches">
-                <label class="custom-control-label" for="customSwitches">Toggle this switch element</label>
-            </div>
                 <div class="card"  >
                 <div class="profile-img">
                    <!--   <img class="img-responsive" src="@/assets/user.png" style=" height:150px;" width="100%" /> -->
                   <img class="img-circle img-responsive rounded-circle"  src="@/assets/user.png" style="width:120px; height:120px;"  />  
+                </div>
+                <div class="custom-control custom-switch">
+                <b-button style="margin-left:905px; margin-top:-190px;" variant="outline-danger" size="lg" class = " mb-2 btn btn-lg space_style" v-on:click = "editPrivacy()">
+                    <b-icon v-if="profile.profileStatus == 'privateProfile'" icon="lock-fill" aria-hidden="true" tooltip="click to go public"></b-icon> 
+                    <b-icon v-if="profile.profileStatus == 'publicProfile'" icon="unlock-fill" aria-hidden="true"  tooltip="click to go public"></b-icon> 
+                </b-button>
                 </div>
                 <div class=" d-inline-block " style=" height:100%; background-color: #ced2d3;">
                     <h4 style = "position:left; left:60px; top:2px; background-color:#ebf0fa;"><b> {{profile.name}}  {{profile.surname}} </b></h4>
@@ -171,8 +186,10 @@ export default {
         password : "",
         currentPassword : "",
         newPassword : "",
-        repeatNewPassword : ""
-
+        repeatNewPassword : "",
+        selectedUser:[''],
+        profileStatus: "",
+        users: [],
         }
     },
      mounted(){
@@ -187,7 +204,16 @@ export default {
                        alert("Error");
                         console.log(res);
                  });
-    
+    this.axios.get('http://localhost:8083/profileMicroservice/api/profile/getAllUsers',{ 
+             headers: {
+                 'Authorization': 'Bearer ' + token,
+             }
+         }).then(response => {
+               this.users = response.data
+         }).catch(res => {
+                       alert("Error");
+                        console.log(res);
+                 });
    },
     methods:{
         toggle () {
@@ -263,7 +289,35 @@ export default {
                     alert("Please, try later.")
                     console.log(response);
                 })
-        }
+        },
+        editPrivacy:  function () {
+            let token = localStorage.getItem('token').substring(1, localStorage.getItem('token').length-1);
+            const userUsername ={
+                username : this.profile.username,
+            } 
+            this.axios.post('http://localhost:8083/profileMicroservice/api/profile/updateProfileStatus',userUsername, { 
+                headers: {
+                    'Authorization': 'Bearer ' + token,
+                }})
+                .then(response => {
+                    this.axios.get('http://localhost:8083/profileMicroservice/api/profile/account',{ 
+                        headers: {
+                            'Authorization': 'Bearer ' + token,
+                        }
+                    }).then(response => {
+                        this.profile = response.data;
+                    }).catch(res => {
+                                alert("Error");
+                                    console.log(res);
+                            });
+                    
+                    console.log(response);
+                })
+                .catch(response => {
+                    alert("Please, try later.")
+                    console.log(response);
+                })
+        },
     }
 }
 </script>
