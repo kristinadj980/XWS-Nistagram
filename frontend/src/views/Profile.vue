@@ -15,6 +15,17 @@
                 <b-input-group class=" serach_look">
                     <b-form-input placeholder="search.."></b-form-input>
                     <b-input-group-append>
+                        <input 
+                        list="my-list-id" 
+                        v-model="selectedLocation" 
+                        class="input_style" 
+                        placeholder="enter location.."
+                        style="margin-top: 1% !important; width:500px;">
+                            <datalist id="my-list-id">
+                        <option v-for="location in locations" v-bind:key="location.id">
+                            {{ location.country }}, {{location.city}},  {{location.street}}, {{location.objectName}} 
+                        </option>
+                    </datalist>
                     <b-button variant="outline-danger"><b-icon icon="search" aria-hidden="true"></b-icon></b-button>
                     </b-input-group-append>
                 </b-input-group>
@@ -24,20 +35,23 @@
                 </span>
         </div>
         <b-card class="content_surface" align="left">
-            <div class="card header_surface" style="margin-top:10px;"  >
+            <div class="card header_surface" style="margin-top:10px; border-color: #d4bcce; margin-left:50px;"  >
                   <img class="img-circle img-responsive rounded-circle"  src="https://images.vexels.com/media/users/3/147101/isolated/preview/b4a49d4b864c74bb73de63f080ad7930-instagram-profile-button-by-vexels.png" style=" width:120px; height:120px;"  /> 
                     
-                    <b-col>
-                        <h5
+                    <b-col style="margin-top:-12%;  margin-left:170px;">
+                        <h3 align="left"
                         text-align-center
                         v-bind:style="{ align: 'center', justify: 'center' }"
-                        >
+                        ><b>
                         {{profile.username}}
-                        </h5>
+                        </b>
+                        </h3>
+                        <h4 align="left">  <strong>123</strong> posts <strong>123</strong> followers <strong>123</strong> following </h4>
+                        <h4 align="left">{{profile.biography}}</h4>
                     </b-col>
             </div>
             <b-tabs 
-            style="margin-top:10px;" 
+            style="margin-top:70px;" 
             align="center" 
             active-nav-item-class="font-weight-bold text-uppercase text-danger"
             active-tab-class="font-weight-bold"
@@ -48,12 +62,13 @@
                 </template>
                     <b-card class="post_look" v-for="post in posts" v-bind:key="post.fileName">
                         <b-row >
-                        <h4><b-icon icon="person-circle" aria-hidden="true"></b-icon>  {{post.username}}</h4>
+                        <h4 align="left"><b-icon icon="person-circle" aria-hidden="true"></b-icon>  {{post.username}}</h4>
                         </b-row>
-                        <h6>{{post.locationDTO.city}},{{post.locationDTO.street}},{{post.locationDTO.objectName}},{{post.locationDTO.country}}</h6>
+                        <h6 align="left">{{post.locationDTO.city}},{{post.locationDTO.street}},{{post.locationDTO.objectName}},{{post.locationDTO.country}}</h6>
                         <b-img thumbnail  v-bind:src="post.imageBytes" alt="Image 1"></b-img>
-                        <br>
-
+                        <h4 align="left">{{post.description}}</h4>
+                        <h5 align="left"><b-icon icon="hand-thumbs-up" aria-hidden="true"></b-icon>  likes <b-icon icon="hand-thumbs-down" aria-hidden="true"></b-icon> <span style="margin-left:430px;"></span> <b-icon icon="bookmark" aria-hidden="true" align="right"></b-icon></h5>
+                        <h4 align="left"><b-icon icon="chat-square" aria-hidden="true"></b-icon>  comments</h4>
                     </b-card>
                 </b-tab>
 
@@ -86,6 +101,7 @@ export default {
         website: "",
         biography: "",
         posts: [],
+        users: [],
         }
     },
     mounted(){
@@ -97,6 +113,16 @@ export default {
          }).then(response => {
                this.profile = response.data;
                this.getMyPosts(response.data);
+         }).catch(res => {
+                       alert("Error");
+                        console.log(res);
+                 });
+        this.axios.get('http://localhost:8083/profileMicroservice/api/profile/getAllUsers',{ 
+             headers: {
+                 'Authorization': 'Bearer ' + token,
+             }
+         }).then(response => {
+               this.users = response.data;
          }).catch(res => {
                        alert("Error");
                         console.log(res);

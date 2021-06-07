@@ -119,7 +119,17 @@ public class ProfileController {
 	}
 	
 	
-	
+	@GetMapping("/getAllUsers")
+	public ResponseEntity<EditProfileDTO> getAllUsers() {
+		Authentication currentUser = SecurityContextHolder.getContext().getAuthentication();
+		Person person = (Person) currentUser.getPrincipal();
+		Profile profile = profileService.findById(person.getId());
+		EditProfileDTO editProfileDTO = new EditProfileDTO(profile.getUsername(), profile.getName(), profile.getSurname(), profile.getEmail(), profile.getPhoneNumber(),
+				profile.getBirthDate(), profile.getGender(), profile.getWebsite(), profile.getBiography());
+		
+		return (ResponseEntity<EditProfileDTO>) (profile == null ? new ResponseEntity<>(HttpStatus.NOT_FOUND) : ResponseEntity.ok(editProfileDTO));
+
+	}
 	
 	
 	
