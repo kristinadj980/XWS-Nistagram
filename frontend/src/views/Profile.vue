@@ -17,16 +17,16 @@
                     <b-input-group-append>
                         <input 
                         list="my-list-id" 
-                        v-model="selectedLocation" 
+                        v-model="selectedUser" 
                         class="input_style" 
-                        placeholder="enter location.."
+                        placeholder="enter username..."
                         style="margin-top: 1% !important; width:500px;">
                             <datalist id="my-list-id">
-                        <option v-for="location in locations" v-bind:key="location.id">
-                            {{ location.country }}, {{location.city}},  {{location.street}}, {{location.objectName}} 
+                        <option v-for="user in users" v-bind:key="user.id">
+                            {{ user.username }} 
                         </option>
                     </datalist>
-                    <b-button variant="outline-danger"><b-icon icon="search" aria-hidden="true"></b-icon></b-button>
+                    <b-button variant="outline-danger"><b-icon icon="search" aria-hidden="true" v-on:click = "searchUser"></b-icon></b-button>
                     </b-input-group-append>
                 </b-input-group>
             </span>
@@ -102,6 +102,7 @@ export default {
         biography: "",
         posts: [],
         users: [],
+        selectedUser:[''],
         }
     },
     mounted(){
@@ -122,7 +123,7 @@ export default {
                  'Authorization': 'Bearer ' + token,
              }
          }).then(response => {
-               this.users = response.data;
+               this.users = response.data
          }).catch(res => {
                        alert("Error");
                         console.log(res);
@@ -152,6 +153,16 @@ export default {
                 for(let i=0; i< response.data.length; i++){
                         this.posts[i].imageBytes = 'data:image/jpeg;base64,' + this.posts[i].imageBytes;                
                 } 
+            }).catch(res => {
+                        alert("Error");
+                            console.log(res);
+                    });
+                    
+        },
+        searchUser: function(selectedUser) {
+            this.axios.get('http://localhost:8083/profileMicroservice/api/profile/getUserProfile/'+ selectedUser,)
+            .then(response => {
+               this.users = response.data
             }).catch(res => {
                         alert("Error");
                             console.log(res);

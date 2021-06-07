@@ -12,6 +12,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,6 +24,7 @@ import com.nistagram.profileMicroservice.dto.PostDTO;
 import com.nistagram.profileMicroservice.dto.RegistredUserDTO;
 import com.nistagram.profileMicroservice.model.Person;
 import com.nistagram.profileMicroservice.model.Profile;
+import com.nistagram.profileMicroservice.model.ProfileStatus;
 import com.nistagram.profileMicroservice.service.implService.ProfileService;
 
 
@@ -120,15 +122,17 @@ public class ProfileController {
 	
 	
 	@GetMapping("/getAllUsers")
-	public ResponseEntity<EditProfileDTO> getAllUsers() {
-		Authentication currentUser = SecurityContextHolder.getContext().getAuthentication();
-		Person person = (Person) currentUser.getPrincipal();
-		Profile profile = profileService.findById(person.getId());
-		EditProfileDTO editProfileDTO = new EditProfileDTO(profile.getUsername(), profile.getName(), profile.getSurname(), profile.getEmail(), profile.getPhoneNumber(),
-				profile.getBirthDate(), profile.getGender(), profile.getWebsite(), profile.getBiography());
+	public ResponseEntity<List<Profile>> getAllUsers() {	
+		List<Profile> usersProfiles = profileService.findAll();
 		
-		return (ResponseEntity<EditProfileDTO>) (profile == null ? new ResponseEntity<>(HttpStatus.NOT_FOUND) : ResponseEntity.ok(editProfileDTO));
-
+		return (ResponseEntity<List<Profile>>) (usersProfiles == null
+				? new ResponseEntity<>(HttpStatus.NOT_FOUND) : ResponseEntity.ok(usersProfiles));
+	}
+	
+	@GetMapping("/getUserProfile/{username}")
+	public ResponseEntity getUserProfile(@PathVariable String username) {
+		
+		return new ResponseEntity(profileService.findByUsername(username), HttpStatus.OK); 
 	}
 	
 	

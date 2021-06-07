@@ -1,5 +1,6 @@
 package com.nistagram.profileMicroservice.service;
 
+import java.util.List;
 import java.util.Optional;
 
 import com.nistagram.profileMicroservice.dto.EditProfileDTO;
@@ -11,6 +12,8 @@ public interface IProfileService {
 	Profile findByEmail(String email);
 	Profile save(PersonRequestDTO userRequest);
 	Profile findById(Long id);
+	Profile findByUsername(String username);
 	void update(EditProfileDTO editProfileDTO);
 	void updatePassword(EditProfileDTO editProfileDTO);
+	List<Profile> findAll();
 }

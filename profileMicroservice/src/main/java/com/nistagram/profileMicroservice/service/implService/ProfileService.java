@@ -102,4 +102,14 @@ public class ProfileService implements IProfileService {
 		profileRepository.save(profile);
 		
 	}
+
+	@Override
+	public List<Profile> findAll() {
+		return profileRepository.findAll();
+	}
+
+	@Override
+	public Profile findByUsername(String username) {
+		return profileRepository.findByUsername(username);
+	}
 }
