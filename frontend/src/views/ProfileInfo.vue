@@ -24,6 +24,29 @@
                 </span>
         </div>
         <b-card class="content_surface">
+            <b-button  class="btn btn-info btn-lg space_style"  style="background-color:#f08080;margin-left:-1300px;" v-b-modal.modal-3>Archive stories</b-button>
+                            <b-modal ref="modal-ref3" id="modal-3" title="Archive stories" hide-footer>
+                                <b-tabs 
+            style="margin-top:70px;" 
+            align="center" 
+            active-nav-item-class="font-weight-bold text-uppercase text-danger"
+            active-tab-class="font-weight-bold"
+            content-class="mt-3">
+                <b-tab active>
+                <template #title>
+                   <b-icon icon="grid3x3-gap" aria-hidden="true"></b-icon><strong> Stories </strong>
+                </template>
+                    <b-card class="post_look" v-for="story in stories" v-bind:key="story.fileName">
+                        <b-row >
+                        <h4 align="left"><b-icon icon="person-circle" aria-hidden="true"></b-icon>  {{story.username}}</h4>
+                        </b-row>
+                        <h6 align="left">{{story.locationDTO.city}},{{story.locationDTO.street}},{{story.locationDTO.objectName}},{{story.locationDTO.country}}</h6>
+                        <b-img thumbnail  v-bind:src="story.imageBytes" alt="Image 1"></b-img>
+                        <h4 align="left">{{story.description}}</h4>
+                    </b-card>
+                </b-tab>
+            </b-tabs>
+         </b-modal>
                 <div class="card"  >
                 <div class="profile-img">
                    <!--   <img class="img-responsive" src="@/assets/user.png" style=" height:150px;" width="100%" /> -->
@@ -167,8 +190,8 @@ export default {
         password : "",
         currentPassword : "",
         newPassword : "",
-        repeatNewPassword : ""
-
+        repeatNewPassword : "",
+        stories: [],
         }
     },
      mounted(){
@@ -179,6 +202,7 @@ export default {
              }
          }).then(response => {
                this.profile = response.data;
+               this.getMyStories(response.data);
          }).catch(res => {
                        alert("Error");
                         console.log(res);
@@ -188,6 +212,9 @@ export default {
     methods:{
         toggle () {
         this.show = !this.show
+        },
+        cancelStories() {
+            this.$refs['modal-ref3'].hide();
         },
         showHomepage: function(){
            window.location.href = "/homepage";
@@ -259,6 +286,19 @@ export default {
                     alert("Please, try later.")
                     console.log(response);
                 })
+        },
+        getMyStories: function(person) {
+            this.axios.get('http://localhost:8083/mediaMicroservice/story/getMyStories/'+ person.username,)
+            .then(response => {
+                this.stories = response.data;
+                for(let i=0; i< response.data.length; i++){
+                        this.stories[i].imageBytes = 'data:image/jpeg;base64,' + this.stories[i].imageBytes;                
+                } 
+            }).catch(res => {
+                        alert("Error");
+                            console.log(res);
+                    });
+                    
         }
     }
 }

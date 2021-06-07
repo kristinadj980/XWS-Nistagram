@@ -68,11 +68,9 @@ public class StoryService implements IStoryService {
 	        
 	        story.setDate(LocalDate.now());
 	       
-	        
-	        story.setEndTime(LocalDateTime.now());
-	       
 	            
 	        story.setStartTime(LocalDateTime.now());
+	        story.setEndTime(story.getStartTime().plusMinutes(3));//izmijeniti na 24h
 	        
 	        profileMediaService.addStoryToProfile(storyDTO, story);
 	        
@@ -90,6 +88,7 @@ public class StoryService implements IStoryService {
 		}
 		List<Story> stories = existingProfile.getStories();
 		for (Story story : stories) {
+			if(LocalDateTime.now().isBefore(story.getEndTime())) {
 			List<Media> medias = story.getMedia();
 			for (Media m : medias) {
 				LocationDTO locationDTO = new LocationDTO(story.getLocation().getCity(), story.getLocation().getStreet(),story.getLocation().getCountry(),
@@ -98,6 +97,9 @@ public class StoryService implements IStoryService {
 				myStories.add(new StoryDTO(story.getDescription(),username,m.getFileName(),locationDTO));
 			}
 		}
+		}
+		
+		
 		
 		return getImagesFiles(myStories);
 	}
