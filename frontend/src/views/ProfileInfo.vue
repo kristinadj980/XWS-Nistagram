@@ -12,25 +12,7 @@
                     <b-icon icon="image" aria-hidden="true"></b-icon> Add post</b-button>
                 <b-button pill variant="outline-danger" class = "btn btn-lg space_style" v-on:click = "editProfile">
                     <b-icon icon="gear" aria-hidden="true"></b-icon> Edit profile</b-button>
-                <b-input-group class=" serach_look">
-                    <b-input-group-append>
-                        <input 
-                        list="my-list-id" 
-                        v-model="selectedUser" 
-                        class="input_style" 
-                        placeholder="enter username..."
-                        style="margin-top: 3% !important; width:400px; height:35px;">
-                            <datalist id="my-list-id">
-                        <option v-for="user in users" v-bind:key="user.id">
-                            {{ user.username }} 
-                        </option>
-                    </datalist>
-                    <router-link :to="{ name: 'GeneralProfiles', params: {selectedUsername: this.selectedUser}}" class="search-btn">
-                       <b-button style="margin-top: -15% !important;  margin-left: 100% !important;" variant="outline-danger"><b-icon icon="search" aria-hidden="true"></b-icon></b-button>
-                    </router-link>
-    
-                    </b-input-group-append>
-                </b-input-group>
+                
             </span>
                 <span  style="float:right;margin:15px">
                     <b-button pill variant="outline-danger" class = "btn btn-lg btn-light" style="margin-right:20px;" v-on:click = "logOut">Log Out</b-button>
@@ -189,7 +171,6 @@ export default {
         repeatNewPassword : "",
         selectedUser:[''],
         profileStatus: "",
-        users: [],
         }
     },
      mounted(){
@@ -200,16 +181,6 @@ export default {
              }
          }).then(response => {
                this.profile = response.data;
-         }).catch(res => {
-                       alert("Error");
-                        console.log(res);
-                 });
-    this.axios.get('http://localhost:8083/profileMicroservice/api/profile/getAllUsers',{ 
-             headers: {
-                 'Authorization': 'Bearer ' + token,
-             }
-         }).then(response => {
-               this.users = response.data
          }).catch(res => {
                        alert("Error");
                         console.log(res);
