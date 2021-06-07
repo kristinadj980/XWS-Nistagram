@@ -10,8 +10,8 @@
                     <b-icon icon="person" aria-hidden="true"></b-icon>Profile</b-button>
                 <b-button pill variant="outline-danger" class = "btn btn-lg space_style" v-on:click = "addPosts">
                     <b-icon icon="image" aria-hidden="true"></b-icon> Add post</b-button>
-                     <b-button pill variant="outline-danger" class = "btn btn-lg space_style" v-on:click = "konekcija">
-                    <b-icon icon="image" aria-hidden="true"></b-icon> KONEKCIJAA</b-button>
+                <b-button pill variant="outline-danger" class = "btn btn-lg space_style" v-on:click = "addStories">
+                    <b-icon icon="image" aria-hidden="true"></b-icon> Add story</b-button>
                 <b-input-group class=" serach_look">
                     <b-form-input placeholder="search.."></b-form-input>
                     <b-input-group-append>
@@ -118,6 +118,16 @@ export default {
                alert(Error)
                 console.log(res);
             });
+            this.axios.get('http://localhost:8083/mediaMicroservice/location/getLocations',{ 
+             headers: {
+                 'Authorization': 'Bearer ' + token,
+             }
+         }).then(response => {
+              this.locations = response.data;
+         }).catch(res => {
+               alert(Error)
+                console.log(res);
+            });
         
     },
     methods:{
@@ -133,6 +143,9 @@ export default {
         },
         addPosts : function() {
             window.location.href = "/addingPosts";
+        },
+        addStories : function() {
+            window.location.href = "/addingStories";
         },
         saveMedia : function() {
             let token = localStorage.getItem('token').substring(1, localStorage.getItem('token').length-1);
@@ -160,31 +173,8 @@ export default {
                     
                     });  
         },
-        konekcija:function(){
-            let token = localStorage.getItem('token').substring(1, localStorage.getItem('token').length-1);
-            
-            this.axios.get('http://localhost:8083/mediaMicroservice/story/konekcija',{
-                headers: {
-                    
-                    'Authorization': 'Bearer ' + token
-                }
-                }).then(response => {
-                       console.log("KONEKCIJAAAAAAA")
-                       //alert(this.fileName)
-                       //alert("Success")
-                       console.log(response.data)
-                       
-                       
-                  
-                    })
-                    .catch(response => {
-                    console.log(response.data)
-                    alert("Eror")
-                    
-                    });  
-        },
         postPicture :function(){  
-            const postInfo= {
+            const storyInfo= {
                 description : this.description,
                 location : this.selectedLocation,
                 //tags : this.tags,
@@ -194,9 +184,9 @@ export default {
                  }
           
 
-          this.axios.post('http://localhost:8083/mediaMicroservice/post/addNewPost',postInfo,{ 
+          this.axios.post('http://localhost:8083/mediaMicroservice/story/addNewStory',storyInfo,{ 
                 }).then(response => {
-                    alert("Picture is posted!");
+                    alert("Story is posted!");
 
                     console.log(response);                
                 }).catch(res => {
@@ -252,7 +242,7 @@ export default {
         margin-left: 60px;
         width: 500px;
     }
-    #addingPosts {
+    #addingStories {
         font-family: Avenir, Helvetica, Arial, sans-serif;
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;

@@ -8,6 +8,7 @@ import com.example.mediamicroservice.model.Media;
 import com.example.mediamicroservice.model.Post;
 import com.example.mediamicroservice.model.ProfileMedia;
 import com.example.mediamicroservice.model.Story;
+import com.example.mediamicroservice.model.Tag;
 import com.example.mediamicroservice.repository.StoryRepository;
 import com.example.mediamicroservice.service.IStoryService;
 
@@ -15,7 +16,10 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.io.IOUtils;
@@ -59,8 +63,17 @@ public class StoryService implements IStoryService {
 	        media.setFileName(storyDTO.getFileName());
 	        List<Media> medias = new ArrayList<Media>();
 	        medias.add(media);
+	        story.setDescription(storyDTO.getDescription());
 	        story.setMedia(medias);
+	        
 	        story.setDate(LocalDate.now());
+	       
+	        
+	        story.setEndTime(LocalDateTime.now());
+	       
+	            
+	        story.setStartTime(LocalDateTime.now());
+	        
 	        profileMediaService.addStoryToProfile(storyDTO, story);
 	        
 	        Story s = storyRepository.save(story);

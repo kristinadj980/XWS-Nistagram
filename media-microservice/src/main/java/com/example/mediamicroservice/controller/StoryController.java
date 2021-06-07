@@ -50,10 +50,10 @@ public class StoryController {
     }
 	
 	@PostMapping("/addNewStory")
-	public ResponseEntity<Post> addNewStory(@RequestBody StoryDTO storyDTO) {
+	public ResponseEntity<Story> addNewStory(@RequestBody StoryDTO storyDTO) {
         Story response = storyService.addNewStory(storyDTO);
         
-		return (ResponseEntity<Post>) (response == null ? new ResponseEntity<>(HttpStatus.NOT_FOUND) : ResponseEntity.ok(response));
+		return (ResponseEntity<Story>) (response == null ? new ResponseEntity<>(HttpStatus.NOT_FOUND) : ResponseEntity.ok(response));
 		
 	}
 	

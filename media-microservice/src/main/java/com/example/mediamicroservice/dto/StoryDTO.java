@@ -24,6 +24,17 @@ public class StoryDTO {
 		this.locationDTO = locationDTO;
 	}
 
+	public StoryDTO(String location, String description, String username, String fileName, LocationDTO locationDTO,
+			List<byte[]> imageBytes) {
+		super();
+		this.location = location;
+		this.description = description;
+		this.username = username;
+		this.fileName = fileName;
+		this.locationDTO = locationDTO;
+		this.imageBytes = imageBytes;
+	}
+
 	public StoryDTO(String location,String description, List<TagDTO> tags, String username, Long userId, String fileName,
 			LocationDTO locationDTO, List<byte[]> imageBytes) {
 		super();

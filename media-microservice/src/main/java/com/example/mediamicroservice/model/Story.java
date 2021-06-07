@@ -3,6 +3,7 @@ package com.example.mediamicroservice.model;
 import javax.persistence.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Date;
 import java.util.List;
@@ -14,25 +15,25 @@ public class Story {
 	@Column(name = "id", nullable = false)
 	private Long id;
 
-	@Column(name = "description", nullable = false)
+	@Column(name = "description", nullable = true)
 	private String description;
 	
-	@Column(name = "startTime", nullable = false)
-	private LocalTime startTime;
+	@Column(name = "startTime", nullable = true)
+	private LocalDateTime startTime;
 
-	@Column(name = "endTime", nullable = false)
-	private LocalTime endTime;
+	@Column(name = "endTime", nullable = true)
+	private LocalDateTime endTime;
 
-	@Column(name = "visible", nullable = false)
+	@Column(name = "visible", nullable = true)
 	private boolean visible;
 
-	@Column(name = "date", nullable = false)
+	@Column(name = "date", nullable = true)
 	private LocalDate date;
 	
-	@Column(name = "highlighted", nullable = false)
+	@Column(name = "highlighted", nullable = true)
 	private boolean highlighted;
 
-	@Column(name = "numberOfInappContent", nullable = false)
+	@Column(name = "numberOfInappContent", nullable = true)
 	private int numberOfInappropriateContent;
 
 	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
@@ -42,7 +43,7 @@ public class Story {
 	public List<Media> medias;
 
 	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-	@JoinTable(name = "story_medias",
+	@JoinTable(name = "story_tags",
 	joinColumns = @JoinColumn(name = "story_id", referencedColumnName = "id"),
 	inverseJoinColumns = @JoinColumn(name = "tag_id", referencedColumnName = "id"))
 	public List<Tag> tags;
@@ -55,7 +56,7 @@ public class Story {
 
 	}
 	   
-	public Story(Long id, String description, LocalTime startTime, LocalTime endTime, boolean visible, LocalDate date,
+	public Story(Long id, String description, LocalDateTime startTime,LocalDateTime endTime, boolean visible, LocalDate date,
 			boolean highlighted, int numberOfInappropriateContent, List<Media> medias, List<Tag> tags,
 			Location location) {
 		super();
@@ -95,25 +96,25 @@ public class Story {
 
 
 
-	public LocalTime getStartTime() {
+	public LocalDateTime getStartTime() {
 		return startTime;
 	}
 
 
 
-	public void setStartTime(LocalTime startTime) {
+	public void setStartTime(LocalDateTime startTime) {
 		this.startTime = startTime;
 	}
 
 
 
-	public LocalTime getEndTime() {
+	public LocalDateTime getEndTime() {
 		return endTime;
 	}
 
 
 
-	public void setEndTime (LocalTime endTime) {
+	public void setEndTime (LocalDateTime endTime) {
 		this.endTime = endTime;
 	}
 
