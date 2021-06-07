@@ -1,6 +1,9 @@
 package com.example.mediamicroservice.model;
 
 import javax.persistence.*;
+
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.Date;
 import java.util.List;
 
@@ -15,16 +18,16 @@ public class Story {
 	private String description;
 	
 	@Column(name = "startTime", nullable = false)
-	private Date startTime;
+	private LocalTime startTime;
 
 	@Column(name = "endTime", nullable = false)
-	private Date endTime;
+	private LocalTime endTime;
 
 	@Column(name = "visible", nullable = false)
 	private boolean visible;
 
 	@Column(name = "date", nullable = false)
-	private Date date;
+	private LocalDate date;
 	
 	@Column(name = "highlighted", nullable = false)
 	private boolean highlighted;
@@ -52,7 +55,7 @@ public class Story {
 
 	}
 	   
-	public Story(Long id, String description, Date startTime, Date endTime, boolean visible, Date date,
+	public Story(Long id, String description, LocalTime startTime, LocalTime endTime, boolean visible, LocalDate date,
 			boolean highlighted, int numberOfInappropriateContent, List<Media> medias, List<Tag> tags,
 			Location location) {
 		super();
@@ -92,25 +95,25 @@ public class Story {
 
 
 
-	public Date getStartTime() {
+	public LocalTime getStartTime() {
 		return startTime;
 	}
 
 
 
-	public void setStartTime(Date startTime) {
+	public void setStartTime(LocalTime startTime) {
 		this.startTime = startTime;
 	}
 
 
 
-	public Date getEndTime() {
+	public LocalTime getEndTime() {
 		return endTime;
 	}
 
 
 
-	public void setEndTime(Date endTime) {
+	public void setEndTime (LocalTime endTime) {
 		this.endTime = endTime;
 	}
 
@@ -128,13 +131,13 @@ public class Story {
 
 
 
-	public Date getDate() {
+	public LocalDate getDate() {
 		return date;
 	}
 
 
 
-	public void setDate(Date date) {
+	public void setDate(LocalDate date) {
 		this.date = date;
 	}
 
