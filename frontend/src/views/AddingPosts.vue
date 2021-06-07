@@ -23,7 +23,7 @@
         </div>
        <form>
             <h4 style="left: 10px;">Choose image </h4>
-            <input type="file" name="image" accept="image/png, image/jpeg" id="file" ref="file" v-on:change="handleFileUpload()">
+            <input type="file" name="image" accept="image/png, image/jpeg, video/mp4,video/x-m4v,video/*" id="file" ref="file" v-on:change="handleFileUpload()">
             <h4 for="textarea-large" 
             class="text-left" 
             style="margin-bottom:2%; 

@@ -68,7 +68,8 @@
                         <h4 align="left"><b-icon icon="person-circle" aria-hidden="true"></b-icon>  {{post.username}}</h4>
                         </b-row>
                         <h6 align="left">{{post.locationDTO.city}},{{post.locationDTO.street}},{{post.locationDTO.objectName}},{{post.locationDTO.country}}</h6>
-                        <b-img thumbnail  v-bind:src="post.imageBytes" alt="Image 1"></b-img>
+                        <b-img v-if="!post.fileName.includes(videoText)" thumbnail  v-bind:src="post.imageBytes" alt="Image 1"></b-img>
+                        <video v-if="post.fileName.includes(videoText)" autoplay controls v-bind:src="post.imageBytes" width="400" height="400" style="display:block; margin-left:auto; margin-right:auto"></video>
                         <h4 align="left">{{post.description}}</h4>
                         <h5 align="left"><b-icon icon="hand-thumbs-up" aria-hidden="true"></b-icon>  likes <b-icon icon="hand-thumbs-down" aria-hidden="true"></b-icon> <span style="margin-left:430px;"></span> <b-icon icon="bookmark" aria-hidden="true" align="right"></b-icon></h5>
                         <h4 align="left"><b-icon icon="chat-square" aria-hidden="true"></b-icon>  comments</h4>
@@ -106,6 +107,7 @@ export default {
         posts: [],
         users: [],
         selectedUser:[''],
+        videoText: "mp4",
         }
     },
     mounted(){
@@ -153,8 +155,16 @@ export default {
             this.axios.get('http://localhost:8083/mediaMicroservice/post/getMyPosts/'+ person.username,)
             .then(response => {
                 this.posts = response.data;
+                let video = "mp4";
+                
                 for(let i=0; i< response.data.length; i++){
-                        this.posts[i].imageBytes = 'data:image/jpeg;base64,' + this.posts[i].imageBytes;                
+                     if(!this.posts[i].fileName.includes(video)){
+                        console.log("slika jeee");
+                        this.posts[i].imageBytes = 'data:image/jpeg;base64,' + this.posts[i].imageBytes; 
+                    }else{
+                        console.log("video jeee");
+                        this.posts[i].imageBytes = 'data:video/mp4;base64,' + this.posts[i].imageBytes;     
+                    }            
                 } 
             }).catch(res => {
                         alert("Error");
