@@ -1,16 +1,22 @@
 package com.example.mediamicroservice.service.implService;
 
+import com.example.mediamicroservice.dto.LocationDTO;
 import com.example.mediamicroservice.dto.PostDTO;
 import com.example.mediamicroservice.model.Location;
 import com.example.mediamicroservice.model.Media;
 import com.example.mediamicroservice.model.Post;
+import com.example.mediamicroservice.model.ProfileMedia;
 import com.example.mediamicroservice.repository.PostRepository;
 import com.example.mediamicroservice.service.IPostService;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,7 +26,8 @@ public class PostService implements IPostService {
 	
 	private final PostRepository postRepository;
 	private final ProfileMediaService profileMediaService;
-	
+	private static String uploadDir = "user-photos";
+
 	@Autowired
 	public PostService(PostRepository postRepository,ProfileMediaService profileMediaService) {
 		super();
@@ -60,6 +67,56 @@ public class PostService implements IPostService {
 		return p;
 	}
 
+	@Override
+	public List<PostDTO> findMyPosts(String username){
+		
+		List<PostDTO> myPosts = new ArrayList<PostDTO>();
+		ProfileMedia existingProfile = profileMediaService.findByUsername(username);
+		System.out.println(existingProfile.getUsername());
+		if(existingProfile == null) {
+			throw new IllegalArgumentException("Profile doesn't exist!");
+		}
+		List<Post> posts = existingProfile.getPosts();
+		for (Post post : posts) {
+			List<Media> medias = post.getMedias();
+			for (Media m : medias) {
+				LocationDTO locationDTO = new LocationDTO(post.getLocation().getCity(), post.getLocation().getStreet(),post.getLocation().getCountry(),
+						post.getLocation().getObjectName());
+			
+				myPosts.add(new PostDTO(post.getDescription(),username,m.getFileName(),locationDTO));
+			}
+		}
+		
+		return getImagesFiles(myPosts);
+	}
 
+	 public List<PostDTO> getImagesFiles(List<PostDTO> posts) {
+		 List<PostDTO> postsDto = new ArrayList<>();
+	     if (posts != null) {
+	    	 String filePath = new File("").getAbsolutePath();
+		     filePath = filePath.concat("/" + uploadDir + "/");
+	         for (PostDTO post : posts) {
+	        	 postsDto.add(imageFile(post, filePath));
+	        }
+	    }
+	    return postsDto;
+	    
+	 }
+
+
+	    public PostDTO imageFile(PostDTO post, String filePath) {
+	    	PostDTO postsDto = post;
+			List<byte[]> imageBytes = new ArrayList<byte[]>();
+			post.setImageBytes(imageBytes);
+	        File in = new File(filePath + "/"+post.getFileName());
+	        try {
+	        	postsDto.getImageBytes().add(IOUtils.toByteArray(new FileInputStream(in)));
+	        } catch (IOException e) {
+	            e.printStackTrace();
+	        }catch(NullPointerException n) {
+	            n.printStackTrace();
+	        }
+	        return postsDto;
+	    }
 	
 }

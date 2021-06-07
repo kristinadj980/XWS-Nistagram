@@ -63,11 +63,11 @@ public class PostController {
 	
 
 	@GetMapping("/getMyPosts/{username}")
-	public ResponseEntity<List<PostDTO>> getMyPosts(@PathVariable String username) {
+	public ResponseEntity getMyPosts(@PathVariable String username) {
 		System.out.println("POGODIOOOOOOOOOOOOOOOOOOOO");
-		List<PostDTO> myPosts = profileMediaService.findMyPosts(username);
+		return new ResponseEntity(postService.findMyPosts(username), HttpStatus.OK); 
 		
-		return (ResponseEntity<List<PostDTO>>) (myPosts == null ? new ResponseEntity<>(HttpStatus.NOT_FOUND) : ResponseEntity.ok(myPosts));
+		//return (ResponseEntity<List<PostDTO>>) (myPosts == null ? new ResponseEntity<>(HttpStatus.NOT_FOUND) : ResponseEntity.ok(myPosts));
 
 	}
 	

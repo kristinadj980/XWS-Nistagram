@@ -49,25 +49,4 @@ public class ProfileMediaService implements IProfileMediaService {
         }
 	}
 	
-	public List<PostDTO> findMyPosts(String username){
-		
-		List<PostDTO> myPosts = new ArrayList<PostDTO>();
-		ProfileMedia existingProfile = findByUsername(username);
-		System.out.println(existingProfile.getUsername());
-		if(existingProfile == null) {
-			throw new IllegalArgumentException("Profile doesn't exist!");
-		}
-		List<Post> posts = existingProfile.getPosts();
-		for (Post post : posts) {
-			List<Media> medias = post.getMedias();
-			for (Media m : medias) {
-				LocationDTO locationDTO = new LocationDTO(post.getLocation().getCity(), post.getLocation().getStreet(),post.getLocation().getCountry(),
-						post.getLocation().getObjectName());
-			
-			myPosts.add(new PostDTO(post.getDescription(),username,m.getFileName(),locationDTO));
-			}
-		}
-		
-		return myPosts;
-	}
 }

@@ -40,25 +40,21 @@
             style="margin-top:10px;" 
             align="center" 
             active-nav-item-class="font-weight-bold text-uppercase text-danger"
-            active-tab-class="font-weight-bold text-success"
+            active-tab-class="font-weight-bold"
             content-class="mt-3">
                 <b-tab active>
                 <template #title>
                    <b-icon icon="grid3x3-gap" aria-hidden="true"></b-icon><strong>   posts</strong>
                 </template>
-                    <b-container fluid class="p-4">
-                    <b-row>
-                        <b-col>
-                        <b-img thumbnail fluid src="https://picsum.photos/250/250/?image=54" alt="Image 1"></b-img>
-                        </b-col>
-                        <b-col>
-                        <b-img thumbnail fluid src="https://picsum.photos/250/250/?image=58" alt="Image 2"></b-img>
-                        </b-col>
-                        <b-col>
-                        <b-img thumbnail fluid src="https://picsum.photos/250/250/?image=59" alt="Image 3"></b-img>
-                        </b-col>
-                    </b-row>
-                    </b-container>
+                    <b-card class="post_look" v-for="post in posts" v-bind:key="post.fileName">
+                        <b-row >
+                        <h4><b-icon icon="person-circle" aria-hidden="true"></b-icon>  {{post.username}}</h4>
+                        </b-row>
+                        <h6>{{post.locationDTO.city}},{{post.locationDTO.street}},{{post.locationDTO.objectName}},{{post.locationDTO.country}}</h6>
+                        <b-img thumbnail  v-bind:src="post.imageBytes" alt="Image 1"></b-img>
+                        <br>
+
+                    </b-card>
                 </b-tab>
 
                 <b-tab>
@@ -79,7 +75,7 @@ export default {
     data() {
     return {
         searchData: "",
-        profile: "",
+        profile: [],
         username: "",
         name: "",
         surname: "",
@@ -89,21 +85,22 @@ export default {
         gender: "",
         website: "",
         biography: "",
+        posts: [],
         }
     },
     mounted(){
-     let token = localStorage.getItem('token').substring(1, localStorage.getItem('token').length-1);
+        let token = localStorage.getItem('token').substring(1, localStorage.getItem('token').length-1);
         this.axios.get('http://localhost:8083/profileMicroservice/api/profile/account',{ 
              headers: {
                  'Authorization': 'Bearer ' + token,
              }
          }).then(response => {
                this.profile = response.data;
+               this.getMyPosts(response.data);
          }).catch(res => {
                        alert("Error");
                         console.log(res);
                  });
-    
    },
     methods:{
         showHomepage: function(){
@@ -122,6 +119,19 @@ export default {
         editProfile: function(){
             window.location.href="/profileInfo";
         },
+        getMyPosts: function(person) {
+            this.axios.get('http://localhost:8083/mediaMicroservice/post/getMyPosts/'+ person.username,)
+            .then(response => {
+                this.posts = response.data;
+                for(let i=0; i< response.data.length; i++){
+                        this.posts[i].imageBytes = 'data:image/jpeg;base64,' + this.posts[i].imageBytes;                
+                } 
+            }).catch(res => {
+                        alert("Error");
+                            console.log(res);
+                    });
+                    
+        }
     }
 }
 </script>
@@ -168,5 +178,14 @@ export default {
          margin-left: 150%;
         width: 50%;
         margin-top: -8%;
+    }
+
+    .post_look {
+        background: #e4e4e4; 
+        width: 60%;
+        height: 120%;
+        margin-left: 20%;
+        margin-bottom: 4%;
+        margin-top: 4%;
     }
 </style>
