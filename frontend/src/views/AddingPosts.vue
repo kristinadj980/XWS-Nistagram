@@ -117,10 +117,21 @@ export default {
         medias:[],
         posts:[],
         selectedUser:[''],
+        users:[],
         }
     },
     mounted() {
          let token = localStorage.getItem('token').substring(1, localStorage.getItem('token').length-1);
+          this.axios.get('http://localhost:8083/profileMicroservice/api/profile/getAllUsers',{ 
+             headers: {
+                 'Authorization': 'Bearer ' + token,
+             }
+         }).then(response => {
+               this.users = response.data
+         }).catch(res => {
+                       alert("Error");
+                        console.log(res);
+                 });
           this.axios.get('http://localhost:8083/profileMicroservice/api/profile/loggedUserInfo',{ 
              headers: {
                  'Authorization': 'Bearer ' + token,
