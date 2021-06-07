@@ -23,8 +23,52 @@
                     <b-button pill variant="outline-danger" class = "btn btn-lg btn-light" style="margin-right:20px;" v-on:click = "logOut">Log Out</b-button>
                 </span>
         </div>
-        <b-card class="content_surface">
+        <b-card class="content_surface" align="left">
+            <div class="card header_surface" style="margin-top:10px;"  >
+                  <img class="img-circle img-responsive rounded-circle"  src="https://images.vexels.com/media/users/3/147101/isolated/preview/b4a49d4b864c74bb73de63f080ad7930-instagram-profile-button-by-vexels.png" style=" width:120px; height:120px;"  /> 
+                    
+                    <b-col>
+                        <h5
+                        text-align-center
+                        v-bind:style="{ align: 'center', justify: 'center' }"
+                        >
+                        {{profile.username}}
+                        </h5>
+                    </b-col>
+            </div>
+            <b-tabs 
+            style="margin-top:10px;" 
+            align="center" 
+            active-nav-item-class="font-weight-bold text-uppercase text-danger"
+            active-tab-class="font-weight-bold text-success"
+            content-class="mt-3">
+                <b-tab active>
+                <template #title>
+                   <b-icon icon="grid3x3-gap" aria-hidden="true"></b-icon><strong>   posts</strong>
+                </template>
+                    <b-container fluid class="p-4">
+                    <b-row>
+                        <b-col>
+                        <b-img thumbnail fluid src="https://picsum.photos/250/250/?image=54" alt="Image 1"></b-img>
+                        </b-col>
+                        <b-col>
+                        <b-img thumbnail fluid src="https://picsum.photos/250/250/?image=58" alt="Image 2"></b-img>
+                        </b-col>
+                        <b-col>
+                        <b-img thumbnail fluid src="https://picsum.photos/250/250/?image=59" alt="Image 3"></b-img>
+                        </b-col>
+                    </b-row>
+                    </b-container>
+                </b-tab>
 
+                <b-tab>
+                <template #title>
+                   <b-icon icon="emoji-heart-eyes" aria-hidden="true"></b-icon><strong>   favourites</strong>
+                </template>
+                    
+                </b-tab>
+            </b-tabs>
+            
         </b-card>
     </div>
 </template>
@@ -35,8 +79,32 @@ export default {
     data() {
     return {
         searchData: "",
+        profile: "",
+        username: "",
+        name: "",
+        surname: "",
+        email: "",
+        phoneNumber: "",
+        birthDate: "",
+        gender: "",
+        website: "",
+        biography: "",
         }
     },
+    mounted(){
+     let token = localStorage.getItem('token').substring(1, localStorage.getItem('token').length-1);
+        this.axios.get('http://localhost:8083/profileMicroservice/api/profile/account',{ 
+             headers: {
+                 'Authorization': 'Bearer ' + token,
+             }
+         }).then(response => {
+               this.profile = response.data;
+         }).catch(res => {
+                       alert("Error");
+                        console.log(res);
+                 });
+    
+   },
     methods:{
         showHomepage: function(){
            window.location.href = "/homepage";
@@ -83,10 +151,17 @@ export default {
         margin-bottom: 2% !important;
     }
     .content_surface{
-        background: #cac6c9; 
+        background: #d4bcce; 
         width: 60%;
         height: 100%;
         margin-left: 20%;
+
+    }
+    .header_surface{
+        background: #d4bcce; 
+        width: 80%;
+        height: 30%;
+        margin-left: 10%;
 
     }
     .serach_look{
