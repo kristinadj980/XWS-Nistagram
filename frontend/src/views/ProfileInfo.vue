@@ -288,7 +288,7 @@ export default {
                 })
         },
         getMyStories: function(person) {
-            this.axios.get('http://localhost:8083/mediaMicroservice/story/getMyStories/'+ person.username,)
+            this.axios.get('http://localhost:8083/mediaMicroservice/story/getArchiveStories/'+ person.username,)
             .then(response => {
                 this.stories = response.data;
                 for(let i=0; i< response.data.length; i++){

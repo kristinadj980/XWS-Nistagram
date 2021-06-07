@@ -60,11 +60,16 @@ public class StoryController {
 
 	@GetMapping("/getMyStories/{username}")
 	public ResponseEntity getMyStories(@PathVariable String username) {
-		System.out.println("POGODIOOOOOOOOOOOOOOOOOOOO");
+		
 		return new ResponseEntity(storyService.findMyStories(username), HttpStatus.OK); 
 		
-		//return (ResponseEntity<List<PostDTO>>) (myPosts == null ? new ResponseEntity<>(HttpStatus.NOT_FOUND) : ResponseEntity.ok(myPosts));
-
+	}
+	
+	@GetMapping("/getArchiveStories/{username}")
+	public ResponseEntity getArchiveStories(@PathVariable String username) {
+		
+		return new ResponseEntity(storyService.findArchiveStories(username), HttpStatus.OK); 
+		
 	}
 	
 }

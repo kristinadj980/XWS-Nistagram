@@ -70,7 +70,7 @@ public class StoryService implements IStoryService {
 	       
 	            
 	        story.setStartTime(LocalDateTime.now());
-	        story.setEndTime(story.getStartTime().plusMinutes(3));//izmijeniti na 24h
+	        story.setEndTime(story.getStartTime().plusMinutes(2));//izmijeniti na 24h
 	        
 	        profileMediaService.addStoryToProfile(storyDTO, story);
 	        
@@ -132,4 +132,29 @@ public class StoryService implements IStoryService {
 	        }
 	        return storiesDto;
 	    }
+
+		@Override
+		public List<StoryDTO> findArchiveStories(String username) {
+			List<StoryDTO> myStories = new ArrayList<StoryDTO>();
+			ProfileMedia existingProfile = profileMediaService.findByUsername(username);
+			System.out.println(existingProfile.getUsername());
+			if(existingProfile == null) {
+				throw new IllegalArgumentException("Profile doesn't exist!");
+			}
+			List<Story> stories = existingProfile.getStories();
+			for (Story story : stories) {
+				
+				List<Media> medias = story.getMedia();
+				for (Media m : medias) {
+					LocationDTO locationDTO = new LocationDTO(story.getLocation().getCity(), story.getLocation().getStreet(),story.getLocation().getCountry(),
+							story.getLocation().getObjectName());
+				
+					myStories.add(new StoryDTO(story.getDescription(),username,m.getFileName(),locationDTO));
+			}
+			}
+			
+			
+			
+			return getImagesFiles(myStories);
+		}
 }
