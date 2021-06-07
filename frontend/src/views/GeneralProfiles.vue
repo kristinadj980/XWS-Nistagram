@@ -1,5 +1,5 @@
 <template>
-    <div id="profile">
+    <div id="generalProfileInfo">
         <div class="homepage_style ">
            <span style="float: left; margin: 15px;">
                 <img class="image_style space_style" title="Nistagram" style="width: 50px; height: 50px; margin-right:10px;"
@@ -26,10 +26,9 @@
                             {{ user.username }} 
                         </option>
                     </datalist>
-                    <router-link :to="{ name: 'GeneralProfiles', params: {selectedUsername: this.selectedUser}}" class="search-btn">
-                       <b-button variant="outline-danger"><b-icon icon="search" aria-hidden="true"></b-icon></b-button>
+                     <router-link :to="{ name: 'GeneralProfiles', params: {selectedUsername: this.selectedUser}}" class="search-btn">
+                       <b-button variant="outline-danger"><b-icon icon="search" aria-hidden="true" @click="refreshPage(selectedUser)"></b-icon></b-button>
                     </router-link>
-    
                     </b-input-group-append>
                 </b-input-group>
             </span>
@@ -46,14 +45,14 @@
                         text-align-center
                         v-bind:style="{ align: 'center', justify: 'center' }"
                         ><b>
-                        {{profile.username}}
+                        {{user.username}}
                         </b>
                         </h3>
                         <h4 align="left">  <strong>123</strong> posts <strong>123</strong> followers <strong>123</strong> following </h4>
-                        <h4 align="left">{{profile.biography}}</h4>
+                        <h4 align="left">{{user.biography}}</h4>
                     </b-col>
             </div>
-            <b-tabs 
+            <b-tabs v-if="user.profileStatus == 'publicProfile'"
             style="margin-top:70px;" 
             align="center" 
             active-nav-item-class="font-weight-bold text-uppercase text-danger"
@@ -74,22 +73,14 @@
                         <h4 align="left"><b-icon icon="chat-square" aria-hidden="true"></b-icon>  comments</h4>
                     </b-card>
                 </b-tab>
-
-                <b-tab>
-                <template #title>
-                   <b-icon icon="emoji-heart-eyes" aria-hidden="true"></b-icon><strong>   favourites</strong>
-                </template>
-                    
-                </b-tab>
             </b-tabs>
             
         </b-card>
     </div>
 </template>
-
 <script>
 export default {
-    name: 'Profile', 
+    name: 'GeneralProfiles', 
     data() {
     return {
         searchData: "",
@@ -106,21 +97,14 @@ export default {
         posts: [],
         users: [],
         selectedUser:[''],
+        choosenUsername:'',
+        user:'',
         }
     },
-    mounted(){
+    async mounted(){
+        this.choosenUsername = this.$route.params.selectedUsername;
         let token = localStorage.getItem('token').substring(1, localStorage.getItem('token').length-1);
-        this.axios.get('http://localhost:8083/profileMicroservice/api/profile/account',{ 
-             headers: {
-                 'Authorization': 'Bearer ' + token,
-             }
-         }).then(response => {
-               this.profile = response.data;
-               this.getMyPosts(response.data);
-         }).catch(res => {
-                       alert("Error");
-                        console.log(res);
-                 });
+       
         this.axios.get('http://localhost:8083/profileMicroservice/api/profile/getAllUsers',{ 
              headers: {
                  'Authorization': 'Bearer ' + token,
@@ -131,6 +115,23 @@ export default {
                        alert("Error");
                         console.log(res);
                  });
+        this.axios.get('http://localhost:8083/profileMicroservice/api/profile/getUserProfile/'+ this.$route.params.selectedUsername)
+            .then(response => {
+               this.user = response.data
+            }).catch(res => {
+                        alert("Error");
+                            console.log(res);
+                    });
+         this.axios.get('http://localhost:8083/mediaMicroservice/post/getMyPosts/'+ this.$route.params.selectedUsername)
+            .then(response => {
+                this.posts = response.data;
+                for(let i=0; i< response.data.length; i++){
+                        this.posts[i].imageBytes = 'data:image/jpeg;base64,' + this.posts[i].imageBytes;                
+                } 
+            }).catch(res => {
+                        alert("Profile is private");
+                            console.log(res);
+                    });
    },
     methods:{
         showHomepage: function(){
@@ -149,20 +150,27 @@ export default {
         editProfile: function(){
             window.location.href="/profileInfo";
         },
-        getMyPosts: function(person) {
-            this.axios.get('http://localhost:8083/mediaMicroservice/post/getMyPosts/'+ person.username,)
+        refreshPage: function(selectedUser){
+            this.axios.get('http://localhost:8083/profileMicroservice/api/profile/getUserProfile/'+ this.$route.params.selectedUsername)
+            .then(response => {
+               this.user = response.data
+            }).catch(res => {
+                        alert("Error");
+                            console.log(res);
+                    });
+             this.axios.get('http://localhost:8083/mediaMicroservice/post/getMyPosts/'+ selectedUser)
             .then(response => {
                 this.posts = response.data;
                 for(let i=0; i< response.data.length; i++){
                         this.posts[i].imageBytes = 'data:image/jpeg;base64,' + this.posts[i].imageBytes;                
                 } 
             }).catch(res => {
-                        alert("Error");
+                        alert("Profile is private");
                             console.log(res);
                     });
-                    
-        },
-       
+        }
+        
+        
     }
 }
 </script>

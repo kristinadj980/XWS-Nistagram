@@ -7,6 +7,7 @@ import Homepage from '../views/Homepage.vue'
 import Profile from '../views/Profile.vue'
 import AddingPosts from '../views/AddingPosts.vue'
 import ProfileInfo from '../views/ProfileInfo.vue'
+import GeneralProfiles from '../views/GeneralProfiles.vue'
 
 Vue.use(VueRouter)
 
@@ -53,6 +54,11 @@ const routes = [
     path: '/profileInfo',
     name: 'ProfileInfo',
     component: ProfileInfo
+  },
+  {
+    path: '/generalProfiles/:selectedUsername',
+    name: 'GeneralProfiles',
+    component: GeneralProfiles
   },
 ]
 
