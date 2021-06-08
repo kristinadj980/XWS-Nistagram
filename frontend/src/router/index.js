@@ -6,6 +6,7 @@ import Registration from '../views/Registration.vue'
 import Homepage from '../views/Homepage.vue'
 import Profile from '../views/Profile.vue'
 import AddingPosts from '../views/AddingPosts.vue'
+import AddingStories from '../views/AddingStories.vue'
 import ProfileInfo from '../views/ProfileInfo.vue'
 import GeneralProfiles from '../views/GeneralProfiles.vue'
 
@@ -49,6 +50,11 @@ const routes = [
     path: '/addingPosts',
     name: 'AddingPosts',
     component: AddingPosts
+  },
+  {
+    path: '/addingStories',
+    name: 'AddingStories',
+    component: AddingStories
   },
   {
     path: '/profileInfo',

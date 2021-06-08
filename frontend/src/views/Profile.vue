@@ -10,6 +10,8 @@
                     <b-icon icon="person" aria-hidden="true"></b-icon>Profile</b-button>
                 <b-button pill variant="outline-danger" class = "btn btn-lg space_style" v-on:click = "addPosts">
                     <b-icon icon="image" aria-hidden="true"></b-icon> Add post</b-button>
+                <b-button pill variant="outline-danger" class = "btn btn-lg space_style" v-on:click = "addStories">
+                    <b-icon icon="image" aria-hidden="true"></b-icon> Add story</b-button>
                 <b-button pill variant="outline-danger" class = "btn btn-lg space_style" v-on:click = "editProfile">
                     <b-icon icon="gear" aria-hidden="true"></b-icon> Edit profile</b-button>
                 <b-input-group class=" serach_look">
@@ -37,6 +39,57 @@
                 </span>
         </div>
         <b-card class="content_surface" align="left">
+            
+             <b-button  class="btn btn-info btn-lg space_style"  style="background-color:#f08080;" v-b-modal.modal-1>Show stories</b-button>
+                            <b-modal ref="modal-ref" id="modal-1" title="Stories" hide-footer>
+                                <b-tabs 
+            style="margin-top:70px;" 
+            align="center" 
+            active-nav-item-class="font-weight-bold text-uppercase text-danger"
+            active-tab-class="font-weight-bold"
+            content-class="mt-3">
+                <b-tab active>
+                <template #title>
+                   <b-icon icon="grid3x3-gap" aria-hidden="true"></b-icon><strong> Stories </strong>
+                </template>
+                    <b-card class="post_look" v-for="story in stories" v-bind:key="story.fileName">
+                        <b-row >
+                        <h4 align="left"><b-icon icon="person-circle" aria-hidden="true"></b-icon>  {{story.username}}</h4>
+                        </b-row>
+                        <h6 align="left">{{story.locationDTO.city}},{{story.locationDTO.street}},{{story.locationDTO.objectName}},{{story.locationDTO.country}}</h6>
+                        <b-img v-if="!story.fileName.includes(videoText)" thumbnail  v-bind:src="story.imageBytes" alt="Image 1"></b-img>
+                        <video v-if="story.fileName.includes(videoText)" autoplay controls v-bind:src="story.imageBytes" width="400" height="400" style="display:block; margin-left:auto; margin-right:auto"></video>
+                        <h4 align="left">{{story.description}}</h4>
+                    </b-card>
+                </b-tab>
+            </b-tabs>
+         </b-modal>
+
+          <b-button  class="btn btn-info btn-lg space_style"  style="background-color:#f08080;margin-left:-500" v-b-modal.modal-4>Show highlights</b-button>
+                            <b-modal ref="modal-ref4" id="modal-4" title="Highlights" hide-footer>
+                                <b-tabs 
+            style="margin-top:70px;" 
+            align="center" 
+            active-nav-item-class="font-weight-bold text-uppercase text-danger"
+            active-tab-class="font-weight-bold"
+            content-class="mt-3">
+                <b-tab active>
+                <template #title>
+                   <b-icon icon="grid3x3-gap" aria-hidden="true"></b-icon><strong> Highlights</strong>
+                </template>
+                    <b-card class="post_look" v-for="story in highlighted" v-bind:key="story.fileName">
+                        <b-row >
+                        <h4 align="left"><b-icon icon="person-circle" aria-hidden="true"></b-icon>  {{story.username}}</h4>
+                        </b-row>
+                        <h6 align="left">{{story.locationDTO.city}},{{story.locationDTO.street}},{{story.locationDTO.objectName}},{{story.locationDTO.country}}</h6>
+                        <b-img v-if="!story.fileName.includes(videoText)" thumbnail  v-bind:src="story.imageBytes" alt="Image 1"></b-img>
+                        <video v-if="story.fileName.includes(videoText)" autoplay controls v-bind:src="story.imageBytes" width="400" height="400" style="display:block; margin-left:auto; margin-right:auto"></video>
+                        <h4 align="left">{{story.description}}</h4>
+                    </b-card>
+                </b-tab>
+            </b-tabs>
+         </b-modal>
+
             <div class="card header_surface" style="margin-top:10px; border-color: #d4bcce; margin-left:50px;"  >
                   <img class="img-circle img-responsive rounded-circle"  src="https://images.vexels.com/media/users/3/147101/isolated/preview/b4a49d4b864c74bb73de63f080ad7930-instagram-profile-button-by-vexels.png" style=" width:120px; height:120px;"  /> 
                     
@@ -105,7 +158,12 @@ export default {
         biography: "",
         posts: [],
         users: [],
+<<<<<<< HEAD
         selectedUser:[''],
+=======
+        stories: [],
+        highlighted:[],
+>>>>>>> add_story
         videoText: "mp4",
         }
     },
@@ -118,11 +176,13 @@ export default {
          }).then(response => {
                this.profile = response.data;
                this.getMyPosts(response.data);
+               this.getMyStories(response.data);
+               this.getHighlightedStories(response.data);
          }).catch(res => {
                        alert("Error");
                         console.log(res);
                  });
-        this.axios.get('http://localhost:8083/profileMicroservice/api/profile/getAllUsers',{ 
+     /*   this.axios.get('http://localhost:8083/profileMicroservice/api/profile/getAllUsers',{ 
              headers: {
                  'Authorization': 'Bearer ' + token,
              }
@@ -131,9 +191,15 @@ export default {
          }).catch(res => {
                        alert("Error");
                         console.log(res);
-                 });
+                 });*/
    },
     methods:{
+         toggle () {
+        this.show = !this.show
+        },
+        cancel() {
+            this.$refs['modal-ref'].hide();
+        },
         showHomepage: function(){
            window.location.href = "/homepage";
         },
@@ -146,6 +212,9 @@ export default {
         },
         addPosts : function() {
             window.location.href = "/addingPosts";
+        },
+         addStories : function() {
+            window.location.href = "/addingStories";
         },
         editProfile: function(){
             window.location.href="/profileInfo";
@@ -171,7 +240,50 @@ export default {
                     });
                     
         },
+<<<<<<< HEAD
        
+=======
+        getMyStories: function(person) {
+            this.axios.get('http://localhost:8083/mediaMicroservice/story/getMyStories/'+ person.username,)
+            .then(response => {
+                this.stories = response.data;
+                let video = "mp4"
+                for(let i=0; i< response.data.length; i++){
+                        if(!this.stories[i].fileName.includes(video)){
+                        console.log("slika jeee");
+                        this.stories[i].imageBytes = 'data:image/jpeg;base64,' + this.stories[i].imageBytes; 
+                    }else{
+                        console.log("video jeee");
+                        this.stories[i].imageBytes = 'data:video/mp4;base64,' + this.stories[i].imageBytes;     
+                    }                            
+                } 
+            }).catch(res => {
+                        alert("Error");
+                            console.log(res);
+                    });
+                    
+        },
+        getHighlightedStories: function(person) {
+            this.axios.get('http://localhost:8083/mediaMicroservice/story/getHighlightedStories/'+ person.username,)
+            .then(response => {
+                this.highlighted = response.data;
+                let video = "mp4"
+                for(let i=0; i< response.data.length; i++){
+                        if(!this.highlighted[i].fileName.includes(video)){
+                        console.log("slika jeee");
+                        this.highlighted[i].imageBytes = 'data:image/jpeg;base64,' + this.highlighted[i].imageBytes; 
+                    }else{
+                        console.log("video jeee");
+                        this.highlighted[i].imageBytes = 'data:video/mp4;base64,' + this.highlighted[i].imageBytes;     
+                    }                            
+                } 
+            }).catch(res => {
+                        alert("Error");
+                            console.log(res);
+                    });
+                    
+        }
+>>>>>>> add_story
     }
 }
 </script>
