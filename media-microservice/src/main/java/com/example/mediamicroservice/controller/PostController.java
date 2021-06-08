@@ -20,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.example.mediamicroservice.dto.MediaDTO;
 import com.example.mediamicroservice.dto.PostDTO;
+import com.example.mediamicroservice.dto.LikePostDTO;
 
 import com.example.mediamicroservice.model.Post;
 import com.example.mediamicroservice.service.implService.PostService;
@@ -67,6 +68,22 @@ public class PostController {
 		
 		//return (ResponseEntity<List<PostDTO>>) (myPosts == null ? new ResponseEntity<>(HttpStatus.NOT_FOUND) : ResponseEntity.ok(myPosts));
 
+	}
+	
+	@PostMapping("/likePost")
+	public int likePost(@RequestBody LikePostDTO likePostDTO) {
+        int likes = postService.likeThisPost(likePostDTO);
+        
+		return likes;
+		
+	}
+	
+	@PostMapping("/dislikePost")
+	public int dislikePost(@RequestBody LikePostDTO likePostDTO) {
+        int dislikes = postService.dislikeThisPost(likePostDTO);
+        
+		return dislikes;
+		
 	}
 	
 	@GetMapping("/proba")

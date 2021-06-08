@@ -167,10 +167,12 @@ export default {
                     });  
         },
         postPicture :function(){  
+
+            alert(this.tags)
             const postInfo= {
                 description : this.description,
                 location : this.selectedLocation,
-                //tags : this.tags,
+                tags : this.tags,
                 username: this.user.username,
                 userId: this.user.id,
                 fileName : this.fileName,
