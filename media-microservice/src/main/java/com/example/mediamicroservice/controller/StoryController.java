@@ -72,4 +72,10 @@ public class StoryController {
 		
 	}
 	
+	@GetMapping("/getHighlightedStories/{username}")
+	public ResponseEntity getHighlightedStories(@PathVariable String username) {
+		
+		return new ResponseEntity(storyService.findHighlightedStories(username), HttpStatus.OK); 
+		
+	}
 }

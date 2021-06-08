@@ -66,6 +66,11 @@
                     separator=" "
                     placeholder="Enter new tags separated by space"
                 ></b-form-tags>
+                <section>
+                    <h3> Highlight </h3>
+                    <input type="checkbox" id="checkbox" v-model="highlight" value="true" >
+                    <label for="checkbox"> {{highlight}} </label>      
+                 </section>
                 <b-button 
                 variant="outline-secondary"  
                
@@ -104,6 +109,7 @@ export default {
         tags: [''],
         fileName:'',
         medias:[],
+        highlight:'',
         }
     },
     mounted() {
@@ -181,6 +187,7 @@ export default {
                 username: this.user.username,
                 userId: this.user.id,
                 fileName : this.fileName,
+                highlighted: this.highlight,
                  }
           
 

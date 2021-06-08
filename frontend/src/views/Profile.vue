@@ -63,6 +63,31 @@
             </b-tabs>
          </b-modal>
 
+          <b-button  class="btn btn-info btn-lg space_style"  style="background-color:#f08080;margin-left:-500" v-b-modal.modal-4>Show highlights</b-button>
+                            <b-modal ref="modal-ref4" id="modal-4" title="Highlights" hide-footer>
+                                <b-tabs 
+            style="margin-top:70px;" 
+            align="center" 
+            active-nav-item-class="font-weight-bold text-uppercase text-danger"
+            active-tab-class="font-weight-bold"
+            content-class="mt-3">
+                <b-tab active>
+                <template #title>
+                   <b-icon icon="grid3x3-gap" aria-hidden="true"></b-icon><strong> Highlights</strong>
+                </template>
+                    <b-card class="post_look" v-for="story in highlighted" v-bind:key="story.fileName">
+                        <b-row >
+                        <h4 align="left"><b-icon icon="person-circle" aria-hidden="true"></b-icon>  {{story.username}}</h4>
+                        </b-row>
+                        <h6 align="left">{{story.locationDTO.city}},{{story.locationDTO.street}},{{story.locationDTO.objectName}},{{story.locationDTO.country}}</h6>
+                        <b-img v-if="!story.fileName.includes(videoText)" thumbnail  v-bind:src="story.imageBytes" alt="Image 1"></b-img>
+                        <video v-if="story.fileName.includes(videoText)" autoplay controls v-bind:src="story.imageBytes" width="400" height="400" style="display:block; margin-left:auto; margin-right:auto"></video>
+                        <h4 align="left">{{story.description}}</h4>
+                    </b-card>
+                </b-tab>
+            </b-tabs>
+         </b-modal>
+
             <div class="card header_surface" style="margin-top:10px; border-color: #d4bcce; margin-left:50px;"  >
                   <img class="img-circle img-responsive rounded-circle"  src="https://images.vexels.com/media/users/3/147101/isolated/preview/b4a49d4b864c74bb73de63f080ad7930-instagram-profile-button-by-vexels.png" style=" width:120px; height:120px;"  /> 
                     
@@ -131,6 +156,7 @@ export default {
         posts: [],
         users: [],
         stories: [],
+        highlighted:[],
         videoText: "mp4",
         }
     },
@@ -144,6 +170,7 @@ export default {
                this.profile = response.data;
                this.getMyPosts(response.data);
                this.getMyStories(response.data);
+               this.getHighlightedStories(response.data);
          }).catch(res => {
                        alert("Error");
                         console.log(res);
@@ -209,7 +236,27 @@ export default {
                         this.stories[i].imageBytes = 'data:image/jpeg;base64,' + this.stories[i].imageBytes; 
                     }else{
                         console.log("video jeee");
-                        this.stores[i].imageBytes = 'data:video/mp4;base64,' + this.stories[i].imageBytes;     
+                        this.stories[i].imageBytes = 'data:video/mp4;base64,' + this.stories[i].imageBytes;     
+                    }                            
+                } 
+            }).catch(res => {
+                        alert("Error");
+                            console.log(res);
+                    });
+                    
+        },
+        getHighlightedStories: function(person) {
+            this.axios.get('http://localhost:8083/mediaMicroservice/story/getHighlightedStories/'+ person.username,)
+            .then(response => {
+                this.highlighted = response.data;
+                let video = "mp4"
+                for(let i=0; i< response.data.length; i++){
+                        if(!this.highlighted[i].fileName.includes(video)){
+                        console.log("slika jeee");
+                        this.highlighted[i].imageBytes = 'data:image/jpeg;base64,' + this.highlighted[i].imageBytes; 
+                    }else{
+                        console.log("video jeee");
+                        this.highlighted[i].imageBytes = 'data:video/mp4;base64,' + this.highlighted[i].imageBytes;     
                     }                            
                 } 
             }).catch(res => {

@@ -9,6 +9,7 @@ public class StoryDTO {
 	private String username;
 	private Long userId;
 	private String fileName;
+	private boolean highlighted;
 	private LocationDTO locationDTO;
     private List<byte[]> imageBytes;
 	public StoryDTO() {
@@ -16,16 +17,17 @@ public class StoryDTO {
 		// TODO Auto-generated constructor stub
 	}
 	
-	public StoryDTO(String description, String username, String fileName, LocationDTO locationDTO) {
+	public StoryDTO(String description, String username, String fileName, LocationDTO locationDTO,boolean highlighted) {
 		super();
 		this.description = description;
 		this.username = username;
 		this.fileName = fileName;
 		this.locationDTO = locationDTO;
+		this.highlighted=highlighted;
 	}
 
 	public StoryDTO(String location, String description, String username, String fileName, LocationDTO locationDTO,
-			List<byte[]> imageBytes) {
+			List<byte[]> imageBytes,boolean highlighted) {
 		super();
 		this.location = location;
 		this.description = description;
@@ -33,6 +35,15 @@ public class StoryDTO {
 		this.fileName = fileName;
 		this.locationDTO = locationDTO;
 		this.imageBytes = imageBytes;
+		this.highlighted=highlighted;
+	}
+
+	public boolean isHighlighted() {
+		return highlighted;
+	}
+
+	public void setHighlighted(boolean highlighted) {
+		this.highlighted = highlighted;
 	}
 
 	public StoryDTO(String location,String description, List<TagDTO> tags, String username, Long userId, String fileName,
