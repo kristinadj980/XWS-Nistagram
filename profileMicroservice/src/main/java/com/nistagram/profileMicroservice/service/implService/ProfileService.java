@@ -1,7 +1,9 @@
 package com.nistagram.profileMicroservice.service.implService;
 import com.nistagram.profileMicroservice.dto.EditProfileDTO;
+import com.nistagram.profileMicroservice.dto.FollowingDTO;
 import com.nistagram.profileMicroservice.dto.PersonRequestDTO;
 import com.nistagram.profileMicroservice.model.Authority;
+import com.nistagram.profileMicroservice.model.Person;
 import com.nistagram.profileMicroservice.model.Profile;
 import com.nistagram.profileMicroservice.model.ProfileStatus;
 import com.nistagram.profileMicroservice.repository.AuthorityRepository;
@@ -15,6 +17,7 @@ import java.util.List;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -124,5 +127,20 @@ public class ProfileService implements IProfileService {
 			profile.setProfileStatus(ProfileStatus.privateProfile);
 	
 		profileRepository.save(profile);
+	}
+
+	@Override
+	public List<FollowingDTO> getFollowingUsers() {
+		Authentication currentUser = SecurityContextHolder.getContext().getAuthentication();
+		Person person = (Person) currentUser.getPrincipal();
+		Profile user = findById(person.getId());
+		List<Profile> following = user.getFollowing();
+		List<FollowingDTO> followingDTO = new ArrayList<FollowingDTO>();
+		
+		for(Profile p: following)
+			followingDTO.add(new FollowingDTO(p.getUsername()));
+		
+		
+		return followingDTO;
 	}
 }

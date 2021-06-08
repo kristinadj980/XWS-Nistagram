@@ -16,7 +16,7 @@ import com.nistagram.profileMicroservice.dto.FriendRequestDTO;
 import com.nistagram.profileMicroservice.service.implService.FriendRequestService;
 
 @RestController
-@RequestMapping(value = "/friendRequest", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/api/friendRequest", produces = MediaType.APPLICATION_JSON_VALUE)
 public class FriendRequestController {
 	
 	private final FriendRequestService friendRequestService;
@@ -31,6 +31,7 @@ public class FriendRequestController {
 	@PreAuthorize("hasRole('REGISTRED_USER')")
 	public ResponseEntity newFriendRequest(@RequestBody FriendRequestDTO friendRequestDTO) {
 		try {
+			System.out.println("POGODIO KONTROLER");
 			friendRequestService.newFriendRequest(friendRequestDTO);
 			return new ResponseEntity<>(HttpStatus.OK);
 		} catch (Exception e) {

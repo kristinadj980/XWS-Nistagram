@@ -10,14 +10,23 @@
                     <b-icon icon="person" aria-hidden="true"></b-icon>Profile</b-button>
                 <b-button pill variant="outline-danger" class = "btn btn-lg space_style" v-on:click = "addPosts">
                     <b-icon icon="image" aria-hidden="true"></b-icon> Add post</b-button>
-                <h4 align="right"><b-icon icon="person-plus" aria-hidden="true"></b-icon></h4>
             </span>
                 <span  style="float:right;margin:15px">
                     <b-button pill variant="outline-danger" class = "btn btn-lg btn-light" style="margin-right:20px;" v-on:click = "logOut">Log Out</b-button>
                 </span>
         </div>
         <b-card class="content_surface">
-
+             <b-card class="post_look" v-for="post in posts" v-bind:key="post.fileName">
+                        <b-row >
+                        <h4 align="left"><b-icon icon="person-circle" aria-hidden="true"></b-icon>  {{post.username}}</h4>
+                        </b-row>
+                        <h6 align="left">{{post.locationDTO.city}},{{post.locationDTO.street}},{{post.locationDTO.objectName}},{{post.locationDTO.country}}</h6>
+                        <b-img v-if="!post.fileName.includes(videoText)" thumbnail width="500px" height="500px" v-bind:src="post.imageBytes" alt="Image 1"></b-img>
+                        <video class="video" v-if="post.fileName.includes(videoText)" autoplay controls v-bind:src="post.imageBytes" width="500px" height="500px" ></video>
+                        <h4 align="left">{{post.description}}</h4>
+                        <h5 align="left"><b-icon icon="hand-thumbs-up" aria-hidden="true"></b-icon>  likes <b-icon icon="hand-thumbs-down" aria-hidden="true"></b-icon> <span style="margin-left:430px;"></span> <b-icon icon="bookmark" aria-hidden="true" align="right"></b-icon></h5>
+                        <h4 align="left"><b-icon icon="chat-square" aria-hidden="true"></b-icon>  comments</h4>
+                    </b-card>
         </b-card>
     </div>
 </template>
@@ -28,8 +37,27 @@ export default {
     data() {
     return {
         selectedUser:[''],
+        users: [],
+        username: "",
+        posts: [],
+        videoText: "mp4",
         }
     },
+    async mounted(){
+        let token = localStorage.getItem('token').substring(1, localStorage.getItem('token').length-1);
+       
+        this.axios.get('http://localhost:8083/profileMicroservice/api/profile/getFollowingUsers',{ 
+             headers: {
+                 'Authorization': 'Bearer ' + token,
+             }
+         }).then(response => {
+               this.users = response.data
+               this.getFriednsPosts(response.data);
+         }).catch(res => {
+                       alert("Error");
+                        console.log(res);
+                 });
+   },
     methods:{
         showHomepage: function(){
            window.location.href = "/homepage";
@@ -43,6 +71,24 @@ export default {
         },
         addPosts : function() {
             window.location.href = "/addingPosts";
+        },
+        getFriednsPosts: function(usernames) {
+
+            this.axios.post('http://localhost:8083/mediaMicroservice/post/getFriendsPosts',usernames)
+            .then(response => {
+                this.posts = response.data;
+                let video = "mp4";
+                for(let i=0; i< response.data.length; i++){
+                     if(!this.posts[i].fileName.includes(video)){
+                        this.posts[i].imageBytes = 'data:image/jpeg;base64,' + this.posts[i].imageBytes; 
+                    }else{
+                        this.posts[i].imageBytes = 'data:video/mp4;base64,' + this.posts[i].imageBytes;     
+                    }            
+                } 
+            }).catch(res => {
+                        alert("Profile is private");
+                            console.log(res);
+                    });
         }
     }
 }
@@ -83,5 +129,13 @@ export default {
     .serach_look{
         margin-left: 190%;
         margin-top: -8%;
+    }
+    .post_look {
+        background: #e4e4e4; 
+        width: 60%;
+        height: 120%;
+        margin-left: 20%;
+        margin-bottom: 4%;
+        margin-top: 2%;
     }
 </style>

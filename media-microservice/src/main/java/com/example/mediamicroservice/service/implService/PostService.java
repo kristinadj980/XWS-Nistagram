@@ -95,8 +95,9 @@ public class PostService implements IPostService {
 		
 		return sortByDate(allPosts);
 	}
-
-	 private List<PostDTO> sortByDate(List<PostDTO> allPosts) {
+	
+	@Override
+	public List<PostDTO> sortByDate(List<PostDTO> allPosts) {
 		//List<PatientSearchDTO> myPatients =  getMyPatients();
 			
 		 Collections.sort(allPosts, new Comparator<PostDTO>() {

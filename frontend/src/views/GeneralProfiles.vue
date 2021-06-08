@@ -55,7 +55,6 @@
             variant="danger"
             class = "btn btn-lg space_style"
             v-on:click = "follow"
-            @click="follow()"
             style="margin-top:25px;
             width:62%;
             margin-left:100px;">
@@ -76,7 +75,8 @@
                         <h4 align="left"><b-icon icon="person-circle" aria-hidden="true"></b-icon>  {{post.username}}</h4>
                         </b-row>
                         <h6 align="left">{{post.locationDTO.city}},{{post.locationDTO.street}},{{post.locationDTO.objectName}},{{post.locationDTO.country}}</h6>
-                        <b-img thumbnail  v-bind:src="post.imageBytes" alt="Image 1"></b-img>
+                        <b-img v-if="!post.fileName.includes(videoText)" thumbnail  v-bind:src="post.imageBytes" alt="Image 1"></b-img>
+                        <video v-if="post.fileName.includes(videoText)" autoplay controls v-bind:src="post.imageBytes" width="400" height="400" style="display:block; margin-left:auto; margin-right:auto"></video>
                         <h4 align="left">{{post.description}}</h4>
                         <h5 align="left"><b-icon icon="hand-thumbs-up" aria-hidden="true"></b-icon>  likes <b-icon icon="hand-thumbs-down" aria-hidden="true"></b-icon> <span style="margin-left:430px;"></span> <b-icon icon="bookmark" aria-hidden="true" align="right"></b-icon></h5>
                         <h4 align="left"><b-icon icon="chat-square" aria-hidden="true"></b-icon>  comments</h4>
@@ -107,6 +107,7 @@ export default {
         selectedUser:[''],
         choosenUsername:'',
         user:'',
+        videoText: "mp4",
         }
     },
     async mounted(){
@@ -133,8 +134,13 @@ export default {
          this.axios.get('http://localhost:8083/mediaMicroservice/post/getMyPosts/'+ this.$route.params.selectedUsername)
             .then(response => {
                 this.posts = response.data;
+                let video = "mp4";
                 for(let i=0; i< response.data.length; i++){
-                        this.posts[i].imageBytes = 'data:image/jpeg;base64,' + this.posts[i].imageBytes;                
+                     if(!this.posts[i].fileName.includes(video)){
+                        this.posts[i].imageBytes = 'data:image/jpeg;base64,' + this.posts[i].imageBytes; 
+                    }else{
+                        this.posts[i].imageBytes = 'data:video/mp4;base64,' + this.posts[i].imageBytes;     
+                    }            
                 } 
             }).catch(res => {
                         alert("Profile is private");
@@ -164,12 +170,12 @@ export default {
             const followRequest ={
                 userReceiver : this.user.username,
             } 
-            this.axios.post('http://localhost:8083/profileMicroservice/friendRequest/newRequest',followRequest, { 
+            this.axios.post('http://localhost:8083/profileMicroservice/api/friendRequest/newRequest',followRequest, { 
                 headers: {
                     'Authorization': 'Bearer ' + token,
                 }})
                 .then(response => {
-                    alert("Successfully edited profile.")
+                    alert("Your are friends now.")
                         console.log(response);
                 })
                 .catch(response => {

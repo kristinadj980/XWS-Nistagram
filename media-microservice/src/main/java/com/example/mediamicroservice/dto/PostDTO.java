@@ -14,6 +14,7 @@ public class PostDTO {
 	private LocalDateTime date;
 	private LocationDTO locationDTO;
     private List<byte[]> imageBytes;
+    private String following;
 	
 	public PostDTO() {
 		super();
@@ -71,6 +72,15 @@ public class PostDTO {
 		this.locationDTO = locationDTO;
 		this.imageBytes = imageBytes;
 	}
+	
+	
+
+	public PostDTO(String following) {
+		super();
+		this.following = following;
+	}
+
+
 
 	public String getDescription() {
 		return description;
@@ -142,6 +152,18 @@ public class PostDTO {
 
 	public void setDate(LocalDateTime date) {
 		this.date = date;
+	}
+
+
+
+	public String getFollowing() {
+		return following;
+	}
+
+
+
+	public void setFollowing(String following) {
+		this.following = following;
 	}
 	
 	

@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.nistagram.profileMicroservice.connections.MediaConnection;
 import com.nistagram.profileMicroservice.dto.EditProfileDTO;
+import com.nistagram.profileMicroservice.dto.FollowingDTO;
 import com.nistagram.profileMicroservice.dto.PostDTO;
 import com.nistagram.profileMicroservice.dto.RegistredUserDTO;
 import com.nistagram.profileMicroservice.model.Person;
@@ -144,6 +145,18 @@ public class ProfileController {
 		} catch (Exception e) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
+	}
+	
+	@GetMapping("/getFollowingUsers")
+	@PreAuthorize("hasRole('REGISTRED_USER')")  
+	public ResponseEntity<List<FollowingDTO>> getFollowingUsers() {
+		try {
+			return new ResponseEntity<>(profileService.getFollowingUsers(), HttpStatus.OK);
+			
+		} catch (Exception e) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+		
 	}
 	
 }

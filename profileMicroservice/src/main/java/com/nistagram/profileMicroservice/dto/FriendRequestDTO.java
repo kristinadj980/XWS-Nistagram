@@ -4,6 +4,10 @@ public class FriendRequestDTO {
 	
 	private String userReceiver;
 
+	public FriendRequestDTO() {
+		super();
+	}
+
 	public FriendRequestDTO(String userReceiver) {
 		super();
 		this.userReceiver = userReceiver;
