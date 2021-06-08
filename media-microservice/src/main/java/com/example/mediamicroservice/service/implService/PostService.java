@@ -3,10 +3,12 @@ package com.example.mediamicroservice.service.implService;
 import com.example.mediamicroservice.dto.LikePostDTO;
 import com.example.mediamicroservice.dto.LocationDTO;
 import com.example.mediamicroservice.dto.PostDTO;
+import com.example.mediamicroservice.dto.TagDTO;
 import com.example.mediamicroservice.model.Location;
 import com.example.mediamicroservice.model.Media;
 import com.example.mediamicroservice.model.Post;
 import com.example.mediamicroservice.model.ProfileMedia;
+import com.example.mediamicroservice.model.Tag;
 import com.example.mediamicroservice.repository.PostRepository;
 import com.example.mediamicroservice.service.IPostService;
 
@@ -53,13 +55,13 @@ public class PostService implements IPostService {
         
         Location location = new Location(city,street , country,objectName);
         post.setLocation(location);
-       /* List<TagDTO> tagsDTO = postDTO.getTags();
+        List<TagDTO> tagsDTO = postDTO.getTags();
         List<Tag> tags = new ArrayList<Tag>();
         for (TagDTO t : tagsDTO) {
 			Tag tag = new Tag(t.getName());
 			tags.add(tag);
 		}
-        post.setTags(tags);*/
+        post.setTags(tags);
         Media media = new Media();
         media.setFileName(postDTO.getFileName());
         List<Media> medias = new ArrayList<Media>();
