@@ -51,6 +51,16 @@
                         <h4 align="left">{{user.biography}}</h4>
                     </b-col>
             </div>
+            <b-button        
+            variant="danger"
+            class = "btn btn-lg space_style"
+            v-on:click = "follow"
+            @click="follow()"
+            style="margin-top:25px;
+            width:62%;
+            margin-left:100px;">
+            Follow
+            </b-button>
             <b-tabs v-if="user.profileStatus == 'publicProfile'"
             style="margin-top:70px;" 
             align="center" 
@@ -73,7 +83,6 @@
                     </b-card>
                 </b-tab>
             </b-tabs>
-            
         </b-card>
     </div>
 </template>
@@ -149,6 +158,25 @@ export default {
         editProfile: function(){
             window.location.href="/profileInfo";
         },
+        follow: function() {
+            console.log("u funckiji je");
+            let token = localStorage.getItem('token').substring(1, localStorage.getItem('token').length-1);
+            const followRequest ={
+                userReceiver : this.user.username,
+            } 
+            this.axios.post('http://localhost:8083/profileMicroservice/friendRequest/newRequest',followRequest, { 
+                headers: {
+                    'Authorization': 'Bearer ' + token,
+                }})
+                .then(response => {
+                    alert("Successfully edited profile.")
+                        console.log(response);
+                })
+                .catch(response => {
+                    alert("Please, try later.")
+                    console.log(response);
+                })
+        },
         refreshPage: function(selectedUser){
             this.axios.get('http://localhost:8083/profileMicroservice/api/profile/getUserProfile/'+ this.$route.params.selectedUsername)
             .then(response => {
@@ -167,10 +195,8 @@ export default {
                         alert("Profile is private");
                             console.log(res);
                     });
-        }
-        
-        
-    }
+            }
+        },
 }
 </script>
 <style scoped>

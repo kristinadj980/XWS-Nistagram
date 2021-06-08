@@ -44,6 +44,12 @@ public class Profile extends Person{
 	private List<Profile> followers; 
 	
 	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@JoinTable(name = "profile_following",
+	joinColumns = @JoinColumn(name = "profile_id", referencedColumnName = "id"),
+	inverseJoinColumns = @JoinColumn(name = "followers_id", referencedColumnName = "id"))
+	private List<Profile> following; 
+	
+	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@JoinTable(name = "profile_mutedFriends",
 	joinColumns = @JoinColumn(name = "profile_id", referencedColumnName = "id"),
 	inverseJoinColumns = @JoinColumn(name = "mutedFriends_id", referencedColumnName = "id"))
@@ -74,11 +80,11 @@ public class Profile extends Person{
 		super();
 	}
 
-
 	public Profile(ProfileStatus profileStatus, List<Profile> closeFriends, String website, String biography,
-			List<Notification> notifications, List<Profile> followers, List<Profile> mutedFriends,
-			List<Profile> blockedUsers, List<FriendRequest> friendRequests, RequestStatus agentRequestStatus,
-			Boolean allowedTags, Boolean allowedMessages, VerificationRequest verificationRequest) {
+			List<Notification> notifications, List<Profile> followers, List<Profile> following,
+			List<Profile> mutedFriends, List<Profile> blockedUsers, List<FriendRequest> friendRequests,
+			RequestStatus agentRequestStatus, Boolean allowedTags, Boolean allowedMessages,
+			VerificationRequest verificationRequest) {
 		super();
 		this.profileStatus = profileStatus;
 		this.closeFriends = closeFriends;
@@ -86,6 +92,7 @@ public class Profile extends Person{
 		this.biography = biography;
 		this.notifications = notifications;
 		this.followers = followers;
+		this.following = following;
 		this.mutedFriends = mutedFriends;
 		this.blockedUsers = blockedUsers;
 		this.friendRequests = friendRequests;
@@ -95,15 +102,12 @@ public class Profile extends Person{
 		this.verificationRequest = verificationRequest;
 	}
 
-	
-
-	
 
 
 	public Profile(Long id, String username, String name, String surname, String email, String password,
 			String phoneNumber, String role, LocalDate birthDate, Gender gender, List<Authority> authorities,
 			boolean enabled,ProfileStatus profileStatus, List<Profile> closeFriends, String website, String biography,
-			List<Notification> notifications, List<Profile> followers, List<Profile> mutedFriends,
+			List<Notification> notifications, List<Profile> followers, List<Profile> following, List<Profile> mutedFriends,
 			List<Profile> blockedUsers, List<FriendRequest> friendRequests, RequestStatus agentRequestStatus,
 			Boolean allowedTags, Boolean allowedMessages, VerificationRequest verificationRequest) {
 		super(id, username, name, surname, email, password, phoneNumber, role, birthDate, gender, authorities, enabled);
@@ -114,6 +118,7 @@ public class Profile extends Person{
 		this.biography = biography;
 		this.notifications = notifications;
 		this.followers = followers;
+		this.following = following;
 		this.mutedFriends = mutedFriends;
 		this.blockedUsers = blockedUsers;
 		this.friendRequests = friendRequests;
@@ -184,6 +189,38 @@ public class Profile extends Person{
 		return mutedFriends;
 	}
 	
+	public List<Profile> getFollowing() {
+		return following;
+	}
+
+	public void setFollowing(List<Profile> following) {
+		this.following = following;
+	}
+
+	public Boolean getAllowedTags() {
+		return allowedTags;
+	}
+
+	public void setAllowedTags(Boolean allowedTags) {
+		this.allowedTags = allowedTags;
+	}
+
+	public Boolean getAllowedMessages() {
+		return allowedMessages;
+	}
+
+	public void setAllowedMessages(Boolean allowedMessages) {
+		this.allowedMessages = allowedMessages;
+	}
+
+	public VerificationRequest getVerificationRequest() {
+		return verificationRequest;
+	}
+
+	public void setVerificationRequest(VerificationRequest verificationRequest) {
+		this.verificationRequest = verificationRequest;
+	}
+
 	public void setMutedFriends(List<Profile> mutedFriends) {
 		this.mutedFriends = mutedFriends;
 	}
