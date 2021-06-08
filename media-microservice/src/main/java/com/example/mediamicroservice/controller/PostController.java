@@ -80,6 +80,14 @@ public class PostController {
 		
 	}
 	
+	@PostMapping("/dislikePost")
+	public int dislikePost(@RequestBody LikePostDTO likePostDTO) {
+        int dislikes = postService.dislikeThisPost(likePostDTO);
+        
+		return dislikes;
+		
+	}
+	
 	@GetMapping("/proba")
 	public String getProba() {
 		System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@");

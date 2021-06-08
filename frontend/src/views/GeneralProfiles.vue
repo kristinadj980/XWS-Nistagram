@@ -68,7 +68,7 @@
                         <h6 align="left">{{post.locationDTO.city}},{{post.locationDTO.street}},{{post.locationDTO.objectName}},{{post.locationDTO.country}}</h6>
                         <b-img thumbnail  v-bind:src="post.imageBytes" alt="Image 1"></b-img>
                         <h4 align="left">{{post.description}}</h4>
-                        <h5 align="left"><b-icon icon="hand-thumbs-up" aria-hidden="true" @click="likePost($event,post)"></b-icon>{{post.numberOfLikes}}  likes <b-icon icon="hand-thumbs-down" aria-hidden="true"></b-icon>{{dislikesNumber}} dislikes <span style="margin-left:430px;"></span> <b-icon icon="bookmark" aria-hidden="true" align="right"></b-icon></h5>
+                        <h5 align="left"><b-icon icon="hand-thumbs-up" aria-hidden="true" @click="likePost($event,post)"></b-icon>{{post.numberOfLikes}}  likes <b-icon icon="hand-thumbs-down" aria-hidden="true" @click="dislikePost($event,post)"></b-icon>{{post.numberOfDislikes}} dislikes <span style="margin-left:430px;"></span> <b-icon icon="bookmark" aria-hidden="true" align="right"></b-icon></h5>
                         <h4 align="left"><b-icon icon="chat-square" aria-hidden="true"></b-icon>  comments</h4>
                     </b-card>
                 </b-tab>
@@ -99,7 +99,7 @@ export default {
         choosenUsername:'',
         user:'',
         likesNumber:0,
-        dislikes:0,
+        dislikesNumber:0,
         loggeduser:'',
         }
     },
@@ -198,6 +198,26 @@ export default {
                     console.log(response);                
                 }).catch(res => {
                     alert("You have already liked this post");
+                    console.log(res.response.data.message);
+
+                });
+        },
+         dislikePost: function(event,post){
+            const postInfo = {
+                usernameTo : post.username,
+                usernameFrom : this.loggeduser.username,
+                fileName : post.fileName,
+            }
+            this.axios.post('http://localhost:8083/mediaMicroservice/post/dislikePost',postInfo,{ 
+                }).then(response => {
+                    alert("Picture is disliked!");
+                    this.dislikesNumber = response.data
+                    this.numberOfDislikes = this.likesNumber
+                    
+                   // this.$router.push('/generalProfiles/choosenUsername') 
+                    console.log(response);                
+                }).catch(res => {
+                    alert("You have already disliked this post");
                     console.log(res.response.data.message);
 
                 });

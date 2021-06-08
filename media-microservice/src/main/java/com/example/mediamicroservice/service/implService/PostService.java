@@ -83,23 +83,35 @@ public class PostService implements IPostService {
 		}
 		List<Post> posts = existingProfile.getPosts();
 		int numberOfLikes = 0;
+		int numberOfDislikes = 0;
 		for (Post post : posts) {
 			List<Media> medias = post.getMedias();
 			for (Media m : medias) {
 				LocationDTO locationDTO = new LocationDTO(post.getLocation().getCity(), post.getLocation().getStreet(),post.getLocation().getCountry(),
 						post.getLocation().getObjectName());
-				if( post.getNumberOfLikes() == null) {
-					myPosts.add(new PostDTO(post.getDescription(),username,m.getFileName(),locationDTO, post.getDate(),0));
-				}else {
-				numberOfLikes = post.getNumberOfLikes();
-				myPosts.add(new PostDTO(post.getDescription(),username,m.getFileName(),locationDTO, post.getDate(),numberOfLikes));
+				if( post.getNumberOfLikes() == null && post.getNumberOfDisikes() != null) {
+					numberOfDislikes = post.getNumberOfDisikes();
+					myPosts.add(new PostDTO(post.getDescription(),username,m.getFileName(),locationDTO, post.getDate(),0,numberOfDislikes));
+				}else if (post.getNumberOfDisikes() == null && post.getNumberOfLikes() != null ) {
+					numberOfLikes = post.getNumberOfLikes();
+					myPosts.add(new PostDTO(post.getDescription(),username,m.getFileName(),locationDTO, post.getDate(),numberOfLikes,0));
 				}
-			}
+				else if(post.getNumberOfLikes() == null && post.getNumberOfDisikes() == null) 
+				{
+					myPosts.add(new PostDTO(post.getDescription(),username,m.getFileName(),locationDTO, post.getDate(),0,0));
+				}
+				else 
+				{
+				numberOfLikes = post.getNumberOfLikes();
+				numberOfDislikes = post.getNumberOfDisikes();
+				myPosts.add(new PostDTO(post.getDescription(),username,m.getFileName(),locationDTO, post.getDate(),numberOfLikes,numberOfDislikes));
+				}
+		}
 		}
 		
 		List<PostDTO> allPosts = getImagesFiles(myPosts);
-		
 		return sortByDate(allPosts);
+	
 	}
 
 	 private List<PostDTO> sortByDate(List<PostDTO> allPosts) {
@@ -168,6 +180,63 @@ public class PostService implements IPostService {
 		System.out.println("BROJ LAJOKVA" + likesNumber);
 		
 		return updatedNumberOfLikes;
+		
+	 }
+	 
+	 public Integer dislikeThisPost(LikePostDTO likePostDTO) {  //smanji br lajkova a povecas dislajkove
+		 //ko je lajkovao znamo iz toga je ko je ulogovan
+		 //prvo nadji profil po username
+		 ProfileMedia profileMediaTo = profileMediaService.findByUsername(likePostDTO.getUsernameTo());
+		 ProfileMedia profileMediaFrom =profileMediaService.findByUsername(likePostDTO.getUsernameFrom());
+		 //dobavi njegove postove
+		 List<Post> myPosts = profileMediaTo.getPosts();
+		 List<Media> medias = new ArrayList<Media>();
+		 List<ProfileMedia> dislikes = new ArrayList<ProfileMedia>();
+		 List<ProfileMedia> currentDislikes = new ArrayList<ProfileMedia>();
+		 Post dislikedPost = new Post();
+		 //nadji onaj post za poslatu sliku
+		 for (Post post : myPosts) {
+			 medias = post.getMedia();
+			 for (Media media : medias) {
+				if(media.getFileName().equals(likePostDTO.getFileName())) {
+					//ako je to ta slika setuj lajkove za nju
+					System.out.println("##########################3");
+					//proveri da li je vec lajkovao ovaj koji hoce da lajkuje
+					currentDislikes = post.getDislikes();
+					for (ProfileMedia profileMedia : currentDislikes) {
+						if(profileMedia.getUsername().equals(likePostDTO.getUsernameFrom())) {
+							//ako je vec dislajkovao
+							throw new IllegalArgumentException("You have already disliked this post!");
+						}
+					}
+					ProfileMedia media2 = new ProfileMedia();
+					dislikes.add(profileMediaFrom);
+					post.setDislikes(dislikes);
+					dislikedPost = post;
+				}
+			}
+		}
+		int dislikesNumber = dislikes.size();
+		int currentNumberOfDislikes = 0;
+		int updatedNumberOfDislikes = 0;
+		if(dislikedPost.getNumberOfDisikes() == null) {
+			System.out.println("nema dislajkova jos");
+			updatedNumberOfDislikes = dislikesNumber;
+		}else {
+			System.out.println("ima dislajkova jos");
+			
+			currentNumberOfDislikes = dislikedPost.getNumberOfDisikes();
+			System.out.println("CURRENT" + currentNumberOfDislikes);
+		   updatedNumberOfDislikes = currentNumberOfDislikes + dislikesNumber;
+		}
+		dislikedPost.setDislikes(dislikes);
+		dislikedPost.setNumberOfDisikes(updatedNumberOfDislikes);
+		
+		postRepository.save(dislikedPost);
+		
+		System.out.println("BROJ DISLAJOKVA" + dislikesNumber);
+		
+		return updatedNumberOfDislikes;
 		
 	 }
 

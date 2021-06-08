@@ -15,6 +15,7 @@ public class PostDTO {
 	private LocationDTO locationDTO;
     private List<byte[]> imageBytes;
     private int numberOfLikes;
+    private int numberOfDislikes;
 	
 	public PostDTO() {
 		super();
@@ -56,7 +57,7 @@ public class PostDTO {
 		this.fileName = fileName;
 	}
 
-	public PostDTO(String description, String username, String fileName, LocationDTO locationDTO, LocalDateTime date,int numberOfLikes) {
+	public PostDTO(String description, String username, String fileName, LocationDTO locationDTO, LocalDateTime date,int numberOfLikes,int numberOfDislikes) {
 		super();
 		this.description = description;
 		this.username = username;
@@ -64,6 +65,7 @@ public class PostDTO {
 		this.locationDTO = locationDTO;
 		this.date = date;
 		this.numberOfLikes = numberOfLikes;
+		this.numberOfDislikes = numberOfDislikes;
 	}
 	public PostDTO(String description, String username, String fileName, LocationDTO locationDTO, List<byte[]> imageBytes) {
 		super();
@@ -152,6 +154,14 @@ public class PostDTO {
 
 	public void setNumberOfLikes(int numberOfLikes) {
 		this.numberOfLikes = numberOfLikes;
+	}
+
+	public int getNumberOfDislikes() {
+		return numberOfDislikes;
+	}
+
+	public void setNumberOfDislikes(int numberOfDislikes) {
+		this.numberOfDislikes = numberOfDislikes;
 	}
 	
 }
