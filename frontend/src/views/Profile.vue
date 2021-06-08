@@ -22,11 +22,11 @@
                         class="input_style" 
                         placeholder="enter username..."
                         style="margin-top: 3% !important; width:400px; height:35px;">
-                            <datalist id="my-list-id">
-                        <option v-for="user in users" v-bind:key="user.id">
-                            {{ user.username }} 
-                        </option>
-                    </datalist>
+                        <datalist id="my-list-id">
+                            <option v-for="user in users" v-bind:key="user.id">
+                                {{ user.username }} 
+                            </option>
+                        </datalist>
                     <router-link :to="{ name: 'GeneralProfiles', params: {selectedUsername: this.selectedUser}}" class="search-btn">
                        <b-button style="margin-top: -15% !important;  margin-left: 100% !important;" variant="outline-danger"><b-icon icon="search" aria-hidden="true"></b-icon></b-button>
                     </router-link>
@@ -123,7 +123,7 @@
                         <b-img v-if="!post.fileName.includes(videoText)" thumbnail  v-bind:src="post.imageBytes" alt="Image 1"></b-img>
                         <video v-if="post.fileName.includes(videoText)" autoplay controls v-bind:src="post.imageBytes" width="400" height="400" style="display:block; margin-left:auto; margin-right:auto"></video>
                         <h4 align="left">{{post.description}}</h4>
-                        <h5 align="left"><b-icon icon="hand-thumbs-up" aria-hidden="true"></b-icon>{{post.numberOfLikes}}  likes <b-icon icon="hand-thumbs-down" aria-hidden="true"></b-icon>{{post.numberOfDislikes}} dislikes <span style="margin-left:430px;"></span> <b-icon icon="bookmark" aria-hidden="true" align="right"></b-icon></h5>
+                        <h5 align="left"><b-icon icon="hand-thumbs-up" aria-hidden="true"></b-icon> {{post.numberOfLikes}} likes <b-icon icon="hand-thumbs-down" aria-hidden="true"></b-icon> {{post.numberOfDislikes}} dislikes<span style="margin-left:430px;"></span> <b-icon icon="bookmark" aria-hidden="true" align="right"></b-icon></h5>
                         <h4 align="left"><b-icon icon="chat-square" aria-hidden="true"></b-icon>  comments</h4>
                     </b-card>
                 </b-tab>
@@ -158,15 +158,13 @@ export default {
         biography: "",
         posts: [],
         users: [],
-<<<<<<< HEAD
         selectedUser:[''],
-=======
         stories: [],
         highlighted:[],
->>>>>>> add_story
         videoText: "mp4",
         numberOfLikes:0,
         numberOfDislikes:0,
+
         }
     },
     mounted(){
@@ -184,7 +182,7 @@ export default {
                        alert("Error");
                         console.log(res);
                  });
-     /*   this.axios.get('http://localhost:8083/profileMicroservice/api/profile/getAllUsers',{ 
+        this.axios.get('http://localhost:8083/profileMicroservice/api/profile/getAllUsers',{ 
              headers: {
                  'Authorization': 'Bearer ' + token,
              }
@@ -193,7 +191,7 @@ export default {
          }).catch(res => {
                        alert("Error");
                         console.log(res);
-                 });*/
+                 });
    },
     methods:{
          toggle () {
@@ -242,9 +240,7 @@ export default {
                     });
                     
         },
-<<<<<<< HEAD
        
-=======
         getMyStories: function(person) {
             this.axios.get('http://localhost:8083/mediaMicroservice/story/getMyStories/'+ person.username,)
             .then(response => {
@@ -285,7 +281,6 @@ export default {
                     });
                     
         }
->>>>>>> add_story
     }
 }
 </script>

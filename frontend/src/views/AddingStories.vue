@@ -183,7 +183,7 @@ export default {
             const storyInfo= {
                 description : this.description,
                 location : this.selectedLocation,
-                //tags : this.tags,
+                tags : this.tags,
                 username: this.user.username,
                 userId: this.user.id,
                 fileName : this.fileName,

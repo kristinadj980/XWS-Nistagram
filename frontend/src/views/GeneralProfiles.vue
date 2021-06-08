@@ -178,6 +178,46 @@ export default {
         editProfile: function(){
             window.location.href="/profileInfo";
         },
+        likePost: async function(event,post){
+            const postInfo = {
+                usernameTo : post.username,
+                usernameFrom : this.loggeduser.username,
+                fileName : post.fileName,
+            }
+            this.axios.post('http://localhost:8083/mediaMicroservice/post/likePost',postInfo,{ 
+                }).then(response => {
+                    alert("Picture is liked!");
+                    this.likesNumber = response.data
+                    this.numberOfLikes = this.likesNumber
+                    
+                   // this.$router.push('/generalProfiles/choosenUsername') 
+                    console.log(response);                
+                }).catch(res => {
+                    alert("You have already liked this post");
+                    console.log(res.response.data.message);
+
+                });
+        },
+         dislikePost: async function(event,post){
+            const postInfo = {
+                usernameTo : post.username,
+                usernameFrom : this.loggeduser.username,
+                fileName : post.fileName,
+            }
+            this.axios.post('http://localhost:8083/mediaMicroservice/post/dislikePost',postInfo,{ 
+                }).then(response => {
+                    alert("Picture is disliked!");
+                    this.dislikesNumber = response.data
+                    this.numberOfDislikes = this.likesNumber
+                    
+                   // this.$router.push('/generalProfiles/choosenUsername') 
+                    console.log(response);                
+                }).catch(res => {
+                    alert("You have already disliked this post");
+                    console.log(res.response.data.message);
+
+                });
+        },
         follow: function() {
             console.log("u funckiji je");
             let token = localStorage.getItem('token').substring(1, localStorage.getItem('token').length-1);
@@ -217,46 +257,6 @@ export default {
                     });
             }
         },
-        likePost: function(event,post){
-            const postInfo = {
-                usernameTo : post.username,
-                usernameFrom : this.loggeduser.username,
-                fileName : post.fileName,
-            }
-            this.axios.post('http://localhost:8083/mediaMicroservice/post/likePost',postInfo,{ 
-                }).then(response => {
-                    alert("Picture is liked!");
-                    this.likesNumber = response.data
-                    this.numberOfLikes = this.likesNumber
-                    
-                   // this.$router.push('/generalProfiles/choosenUsername') 
-                    console.log(response);                
-                }).catch(res => {
-                    alert("You have already liked this post");
-                    console.log(res.response.data.message);
-
-                });
-        },
-         dislikePost: function(event,post){
-            const postInfo = {
-                usernameTo : post.username,
-                usernameFrom : this.loggeduser.username,
-                fileName : post.fileName,
-            }
-            this.axios.post('http://localhost:8083/mediaMicroservice/post/dislikePost',postInfo,{ 
-                }).then(response => {
-                    alert("Picture is disliked!");
-                    this.dislikesNumber = response.data
-                    this.numberOfDislikes = this.likesNumber
-                    
-                   // this.$router.push('/generalProfiles/choosenUsername') 
-                    console.log(response);                
-                }).catch(res => {
-                    alert("You have already disliked this post");
-                    console.log(res.response.data.message);
-
-                });
-        }
         
 }
 </script>

@@ -12,9 +12,9 @@
                     <b-icon icon="image" aria-hidden="true"></b-icon> Add post</b-button>
                 
             </span>
-                <span  style="float:right;margin:15px">
-                    <b-button pill variant="outline-danger" class = "btn btn-lg btn-light" style="margin-right:20px;" v-on:click = "findPosts">Log Out</b-button>
-                </span>
+            <span  style="float:right;margin:15px">
+                <b-button pill variant="outline-danger" class = "btn btn-lg btn-light" style="margin-right:20px;" v-on:click = "findPosts">Log Out</b-button>
+            </span>
         </div>
        <form>
             <h4 style="left: 10px;">Choose image </h4>
@@ -168,7 +168,6 @@ export default {
         },
         postPicture :function(){  
 
-            alert(this.tags)
             const postInfo= {
                 description : this.description,
                 location : this.selectedLocation,

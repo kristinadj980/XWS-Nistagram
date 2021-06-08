@@ -10,6 +10,8 @@
                     <b-icon icon="person" aria-hidden="true"></b-icon>Profile</b-button>
                 <b-button pill variant="outline-danger" class = "btn btn-lg space_style" v-on:click = "addPosts">
                     <b-icon icon="image" aria-hidden="true"></b-icon> Add post</b-button>
+                <b-button pill variant="outline-danger" class = "btn btn-lg space_style" v-on:click = "addStories">
+                    <b-icon icon="image" aria-hidden="true"></b-icon> Add story</b-button>
             </span>
                 <span  style="float:right;margin:15px">
                     <b-button pill variant="outline-danger" class = "btn btn-lg btn-light" style="margin-right:20px;" v-on:click = "logOut">Log Out</b-button>
@@ -24,7 +26,7 @@
                         <b-img v-if="!post.fileName.includes(videoText)" thumbnail width="500px" height="500px" v-bind:src="post.imageBytes" alt="Image 1"></b-img>
                         <video class="video" v-if="post.fileName.includes(videoText)" autoplay controls v-bind:src="post.imageBytes" width="500px" height="500px" ></video>
                         <h4 align="left">{{post.description}}</h4>
-                        <h5 align="left"><b-icon icon="hand-thumbs-up" aria-hidden="true"></b-icon>  likes <b-icon icon="hand-thumbs-down" aria-hidden="true"></b-icon> <span style="margin-left:430px;"></span> <b-icon icon="bookmark" aria-hidden="true" align="right"></b-icon></h5>
+                        <h5 align="left"><b-icon icon="hand-thumbs-up" aria-hidden="true" @click="likePost($event,post)"></b-icon>{{post.numberOfLikes}}  likes <b-icon icon="hand-thumbs-down" aria-hidden="true" @click="dislikePost($event,post)"></b-icon>{{post.numberOfDislikes}} dislikes <span style="margin-left:430px;"></span> <b-icon icon="bookmark" aria-hidden="true" align="right"></b-icon></h5>
                         <h4 align="left"><b-icon icon="chat-square" aria-hidden="true"></b-icon>  comments</h4>
                     </b-card>
         </b-card>
@@ -41,6 +43,9 @@ export default {
         username: "",
         posts: [],
         videoText: "mp4",
+        numberOfLikes:0,
+        numberOfDislikes:0,
+        loggeduser: "",
         }
     },
     async mounted(){
@@ -57,6 +62,17 @@ export default {
                        alert("Error");
                         console.log(res);
                  });
+       
+        this.axios.get('http://localhost:8083/profileMicroservice/api/profile/loggedUserInfo',{ 
+             headers: {
+                 'Authorization': 'Bearer ' + token,
+             }
+         }).then(response => {
+              this.loggeduser = response.data;
+         }).catch(res => {
+               alert(Error)
+                console.log(res);
+            });
    },
     methods:{
         showHomepage: function(){
@@ -71,6 +87,9 @@ export default {
         },
         addPosts : function() {
             window.location.href = "/addingPosts";
+        },
+        addStories : function() {
+            window.location.href = "/addingStories";
         },
         getFriednsPosts: function(usernames) {
 
@@ -89,7 +108,47 @@ export default {
                         alert("Profile is private");
                             console.log(res);
                     });
-        }
+        },
+        likePost: async function(event,post){
+            const postInfo = {
+                usernameTo : post.username,
+                usernameFrom : this.loggeduser.username,
+                fileName : post.fileName,
+            }
+            this.axios.post('http://localhost:8083/mediaMicroservice/post/likePost',postInfo,{ 
+                }).then(response => {
+                    alert("Picture is liked!");
+                    this.likesNumber = response.data
+                    this.numberOfLikes = this.likesNumber
+                    
+                   // this.$router.push('/generalProfiles/choosenUsername') 
+                    console.log(response);                
+                }).catch(res => {
+                    alert("You have already liked this post");
+                    console.log(res.response.data.message);
+
+                });
+        },
+         dislikePost: async function(event,post){
+            const postInfo = {
+                usernameTo : post.username,
+                usernameFrom : this.loggeduser.username,
+                fileName : post.fileName,
+            }
+            this.axios.post('http://localhost:8083/mediaMicroservice/post/dislikePost',postInfo,{ 
+                }).then(response => {
+                    alert("Picture is disliked!");
+                    this.dislikesNumber = response.data
+                    this.numberOfDislikes = this.likesNumber
+                    
+                   // this.$router.push('/generalProfiles/choosenUsername') 
+                    console.log(response);                
+                }).catch(res => {
+                    alert("You have already disliked this post");
+                    console.log(res.response.data.message);
+
+                });
+        },
     }
 }
 </script>
