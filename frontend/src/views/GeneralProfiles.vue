@@ -68,7 +68,7 @@
                         <h6 align="left">{{post.locationDTO.city}},{{post.locationDTO.street}},{{post.locationDTO.objectName}},{{post.locationDTO.country}}</h6>
                         <b-img thumbnail  v-bind:src="post.imageBytes" alt="Image 1"></b-img>
                         <h4 align="left">{{post.description}}</h4>
-                        <h5 align="left"><b-icon icon="hand-thumbs-up" aria-hidden="true" @click="likePost($event,post)"></b-icon>{{likesNumber}}  likes <b-icon icon="hand-thumbs-down" aria-hidden="true"></b-icon>{{dislikesNumber}} dislikes <span style="margin-left:430px;"></span> <b-icon icon="bookmark" aria-hidden="true" align="right"></b-icon></h5>
+                        <h5 align="left"><b-icon icon="hand-thumbs-up" aria-hidden="true" @click="likePost($event,post)"></b-icon>{{post.numberOfLikes}}  likes <b-icon icon="hand-thumbs-down" aria-hidden="true"></b-icon>{{dislikesNumber}} dislikes <span style="margin-left:430px;"></span> <b-icon icon="bookmark" aria-hidden="true" align="right"></b-icon></h5>
                         <h4 align="left"><b-icon icon="chat-square" aria-hidden="true"></b-icon>  comments</h4>
                     </b-card>
                 </b-tab>
@@ -100,12 +100,24 @@ export default {
         user:'',
         likesNumber:0,
         dislikes:0,
+        loggeduser:'',
         }
     },
     async mounted(){
         this.choosenUsername = this.$route.params.selectedUsername;
         let token = localStorage.getItem('token').substring(1, localStorage.getItem('token').length-1);
        
+        this.axios.get('http://localhost:8083/profileMicroservice/api/profile/loggedUserInfo',{ 
+             headers: {
+                 'Authorization': 'Bearer ' + token,
+             }
+         }).then(response => {
+              this.loggeduser = response.data;
+         }).catch(res => {
+               alert(Error)
+                console.log(res);
+            });
+
         this.axios.get('http://localhost:8083/profileMicroservice/api/profile/getAllUsers',{ 
              headers: {
                  'Authorization': 'Bearer ' + token,
@@ -173,16 +185,20 @@ export default {
         likePost: function(event,post){
             const postInfo = {
                 usernameTo : post.username,
-                usernameFrom : 'pera',
+                usernameFrom : this.loggeduser.username,
                 fileName : post.fileName,
             }
             this.axios.post('http://localhost:8083/mediaMicroservice/post/likePost',postInfo,{ 
                 }).then(response => {
                     alert("Picture is liked!");
                     this.likesNumber = response.data
+                    this.numberOfLikes = this.likesNumber
+                    
+                   // this.$router.push('/generalProfiles/choosenUsername') 
                     console.log(response);                
                 }).catch(res => {
-                    alert(res.response.data.message);
+                    alert("You have already liked this post");
+                    console.log(res.response.data.message);
 
                 });
         }

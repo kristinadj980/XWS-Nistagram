@@ -82,13 +82,18 @@ public class PostService implements IPostService {
 			throw new IllegalArgumentException("Profile doesn't exist!");
 		}
 		List<Post> posts = existingProfile.getPosts();
+		int numberOfLikes = 0;
 		for (Post post : posts) {
 			List<Media> medias = post.getMedias();
 			for (Media m : medias) {
 				LocationDTO locationDTO = new LocationDTO(post.getLocation().getCity(), post.getLocation().getStreet(),post.getLocation().getCountry(),
 						post.getLocation().getObjectName());
-			
-				myPosts.add(new PostDTO(post.getDescription(),username,m.getFileName(),locationDTO, post.getDate()));
+				if( post.getNumberOfLikes() == null) {
+					myPosts.add(new PostDTO(post.getDescription(),username,m.getFileName(),locationDTO, post.getDate(),0));
+				}else {
+				numberOfLikes = post.getNumberOfLikes();
+				myPosts.add(new PostDTO(post.getDescription(),username,m.getFileName(),locationDTO, post.getDate(),numberOfLikes));
+				}
 			}
 		}
 		
@@ -113,15 +118,13 @@ public class PostService implements IPostService {
 		 //ko je lajkovao znamo iz toga je ko je ulogovan
 		 //prvo nadji profil po username
 		 ProfileMedia profileMediaTo = profileMediaService.findByUsername(likePostDTO.getUsernameTo());
-		 System.out.println("PROFIL KOME LAJKUJE " + profileMediaTo.getUsername());
 		 ProfileMedia profileMediaFrom =profileMediaService.findByUsername(likePostDTO.getUsernameFrom());
-		 System.out.println("PROFIL KOJI LAJKUJE " + profileMediaFrom.getUsername());
 		 //dobavi njegove postove
 		 List<Post> myPosts = profileMediaTo.getPosts();
 		 List<Media> medias = new ArrayList<Media>();
 		 List<ProfileMedia> likes = new ArrayList<ProfileMedia>();
+		 List<ProfileMedia> currentLikes = new ArrayList<ProfileMedia>();
 		 Post likedPost = new Post();
-		 System.out.println("*****************************");
 		 //nadji onaj post za poslatu sliku
 		 for (Post post : myPosts) {
 			 medias = post.getMedia();
@@ -129,6 +132,14 @@ public class PostService implements IPostService {
 				if(media.getFileName().equals(likePostDTO.getFileName())) {
 					//ako je to ta slika setuj lajkove za nju
 					System.out.println("##########################3");
+					//proveri da li je vec lajkovao ovaj koji hoce da lajkuje
+					currentLikes = post.getLikes();
+					for (ProfileMedia profileMedia : currentLikes) {
+						if(profileMedia.getUsername().equals(likePostDTO.getUsernameFrom())) {
+							//ako je vec lajkovao
+							throw new IllegalArgumentException("You have already liked this post!");
+						}
+					}
 					ProfileMedia media2 = new ProfileMedia();
 					likes.add(profileMediaFrom);
 					post.setLike(likes);
@@ -144,6 +155,7 @@ public class PostService implements IPostService {
 			updatedNumberOfLikes = likesNumber;
 		}else {
 			System.out.println("ima lajkova jos");
+			
 			currentNumberOfLikes = likedPost.getNumberOfLikes();
 			System.out.println("CURRENT" + currentNumberOfLikes);
 		   updatedNumberOfLikes = currentNumberOfLikes + likesNumber;
