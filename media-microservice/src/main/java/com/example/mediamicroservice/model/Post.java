@@ -12,7 +12,7 @@ public class Post{
 	   @GeneratedValue(strategy = GenerationType.IDENTITY)
 	   private Long id;
 
-	   @Column(name = "description", nullable = false)
+	   @Column(name = "description")
 	   private String description;
 
 	   @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
@@ -20,6 +20,9 @@ public class Post{
 	   joinColumns = @JoinColumn(name = "post_id", referencedColumnName = "id"),
 	   inverseJoinColumns = @JoinColumn(name = "likes_id", referencedColumnName = "id"))
 	   private List<ProfileMedia> likes;
+	   
+	   @Column(name = "numberOfLikes")
+	   private Integer numberOfLikes;
 
 	   @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	   @JoinTable(name = "post_dislikes",
@@ -33,7 +36,7 @@ public class Post{
 		inverseJoinColumns = @JoinColumn(name = "comment_id", referencedColumnName = "id"))
 		private List<Comment> comments;
 
-	   @Column(name = "date", nullable = false)
+	   @Column(name = "date")
 	   private LocalDateTime  date;
 
 	   @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
@@ -64,6 +67,23 @@ public class Post{
 		this.id = id;
 		this.description = description;
 		this.likes = likes;
+		this.dislikes = dislikes;
+		this.comments = comments;
+		this.date = date;
+		this.medias = medias;
+		this.location = location;
+		this.tags = tags;
+	}
+
+
+	public Post(Long id, String description, List<ProfileMedia> likes, Integer numberOfLikes,
+			List<ProfileMedia> dislikes, List<Comment> comments, LocalDateTime date, List<Media> medias,
+			Location location, List<Tag> tags) {
+		super();
+		this.id = id;
+		this.description = description;
+		this.likes = likes;
+		this.numberOfLikes = numberOfLikes;
 		this.dislikes = dislikes;
 		this.comments = comments;
 		this.date = date;
@@ -187,6 +207,14 @@ public class Post{
 	public void setTag(List<Tag> tag) {
 		this.tags = tag;
 	}
-	   
-	   
+
+
+	public Integer getNumberOfLikes() {
+		return numberOfLikes;
+	}
+
+
+	public void setNumberOfLikes(Integer numberOfLikes) {
+		this.numberOfLikes = numberOfLikes;
+	}
 }

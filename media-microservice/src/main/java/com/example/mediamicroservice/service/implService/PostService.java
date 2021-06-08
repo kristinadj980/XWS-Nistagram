@@ -1,5 +1,6 @@
 package com.example.mediamicroservice.service.implService;
 
+import com.example.mediamicroservice.dto.LikePostDTO;
 import com.example.mediamicroservice.dto.LocationDTO;
 import com.example.mediamicroservice.dto.PostDTO;
 import com.example.mediamicroservice.model.Location;
@@ -107,6 +108,56 @@ public class PostService implements IPostService {
 		 });
 		return allPosts;
 	}
+	 
+	 public Integer likeThisPost(LikePostDTO likePostDTO) {
+		 //ko je lajkovao znamo iz toga je ko je ulogovan
+		 //prvo nadji profil po username
+		 ProfileMedia profileMediaTo = profileMediaService.findByUsername(likePostDTO.getUsernameTo());
+		 System.out.println("PROFIL KOME LAJKUJE " + profileMediaTo.getUsername());
+		 ProfileMedia profileMediaFrom =profileMediaService.findByUsername(likePostDTO.getUsernameFrom());
+		 System.out.println("PROFIL KOJI LAJKUJE " + profileMediaFrom.getUsername());
+		 //dobavi njegove postove
+		 List<Post> myPosts = profileMediaTo.getPosts();
+		 List<Media> medias = new ArrayList<Media>();
+		 List<ProfileMedia> likes = new ArrayList<ProfileMedia>();
+		 Post likedPost = new Post();
+		 System.out.println("*****************************");
+		 //nadji onaj post za poslatu sliku
+		 for (Post post : myPosts) {
+			 medias = post.getMedia();
+			 for (Media media : medias) {
+				if(media.getFileName().equals(likePostDTO.getFileName())) {
+					//ako je to ta slika setuj lajkove za nju
+					System.out.println("##########################3");
+					ProfileMedia media2 = new ProfileMedia();
+					likes.add(profileMediaFrom);
+					post.setLike(likes);
+					likedPost = post;
+				}
+			}
+		}
+		int likesNumber = likes.size();
+		int currentNumberOfLikes = 0;
+		int updatedNumberOfLikes = 0;
+		if(likedPost.getNumberOfLikes() == null) {
+			System.out.println("nema lajkova jos");
+			updatedNumberOfLikes = likesNumber;
+		}else {
+			System.out.println("ima lajkova jos");
+			currentNumberOfLikes = likedPost.getNumberOfLikes();
+			System.out.println("CURRENT" + currentNumberOfLikes);
+		   updatedNumberOfLikes = currentNumberOfLikes + likesNumber;
+		}
+		likedPost.setLikes(likes);
+		likedPost.setNumberOfLikes(updatedNumberOfLikes);
+		
+		postRepository.save(likedPost);
+		
+		System.out.println("BROJ LAJOKVA" + likesNumber);
+		
+		return updatedNumberOfLikes;
+		
+	 }
 
 	public List<PostDTO> getImagesFiles(List<PostDTO> posts) {
 		 List<PostDTO> postsDto = new ArrayList<>();
