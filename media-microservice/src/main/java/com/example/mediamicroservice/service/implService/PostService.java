@@ -5,6 +5,7 @@ import com.example.mediamicroservice.dto.LikePostDTO;
 import com.example.mediamicroservice.dto.LocationDTO;
 import com.example.mediamicroservice.dto.PostDTO;
 import com.example.mediamicroservice.dto.TagDTO;
+import com.example.mediamicroservice.model.Comment;
 import com.example.mediamicroservice.model.Location;
 import com.example.mediamicroservice.model.Media;
 import com.example.mediamicroservice.model.Post;
@@ -277,6 +278,32 @@ public class PostService implements IPostService {
 			}
 	   
 	    	return profilesWhoDisliked;
+	    }
+	    
+	    public void commentPost(LikePostDTO dto) {
+	    	 ProfileMedia profileMediaTo = profileMediaService.findByUsername(dto.getUsernameTo());
+			 ProfileMedia profileMediaFrom =profileMediaService.findByUsername(dto.getUsernameFrom());
+			 List<Post> myPosts = profileMediaTo.getPosts();
+			 List<Media> medias = new ArrayList<Media>();
+			 for (Post post : myPosts) {
+				 medias = post.getMedia();
+				 for (Media media : medias) {
+					 if(media.getFileName().equals(dto.getFileName())) {
+						 List<Comment> currentComments = post.getComments();
+						 System.out.println(currentComments.isEmpty());
+						 if(!currentComments.isEmpty()) {
+						 for (Comment comment : currentComments) {
+							currentComments.add(new Comment(dto.getComment(), profileMediaFrom));
+						 }
+						 }else {
+							 currentComments.add(new Comment(dto.getComment(), profileMediaFrom));
+						 }
+						 post.setComments(currentComments);
+						 postRepository.save(post);
+						 
+					 }
+				 }
+			}
 	    }
 	
 }

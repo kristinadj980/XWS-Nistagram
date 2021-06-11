@@ -26,6 +26,10 @@
                         <b-img v-if="!post.fileName.includes(videoText)" thumbnail width="500px" height="500px" v-bind:src="post.imageBytes" alt="Image 1"></b-img>
                         <video class="video" v-if="post.fileName.includes(videoText)" autoplay controls v-bind:src="post.imageBytes" width="500px" height="500px" ></video>
                         <h4 align="left">{{post.description}}</h4>
+                         <h5 align="left"><span v-for="(tag,t) in post.tags" :key="t">
+                                        #{{tag.name}}
+                                    </span>
+                        </h5>
                         <h5 align="left"><b-icon icon="hand-thumbs-up" aria-hidden="true" @click="likePost($event,post)"></b-icon>{{post.numberOfLikes}}  likes <b-icon icon="hand-thumbs-down" aria-hidden="true" @click="dislikePost($event,post)"></b-icon>{{post.numberOfDislikes}} dislikes <span style="margin-left:430px;"></span> <b-icon icon="bookmark" aria-hidden="true" align="right"></b-icon></h5>
                         <h4 align="left"><b-icon icon="chat-square" aria-hidden="true"></b-icon>  comments</h4>
                     </b-card>

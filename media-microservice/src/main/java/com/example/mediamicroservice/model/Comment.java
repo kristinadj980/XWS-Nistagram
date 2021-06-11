@@ -17,7 +17,7 @@ public class Comment {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
 	
-	@Column(name = "description", nullable = false)
+	@Column(name = "description")
 	private String description;
 	
 	@OneToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
@@ -32,6 +32,12 @@ public class Comment {
 	public Comment(Long id, String description, ProfileMedia registredUserProfile) {
 		super();
 		this.id = id;
+		this.description = description;
+		this.registredUserProfile = registredUserProfile;
+	}
+
+	public Comment(String description, ProfileMedia registredUserProfile) {
+		super();
 		this.description = description;
 		this.registredUserProfile = registredUserProfile;
 	}

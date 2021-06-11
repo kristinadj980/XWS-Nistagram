@@ -134,5 +134,13 @@ public class PostController {
 		return new ResponseEntity(postService.findMyDislikes(infoDTO), HttpStatus.OK); 
 
 	}
+	
+	@PostMapping("/commentPost")
+	public ResponseEntity commentPost(@RequestBody LikePostDTO likePostDTO) {
+		postService.commentPost(likePostDTO);
+		return new ResponseEntity(likePostDTO, HttpStatus.OK);
+		//return new ResponseEntity(postService.commentPost(likePostDTO), HttpStatus.OK); 
+	}
+	
 
 }

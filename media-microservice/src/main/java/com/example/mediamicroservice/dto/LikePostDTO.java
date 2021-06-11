@@ -5,17 +5,19 @@ public class LikePostDTO {
 	private String fileName;
 	private String usernameFrom;  //kolajkuje
 	private int likes;
+	private String comment;
 	
 	public LikePostDTO() {
 		super();
 	}
-	
-	public LikePostDTO(String usernameTo, String fileName, String usernameFrom, int likes) {
+
+	public LikePostDTO(String usernameTo, String fileName, String usernameFrom, int likes, String comment) {
 		super();
 		this.usernameTo = usernameTo;
 		this.fileName = fileName;
 		this.usernameFrom = usernameFrom;
 		this.likes = likes;
+		this.comment = comment;
 	}
 
 	public String getUsernameTo() {
@@ -48,6 +50,14 @@ public class LikePostDTO {
 
 	public void setLikes(int likes) {
 		this.likes = likes;
+	}
+
+	public String getComment() {
+		return comment;
+	}
+
+	public void setComment(String comment) {
+		this.comment = comment;
 	}
 
 }
