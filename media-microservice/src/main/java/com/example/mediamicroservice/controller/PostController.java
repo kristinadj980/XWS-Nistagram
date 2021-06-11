@@ -20,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.example.mediamicroservice.dto.MediaDTO;
 import com.example.mediamicroservice.dto.PostDTO;
+import com.example.mediamicroservice.dto.LikeDislikeInfoDTO;
 import com.example.mediamicroservice.dto.LikePostDTO;
 
 import com.example.mediamicroservice.model.Post;
@@ -63,10 +64,8 @@ public class PostController {
 
 	@GetMapping("/getMyPosts/{username}")
 	public ResponseEntity getMyPosts(@PathVariable String username) {
-		System.out.println("POGODIOOOOOOOOOOOOOOOOOOOO");
-		return new ResponseEntity(postService.findMyPosts(username), HttpStatus.OK); 
 		
-		//return (ResponseEntity<List<PostDTO>>) (myPosts == null ? new ResponseEntity<>(HttpStatus.NOT_FOUND) : ResponseEntity.ok(myPosts));
+		return new ResponseEntity(postService.findMyPosts(username), HttpStatus.OK); 
 
 	}
 	
@@ -121,4 +120,12 @@ public class PostController {
 		}
 		
 	}
+	
+	@PostMapping("/getMyLikesInfo")
+    public ResponseEntity getMyLikesInfo(@RequestBody LikeDislikeInfoDTO infoDTO) {
+		
+		return new ResponseEntity(postService.findMyLikes(infoDTO), HttpStatus.OK); 
+
+	}
+
 }
