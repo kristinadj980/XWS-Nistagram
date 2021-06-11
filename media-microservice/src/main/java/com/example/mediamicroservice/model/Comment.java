@@ -22,14 +22,14 @@ public class Comment {
 	
 	@OneToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
 	@JoinColumn(name = "profile_id", referencedColumnName = "id")
-	public Profile registredUserProfile;
+	public ProfileMedia registredUserProfile;
 	   
 	   
 	public Comment() {
 		super();
 	}
 
-	public Comment(Long id, String description, Profile registredUserProfile) {
+	public Comment(Long id, String description, ProfileMedia registredUserProfile) {
 		super();
 		this.id = id;
 		this.description = description;
@@ -52,11 +52,11 @@ public class Comment {
 		this.description = description;
 	}
 
-	public Profile getRegistredUserProfile() {
+	public ProfileMedia getRegistredUserProfile() {
 		return registredUserProfile;
 	}
 
-	public void setRegistredUserProfile(Profile registredUserProfile) {
+	public void setRegistredUserProfile(ProfileMedia registredUserProfile) {
 		this.registredUserProfile = registredUserProfile;
 	}
 }

@@ -1,8 +1,11 @@
 package com.nistagram.profileMicroservice.service.implService;
 import com.nistagram.profileMicroservice.dto.EditProfileDTO;
+import com.nistagram.profileMicroservice.dto.FollowingDTO;
 import com.nistagram.profileMicroservice.dto.PersonRequestDTO;
 import com.nistagram.profileMicroservice.model.Authority;
+import com.nistagram.profileMicroservice.model.Person;
 import com.nistagram.profileMicroservice.model.Profile;
+import com.nistagram.profileMicroservice.model.ProfileStatus;
 import com.nistagram.profileMicroservice.repository.AuthorityRepository;
 import com.nistagram.profileMicroservice.repository.ProfileRepository;
 import com.nistagram.profileMicroservice.service.IProfileService;
@@ -14,6 +17,7 @@ import java.util.List;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -50,6 +54,7 @@ public class ProfileService implements IProfileService {
         profile.setGender(userRequest.getGender());
         profile.setUsername(userRequest.getUsername());
         profile.setBirthDate(userRequest.getBirthDate());
+        profile.setProfileStatus(ProfileStatus.publicProfile);
         Authority authority = authService.findByname("ROLE_REGISTRED_USER");
         List<Authority> auth = new ArrayList<Authority>();
         if(authority==null) {
@@ -101,5 +106,41 @@ public class ProfileService implements IProfileService {
 		
 		profileRepository.save(profile);
 		
+	}
+
+	@Override
+	public List<Profile> findAll() {
+		return profileRepository.findAll();
+	}
+
+	@Override
+	public Profile findByUsername(String username) {
+		return profileRepository.findByUsername(username);
+	}
+
+	@Override
+	public void updateProfileStatus(String username) {
+		Profile profile = findByUsername(username);
+		if(profile.getProfileStatus().equals(ProfileStatus.privateProfile))
+			profile.setProfileStatus(ProfileStatus.publicProfile);
+		else
+			profile.setProfileStatus(ProfileStatus.privateProfile);
+	
+		profileRepository.save(profile);
+	}
+
+	@Override
+	public List<FollowingDTO> getFollowingUsers() {
+		Authentication currentUser = SecurityContextHolder.getContext().getAuthentication();
+		Person person = (Person) currentUser.getPrincipal();
+		Profile user = findById(person.getId());
+		List<Profile> following = user.getFollowing();
+		List<FollowingDTO> followingDTO = new ArrayList<FollowingDTO>();
+		
+		for(Profile p: following)
+			followingDTO.add(new FollowingDTO(p.getUsername()));
+		
+		
+		return followingDTO;
 	}
 }

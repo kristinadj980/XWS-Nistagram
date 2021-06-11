@@ -12,22 +12,46 @@
                     <b-icon icon="image" aria-hidden="true"></b-icon> Add post</b-button>
                 <b-button pill variant="outline-danger" class = "btn btn-lg space_style" v-on:click = "editProfile">
                     <b-icon icon="gear" aria-hidden="true"></b-icon> Edit profile</b-button>
-                <b-input-group class=" serach_look">
-                    <b-form-input placeholder="search.."></b-form-input>
-                    <b-input-group-append>
-                    <b-button variant="outline-danger"><b-icon icon="search" aria-hidden="true"></b-icon></b-button>
-                    </b-input-group-append>
-                </b-input-group>
+                
             </span>
                 <span  style="float:right;margin:15px">
                     <b-button pill variant="outline-danger" class = "btn btn-lg btn-light" style="margin-right:20px;" v-on:click = "logOut">Log Out</b-button>
                 </span>
         </div>
         <b-card class="content_surface">
+            <b-button  class="btn btn-info btn-lg space_style"  style="background-color:#f08080;margin-left:-1300px;" v-b-modal.modal-3>Archive stories</b-button>
+                            <b-modal ref="modal-ref3" id="modal-3" title="Archive stories" hide-footer>
+                                <b-tabs 
+            style="margin-top:70px;" 
+            align="center" 
+            active-nav-item-class="font-weight-bold text-uppercase text-danger"
+            active-tab-class="font-weight-bold"
+            content-class="mt-3">
+                <b-tab active>
+                <template #title>
+                   <b-icon icon="grid3x3-gap" aria-hidden="true"></b-icon><strong> Stories </strong>
+                </template>
+                    <b-card class="post_look" v-for="story in stories" v-bind:key="story.fileName">
+                        <b-row >
+                        <h4 align="left"><b-icon icon="person-circle" aria-hidden="true"></b-icon>  {{story.username}}</h4>
+                        </b-row>
+                        <h6 align="left">{{story.locationDTO.city}},{{story.locationDTO.street}},{{story.locationDTO.objectName}},{{story.locationDTO.country}}</h6>
+                        <b-img thumbnail  v-bind:src="story.imageBytes" alt="Image 1"></b-img>
+                        <h4 align="left">{{story.description}}</h4>
+                    </b-card>
+                </b-tab>
+            </b-tabs>
+         </b-modal>
                 <div class="card"  >
                 <div class="profile-img">
                    <!--   <img class="img-responsive" src="@/assets/user.png" style=" height:150px;" width="100%" /> -->
                   <img class="img-circle img-responsive rounded-circle"  src="@/assets/user.png" style="width:120px; height:120px;"  />  
+                </div>
+                <div class="custom-control custom-switch">
+                <b-button style="margin-left:905px; margin-top:-190px;" variant="outline-danger" size="lg" class = " mb-2 btn btn-lg space_style" v-on:click = "editPrivacy()">
+                    <b-icon v-if="profile.profileStatus == 'privateProfile'" icon="lock-fill" aria-hidden="true" tooltip="click to go public"></b-icon> 
+                    <b-icon v-if="profile.profileStatus == 'publicProfile'" icon="unlock-fill" aria-hidden="true"  tooltip="click to go public"></b-icon> 
+                </b-button>
                 </div>
                 <div class=" d-inline-block " style=" height:100%; background-color: #ced2d3;">
                     <h4 style = "position:left; left:60px; top:2px; background-color:#ebf0fa;"><b> {{profile.name}}  {{profile.surname}} </b></h4>
@@ -167,8 +191,10 @@ export default {
         password : "",
         currentPassword : "",
         newPassword : "",
-        repeatNewPassword : ""
-
+        repeatNewPassword : "",
+        selectedUser:[''],
+        profileStatus: "",
+        stories: [],
         }
     },
      mounted(){
@@ -179,15 +205,18 @@ export default {
              }
          }).then(response => {
                this.profile = response.data;
+               this.getMyStories(response.data);
          }).catch(res => {
                        alert("Error");
                         console.log(res);
                  });
-    
    },
     methods:{
         toggle () {
         this.show = !this.show
+        },
+        cancelStories() {
+            this.$refs['modal-ref3'].hide();
         },
         showHomepage: function(){
            window.location.href = "/homepage";
@@ -259,6 +288,47 @@ export default {
                     alert("Please, try later.")
                     console.log(response);
                 })
+        },
+        editPrivacy:  function () {
+            let token = localStorage.getItem('token').substring(1, localStorage.getItem('token').length-1);
+            const userUsername ={
+                username : this.profile.username,
+            } 
+            this.axios.post('http://localhost:8083/profileMicroservice/api/profile/updateProfileStatus',userUsername, { 
+                headers: {
+                    'Authorization': 'Bearer ' + token,
+                }})
+                .then(response => {
+                    this.axios.get('http://localhost:8083/profileMicroservice/api/profile/account',{ 
+                        headers: {
+                            'Authorization': 'Bearer ' + token,
+                        }
+                    }).then(response => {
+                        this.profile = response.data;
+                    }).catch(res => {
+                                alert("Error");
+                                    console.log(res);
+                            });
+                    
+                    console.log(response);
+                })
+                .catch(response => {
+                    alert("Please, try later.")
+                    console.log(response);
+                })
+        },
+        getMyStories: function(person) {
+            this.axios.get('http://localhost:8083/mediaMicroservice/story/getArchiveStories/'+ person.username,)
+            .then(response => {
+                this.stories = response.data;
+                for(let i=0; i< response.data.length; i++){
+                        this.stories[i].imageBytes = 'data:image/jpeg;base64,' + this.stories[i].imageBytes;                
+                } 
+            }).catch(res => {
+                        alert("Error");
+                            console.log(res);
+                    });
+                    
         }
     }
 }

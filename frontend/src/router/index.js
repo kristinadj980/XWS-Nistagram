@@ -5,7 +5,10 @@ import Login from '../views/Login.vue'
 import Registration from '../views/Registration.vue'
 import Homepage from '../views/Homepage.vue'
 import Profile from '../views/Profile.vue'
+import AddingPosts from '../views/AddingPosts.vue'
+import AddingStories from '../views/AddingStories.vue'
 import ProfileInfo from '../views/ProfileInfo.vue'
+import GeneralProfiles from '../views/GeneralProfiles.vue'
 
 Vue.use(VueRouter)
 
@@ -44,9 +47,24 @@ const routes = [
     component: Profile
   },
   {
+    path: '/addingPosts',
+    name: 'AddingPosts',
+    component: AddingPosts
+  },
+  {
+    path: '/addingStories',
+    name: 'AddingStories',
+    component: AddingStories
+  },
+  {
     path: '/profileInfo',
     name: 'ProfileInfo',
     component: ProfileInfo
+  },
+  {
+    path: '/generalProfiles/:selectedUsername',
+    name: 'GeneralProfiles',
+    component: GeneralProfiles
   },
 ]
 

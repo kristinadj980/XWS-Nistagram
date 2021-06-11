@@ -47,10 +47,6 @@ export default {
             this.axios.post('http://localhost:8083/profileMicroservice/api/auth/login',loginInfo)
                 .then(response => {
                     localStorage.setItem('token', JSON.stringify(response.data.accessToken));
-                    console.log("aaaaaaaaaaaa");
-                    console.log(response.data.token);
-                     console.log("aaaaaaaaaaaa");
-                    
                     let token = localStorage.getItem('token').substring(1, localStorage.getItem('token').length-1);
                     this.axios.get('http://localhost:8083/profileMicroservice/api/auth/authority',{  
                          headers: {
