@@ -127,5 +127,12 @@ public class PostController {
 		return new ResponseEntity(postService.findMyLikes(infoDTO), HttpStatus.OK); 
 
 	}
+	
+	@PostMapping("/getMyDislikesInfo")
+    public ResponseEntity getMyDislikesInfo(@RequestBody LikeDislikeInfoDTO infoDTO) {
+		
+		return new ResponseEntity(postService.findMyDislikes(infoDTO), HttpStatus.OK); 
+
+	}
 
 }

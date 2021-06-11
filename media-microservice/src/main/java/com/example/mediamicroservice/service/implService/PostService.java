@@ -257,5 +257,21 @@ public class PostService implements IPostService {
 	   
 	    	return profilesWhoLiked;
 	    }
+	    
+	    @Override
+	    public List<LikeDislikeInfoDTO> findMyDislikes(LikeDislikeInfoDTO dtoInfo){
+	    	List<LikeDislikeInfoDTO> profilesWhoDisliked = new ArrayList<LikeDislikeInfoDTO>();
+	    	ProfileMedia myProfile = profileMediaService.findByUsername(dtoInfo.getMyProfile());
+	    	List<ProfileMedia> profiles = new ArrayList<ProfileMedia>();
+	    	List<Post> myPosts = myProfile.getPosts();
+	    	for (Post post : myPosts) {
+				profiles = post.getDislikes();
+			}
+	    	for (ProfileMedia p : profiles) {
+	    		profilesWhoDisliked.add(new LikeDislikeInfoDTO(p.getUsername()));
+			}
+	   
+	    	return profilesWhoDisliked;
+	    }
 	
 }
