@@ -137,6 +137,24 @@
             </b-tabs>
             
         </b-card>
+
+        <div> 
+          <b-modal ref="modal" hide-footer scrollable title="Profiles who liked your photo" size="lg" modal-class="b-modal">
+               <div modal-class="modal-dialog" role="document">
+                    <div class="modal-content" style="background-color:whitesmoke">
+                         <div v-for="user in usersWhoLiked" v-bind:key="user" class="modal-body">
+                             
+                             <div class="row">
+                                <div class=" form-group col">
+                                <label > Username : {{user.username}}</label>
+                            </div>
+                             </div>
+                                                       
+                         </div>                
+                    </div>
+               </div>
+          </b-modal>
+       </div>
     </div>
 </template>
 
@@ -289,10 +307,8 @@ export default {
             }
             this.axios.post('http://localhost:8083/mediaMicroservice/post/getMyLikesInfo',postInfo,{ 
                 }).then(response => {
-                    alert("Success!");
                     this.usersWhoLiked = response.data
-                    
-                   // this.$router.push('/generalProfiles/choosenUsername') 
+                    this.$refs['modal'].show();
                     console.log(response);                
                 }).catch(res => {
                     alert("Error,please try later");

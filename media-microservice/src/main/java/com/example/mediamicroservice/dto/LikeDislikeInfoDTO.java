@@ -16,6 +16,11 @@ public class LikeDislikeInfoDTO {
 		this.myProfile = myProfile;
 	}
 
+	public LikeDislikeInfoDTO(String username) {
+		super();
+		this.username = username;
+	}
+
 	public String getUsername() {
 		return username;
 	}

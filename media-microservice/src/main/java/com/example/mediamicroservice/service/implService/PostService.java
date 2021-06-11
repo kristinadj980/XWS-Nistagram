@@ -130,6 +130,7 @@ public class PostService implements IPostService {
 		return allPosts;
 	}
 	 
+	@Override
 	 public Integer likeThisPost(LikePostDTO likePostDTO) {
 		 ProfileMedia profileMediaTo = profileMediaService.findByUsername(likePostDTO.getUsernameTo());
 		 ProfileMedia profileMediaFrom =profileMediaService.findByUsername(likePostDTO.getUsernameFrom());
@@ -171,6 +172,7 @@ public class PostService implements IPostService {
 		return updatedNumberOfLikes;
 	 }
 	 
+	@Override
 	 public Integer dislikeThisPost(LikePostDTO likePostDTO) { 
 		 ProfileMedia profileMediaTo = profileMediaService.findByUsername(likePostDTO.getUsernameTo());
 		 ProfileMedia profileMediaFrom =profileMediaService.findByUsername(likePostDTO.getUsernameFrom());
@@ -240,22 +242,19 @@ public class PostService implements IPostService {
 	        return postsDto;
 	    }
 	    
-	    public List<String> findMyLikes(LikeDislikeInfoDTO dtoInfo){
-	    	//imas sa fronta sta lajkuje i ciji je profil za koji trazis lajkove
-	    	//nadjes ko je sve lajkovao post to i vratis
-	    	List<String> profilesWhoLiked = new ArrayList<String>();
+	    @Override
+	    public List<LikeDislikeInfoDTO> findMyLikes(LikeDislikeInfoDTO dtoInfo){
+	    	List<LikeDislikeInfoDTO> profilesWhoLiked = new ArrayList<LikeDislikeInfoDTO>();
 	    	ProfileMedia myProfile = profileMediaService.findByUsername(dtoInfo.getMyProfile());
-	    	System.out.println("MOJ PROFIL: " + myProfile.getUsername());
 	    	List<ProfileMedia> profiles = new ArrayList<ProfileMedia>();
 	    	List<Post> myPosts = myProfile.getPosts();
 	    	for (Post post : myPosts) {
 				profiles = post.getLikes();
 			}
 	    	for (ProfileMedia p : profiles) {
-	    		System.out.println("Lajkovao" + p.getUsername());
-				profilesWhoLiked.add(p.getUsername());
+				profilesWhoLiked.add(new LikeDislikeInfoDTO(p.getUsername()));
 			}
-	    	
+	   
 	    	return profilesWhoLiked;
 	    }
 	
