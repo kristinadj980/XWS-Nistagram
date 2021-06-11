@@ -135,47 +135,40 @@ public class PostService implements IPostService {
 		 ProfileMedia profileMediaFrom =profileMediaService.findByUsername(likePostDTO.getUsernameFrom());
 		 List<Post> myPosts = profileMediaTo.getPosts();
 		 List<Media> medias = new ArrayList<Media>();
-		 List<ProfileMedia> likes = new ArrayList<ProfileMedia>();
-		 List<ProfileMedia> currentLikes = new ArrayList<ProfileMedia>();
-		 List<ProfileMedia> currentDislikes = new ArrayList<ProfileMedia>();
-		 Post likedPost = new Post();
+		 int updatedNumberOfLikes = 0;
 		 for (Post post : myPosts) {
 			 medias = post.getMedia();
 			 for (Media media : medias) {
 				if(media.getFileName().equals(likePostDTO.getFileName())) {
-					currentLikes = post.getLikes();
-					currentDislikes = post.getDislikes();
-					for (ProfileMedia profileMedia : currentLikes) {
-						if(profileMedia.getUsername().equals(likePostDTO.getUsernameFrom())) 
-							throw new IllegalArgumentException("You have already liked this post!");
-					}
-					for (ProfileMedia profileMedia : currentDislikes) {
-						if(profileMedia.getUsername().equals(likePostDTO.getUsernameFrom())) 
-							post.setNumberOfDisikes(post.getNumberOfDisikes() - 1);
-					}
-					
-					ProfileMedia media2 = new ProfileMedia();
-					likes.add(profileMediaFrom);
-					post.setLike(likes);
-					likedPost = post;
+					List<ProfileMedia> currentLikes = post.getLikes();
+					List<ProfileMedia> currentDislikes = post.getDislikes();
+						for (ProfileMedia profileMedia : currentLikes) {
+							if(profileMedia.getUsername().equals(likePostDTO.getUsernameFrom())) 
+								throw new IllegalArgumentException("You have already liked this post!");
+						}
+						for (ProfileMedia profileMedia : currentDislikes) {
+							if(profileMedia.getUsername().equals(likePostDTO.getUsernameFrom())) 
+								post.setNumberOfDisikes(post.getNumberOfDisikes() - 1);
+						}
+						
+						currentLikes.add(profileMediaFrom);
+						post.setLikes(currentLikes);
+						int likesNumber = currentLikes.size();
+						int currentNumberOfLikes = 0;
+						if(post.getNumberOfLikes() == null) {
+							updatedNumberOfLikes = likesNumber;
+						}else {
+						   currentNumberOfLikes = post.getNumberOfLikes();
+						   updatedNumberOfLikes = currentNumberOfLikes + 1;
+						}
+						post.setNumberOfLikes(updatedNumberOfLikes);
+						
+						postRepository.save(post);
 				}
 			}
 		}
-		int likesNumber = likes.size();
-		int currentNumberOfLikes = 0;
-		int updatedNumberOfLikes = 0;
-		if(likedPost.getNumberOfLikes() == null) {
-			updatedNumberOfLikes = likesNumber;
-		}else {
-		   currentNumberOfLikes = likedPost.getNumberOfLikes();
-		   updatedNumberOfLikes = currentNumberOfLikes + likesNumber;
-		}
-		likedPost.setLikes(likes);
-		likedPost.setNumberOfLikes(updatedNumberOfLikes);
 		
-		postRepository.save(likedPost);
 		return updatedNumberOfLikes;
-		
 	 }
 	 
 	 public Integer dislikeThisPost(LikePostDTO likePostDTO) { 
@@ -183,16 +176,13 @@ public class PostService implements IPostService {
 		 ProfileMedia profileMediaFrom =profileMediaService.findByUsername(likePostDTO.getUsernameFrom());
 		 List<Post> myPosts = profileMediaTo.getPosts();
 		 List<Media> medias = new ArrayList<Media>();
-		 List<ProfileMedia> dislikes = new ArrayList<ProfileMedia>();
-		 List<ProfileMedia> currentDislikes = new ArrayList<ProfileMedia>();
-		 List<ProfileMedia> currentLikes = new ArrayList<ProfileMedia>();
-		 Post dislikedPost = new Post();
+		 int updatedNumberOfDislikes= 0;
 		 for (Post post : myPosts) {
 			 medias = post.getMedia();
 			 for (Media media : medias) {
 				if(media.getFileName().equals(likePostDTO.getFileName())) {
-					currentDislikes = post.getDislikes();
-					currentLikes = post.getLikes();
+					List<ProfileMedia> currentDislikes = post.getDislikes();
+					List<ProfileMedia> currentLikes = post.getLikes();
 					for (ProfileMedia profileMedia : currentDislikes) {
 						if(profileMedia.getUsername().equals(likePostDTO.getUsernameFrom())) 
 							throw new IllegalArgumentException("You have already disliked this post!");
@@ -201,29 +191,24 @@ public class PostService implements IPostService {
 						if(profileMedia.getUsername().equals(likePostDTO.getUsernameFrom()))
 							post.setNumberOfLikes(post.getNumberOfLikes()- 1);
 					}
-					ProfileMedia media2 = new ProfileMedia();
-					dislikes.add(profileMediaFrom);
-					post.setDislikes(dislikes);
-					dislikedPost = post;
+					currentDislikes.add(profileMediaFrom);
+					post.setDislikes(currentDislikes);
+					int dislikesNumber = currentDislikes.size();
+					int currentNumberOfDislikes = 0;
+					if(post.getNumberOfDisikes() == null) {
+						updatedNumberOfDislikes = dislikesNumber;
+					}else {
+						currentNumberOfDislikes = post.getNumberOfDisikes();
+						updatedNumberOfDislikes = currentNumberOfDislikes + 1;
+					}
+					post.setNumberOfDisikes(updatedNumberOfDislikes);
+					
+					postRepository.save(post);
 				}
 			}
 		}
-		int dislikesNumber = dislikes.size();
-		int currentNumberOfDislikes = 0;
-		int updatedNumberOfDislikes = 0;
-		if(dislikedPost.getNumberOfDisikes() == null) {
-			updatedNumberOfDislikes = dislikesNumber;
-		}else {
-		   currentNumberOfDislikes = dislikedPost.getNumberOfDisikes();
-		   updatedNumberOfDislikes = currentNumberOfDislikes + dislikesNumber;
-		}
-		dislikedPost.setDislikes(dislikes);
-		dislikedPost.setNumberOfDisikes(updatedNumberOfDislikes);
-		
-		postRepository.save(dislikedPost);
-		
-		return updatedNumberOfDislikes;
-		
+
+		return updatedNumberOfDislikes;		
 	 }
 
 	public List<PostDTO> getImagesFiles(List<PostDTO> posts) {
