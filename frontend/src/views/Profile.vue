@@ -123,6 +123,10 @@
                         <b-img v-if="!post.fileName.includes(videoText)" thumbnail  v-bind:src="post.imageBytes" alt="Image 1"></b-img>
                         <video v-if="post.fileName.includes(videoText)" autoplay controls v-bind:src="post.imageBytes" width="400" height="400" style="display:block; margin-left:auto; margin-right:auto"></video>
                         <h4 align="left">{{post.description}}</h4>
+                        <h5 align="left"><span v-for="(tag,t) in post.tags" :key="t">
+                                        #{{tag.name}}
+                                    </span>
+                        </h5>
                         <h5 align="left"><b-icon icon="hand-thumbs-up" aria-hidden="true" @click="getLikes($event,post)"></b-icon > {{post.numberOfLikes}} likes <b-icon icon="hand-thumbs-down" aria-hidden="true"  @click="getDislikes($event,post)"></b-icon> {{post.numberOfDislikes}} dislikes<span style="margin-left:430px;"></span> <b-icon icon="bookmark" aria-hidden="true" align="right"></b-icon></h5>
                         <h4 align="left"><b-icon icon="chat-square" aria-hidden="true"></b-icon>  comments</h4>
                     </b-card>
@@ -141,7 +145,7 @@
         <div> 
           <b-modal ref="modal" hide-footer scrollable title="Profiles who liked your photo" size="lg" modal-class="b-modal">
                <div modal-class="modal-dialog" role="document">
-                    <div class="modal-content" style="background-color:whitesmoke">
+                    <div class="modal-content" style="background-color:#e4e4e4;">
                          <div v-for="user in usersWhoLiked" v-bind:key="user" class="modal-body">
                              
                              <div class="row">
@@ -158,7 +162,7 @@
         <div> 
           <b-modal ref="modal2" hide-footer scrollable title="Profiles who disliked your photo" size="lg" modal-class="b-modal">
                <div modal-class="modal-dialog" role="document">
-                    <div class="modal-content" style="background-color:whitesmoke">
+                    <div class="modal-content" style="background-color:#e4e4e4; ">
                          <div v-for="user in usersWhoDisliked" v-bind:key="user" class="modal-body">
                              
                              <div class="row">
@@ -201,6 +205,7 @@ export default {
         numberOfDislikes:0,
         usersWhoLiked:[],
         usersWhoDisliked:[],
+        tags:[],
         }
     },
     mounted(){

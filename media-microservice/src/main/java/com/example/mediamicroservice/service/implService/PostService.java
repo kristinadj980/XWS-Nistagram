@@ -92,22 +92,27 @@ public class PostService implements IPostService {
 			for (Media m : medias) {
 				LocationDTO locationDTO = new LocationDTO(post.getLocation().getCity(), post.getLocation().getStreet(),post.getLocation().getCountry(),
 						post.getLocation().getObjectName());
+				List<TagDTO> tagsDTO = new ArrayList<TagDTO>();
+				List<Tag> tags = post.getTags();
+				for (Tag tag : tags) {
+					tagsDTO.add(new TagDTO(tag.getName()));
+				}
 				if( post.getNumberOfLikes() == null && post.getNumberOfDisikes() != null) {
 					numberOfDislikes = post.getNumberOfDisikes();
-					myPosts.add(new PostDTO(post.getDescription(),username,m.getFileName(),locationDTO, post.getDate(),0,numberOfDislikes));
+					myPosts.add(new PostDTO(post.getDescription(),username,m.getFileName(),locationDTO, post.getDate(),0,numberOfDislikes,tagsDTO));
 				}else if (post.getNumberOfDisikes() == null && post.getNumberOfLikes() != null ) {
 					numberOfLikes = post.getNumberOfLikes();
-					myPosts.add(new PostDTO(post.getDescription(),username,m.getFileName(),locationDTO, post.getDate(),numberOfLikes,0));
+					myPosts.add(new PostDTO(post.getDescription(),username,m.getFileName(),locationDTO, post.getDate(),numberOfLikes,0,tagsDTO));
 				}
 				else if(post.getNumberOfLikes() == null && post.getNumberOfDisikes() == null) 
 				{
-					myPosts.add(new PostDTO(post.getDescription(),username,m.getFileName(),locationDTO, post.getDate(),0,0));
+					myPosts.add(new PostDTO(post.getDescription(),username,m.getFileName(),locationDTO, post.getDate(),0,0,tagsDTO));
 				}
 				else 
 				{
 				numberOfLikes = post.getNumberOfLikes();
 				numberOfDislikes = post.getNumberOfDisikes();
-				myPosts.add(new PostDTO(post.getDescription(),username,m.getFileName(),locationDTO, post.getDate(),numberOfLikes,numberOfDislikes));
+				myPosts.add(new PostDTO(post.getDescription(),username,m.getFileName(),locationDTO, post.getDate(),numberOfLikes,numberOfDislikes,tagsDTO));
 				}
 		}
 		}
