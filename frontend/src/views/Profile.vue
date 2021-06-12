@@ -128,7 +128,7 @@
                                     </span>
                         </h5>
                         <h5 align="left"><b-icon icon="hand-thumbs-up" aria-hidden="true" @click="getLikes($event,post)"></b-icon > {{post.numberOfLikes}} likes <b-icon icon="hand-thumbs-down" aria-hidden="true"  @click="getDislikes($event,post)"></b-icon> {{post.numberOfDislikes}} dislikes<span style="margin-left:430px;"></span> <b-icon icon="bookmark" aria-hidden="true" align="right"></b-icon></h5>
-                        <h4 align="left"><b-icon icon="chat-square" aria-hidden="true"  @click="getComments($event,post)"></b-icon>  comments</h4>
+                        <h4 align="left"><b-icon icon="chat-square" aria-hidden="true"  @click="getComments($event,post)"></b-icon>{{post.numberOfComments}}  comments</h4>
                     </b-card>
                 </b-tab>
 
@@ -184,7 +184,8 @@
                              
                              <div class="row">
                                 <div class=" form-group col">
-                                <label > Username : {{user.username}}</label>
+                                <label > Username : {{user.usernameFrom}}</label><span style="margin-left:80px;" ></span>
+                                <label > Comment : {{user.comment}}</label>
                             </div>
                              </div>
                                                        
@@ -374,8 +375,9 @@ export default {
         },
         getComments: async function(event,post){
             const postInfo = {
-                myProfile : post.username,
+                usernameTo : post.username,
                 fileName : post.fileName,
+                comment : this.comment,
             }
             this.axios.post('http://localhost:8083/mediaMicroservice/post/getMyCommentsInfo',postInfo,{ 
                 }).then(response => {

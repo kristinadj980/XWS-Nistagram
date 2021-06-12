@@ -88,6 +88,7 @@ public class PostService implements IPostService {
 		List<Post> posts = existingProfile.getPosts();
 		int numberOfLikes = 0;
 		int numberOfDislikes = 0;
+		int numberOfComments = 0;
 		for (Post post : posts) {
 			List<Media> medias = post.getMedias();
 			for (Media m : medias) {
@@ -98,22 +99,39 @@ public class PostService implements IPostService {
 				for (Tag tag : tags) {
 					tagsDTO.add(new TagDTO(tag.getName()));
 				}
-				if( post.getNumberOfLikes() == null && post.getNumberOfDisikes() != null) {
+				if( post.getNumberOfLikes() == null && post.getNumberOfDisikes() != null && post.getNumberOfComments() == null) {
 					numberOfDislikes = post.getNumberOfDisikes();
-					myPosts.add(new PostDTO(post.getDescription(),username,m.getFileName(),locationDTO, post.getDate(),0,numberOfDislikes,tagsDTO));
-				}else if (post.getNumberOfDisikes() == null && post.getNumberOfLikes() != null ) {
+					myPosts.add(new PostDTO(post.getDescription(),username,m.getFileName(),locationDTO, post.getDate(),0,numberOfDislikes,0,tagsDTO));
+					
+				}else if( post.getNumberOfLikes() == null && post.getNumberOfDisikes() != null && post.getNumberOfComments() != null) {
+						numberOfDislikes = post.getNumberOfDisikes();
+						numberOfComments = post.getNumberOfComments();
+						myPosts.add(new PostDTO(post.getDescription(),username,m.getFileName(),locationDTO, post.getDate(),0,numberOfDislikes,numberOfComments,tagsDTO));
+				
+				}else if (post.getNumberOfDisikes() == null && post.getNumberOfLikes() != null && post.getNumberOfComments() == null ) {
 					numberOfLikes = post.getNumberOfLikes();
-					myPosts.add(new PostDTO(post.getDescription(),username,m.getFileName(),locationDTO, post.getDate(),numberOfLikes,0,tagsDTO));
-				}
-				else if(post.getNumberOfLikes() == null && post.getNumberOfDisikes() == null) 
+					myPosts.add(new PostDTO(post.getDescription(),username,m.getFileName(),locationDTO, post.getDate(),numberOfLikes,0,0,tagsDTO));
+				
+			    }else if (post.getNumberOfDisikes() == null && post.getNumberOfLikes() != null && post.getNumberOfComments() != null ) {
+				numberOfLikes = post.getNumberOfLikes();
+				numberOfComments = post.getNumberOfComments();
+				myPosts.add(new PostDTO(post.getDescription(),username,m.getFileName(),locationDTO, post.getDate(),numberOfLikes,0,numberOfComments,tagsDTO));
+			    }
+				else if(post.getNumberOfLikes() == null && post.getNumberOfDisikes() == null && post.getNumberOfComments() == null) 
 				{
-					myPosts.add(new PostDTO(post.getDescription(),username,m.getFileName(),locationDTO, post.getDate(),0,0,tagsDTO));
+					myPosts.add(new PostDTO(post.getDescription(),username,m.getFileName(),locationDTO, post.getDate(),0,0,0,tagsDTO));
+				}
+				else if(post.getNumberOfLikes() == null && post.getNumberOfDisikes() == null && post.getNumberOfComments() != null) 
+				{
+					numberOfComments = post.getNumberOfComments();
+					myPosts.add(new PostDTO(post.getDescription(),username,m.getFileName(),locationDTO, post.getDate(),0,0,numberOfComments,tagsDTO));
 				}
 				else 
 				{
 				numberOfLikes = post.getNumberOfLikes();
 				numberOfDislikes = post.getNumberOfDisikes();
-				myPosts.add(new PostDTO(post.getDescription(),username,m.getFileName(),locationDTO, post.getDate(),numberOfLikes,numberOfDislikes,tagsDTO));
+				numberOfComments = post.getNumberOfComments();
+				myPosts.add(new PostDTO(post.getDescription(),username,m.getFileName(),locationDTO, post.getDate(),numberOfLikes,numberOfDislikes,numberOfComments,tagsDTO));
 				}
 		}
 		}
@@ -285,21 +303,46 @@ public class PostService implements IPostService {
 	    	 ProfileMedia profileMediaTo = profileMediaService.findByUsername(dto.getUsernameTo());
 			 ProfileMedia profileMediaFrom =profileMediaService.findByUsername(dto.getUsernameFrom());
 			 List<Post> myPosts = profileMediaTo.getPosts();
+			 
 			 List<Media> medias = new ArrayList<Media>();
+			 int updatedNumberOfComments = 0;
 			 for (Post post : myPosts) {
 				 medias = post.getMedia();
 				 for (Media media : medias) {
 					 if(media.getFileName().equals(dto.getFileName())) {
 						 List<Comment> currentComments = post.getComments();
-						 System.out.println(currentComments.isEmpty());
-						 if(!currentComments.isEmpty()) {
+						 List<Comment> comments = new ArrayList<Comment>();
+						 System.out.println("SIZE" + currentComments.size());
+						 if(currentComments.size() != 0) {
+						 System.out.println("**************************************");
 						 for (Comment comment : currentComments) {
-							currentComments.add(new Comment(dto.getComment(), profileMediaFrom));
+							 System.out.println("%%%%%%%%%%%%%%%%%%%%%%%%%");
+							 try {
+								 comments.add(comment);
+								 comments.add(new Comment(dto.getComment(), profileMediaFrom, LocalDateTime.now()));
+							} catch (Exception e) {
+								// TODO: handle exception
+								System.out.println("ERRRRRRORR");
+								System.out.println(e.getMessage());
+							}
+							
 						 }
 						 }else {
-							 currentComments.add(new Comment(dto.getComment(), profileMediaFrom));
+							 System.out.println("##########NEMA##############");
+							 comments.add(new Comment(dto.getComment(), profileMediaFrom,LocalDateTime.now()));
 						 }
-						 post.setComments(currentComments);
+						 System.out.println("PROSAOOOOOOOOOOOOOOO");
+						 int numberOfComments = comments.size();
+						 System.out.println("BROJ KOM" + numberOfComments);
+						 int currentNumberOfComments = 0;
+						 if(post.getNumberOfComments() == null) {
+							 updatedNumberOfComments = numberOfComments;
+						 }else {
+							 currentNumberOfComments = post.getNumberOfComments();
+							 updatedNumberOfComments = currentNumberOfComments + 1;
+						 }
+						 post.setComments(comments);
+						 post.setNumberOfComments(updatedNumberOfComments);
 						 postRepository.save(post);
 						 
 					 }
@@ -308,9 +351,9 @@ public class PostService implements IPostService {
 	    }
 	    
 	    @Override
-	    public List<LikeDislikeInfoDTO> findMyComments(LikeDislikeInfoDTO dtoInfo){
-	    	List<LikeDislikeInfoDTO> profilesWhoCommented = new ArrayList<LikeDislikeInfoDTO>();
-	    	ProfileMedia myProfile = profileMediaService.findByUsername(dtoInfo.getMyProfile());
+	    public List<LikePostDTO> findMyComments(LikePostDTO dtoInfo){
+	    	List<LikePostDTO> profilesWhoCommented = new ArrayList<LikePostDTO>();
+	    	ProfileMedia myProfile = profileMediaService.findByUsername(dtoInfo.getUsernameTo());
 	    	List<Comment> comments = new ArrayList<Comment>();
 	    	
 	    	List<Post> myPosts = myProfile.getPosts();
@@ -318,11 +361,9 @@ public class PostService implements IPostService {
 	    		comments = post.getComments();
 	    		for (Comment c : comments) {
 	    			ProfileMedia user =  c.getRegistredUserProfile();
-	    			
-					profilesWhoCommented.add(new LikeDislikeInfoDTO(user.getUsername()));
+					profilesWhoCommented.add(new LikePostDTO(user.getUsername(), c.getDescription(), comments.size()));
 				}
 			}
-	    	
 	   
 	    	return profilesWhoCommented;
 	    }

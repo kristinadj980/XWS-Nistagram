@@ -1,5 +1,7 @@
 package com.example.mediamicroservice.model;
 
+import java.time.LocalDateTime;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -23,23 +25,27 @@ public class Comment {
 	@OneToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
 	@JoinColumn(name = "profile_id", referencedColumnName = "id")
 	public ProfileMedia registredUserProfile;
-	   
+	
+	@Column(name = "date")
+	private LocalDateTime  date;
 	   
 	public Comment() {
 		super();
 	}
 
-	public Comment(Long id, String description, ProfileMedia registredUserProfile) {
+	public Comment(long id, String description, ProfileMedia registredUserProfile, LocalDateTime date) {
 		super();
 		this.id = id;
 		this.description = description;
 		this.registredUserProfile = registredUserProfile;
+		this.date = date;
 	}
 
-	public Comment(String description, ProfileMedia registredUserProfile) {
+	public Comment(String description, ProfileMedia registredUserProfile,LocalDateTime date) {
 		super();
 		this.description = description;
 		this.registredUserProfile = registredUserProfile;
+		this.date = date;
 	}
 
 	public Long getId() {
@@ -64,5 +70,17 @@ public class Comment {
 
 	public void setRegistredUserProfile(ProfileMedia registredUserProfile) {
 		this.registredUserProfile = registredUserProfile;
+	}
+
+	public LocalDateTime getDate() {
+		return date;
+	}
+
+	public void setDate(LocalDateTime date) {
+		this.date = date;
+	}
+
+	public void setId(long id) {
+		this.id = id;
 	}
 }

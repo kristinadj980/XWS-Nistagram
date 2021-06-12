@@ -26,6 +26,9 @@ public class Post{
 	   
 	   @Column(name = "numberOfDislikes")
 	   private Integer numberOfDisikes;
+	   
+	   @Column(name = "numberOfComments")
+	   private Integer numberOfComments;
 
 	   @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	   @JoinTable(name = "post_dislikes",
@@ -78,7 +81,7 @@ public class Post{
 		this.tags = tags;
 	}
 
-	public Post(Long id, String description, List<ProfileMedia> likes, Integer numberOfLikes, Integer numberOfDisikes,
+	public Post(Long id, String description, List<ProfileMedia> likes, Integer numberOfLikes, Integer numberOfDisikes,Integer numberOfComments,
 			List<ProfileMedia> dislikes, List<Comment> comments, LocalDateTime date, List<Media> medias,
 			Location location, List<Tag> tags) {
 		super();
@@ -87,6 +90,7 @@ public class Post{
 		this.likes = likes;
 		this.numberOfLikes = numberOfLikes;
 		this.numberOfDisikes = numberOfDisikes;
+		this.numberOfComments = numberOfComments;
 		this.dislikes = dislikes;
 		this.comments = comments;
 		this.date = date;
@@ -226,4 +230,13 @@ public class Post{
 	public void setNumberOfDisikes(Integer numberOfDisikes) {
 		this.numberOfDisikes = numberOfDisikes;
 	}
+
+	public Integer getNumberOfComments() {
+		return numberOfComments;
+	}
+
+	public void setNumberOfComments(Integer numberOfComments) {
+		this.numberOfComments = numberOfComments;
+	}
+	
 }

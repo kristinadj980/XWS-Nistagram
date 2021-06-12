@@ -6,6 +6,7 @@ public class LikePostDTO {
 	private String usernameFrom;  //kolajkuje
 	private int likes;
 	private String comment;
+	private int numberOfComments;
 	
 	public LikePostDTO() {
 		super();
@@ -18,6 +19,15 @@ public class LikePostDTO {
 		this.usernameFrom = usernameFrom;
 		this.likes = likes;
 		this.comment = comment;
+	}
+	
+	
+
+	public LikePostDTO(String usernameFrom, String comment, int numberOfComments) {
+		super();
+		this.usernameFrom = usernameFrom;
+		this.comment = comment;
+		this.numberOfComments = numberOfComments;
 	}
 
 	public String getUsernameTo() {

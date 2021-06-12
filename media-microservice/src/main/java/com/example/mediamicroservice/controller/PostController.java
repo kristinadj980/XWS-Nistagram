@@ -143,7 +143,7 @@ public class PostController {
 	}
 	
 	@PostMapping("/getMyCommentsInfo")
-    public ResponseEntity getMyCommentsInfo(@RequestBody LikeDislikeInfoDTO infoDTO) {
+    public ResponseEntity getMyCommentsInfo(@RequestBody LikePostDTO infoDTO) {
 		
 		return new ResponseEntity(postService.findMyComments(infoDTO), HttpStatus.OK); 
 

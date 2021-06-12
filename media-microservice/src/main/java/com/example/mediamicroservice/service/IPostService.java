@@ -17,5 +17,5 @@ public interface IPostService {
 	List<LikeDislikeInfoDTO> findMyLikes(LikeDislikeInfoDTO dtoInfo);
 	List<LikeDislikeInfoDTO> findMyDislikes(LikeDislikeInfoDTO dtoInfo);
 	void commentPost(LikePostDTO dto);
-	List<LikeDislikeInfoDTO> findMyComments(LikeDislikeInfoDTO dtoInfo);
+	List<LikePostDTO> findMyComments(LikePostDTO dtoInfo);
 }
