@@ -280,6 +280,7 @@ public class PostService implements IPostService {
 	    	return profilesWhoDisliked;
 	    }
 	    
+	    @Override
 	    public void commentPost(LikePostDTO dto) {
 	    	 ProfileMedia profileMediaTo = profileMediaService.findByUsername(dto.getUsernameTo());
 			 ProfileMedia profileMediaFrom =profileMediaService.findByUsername(dto.getUsernameFrom());
@@ -304,6 +305,26 @@ public class PostService implements IPostService {
 					 }
 				 }
 			}
+	    }
+	    
+	    @Override
+	    public List<LikeDislikeInfoDTO> findMyComments(LikeDislikeInfoDTO dtoInfo){
+	    	List<LikeDislikeInfoDTO> profilesWhoCommented = new ArrayList<LikeDislikeInfoDTO>();
+	    	ProfileMedia myProfile = profileMediaService.findByUsername(dtoInfo.getMyProfile());
+	    	List<Comment> comments = new ArrayList<Comment>();
+	    	
+	    	List<Post> myPosts = myProfile.getPosts();
+	    	for (Post post : myPosts) {
+	    		comments = post.getComments();
+	    		for (Comment c : comments) {
+	    			ProfileMedia user =  c.getRegistredUserProfile();
+	    			
+					profilesWhoCommented.add(new LikeDislikeInfoDTO(user.getUsername()));
+				}
+			}
+	    	
+	   
+	    	return profilesWhoCommented;
 	    }
 	
 }

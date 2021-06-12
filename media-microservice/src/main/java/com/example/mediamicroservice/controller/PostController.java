@@ -142,5 +142,12 @@ public class PostController {
 		//return new ResponseEntity(postService.commentPost(likePostDTO), HttpStatus.OK); 
 	}
 	
+	@PostMapping("/getMyCommentsInfo")
+    public ResponseEntity getMyCommentsInfo(@RequestBody LikeDislikeInfoDTO infoDTO) {
+		
+		return new ResponseEntity(postService.findMyComments(infoDTO), HttpStatus.OK); 
+
+	}
+	
 
 }

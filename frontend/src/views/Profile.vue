@@ -128,7 +128,7 @@
                                     </span>
                         </h5>
                         <h5 align="left"><b-icon icon="hand-thumbs-up" aria-hidden="true" @click="getLikes($event,post)"></b-icon > {{post.numberOfLikes}} likes <b-icon icon="hand-thumbs-down" aria-hidden="true"  @click="getDislikes($event,post)"></b-icon> {{post.numberOfDislikes}} dislikes<span style="margin-left:430px;"></span> <b-icon icon="bookmark" aria-hidden="true" align="right"></b-icon></h5>
-                        <h4 align="left"><b-icon icon="chat-square" aria-hidden="true"></b-icon>  comments</h4>
+                        <h4 align="left"><b-icon icon="chat-square" aria-hidden="true"  @click="getComments($event,post)"></b-icon>  comments</h4>
                     </b-card>
                 </b-tab>
 
@@ -176,6 +176,23 @@
                </div>
           </b-modal>
        </div>
+        <div> 
+          <b-modal ref="modal3" hide-footer scrollable title="Profiles who commented your photo" size="lg" modal-class="b-modal">
+               <div modal-class="modal-dialog" role="document">
+                    <div class="modal-content" style="background-color:#e4e4e4; ">
+                         <div v-for="user in usersWhoCommented" v-bind:key="user" class="modal-body">
+                             
+                             <div class="row">
+                                <div class=" form-group col">
+                                <label > Username : {{user.username}}</label>
+                            </div>
+                             </div>
+                                                       
+                         </div>                
+                    </div>
+               </div>
+          </b-modal>
+       </div>
     </div>
 </template>
 
@@ -206,6 +223,7 @@ export default {
         usersWhoLiked:[],
         usersWhoDisliked:[],
         tags:[],
+        usersWhoCommented:[],
         }
     },
     mounted(){
@@ -347,6 +365,22 @@ export default {
                 }).then(response => {
                     this.usersWhoDisliked = response.data
                     this.$refs['modal2'].show();
+                    console.log(response);                
+                }).catch(res => {
+                    alert("Error,please try later");
+                    console.log(res.response.data.message);
+
+                });
+        },
+        getComments: async function(event,post){
+            const postInfo = {
+                myProfile : post.username,
+                fileName : post.fileName,
+            }
+            this.axios.post('http://localhost:8083/mediaMicroservice/post/getMyCommentsInfo',postInfo,{ 
+                }).then(response => {
+                    this.usersWhoCommented = response.data
+                    this.$refs['modal3'].show();
                     console.log(response);                
                 }).catch(res => {
                     alert("Error,please try later");
