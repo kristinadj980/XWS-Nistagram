@@ -1,5 +1,6 @@
 package com.example.mediamicroservice.service.implService;
 
+import com.example.mediamicroservice.dto.CommentDTO;
 import com.example.mediamicroservice.dto.LikeDislikeInfoDTO;
 import com.example.mediamicroservice.dto.LikePostDTO;
 import com.example.mediamicroservice.dto.LocationDTO;
@@ -361,11 +362,12 @@ public class PostService implements IPostService {
 	    		comments = post.getComments();
 	    		for (Comment c : comments) {
 	    			ProfileMedia user =  c.getRegistredUserProfile();
-					profilesWhoCommented.add(new LikePostDTO(user.getUsername(), c.getDescription(), comments.size()));
+					profilesWhoCommented.add(new LikePostDTO(user.getUsername(), c.getDescription(), comments.size(), c.getId()));
 				}
 			}
 	   
 	    	return profilesWhoCommented;
 	    }
+	   
 	
 }

@@ -20,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.example.mediamicroservice.dto.MediaDTO;
 import com.example.mediamicroservice.dto.PostDTO;
+import com.example.mediamicroservice.dto.CommentDTO;
 import com.example.mediamicroservice.dto.LikeDislikeInfoDTO;
 import com.example.mediamicroservice.dto.LikePostDTO;
 
@@ -138,8 +139,8 @@ public class PostController {
 	@PostMapping("/commentPost")
 	public ResponseEntity commentPost(@RequestBody LikePostDTO likePostDTO) {
 		postService.commentPost(likePostDTO);
+		
 		return new ResponseEntity(likePostDTO, HttpStatus.OK);
-		//return new ResponseEntity(postService.commentPost(likePostDTO), HttpStatus.OK); 
 	}
 	
 	@PostMapping("/getMyCommentsInfo")
@@ -148,6 +149,5 @@ public class PostController {
 		return new ResponseEntity(postService.findMyComments(infoDTO), HttpStatus.OK); 
 
 	}
-	
 
 }

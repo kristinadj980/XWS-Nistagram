@@ -28,17 +28,26 @@ public class Comment {
 	
 	@Column(name = "date")
 	private LocalDateTime  date;
+	
+	@Column(name = "answer")
+	private String answer;
+	
+	@Column(name = "isAnswered")
+	private boolean isAnswered;
 	   
 	public Comment() {
 		super();
 	}
 
-	public Comment(long id, String description, ProfileMedia registredUserProfile, LocalDateTime date) {
+	public Comment(long id, String description, ProfileMedia registredUserProfile, LocalDateTime date, String answer,
+			boolean isAnswered) {
 		super();
 		this.id = id;
 		this.description = description;
 		this.registredUserProfile = registredUserProfile;
 		this.date = date;
+		this.answer = answer;
+		this.isAnswered = isAnswered;
 	}
 
 	public Comment(String description, ProfileMedia registredUserProfile,LocalDateTime date) {
@@ -82,5 +91,21 @@ public class Comment {
 
 	public void setId(long id) {
 		this.id = id;
+	}
+
+	public String getAnswer() {
+		return answer;
+	}
+
+	public void setAnswer(String answer) {
+		this.answer = answer;
+	}
+
+	public boolean isAnswered() {
+		return isAnswered;
+	}
+
+	public void setAnswered(boolean isAnswered) {
+		this.isAnswered = isAnswered;
 	}
 }

@@ -7,6 +7,7 @@ public class LikePostDTO {
 	private int likes;
 	private String comment;
 	private int numberOfComments;
+	private Long commentId;
 	
 	public LikePostDTO() {
 		super();
@@ -21,13 +22,12 @@ public class LikePostDTO {
 		this.comment = comment;
 	}
 	
-	
-
-	public LikePostDTO(String usernameFrom, String comment, int numberOfComments) {
+	public LikePostDTO(String usernameFrom, String comment, int numberOfComments,Long commentId) {
 		super();
 		this.usernameFrom = usernameFrom;
 		this.comment = comment;
 		this.numberOfComments = numberOfComments;
+		this.commentId = commentId;
 	}
 
 	public String getUsernameTo() {
@@ -68,6 +68,22 @@ public class LikePostDTO {
 
 	public void setComment(String comment) {
 		this.comment = comment;
+	}
+
+	public int getNumberOfComments() {
+		return numberOfComments;
+	}
+
+	public void setNumberOfComments(int numberOfComments) {
+		this.numberOfComments = numberOfComments;
+	}
+
+	public Long getCommentId() {
+		return commentId;
+	}
+
+	public void setCommentId(Long commentId) {
+		this.commentId = commentId;
 	}
 
 }
