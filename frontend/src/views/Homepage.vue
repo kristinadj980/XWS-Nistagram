@@ -10,6 +10,8 @@
                     <b-icon icon="person" aria-hidden="true"></b-icon>Profile</b-button>
                 <b-button pill variant="outline-danger" class = "btn btn-lg space_style" v-on:click = "addPosts">
                     <b-icon icon="image" aria-hidden="true"></b-icon> Add post</b-button>
+                    <b-button pill variant="outline-danger" class = "btn btn-lg space_style" v-on:click = "proba">
+                    <b-icon icon="image" aria-hidden="true"></b-icon> PROBA </b-button>
                 <b-input-group class=" serach_look">
                     <b-form-input placeholder="search.."></b-form-input>
                     <b-input-group-append>
@@ -32,9 +34,25 @@ export default {
     name: 'Homepage',
     data() {
     return {
-        
+         profile: [],
+         username: "",
         }
     },
+
+     mounted(){
+        let token = localStorage.getItem('token').substring(1, localStorage.getItem('token').length-1);
+        this.axios.get('http://localhost:8083/profileMicroservice/api/profile/account',{ 
+             headers: {
+                 'Authorization': 'Bearer ' + token,
+             }
+         }).then(response => {
+               this.profile = response.data;
+
+         }).catch(res => {
+                       alert("Error");
+                        console.log(res);
+                 });
+     },
     methods:{
         showHomepage: function(){
            window.location.href = "/homepage";
@@ -48,9 +66,21 @@ export default {
         },
         addPosts : function() {
             window.location.href = "/addingPosts";
+        },
+        proba : function(){
+            this.axios.get('http://localhost:8083/mediaMicroservice/story/proba')
+            .then(response => {
+                this.username = response.data;
+                console.log(this.username);
+            }).catch(res => {
+                        alert("Error");
+                            console.log(res);
+                    });
+                    
         }
     }
 }
+
 </script>
 
 <style scoped>

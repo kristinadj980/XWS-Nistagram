@@ -40,6 +40,17 @@ public class ProfileController {
 		this.mediaConnection = mediaConnection;
 	}
 
+	@PostMapping("/proba")
+	public ResponseEntity<?> proba()
+	{
+		System.out.println("Probaaaaaaaaaaaaaa");
+		Profile pr=profileService.findById(102L);
+		String username=pr.getUsername();
+		
+		System.out.println("Probaaaaaaaaaaaaaa"+username);
+		return ResponseEntity.ok(username);
+	}
+	
 	@GetMapping("/account")
 	@PreAuthorize("hasRole('REGISTRED_USER')")
 	public ResponseEntity<EditProfileDTO> getMyAccount() {
