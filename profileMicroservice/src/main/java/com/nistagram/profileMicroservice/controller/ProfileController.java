@@ -159,4 +159,15 @@ public class ProfileController {
 		
 	}
 	
+	@PostMapping("/proba")
+	public ResponseEntity<?> proba()
+	{
+		System.out.println("Probaaaaaaaaaaaaaa");
+		Profile pr=profileService.findById(102L);
+		String username=pr.getUsername();
+		
+		System.out.println("Probaaaaaaaaaaaaaa"+username);
+		return ResponseEntity.ok(username);
+	}
+	
 }

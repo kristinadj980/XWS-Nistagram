@@ -362,7 +362,7 @@ public class PostService implements IPostService {
 	    		comments = post.getComments();
 	    		for (Comment c : comments) {
 	    			ProfileMedia user =  c.getRegistredUserProfile();
-					profilesWhoCommented.add(new LikePostDTO(user.getUsername(), c.getDescription(), comments.size(), c.getId()));
+					profilesWhoCommented.add(new LikePostDTO(user.getUsername(), c.getDescription(),c.getAnswer(), comments.size(), c.getId()));
 				}
 			}
 	   

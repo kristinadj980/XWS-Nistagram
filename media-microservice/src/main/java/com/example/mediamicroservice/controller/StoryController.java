@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.example.mediamicroservice.connections.ProfileConnection;
 import com.example.mediamicroservice.dto.PostDTO;
 import com.example.mediamicroservice.dto.StoryDTO;
 import com.example.mediamicroservice.model.Post;
@@ -31,11 +32,14 @@ public class StoryController {
 	private final ProfileMediaService profileMediaService;
 	private final StoryService storyService;
 	
+	private final ProfileConnection profileConnection;
+	
 	@Autowired
-	public StoryController(ProfileMediaService profileMediaService, StoryService storyService) {
+	public StoryController(ProfileMediaService profileMediaService, StoryService storyService,ProfileConnection profileConnection) {
 		super();
 		this.profileMediaService = profileMediaService;
 		this.storyService = storyService;
+		this.profileConnection = profileConnection;
 	}
 	
 	private static String uploadDir = "user-photos";
@@ -78,4 +82,15 @@ public class StoryController {
 		return new ResponseEntity(storyService.findHighlightedStories(username), HttpStatus.OK); 
 		
 	}
+	
+	@GetMapping("/proba")
+	public ResponseEntity<String> Proba() {
+		 System.out.println("AAAAAAA");
+        String proba=profileConnection.proba();
+        System.out.println("AAAAAAA");
+		return ResponseEntity.ok(proba);
+		
+	}
+	
+	
 }

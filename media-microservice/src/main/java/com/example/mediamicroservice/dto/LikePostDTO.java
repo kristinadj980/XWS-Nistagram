@@ -8,24 +8,30 @@ public class LikePostDTO {
 	private String comment;
 	private int numberOfComments;
 	private Long commentId;
+	private String answer;
 	
 	public LikePostDTO() {
 		super();
 	}
-
-	public LikePostDTO(String usernameTo, String fileName, String usernameFrom, int likes, String comment) {
+	
+	public LikePostDTO(String usernameTo, String fileName, String usernameFrom, int likes, String comment,
+			int numberOfComments, Long commentId, String answer) {
 		super();
 		this.usernameTo = usernameTo;
 		this.fileName = fileName;
 		this.usernameFrom = usernameFrom;
 		this.likes = likes;
 		this.comment = comment;
+		this.numberOfComments = numberOfComments;
+		this.commentId = commentId;
+		this.answer = answer;
 	}
-	
-	public LikePostDTO(String usernameFrom, String comment, int numberOfComments,Long commentId) {
+
+	public LikePostDTO(String usernameFrom, String comment,String answer, int numberOfComments,Long commentId) {
 		super();
 		this.usernameFrom = usernameFrom;
 		this.comment = comment;
+		this.answer = answer;
 		this.numberOfComments = numberOfComments;
 		this.commentId = commentId;
 	}
@@ -86,4 +92,11 @@ public class LikePostDTO {
 		this.commentId = commentId;
 	}
 
+	public String getAnswer() {
+		return answer;
+	}
+
+	public void setAnswer(String answer) {
+		this.answer = answer;
+	}
 }

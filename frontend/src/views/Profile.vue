@@ -184,15 +184,29 @@
                              
                             <div class="row">
                                 <div class=" form-group col">
-                                     <label>Username: {{user.usernameFrom}} </label><span style="margin-left:30px;" ></span>
-                                     <label > Comment : {{user.comment}}</label>
+                                     <label>Profile: {{user.usernameFrom}} </label><span style="margin-left:30px;" ></span>
+                                     <label > Comment : {{user.comment}}</label><span style="margin-left:30px;" ></span>
+                                     <label > Answer : {{user.answer}}</label>
                                 </div>
+                             </div><span style="margin-left:610px;" ></span>
+                             <b-button style="margin-left: 30px;" pill variant="outline-danger" class = "btn btn-lg space_style" @click="sendAnswer($event,user)">Replay</b-button> 
+                             </div>
+                                            
+                    </div>                
+                </div>
+          </b-modal>
+       </div>
+       <div> 
+          <b-modal ref="modal4" hide-footer scrollable title="Profiles who commented your photo" size="lg" modal-class="b-modal">
+               <div modal-class="modal-dialog" role="document">
+                    <div class="modal-content" style="background-color:#e4e4e4; ">
+                         <div class="modal-body">
+                            <div class="row">
                                 <div class=" form-group col">  
                                     <input type="text" class="form-control" v-model="answer" placeholder="Answer...">
                                 </div>
                              </div>
-                             
-                            <b-button pill variant="outline-danger" class = "btn btn-lg space_style" @click="answerOnComment($event,user)">Replay</b-button> 
+                            <b-button style="margin-top: 10px; margin-left:640px; " pill variant="outline-danger" class = "btn btn-lg space_style" @click="answerOnComment">Replay</b-button> 
                              </div>
                                             
                     </div>                
@@ -231,6 +245,7 @@ export default {
         tags:[],
         usersWhoCommented:[],
         answer:'',
+        commentId:'',
         }
     },
     mounted(){
@@ -396,19 +411,24 @@ export default {
 
                 });
         },
-        answerOnComment:function(event,user){
+        sendAnswer:function(event,user){
+            this.$refs['modal3'].hide();
+            this.$refs['modal4'].show();
+            this.commentId = user.commentId;
+        },
+        answerOnComment:function(){
             const answerInfo = {
                answer : this.answer,
-               id: user.commentId,
+               id: this.commentId,
             }
             this.axios.post('http://localhost:8083/mediaMicroservice/comment/answer',answerInfo,{ 
                 }).then(response => {
                     this.usersWhoCommented = response.data
-                    this.$refs['modal3'].hide();
+                    this.$refs['modal4'].hide();
                     console.log(response);                
                 }).catch(res => {
                     alert("You have already answered");
-                    this.$refs['modal3'].hide();
+                    this.$refs['modal4'].hide();
                     console.log(res.response.data.message);
 
                 });
