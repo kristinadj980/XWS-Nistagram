@@ -1,5 +1,7 @@
 package com.example.mediamicroservice.model;
 
+import java.time.LocalDateTime;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -17,23 +19,42 @@ public class Comment {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
 	
-	@Column(name = "description", nullable = false)
+	@Column(name = "description")
 	private String description;
 	
 	@OneToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
 	@JoinColumn(name = "profile_id", referencedColumnName = "id")
 	public ProfileMedia registredUserProfile;
-	   
+	
+	@Column(name = "date")
+	private LocalDateTime  date;
+	
+	@Column(name = "answer")
+	private String answer;
+	
+	@Column(name = "isAnswered")
+	private boolean isAnswered;
 	   
 	public Comment() {
 		super();
 	}
 
-	public Comment(Long id, String description, ProfileMedia registredUserProfile) {
+	public Comment(long id, String description, ProfileMedia registredUserProfile, LocalDateTime date, String answer,
+			boolean isAnswered) {
 		super();
 		this.id = id;
 		this.description = description;
 		this.registredUserProfile = registredUserProfile;
+		this.date = date;
+		this.answer = answer;
+		this.isAnswered = isAnswered;
+	}
+
+	public Comment(String description, ProfileMedia registredUserProfile,LocalDateTime date) {
+		super();
+		this.description = description;
+		this.registredUserProfile = registredUserProfile;
+		this.date = date;
 	}
 
 	public Long getId() {
@@ -58,5 +79,33 @@ public class Comment {
 
 	public void setRegistredUserProfile(ProfileMedia registredUserProfile) {
 		this.registredUserProfile = registredUserProfile;
+	}
+
+	public LocalDateTime getDate() {
+		return date;
+	}
+
+	public void setDate(LocalDateTime date) {
+		this.date = date;
+	}
+
+	public void setId(long id) {
+		this.id = id;
+	}
+
+	public String getAnswer() {
+		return answer;
+	}
+
+	public void setAnswer(String answer) {
+		this.answer = answer;
+	}
+
+	public boolean isAnswered() {
+		return isAnswered;
+	}
+
+	public void setAnswered(boolean isAnswered) {
+		this.isAnswered = isAnswered;
 	}
 }

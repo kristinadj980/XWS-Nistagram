@@ -78,12 +78,39 @@
                         <b-img v-if="!post.fileName.includes(videoText)" thumbnail  v-bind:src="post.imageBytes" alt="Image 1"></b-img>
                         <video v-if="post.fileName.includes(videoText)" autoplay controls v-bind:src="post.imageBytes" width="400" height="400" style="display:block; margin-left:auto; margin-right:auto"></video>
                         <h4 align="left">{{post.description}}</h4>
-                        <h5 align="left"><b-icon icon="hand-thumbs-up" aria-hidden="true" @click="likePost($event,post)"></b-icon>{{post.numberOfLikes}}  likes <b-icon icon="hand-thumbs-down" aria-hidden="true" @click="dislikePost($event,post)"></b-icon>{{post.numberOfDislikes}} dislikes <span style="margin-left:430px;"></span> <b-icon icon="bookmark" aria-hidden="true" align="right"></b-icon></h5>
-                        <h4 align="left"><b-icon icon="chat-square" aria-hidden="true"></b-icon>  comments</h4>
+                        <h5 align="left"><span v-for="(tag,t) in post.tags" :key="t">
+                                        #{{tag.name}}
+                                    </span>
+                        </h5>
+                        <h5 align="left"><b-icon icon="hand-thumbs-up" aria-hidden="true" @click="likePost($event,post)"></b-icon>{{post.numberOfLikes}}  likes
+                        <b-icon icon="hand-thumbs-down" aria-hidden="true" @click="dislikePost($event,post)"></b-icon>{{post.numberOfDislikes}} dislikes <span style="margin-left:430px;"></span> 
+                        <b-icon icon="bookmark" aria-hidden="true" align="right"></b-icon></h5>
+                        <h4 align="left"><b-icon icon="chat-square" aria-hidden="true"  @click="getComments($event,post)"></b-icon> {{post.numberOfComments}}  comments
+                        <input style="width: 94%; margin-top:10px;" type="text" v-model="comment"><span style="margin-left:10px;" ></span>
+                        <b-icon icon="check-circle" aria-hidden="true" @click="commentPost($event,post)"></b-icon></h4>
                     </b-card>
                 </b-tab>
             </b-tabs>
         </b-card>
+        <div> 
+          <b-modal ref="modal3" hide-footer scrollable title="Profiles who commented photo" size="lg" modal-class="b-modal">
+               <div modal-class="modal-dialog" role="document">
+                    <div class="modal-content" style="background-color:#e4e4e4; ">
+                         <div v-for="user in usersWhoCommented" v-bind:key="user.username" class="modal-body">
+                             
+                            <div class="row">
+                                <div class=" form-group col">
+                                     <label>Profile: {{user.usernameFrom}} </label><span style="margin-left:30px;" ></span>
+                                     <label > Comment : {{user.comment}}</label><span style="margin-left:30px;" ></span>
+                                     <label > Answer : {{user.answer}}</label>
+                                </div>
+                             </div><span style="margin-left:610px;" ></span>
+                             </div>
+                                            
+                    </div>                
+                </div>
+          </b-modal>
+       </div>
     </div>
 </template>
 <script>
@@ -111,6 +138,11 @@ export default {
         likesNumber:0,
         dislikesNumber:0,
         loggeduser:'',
+        comments:[],
+        comment:'',
+        usersWhoCommented:[],
+        answer:'',
+        commentId:'',
         }
     },
     async mounted(){
@@ -218,6 +250,23 @@ export default {
 
                 });
         },
+        commentPost: async function(event,post){
+            const postInfo = {
+                usernameTo : post.username,
+                usernameFrom : this.loggeduser.username,
+                fileName : post.fileName,
+                comment : this.comment,
+            }
+            this.axios.post('http://localhost:8083/mediaMicroservice/post/commentPost',postInfo,{ 
+                }).then(response => {
+                    alert("Picture is commented!");
+                    console.log(response);                
+                }).catch(res => {
+                    alert("Error, please try later!");
+                    console.log(res.response.data.message);
+
+                });
+        },
         follow: function() {
             console.log("u funckiji je");
             let token = localStorage.getItem('token').substring(1, localStorage.getItem('token').length-1);
@@ -236,6 +285,23 @@ export default {
                     alert("Please, try later.")
                     console.log(response);
                 })
+        },
+         getComments: async function(event,post){
+            const postInfo = {
+                usernameTo : post.username,
+                fileName : post.fileName,
+                comment : this.comment,
+            }
+            this.axios.post('http://localhost:8083/mediaMicroservice/post/getMyCommentsInfo',postInfo,{ 
+                }).then(response => {
+                    this.usersWhoCommented = response.data
+                    this.$refs['modal3'].show();
+                    console.log(response);                
+                }).catch(res => {
+                    alert("Error,please try later");
+                    console.log(res.response.data.message);
+
+                });
         },
         refreshPage: function(selectedUser){
             this.axios.get('http://localhost:8083/profileMicroservice/api/profile/getUserProfile/'+ this.$route.params.selectedUsername)
@@ -257,6 +323,7 @@ export default {
                     });
             }
         },
+       
         
 }
 </script>

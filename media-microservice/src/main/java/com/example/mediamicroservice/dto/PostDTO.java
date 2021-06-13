@@ -17,6 +17,7 @@ public class PostDTO {
     private String following;
     private int numberOfLikes;
     private int numberOfDislikes;
+    private int numberOfComments;
 	
 	public PostDTO() {
 		super();
@@ -58,7 +59,8 @@ public class PostDTO {
 		this.fileName = fileName;
 	}
 
-	public PostDTO(String description, String username, String fileName, LocationDTO locationDTO, LocalDateTime date,int numberOfLikes,int numberOfDislikes) {
+	public PostDTO(String description, String username, String fileName, LocationDTO locationDTO, LocalDateTime date,int numberOfLikes,int numberOfDislikes,
+			int numberOfComments,List<TagDTO> tags) {
 		super();
 		this.description = description;
 		this.username = username;
@@ -67,7 +69,10 @@ public class PostDTO {
 		this.date = date;
 		this.numberOfLikes = numberOfLikes;
 		this.numberOfDislikes = numberOfDislikes;
+		this.numberOfComments = numberOfComments;
+		this.tags = tags;
 	}
+	
 	public PostDTO(String description, String username, String fileName, LocationDTO locationDTO, List<byte[]> imageBytes) {
 		super();
 		this.description = description;
@@ -76,15 +81,11 @@ public class PostDTO {
 		this.locationDTO = locationDTO;
 		this.imageBytes = imageBytes;
 	}
-	
-	
 
 	public PostDTO(String following) {
 		super();
 		this.following = following;
 	}
-
-
 
 	public String getDescription() {
 		return description;
@@ -161,9 +162,7 @@ public class PostDTO {
 	public String getFollowing() {
 		return following;
 	}
-
-
-
+	
 	public void setFollowing(String following) {
 		this.following = following;
 	}
@@ -183,4 +182,13 @@ public class PostDTO {
 	public void setNumberOfDislikes(int numberOfDislikes) {
 		this.numberOfDislikes = numberOfDislikes;
 	}
+
+	public int getNumberOfComments() {
+		return numberOfComments;
+	}
+	
+	public void setNumberOfComments(int numberOfComments) {
+		this.numberOfComments = numberOfComments;
+	}
+
 }
