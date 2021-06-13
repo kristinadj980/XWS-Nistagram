@@ -79,13 +79,11 @@ public class PostService implements IPostService {
 
 	@Override
 	public List<PostDTO> findMyPosts(String username){
-		
 		List<PostDTO> myPosts = new ArrayList<PostDTO>();
 		ProfileMedia existingProfile = profileMediaService.findByUsername(username);
 		System.out.println(existingProfile.getUsername());
-		if(existingProfile == null) {
+		if(existingProfile == null) 
 			throw new IllegalArgumentException("Profile doesn't exist!");
-		}
 		List<Post> posts = existingProfile.getPosts();
 		int numberOfLikes = 0;
 		int numberOfDislikes = 0;
@@ -304,7 +302,6 @@ public class PostService implements IPostService {
 	    	 ProfileMedia profileMediaTo = profileMediaService.findByUsername(dto.getUsernameTo());
 			 ProfileMedia profileMediaFrom =profileMediaService.findByUsername(dto.getUsernameFrom());
 			 List<Post> myPosts = profileMediaTo.getPosts();
-			 
 			 List<Media> medias = new ArrayList<Media>();
 			 int updatedNumberOfComments = 0;
 			 for (Post post : myPosts) {
@@ -313,28 +310,19 @@ public class PostService implements IPostService {
 					 if(media.getFileName().equals(dto.getFileName())) {
 						 List<Comment> currentComments = post.getComments();
 						 List<Comment> comments = new ArrayList<Comment>();
-						 System.out.println("SIZE" + currentComments.size());
 						 if(currentComments.size() != 0) {
-						 System.out.println("**************************************");
+						 int i=0;
 						 for (Comment comment : currentComments) {
-							 System.out.println("%%%%%%%%%%%%%%%%%%%%%%%%%");
-							 try {
-								 comments.add(comment);
-								 comments.add(new Comment(dto.getComment(), profileMediaFrom, LocalDateTime.now()));
-							} catch (Exception e) {
-								// TODO: handle exception
-								System.out.println("ERRRRRRORR");
-								System.out.println(e.getMessage());
+							 i++;
+							 comments.add(comment);
+							 if(i<2) {
+							    comments.add(new Comment(dto.getComment(), profileMediaFrom, LocalDateTime.now()));
 							}
-							
-						 }
+						  }
 						 }else {
-							 System.out.println("##########NEMA##############");
 							 comments.add(new Comment(dto.getComment(), profileMediaFrom,LocalDateTime.now()));
 						 }
-						 System.out.println("PROSAOOOOOOOOOOOOOOO");
 						 int numberOfComments = comments.size();
-						 System.out.println("BROJ KOM" + numberOfComments);
 						 int currentNumberOfComments = 0;
 						 if(post.getNumberOfComments() == null) {
 							 updatedNumberOfComments = numberOfComments;
@@ -370,6 +358,7 @@ public class PostService implements IPostService {
 	    	return profilesWhoCommented;
 	    }
 	    
+	    @Override
 	    public List<Comment> sortCommentsByDate(List<Comment> comments) {	
 			 Collections.sort(comments, new Comparator<Comment>() {
 				@Override
