@@ -54,4 +54,15 @@ public class FriendRequestController {
 		}
 	}
 	
+	@PostMapping("/cancelRrequest")
+	@PreAuthorize("hasRole('REGISTRED_USER')")
+	public ResponseEntity cancelRrequest(@RequestBody FriendRequestDTO friendRequestDTO) {
+		try {
+			friendRequestService.cancelRequest(friendRequestDTO);
+			return new ResponseEntity<>("Request is canceled!",HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+	}
+	
 }

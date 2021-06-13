@@ -44,11 +44,11 @@
             <b-button v-if="friendStatus == 'waiting'"       
             variant="danger"
             class = "btn btn-lg space_style"
-            v-on:click = "follow"
+            v-on:click = "cancelRequest"
             style="margin-top:25px;
             width:62%;
             margin-left:100px;">
-            Request is sent
+            Cancel request
             </b-button>
             <b-tabs v-if="user.profileStatus == 'publicProfile' || friendStatus == 'friends'"
             style="margin-top:70px;" 
@@ -221,6 +221,23 @@ export default {
                 }})
                 .then(response => {
                     alert(response.data)
+                        console.log(response);
+                })
+                .catch(response => {
+                    alert("Please, try later.")
+                    console.log(response);
+                })
+        },cancelRequest: async function() {
+            let token = localStorage.getItem('token').substring(1, localStorage.getItem('token').length-1);
+            const followRequest ={
+                userReceiver : this.user.username,
+            } 
+            this.axios.post('http://localhost:8083/profileMicroservice/api/friendRequest/cancelRrequest',followRequest, { 
+                headers: {
+                    'Authorization': 'Bearer ' + token,
+                }})
+                .then(response => {
+                    this.friendStatus =response.data;
                         console.log(response);
                 })
                 .catch(response => {
