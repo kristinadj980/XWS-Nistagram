@@ -34,46 +34,70 @@ public class FriendRequestService implements IFriendRequestService{
 		this.profileRepository = profileRepository;
 	}
 
+	
 	@Override
-	public void newFriendRequest(FriendRequestDTO friendRequestDTO) {
-
-		System.out.println("****************************************SERVIS");
+	public String newFriendRequest(FriendRequestDTO friendRequestDTO) {
 		Authentication currentUser = SecurityContextHolder.getContext().getAuthentication();
-
-		System.out.println("****************************************SERVIS");
 		Person person = (Person) currentUser.getPrincipal();
-
-		System.out.println("****************************************SERVIS");
 		Profile userSender = profileService.findById(person.getId());
-
-		System.out.println("****************************************SERVIS");
 		Profile userReceiver = profileService.findByUsername(friendRequestDTO.getUserReceiver());
-
-		System.out.println("****************************************SERVIS");
 		List<Profile> folowers = new ArrayList<Profile>();
-
-		System.out.println("****************************************SERVIS");
 		FriendRequest friendRequest = new FriendRequest();
 
-
-		System.out.println("****************************************SERVIS");
 		if(userReceiver.getProfileStatus().equals(ProfileStatus.publicProfile)) {
-			System.out.println("**************************************** zapratili smo javan profil");
 			userSender.getFollowing().add(userReceiver);
-			System.out.println("**************************************** dodali smo u following");
 			userReceiver.getFollowers().add(userSender);
-			System.out.println("**************************************** dodali smo u followers");
 			profileRepository.save(userSender);
 			profileRepository.save(userReceiver);
-		}else if(userSender.getProfileStatus().equals(ProfileStatus.publicProfile)) {
+			return "You are friends!";
+		}else {
 			friendRequest.setFriendRequestStatus(FriendRequestStatus.waiting);
 			friendRequest.setProfile(userSender);
 			userReceiver.getFriendRequests().add(friendRequest);
-		}else {
-			//both private
+			friendRequestRepository.save(friendRequest);
+			profileRepository.save(userReceiver);
+			return "Request is sent!";
 		}
+	}
+
+	@Override
+	public List<FriendRequestDTO> getMyRequests() {
+		Authentication currentUser = SecurityContextHolder.getContext().getAuthentication();
+		Person person = (Person) currentUser.getPrincipal();
+		Profile profile = profileService.findById(person.getId());
+		List<FriendRequest> requests = profile.getFriendRequests();
+		
+		List<FriendRequestDTO> requestDTOs = new ArrayList<FriendRequestDTO>();
+		for(FriendRequest f:requests)
+			if(f.getFriendRequestStatus().equals(FriendRequestStatus.waiting))
+				requestDTOs.add(new FriendRequestDTO(f.getProfile().getUsername(),f.getId()));
 		
 		
+		return requestDTOs;
+	}
+
+
+	@Override
+	public String setRequestResponse(FriendRequestDTO friendRequestDTO) {
+		FriendRequest request = friendRequestRepository.findById(friendRequestDTO.getRequestId()).get();
+		Profile requestSender = request.getProfile();
+		Authentication currentUser = SecurityContextHolder.getContext().getAuthentication();
+		Person person = (Person) currentUser.getPrincipal();
+		Profile requestReceiver = profileService.findById(person.getId());
+		
+		if(friendRequestDTO.getRequestStatus().equals(FriendRequestStatus.approved))
+		{
+			requestSender.getFollowing().add(requestReceiver);
+			requestReceiver.getFollowers().add(requestSender);
+			profileRepository.save(requestReceiver);
+			profileRepository.save(requestSender);
+			request.setFriendRequestStatus(FriendRequestStatus.approved);
+		}else
+			request.setFriendRequestStatus(FriendRequestStatus.rejected);
+		
+		friendRequestRepository.save(request);
+		
+		return "Request is updated";
 	}
 	
 }

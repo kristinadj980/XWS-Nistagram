@@ -10,26 +10,7 @@
                     <b-icon icon="person" aria-hidden="true"></b-icon>Profile</b-button>
                 <b-button pill variant="outline-danger" class = "btn btn-lg space_style" v-on:click = "addPosts">
                     <b-icon icon="image" aria-hidden="true"></b-icon> Add post</b-button>
-                <b-button pill variant="outline-danger" class = "btn btn-lg space_style" v-on:click = "editProfile">
-                    <b-icon icon="gear" aria-hidden="true"></b-icon> Edit profile</b-button>
-                <b-input-group class=" serach_look">
-                    <b-input-group-append>
-                        <input 
-                        list="my-list-id" 
-                        v-model="selectedUser" 
-                        class="input_style" 
-                        placeholder="enter username..."
-                        style="margin-top: 3% !important; width:400px; height:35px;">
-                            <datalist id="my-list-id">
-                        <option v-for="user in users" v-bind:key="user.id">
-                            {{ user.username }} 
-                        </option>
-                    </datalist>
-                     <router-link :to="{ name: 'GeneralProfiles', params: {selectedUsername: this.selectedUser}}" class="search-btn">
-                       <b-button style="margin-top: -15% !important;  margin-left: 100% !important;"  variant="outline-danger"><b-icon icon="search" aria-hidden="true" @click="refreshPage(selectedUser)"></b-icon></b-button>
-                    </router-link>
-                    </b-input-group-append>
-                </b-input-group>
+                
             </span>
                 <span  style="float:right;margin:15px">
                     <b-button pill variant="outline-danger" class = "btn btn-lg btn-light" style="margin-right:20px;" v-on:click = "logOut">Log Out</b-button>
@@ -51,7 +32,7 @@
                         <h4 align="left">{{user.biography}}</h4>
                     </b-col>
             </div>
-            <b-button        
+            <b-button v-if="friendStatus == 'notFriends' || friendStatus == 'rejected'"       
             variant="danger"
             class = "btn btn-lg space_style"
             v-on:click = "follow"
@@ -60,7 +41,16 @@
             margin-left:100px;">
             Follow
             </b-button>
-            <b-tabs v-if="user.profileStatus == 'publicProfile'"
+            <b-button v-if="friendStatus == 'waiting'"       
+            variant="danger"
+            class = "btn btn-lg space_style"
+            v-on:click = "follow"
+            style="margin-top:25px;
+            width:62%;
+            margin-left:100px;">
+            Request is sent
+            </b-button>
+            <b-tabs v-if="user.profileStatus == 'publicProfile' || friendStatus == 'friends'"
             style="margin-top:70px;" 
             align="center" 
             active-nav-item-class="font-weight-bold text-uppercase text-danger"
@@ -103,7 +93,6 @@ export default {
         website: "",
         biography: "",
         posts: [],
-        users: [],
         selectedUser:[''],
         choosenUsername:'',
         user:'',
@@ -111,6 +100,7 @@ export default {
         likesNumber:0,
         dislikesNumber:0,
         loggeduser:'',
+        friendStatus: '',
         }
     },
     async mounted(){
@@ -127,17 +117,6 @@ export default {
                alert(Error)
                 console.log(res);
             });
-
-        this.axios.get('http://localhost:8083/profileMicroservice/api/profile/getAllUsers',{ 
-             headers: {
-                 'Authorization': 'Bearer ' + token,
-             }
-         }).then(response => {
-               this.users = response.data
-         }).catch(res => {
-                       alert("Error");
-                        console.log(res);
-                 });
         this.axios.get('http://localhost:8083/profileMicroservice/api/profile/getUserProfile/'+ this.$route.params.selectedUsername)
             .then(response => {
                this.user = response.data
@@ -145,6 +124,17 @@ export default {
                         alert("Error");
                             console.log(res);
                     });
+        this.axios.get('http://localhost:8083/profileMicroservice/api/profile/getFriendStatus/'+ this.$route.params.selectedUsername,{ 
+             headers: {
+                 'Authorization': 'Bearer ' + token,
+             }
+         }).then(response => {
+              this.friendStatus = response.data;
+              console.log(response.data);
+         }).catch(res => {
+               alert(Error)
+                console.log(res);
+            });
          this.axios.get('http://localhost:8083/mediaMicroservice/post/getMyPosts/'+ this.$route.params.selectedUsername)
             .then(response => {
                 this.posts = response.data;
@@ -160,6 +150,7 @@ export default {
                         alert("Profile is private");
                             console.log(res);
                     });
+        
    },
     methods:{
         showHomepage: function(){
@@ -218,7 +209,7 @@ export default {
 
                 });
         },
-        follow: function() {
+        follow: async function() {
             console.log("u funckiji je");
             let token = localStorage.getItem('token').substring(1, localStorage.getItem('token').length-1);
             const followRequest ={
@@ -229,7 +220,7 @@ export default {
                     'Authorization': 'Bearer ' + token,
                 }})
                 .then(response => {
-                    alert("Your are friends now.")
+                    alert(response.data)
                         console.log(response);
                 })
                 .catch(response => {
@@ -299,12 +290,6 @@ export default {
         margin-left: 10%;
 
     }
-    .serach_look{
-         margin-left: 150%;
-        width: 50%;
-        margin-top: -8%;
-    }
-
     .post_look {
         background: #e4e4e4; 
         width: 60%;

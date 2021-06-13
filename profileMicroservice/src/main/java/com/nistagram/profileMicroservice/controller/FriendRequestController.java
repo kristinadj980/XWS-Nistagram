@@ -31,9 +31,24 @@ public class FriendRequestController {
 	@PreAuthorize("hasRole('REGISTRED_USER')")
 	public ResponseEntity newFriendRequest(@RequestBody FriendRequestDTO friendRequestDTO) {
 		try {
-			System.out.println("POGODIO KONTROLER");
-			friendRequestService.newFriendRequest(friendRequestDTO);
-			return new ResponseEntity<>(HttpStatus.OK);
+			return new ResponseEntity<>(friendRequestService.newFriendRequest(friendRequestDTO),HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+	}
+	
+	@GetMapping("/getMyRequests")
+	@PreAuthorize("hasRole('REGISTRED_USER')")
+	public ResponseEntity getMyRequests() {
+		return new ResponseEntity<>(friendRequestService.getMyRequests(),HttpStatus.OK);
+	}
+	
+	
+	@PostMapping("/requestResponse")
+	@PreAuthorize("hasRole('REGISTRED_USER')")
+	public ResponseEntity setRequestResponse(@RequestBody FriendRequestDTO friendRequestDTO) {
+		try {
+			return new ResponseEntity<>(friendRequestService.setRequestResponse(friendRequestDTO),HttpStatus.OK);
 		} catch (Exception e) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}

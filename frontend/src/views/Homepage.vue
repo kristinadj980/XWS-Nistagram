@@ -22,6 +22,8 @@
                 </b-input-group>
             </span>
                 <span  style="float:right;margin:15px">
+                    <b-button pill variant="outline-danger" class = "btn btn-lg space_style" v-on:click = "friendRequests">
+                    <b-icon icon="person-plus"></b-icon> Friend requests</b-button>
                     <b-button pill variant="outline-danger" class = "btn btn-lg btn-light" style="margin-right:20px;" v-on:click = "logOut">Log Out</b-button>
                 </span>
         </div>
@@ -98,6 +100,9 @@ export default {
         },
         addStories : function() {
             window.location.href = "/addingStories";
+        },
+        friendRequests: function() {
+            window.location.href = "/friendRequests";
         },
         getFriednsPosts: function(usernames) {
 

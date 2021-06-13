@@ -3,6 +3,8 @@ import com.nistagram.profileMicroservice.dto.EditProfileDTO;
 import com.nistagram.profileMicroservice.dto.FollowingDTO;
 import com.nistagram.profileMicroservice.dto.PersonRequestDTO;
 import com.nistagram.profileMicroservice.model.Authority;
+import com.nistagram.profileMicroservice.model.FriendRequest;
+import com.nistagram.profileMicroservice.model.FriendRequestStatus;
 import com.nistagram.profileMicroservice.model.Person;
 import com.nistagram.profileMicroservice.model.Profile;
 import com.nistagram.profileMicroservice.model.ProfileStatus;
@@ -142,5 +144,30 @@ public class ProfileService implements IProfileService {
 		
 		
 		return followingDTO;
+	}
+
+	@Override
+	public FriendRequestStatus getFriendStatus(String username) {
+		System.out.print("U servisu jeeeeeeeeeeeeeeeeeeeeee");
+		Authentication currentUser = SecurityContextHolder.getContext().getAuthentication();
+		Person person = (Person) currentUser.getPrincipal();
+		Profile logedUser = findById(person.getId());
+		System.out.print("U servisu jeeeeeeeeeeeeeeeeeeeeee");
+		Profile searchedUser = findByUsername(username);
+		System.out.print("U servisu jeeeeeeeeeeeeeeeeeeeeee"  + username);
+		List<Profile> following = logedUser.getFollowing();
+		FriendRequestStatus status  = FriendRequestStatus.notFriends;
+		System.out.print("U servisu jeeeeeeeeeeeeeeeeeeeeee" + status);
+		for(Profile p: following)
+			if(p.getUsername().equals(username))
+				return FriendRequestStatus.friends;
+		System.out.print("U servisu jeeeeeeeeeeeeeeeeeeeeee");
+		List<FriendRequest> requests = searchedUser.getFriendRequests();
+		for(FriendRequest r:requests)
+			if(r.getProfile().getUsername().equals(logedUser.getUsername()))
+				status = r.getFriendRequestStatus();
+		
+			
+		return status;
 	}
 }

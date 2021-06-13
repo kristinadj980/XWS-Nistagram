@@ -6,33 +6,25 @@ import javax.persistence.Column;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 
+import com.nistagram.profileMicroservice.model.FriendRequestStatus;
 import com.nistagram.profileMicroservice.model.Gender;
 import com.nistagram.profileMicroservice.model.ProfileStatus;
 
 public class EditProfileDTO {
+	
 	private String username;
-
 	private String name;
-
 	private String surname;
-
 	private String email;
-
 	private String password;
-
 	private String phoneNumber;
-
 	private LocalDate birthDate;
-
 	private Gender gender;
-	
 	private String website;
-  
 	private String biography;
-	 
 	private String confirmPassword;
-	
 	private ProfileStatus profileStatus;
+	private FriendRequestStatus friendRequestStatus;
 	
 	
 	
