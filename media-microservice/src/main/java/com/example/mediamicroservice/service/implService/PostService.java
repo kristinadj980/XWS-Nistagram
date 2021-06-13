@@ -356,10 +356,11 @@ public class PostService implements IPostService {
 	    	List<LikePostDTO> profilesWhoCommented = new ArrayList<LikePostDTO>();
 	    	ProfileMedia myProfile = profileMediaService.findByUsername(dtoInfo.getUsernameTo());
 	    	List<Comment> comments = new ArrayList<Comment>();
-	    	
+	    	List<Comment> allComments = new ArrayList<Comment>();
 	    	List<Post> myPosts = myProfile.getPosts();
 	    	for (Post post : myPosts) {
 	    		comments = post.getComments();
+	    		allComments = sortCommentsByDate(comments);
 	    		for (Comment c : comments) {
 	    			ProfileMedia user =  c.getRegistredUserProfile();
 					profilesWhoCommented.add(new LikePostDTO(user.getUsername(), c.getDescription(),c.getAnswer(), comments.size(), c.getId()));
@@ -368,6 +369,17 @@ public class PostService implements IPostService {
 	   
 	    	return profilesWhoCommented;
 	    }
+	    
+	    public List<Comment> sortCommentsByDate(List<Comment> comments) {	
+			 Collections.sort(comments, new Comparator<Comment>() {
+				@Override
+				public int compare(Comment o1, Comment o2) {
+					return o2.getDate().compareTo(o1.getDate());
+				}
+			 });
+			 
+			return comments;
+		}
 	   
 	
 }
