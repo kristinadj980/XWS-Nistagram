@@ -5,6 +5,7 @@ import java.util.List;
 import com.example.mediamicroservice.dto.LikeDislikeInfoDTO;
 import com.example.mediamicroservice.dto.LikePostDTO;
 import com.example.mediamicroservice.dto.PostDTO;
+import com.example.mediamicroservice.model.Comment;
 import com.example.mediamicroservice.model.Post;
 
 public interface IPostService {
@@ -18,4 +19,5 @@ public interface IPostService {
 	List<LikeDislikeInfoDTO> findMyDislikes(LikeDislikeInfoDTO dtoInfo);
 	void commentPost(LikePostDTO dto);
 	List<LikePostDTO> findMyComments(LikePostDTO dtoInfo);
+	List<Comment> sortCommentsByDate(List<Comment> comments);
 }
