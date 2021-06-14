@@ -140,6 +140,7 @@
                 <b-card class="post_look" v-for="post in favouritePosts" v-bind:key="post.fileName">
                         <b-row >
                         <h4 align="left"><b-icon icon="person-circle" aria-hidden="true"></b-icon>  {{post.username}}</h4>
+                        <b-icon font-scale="2" style="margin-top:-38px; margin-left:288px;" icon="plus-circle" aria-hidden="true" @click="addToCollection($event,post)"></b-icon>
                         </b-row>
                         <h6 align="left">{{post.locationDTO.city}},{{post.locationDTO.street}},{{post.locationDTO.objectName}},{{post.locationDTO.country}}</h6>
                         <b-img v-if="!post.fileName.includes(videoText)" thumbnail  v-bind:src="post.imageBytes" alt="Image 1"></b-img>
@@ -230,6 +231,27 @@
                 </div>
           </b-modal>
        </div>
+       <div> 
+          <b-modal ref="modal5" hide-footer scrollable title="Choose or create new collection" size="lg" modal-class="b-modal">
+               <div modal-class="modal-dialog" role="document">
+                    <div class="modal-content" style="background-color:#e4e4e4; ">
+                         <div class="modal-body">
+                            <div class="row">
+                            <select style="width:250px;" v-model="selectedCollection">
+                            <option v-for="collection in collections" v-bind:key="collection.id" v-on:click ="addAlternativeTolist($event, attack)">
+                            {{collection.name}}</option> 
+                            </select>
+                                <div class=" form-group col">  
+                                    <input type="text" class="form-control" v-model="collectionName" placeholder="Enter collection name...">
+                                </div>
+                             </div>
+                            <b-button style="margin-top: 10px; margin-left:640px; " pill variant="outline-danger" class = "btn btn-lg space_style" @click="addPostToCollection">Create</b-button> 
+                             </div>
+                                            
+                    </div>                
+                </div>
+          </b-modal>
+       </div>
     </div>
 </template>
 
@@ -264,6 +286,11 @@ export default {
         answer:'',
         commentId:'',
         favouritePosts:[],
+        fileName:'',
+        selectedCollection:'',
+        collections:[],
+        collectionName:'',
+        postId:'',
         }
     },
     mounted(){
@@ -278,6 +305,7 @@ export default {
                this.getMyStories(response.data);
                this.getHighlightedStories(response.data);
                this.getMyFavouritePosts(response.data);
+               this.getMyCollections(response.data);
          }).catch(res => {
                        alert("Error");
                         console.log(res);
@@ -292,6 +320,7 @@ export default {
                        alert("Error");
                         console.log(res);
                  });
+        
    },
     methods:{
          toggle () {
@@ -489,6 +518,43 @@ export default {
                     });
                     
         },
+        addToCollection: function(event,post){
+            this.$refs['modal5'].show();
+            this.fileName = post.fileName,
+            this.username = post.username,
+            this.postId = post.id;
+            alert(this.postId)
+        },
+        addPostToCollection : function(){
+           const postInfo = {
+                myProfile : this.username,
+                postId : this.postId,
+                collectionName : this.collectionName,
+                selectedCollection : this.selectedCollection,
+            }
+            this.axios.post('http://localhost:8083/mediaMicroservice/collection/addToCollection',postInfo,{ 
+                }).then(response => {
+                    //this.usersWhoLiked = response.data
+                    alert("Post is added in the favourites!")
+                    console.log(response);                
+                }).catch(res => {
+                    alert("Error,please try later");
+                    console.log(res.response.data.message);
+
+                });
+        },
+        getMyCollections: function(person){
+        
+        this.axios.get('http://localhost:8083/mediaMicroservice/collection/getMyCollections/'+ person.username,)
+            .then(response => {
+                this.collections = response.data;
+                alert("Ok")
+            }).catch(res => {
+                        alert("Error");
+                            console.log(res);
+                    });
+        }
+        
     }
 }
 </script>

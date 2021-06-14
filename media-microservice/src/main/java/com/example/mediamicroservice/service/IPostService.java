@@ -20,4 +20,5 @@ public interface IPostService {
 	void commentPost(LikePostDTO dto);
 	List<LikePostDTO> findMyComments(LikePostDTO dtoInfo);
 	List<Comment> sortCommentsByDate(List<Comment> comments);
+	Post findById(Long id);
 }
