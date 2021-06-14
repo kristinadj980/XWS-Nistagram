@@ -137,6 +137,22 @@
                 <template #title>
                    <b-icon icon="emoji-heart-eyes" aria-hidden="true"></b-icon><strong>   favourites</strong>
                 </template>
+                <b-card class="post_look" v-for="post in favouritePosts" v-bind:key="post.fileName">
+                        <b-row >
+                        <h4 align="left"><b-icon icon="person-circle" aria-hidden="true"></b-icon>  {{post.username}}</h4>
+                        </b-row>
+                        <h6 align="left">{{post.locationDTO.city}},{{post.locationDTO.street}},{{post.locationDTO.objectName}},{{post.locationDTO.country}}</h6>
+                        <b-img v-if="!post.fileName.includes(videoText)" thumbnail  v-bind:src="post.imageBytes" alt="Image 1"></b-img>
+                        <video v-if="post.fileName.includes(videoText)" autoplay controls v-bind:src="post.imageBytes" width="400" height="400" style="display:block; margin-left:auto; margin-right:auto"></video>
+                        <h4 align="left">{{post.description}}</h4>
+                        <h5 align="left"><span v-for="(tag,t) in post.tags" :key="t">
+                                        #{{tag.name}}
+                                    </span>
+                        </h5>
+                        <h5 align="left"><b-icon icon="hand-thumbs-up" aria-hidden="true" @click="getLikes($event,post)"></b-icon > {{post.numberOfLikes}} likes <b-icon icon="hand-thumbs-down" aria-hidden="true"  @click="getDislikes($event,post)"></b-icon> {{post.numberOfDislikes}} dislikes<span style="margin-left:430px;"></span>
+                         <b-icon icon="bookmark" aria-hidden="true" align="right" @click="saveAsFavourite($event,post)"></b-icon></h5>
+                        <h4 align="left"><b-icon icon="chat-square" aria-hidden="true"  @click="getComments($event,post)"></b-icon> {{post.numberOfComments}}  comments</h4>
+                    </b-card>
                     
                 </b-tab>
             </b-tabs>
@@ -247,6 +263,7 @@ export default {
         usersWhoCommented:[],
         answer:'',
         commentId:'',
+        favouritePosts:[],
         }
     },
     mounted(){
@@ -260,6 +277,7 @@ export default {
                this.getMyPosts(response.data);
                this.getMyStories(response.data);
                this.getHighlightedStories(response.data);
+               this.getMyFavouritePosts(response.data);
          }).catch(res => {
                        alert("Error");
                         console.log(res);
@@ -449,6 +467,27 @@ export default {
                     console.log(res.response.data.message);
 
                 });
+        },
+        getMyFavouritePosts: function(person) {
+            this.axios.get('http://localhost:8083/mediaMicroservice/post/getMyFavouritePosts/'+ person.username,)
+            .then(response => {
+                this.favouritePosts = response.data;
+                let video = "mp4";
+                
+                for(let i=0; i< response.data.length; i++){
+                     if(!this.favouritePosts[i].fileName.includes(video)){
+                        console.log("slika jeee");
+                        this.favouritePosts[i].imageBytes = 'data:image/jpeg;base64,' + this.favouritePosts[i].imageBytes; 
+                    }else{
+                        console.log("video jeee");
+                        this.favouritePosts[i].imageBytes = 'data:video/mp4;base64,' + this.favouritePosts[i].imageBytes;     
+                    }            
+                } 
+            }).catch(res => {
+                        alert("Error");
+                            console.log(res);
+                    });
+                    
         },
     }
 }

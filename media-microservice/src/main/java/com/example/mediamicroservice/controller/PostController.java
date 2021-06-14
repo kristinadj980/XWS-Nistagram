@@ -149,5 +149,12 @@ public class PostController {
 		return new ResponseEntity(postService.findMyComments(infoDTO), HttpStatus.OK); 
 
 	}
+	
+	@GetMapping("/getMyFavouritePosts/{username}")
+	public ResponseEntity getMyFavouritePosts(@PathVariable String username) {
+		
+		return new ResponseEntity(postService.findMyFavouritePosts(username), HttpStatus.OK); 
+
+	}
 
 }
