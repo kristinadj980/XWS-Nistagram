@@ -137,7 +137,15 @@
                 <template #title>
                    <b-icon icon="emoji-heart-eyes" aria-hidden="true"></b-icon><strong>   favourites</strong>
                 </template>
-                <b-card class="post_look" v-for="post in favouritePosts" v-bind:key="post.fileName">
+
+
+                <b-tabs card>
+                    <!-- ovaj tab je za sve favourites postove-->
+                    <b-tab>
+                    <template #title>
+                        <b-icon icon="emoji-heart-eyes" aria-hidden="true"></b-icon><strong>   favourites</strong>
+                    </template>
+                    <b-card class="post_look" v-for="post in favouritePosts" v-bind:key="post.fileName">
                         <b-row >
                         <h4 align="left"><b-icon icon="person-circle" aria-hidden="true"></b-icon>  {{post.username}}</h4>
                         <b-icon font-scale="2" style="margin-top:-38px; margin-left:288px;" icon="plus-circle" aria-hidden="true" @click="addToCollection($event,post)"></b-icon>
@@ -155,6 +163,28 @@
                         <h4 align="left"><b-icon icon="chat-square" aria-hidden="true"  @click="getComments($event,post)"></b-icon> {{post.numberOfComments}}  comments</h4>
                     </b-card>
                     
+                </b-tab>
+                 <!-- ovo su dodatni tabovi-->
+                <b-tab v-for="collection in collections" :key="collection.name" :title="collection.name">
+                    <b-card class="post_look" v-for="post in collection.posts" v-bind:key="post.fileName">
+                        <b-row >
+                        <h4 align="left"><b-icon icon="person-circle" aria-hidden="true"></b-icon>  {{post.username}}</h4>
+                        <b-icon font-scale="2" style="margin-top:-38px; margin-left:288px;" icon="plus-circle" aria-hidden="true" @click="addToCollection($event,post)"></b-icon>
+                        </b-row>
+                        <h6 align="left">{{post.locationDTO.city}},{{post.locationDTO.street}},{{post.locationDTO.objectName}},{{post.locationDTO.country}}</h6>
+                        <b-img v-if="!post.fileName.includes(videoText)" thumbnail  v-bind:src="post.imageBytes" alt="Image 1"></b-img>
+                        <video v-if="post.fileName.includes(videoText)" autoplay controls v-bind:src="post.imageBytes" width="400" height="400" style="display:block; margin-left:auto; margin-right:auto"></video>
+                        <h4 align="left">{{post.description}}</h4>
+                        <h5 align="left"><span v-for="(tag,t) in post.tags" :key="t">
+                                        #{{tag.name}}
+                                    </span>
+                        </h5>
+                        <h5 align="left"><b-icon icon="hand-thumbs-up" aria-hidden="true" @click="getLikes($event,post)"></b-icon > {{post.numberOfLikes}} likes <b-icon icon="hand-thumbs-down" aria-hidden="true"  @click="getDislikes($event,post)"></b-icon> {{post.numberOfDislikes}} dislikes<span style="margin-left:430px;"></span>
+                         <b-icon icon="bookmark" aria-hidden="true" align="right" @click="saveAsFavourite($event,post)"></b-icon></h5>
+                        <h4 align="left"><b-icon icon="chat-square" aria-hidden="true"  @click="getComments($event,post)"></b-icon> {{post.numberOfComments}}  comments</h4>
+                    </b-card>
+                </b-tab>
+                </b-tabs>
                 </b-tab>
             </b-tabs>
             
@@ -237,9 +267,9 @@
                     <div class="modal-content" style="background-color:#e4e4e4; ">
                          <div class="modal-body">
                             <div class="row">
-                            <select style="width:250px;" v-model="selectedCollection">
-                            <option v-for="collection in collections" v-bind:key="collection.id" v-on:click ="addAlternativeTolist($event, attack)">
-                            {{collection.name}}</option> 
+                            <select style="width:250px;" v-model="selectedCollectionID">
+                            <option v-for="collection in collections" v-bind:key="collection.id" v-on:click ="addSelected($event, collection.id)">
+                            {{collection.name}} {{collection.id}}</option> 
                             </select>
                                 <div class=" form-group col">  
                                     <input type="text" class="form-control" v-model="collectionName" placeholder="Enter collection name...">
@@ -291,6 +321,7 @@ export default {
         collections:[],
         collectionName:'',
         postId:'',
+        selectedCollectionID: '',
         }
     },
     mounted(){
@@ -530,7 +561,7 @@ export default {
                 myProfile : this.username,
                 postId : this.postId,
                 collectionName : this.collectionName,
-                selectedCollection : this.selectedCollection,
+                selectedCollection : this.selectedCollectionID,
             }
             this.axios.post('http://localhost:8083/mediaMicroservice/collection/addToCollection',postInfo,{ 
                 }).then(response => {
@@ -548,12 +579,27 @@ export default {
         this.axios.get('http://localhost:8083/mediaMicroservice/collection/getMyCollections/'+ person.username,)
             .then(response => {
                 this.collections = response.data;
+                let video = "mp4";
+                
+                for(let i=0; i< this.collections.length; i++){
+                    for(let j=0; j< this.collections[i].posts.length; j++){
+                        if(!this.collections[i].posts[j].fileName.includes(video)){
+                            this.collections[i].posts[j].imageBytes = 'data:image/jpeg;base64,' + this.collections[i].posts[j].imageBytes; 
+                        }else{
+                            this.collections[i].posts[j].imageBytes = 'data:video/mp4;base64,' + this.collections[i].posts[j].imageBytes;     
+                        }      
+                    }      
+                } 
                 alert("Ok")
             }).catch(res => {
                         alert("Error");
                             console.log(res);
                     });
+        },addSelected: function(event,collectionID){
+            this.selectedCollection = collectionID;
+            alert(this.collectionID)
         }
+
         
     }
 }

@@ -51,7 +51,7 @@ public class CollectionService implements ICollectionService{
 			collectionRepository.save(favouritesCollection);
 			profileMediaRepositoty.save(myProfile);
 			
-			return collectionDTO.getCollectionName();
+			
 		}else 
 			for (FavouritesCollection f : myCollections) 
 				if(f.getId().equals(collectionDTO.getSelectedCollection())) {
@@ -60,7 +60,7 @@ public class CollectionService implements ICollectionService{
 					collectionRepository.save(f);
 					profileMediaRepositoty.save(myProfile);
 				}
-		return null;
+		return collectionDTO.getCollectionName();
 	}
 	
 	public List<CollectionInfoDTO> findMyCollections(String username){
@@ -124,7 +124,10 @@ public class CollectionService implements ICollectionService{
 					
 					
 				}
-				collectionInfoDTO.setPosts(myPosts);
+				List<PostDTO> allPosts = postService.getImagesFiles(myPosts);
+				postService.sortByDate(allPosts);
+				
+				collectionInfoDTO.setPosts(allPosts);
 				System.out.println("SIZE OVDE " + myPosts.size());
 				collectionInfoDTO.setName(f.getName());
 				collectionInfoDTO.setId(f.getId());
