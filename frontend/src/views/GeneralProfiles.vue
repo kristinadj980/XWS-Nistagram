@@ -50,6 +50,15 @@
             margin-left:100px;">
             Cancel request
             </b-button>
+            <b-button v-if="friendStatus == 'approved' || friendStatus == 'friends'"       
+            variant="danger"
+            class = "btn btn-lg space_style"
+            v-on:click = "unfollow"
+            style="margin-top:25px;
+            width:62%;
+            margin-left:100px;">
+            Unfollow
+            </b-button>
             <b-tabs v-if="user.profileStatus == 'publicProfile' || friendStatus == 'friends'"
             style="margin-top:70px;" 
             align="center" 
@@ -210,7 +219,6 @@ export default {
                 });
         },
         follow: async function() {
-            console.log("u funckiji je");
             let token = localStorage.getItem('token').substring(1, localStorage.getItem('token').length-1);
             const followRequest ={
                 userReceiver : this.user.username,
@@ -227,7 +235,27 @@ export default {
                     alert("Please, try later.")
                     console.log(response);
                 })
-        },cancelRequest: async function() {
+        },
+        unfollow: async function() {
+            console.log("u funckiji je");
+            let token = localStorage.getItem('token').substring(1, localStorage.getItem('token').length-1);
+            const followRequest ={
+                userReceiver : this.user.username,
+            } 
+            this.axios.post('http://localhost:8083/profileMicroservice/api/friendRequest/unfollow',followRequest, { 
+                headers: {
+                    'Authorization': 'Bearer ' + token,
+                }})
+                .then(response => {
+                    alert(response.data)
+                        console.log(response);
+                })
+                .catch(response => {
+                    alert("Please, try later.")
+                    console.log(response);
+                })
+        },
+        cancelRequest: async function() {
             let token = localStorage.getItem('token').substring(1, localStorage.getItem('token').length-1);
             const followRequest ={
                 userReceiver : this.user.username,

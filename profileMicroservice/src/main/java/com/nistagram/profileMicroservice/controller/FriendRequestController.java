@@ -65,4 +65,16 @@ public class FriendRequestController {
 		}
 	}
 	
+	
+	@PostMapping("/unfollow")
+	@PreAuthorize("hasRole('REGISTRED_USER')")
+	public ResponseEntity unfollowFriend(@RequestBody FriendRequestDTO friendRequestDTO) {
+		try {
+			friendRequestService.unfollowFriend(friendRequestDTO);
+			return new ResponseEntity<>("You have unfollowed this account!",HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+	}
+	
 }

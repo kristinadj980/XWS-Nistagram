@@ -44,7 +44,7 @@
                             <b-modal ref="modal-ref" id="modal-1" title="Stories" hide-footer>
                                 <b-tabs 
             style="margin-top:70px;" 
-            align="center" 
+            align="center"
             active-nav-item-class="font-weight-bold text-uppercase text-danger"
             active-tab-class="font-weight-bold"
             content-class="mt-3">

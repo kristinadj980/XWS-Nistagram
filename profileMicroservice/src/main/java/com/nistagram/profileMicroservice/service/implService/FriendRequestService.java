@@ -45,7 +45,6 @@ public class FriendRequestService implements IFriendRequestService{
 	public String newFriendRequest(FriendRequestDTO friendRequestDTO) {
 		Profile userSender = getLogedUser();
 		Profile userReceiver = profileService.findByUsername(friendRequestDTO.getUserReceiver());
-		List<Profile> folowers = new ArrayList<Profile>();
 		FriendRequest friendRequest = new FriendRequest();
 
 		if(userReceiver.getProfileStatus().equals(ProfileStatus.publicProfile)) {
@@ -114,6 +113,20 @@ public class FriendRequestService implements IFriendRequestService{
 			}
 			
 	
+	}
+
+	@Override
+	public void unfollowFriend(FriendRequestDTO friendRequestDTO) {
+		Profile requestSender = getLogedUser();
+		Profile requestReceiver = profileService.findByUsername(friendRequestDTO.getUserReceiver());
+		
+		requestSender.getFollowing().remove(requestReceiver);
+		requestReceiver.getFollowers().remove(requestSender);
+		profileRepository.save(requestSender);
+		profileRepository.save(requestReceiver);
+		
+		requestReceiver.getFriendRequests();
+		
 	}
 	
 }
