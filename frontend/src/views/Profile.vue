@@ -127,7 +127,8 @@
                                         #{{tag.name}}
                                     </span>
                         </h5>
-                        <h5 align="left"><b-icon icon="hand-thumbs-up" aria-hidden="true" @click="getLikes($event,post)"></b-icon > {{post.numberOfLikes}} likes <b-icon icon="hand-thumbs-down" aria-hidden="true"  @click="getDislikes($event,post)"></b-icon> {{post.numberOfDislikes}} dislikes<span style="margin-left:430px;"></span> <b-icon icon="bookmark" aria-hidden="true" align="right"></b-icon></h5>
+                        <h5 align="left"><b-icon icon="hand-thumbs-up" aria-hidden="true" @click="getLikes($event,post)"></b-icon > {{post.numberOfLikes}} likes <b-icon icon="hand-thumbs-down" aria-hidden="true"  @click="getDislikes($event,post)"></b-icon> {{post.numberOfDislikes}} dislikes<span style="margin-left:430px;"></span>
+                         <b-icon icon="bookmark" aria-hidden="true" align="right" @click="saveAsFavourite($event,post)"></b-icon></h5>
                         <h4 align="left"><b-icon icon="chat-square" aria-hidden="true"  @click="getComments($event,post)"></b-icon> {{post.numberOfComments}}  comments</h4>
                     </b-card>
                 </b-tab>
@@ -429,6 +430,22 @@ export default {
                 }).catch(res => {
                     alert("You have already answered");
                     this.$refs['modal4'].hide();
+                    console.log(res.response.data.message);
+
+                });
+        },
+         saveAsFavourite: async function(event,post){
+            const postInfo = {
+                myProfile : post.username,
+                fileName : post.fileName,
+            }
+            this.axios.post('http://localhost:8083/mediaMicroservice/profile/saveFavourites',postInfo,{ 
+                }).then(response => {
+                    //this.usersWhoLiked = response.data
+                    alert("Post is added in the favourites!")
+                    console.log(response);                
+                }).catch(res => {
+                    alert("Error,please try later");
                     console.log(res.response.data.message);
 
                 });
