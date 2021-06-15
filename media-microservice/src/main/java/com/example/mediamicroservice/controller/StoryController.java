@@ -1,6 +1,8 @@
 package com.example.mediamicroservice.controller;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -89,6 +91,34 @@ public class StoryController {
         String proba=profileConnection.proba();
         System.out.println("AAAAAAA");
 		return ResponseEntity.ok(proba);
+		
+	}
+	@PostMapping("/getFriendsStories")
+	public ResponseEntity<List<StoryDTO>> getFriendsStories(@RequestBody List<StoryDTO> storyDTOs) {
+		System.out.println("USPELOOOOOOOOOOOOOOOO");
+		try {
+			List<StoryDTO> stories = new ArrayList<StoryDTO>();
+			System.out.println("USPELOOOOOOOOOOOOOOOO");
+			for(StoryDTO p:storyDTOs) {
+				System.out.println("USPELOOOOOOOOOOOOOOOO");
+				List<StoryDTO> friendStories = new ArrayList<StoryDTO>();
+				System.out.println("USPELOOOOOOOOOOOOOOOO"+p.getFollowing());
+				friendStories = storyService.findMyStories(p.getFollowing());
+				System.out.println("USPELOOOOOOOOOOOOOOOO");
+				for(StoryDTO pf:friendStories) {
+					System.out.println("USPELOOOOOOOOOOOOOOOO");
+					stories.add(pf);
+				}
+				
+			}
+			System.out.println("USPELOOOOOOOOOOOOOOOO");
+			//stories = storyService.sortByDate(stories);
+			return new ResponseEntity(stories, HttpStatus.OK); 
+		}catch(Exception e) {
+			System.out.println("USPELOOOOOOOOOOOOOOOO" + e.getMessage());
+			e.printStackTrace();
+			return new ResponseEntity(HttpStatus.BAD_REQUEST);
+		}
 		
 	}
 }

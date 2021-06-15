@@ -70,7 +70,7 @@ public class StoryService implements IStoryService {
 	       
 	            
 	        story.setStartTime(LocalDateTime.now());
-	        story.setEndTime(story.getStartTime().plusMinutes(2));//izmijeniti na 24h
+	        story.setEndTime(story.getStartTime().plusMinutes(4));//izmijeniti na 24h
 	        story.setHighlighted(storyDTO.isHighlighted());
 	        
 	        profileMediaService.addStoryToProfile(storyDTO, story);

@@ -10,6 +10,7 @@ public class StoryDTO {
 	private Long userId;
 	private String fileName;
 	private boolean highlighted;
+	 private String following;
 	private LocationDTO locationDTO;
     private List<byte[]> imageBytes;
 	public StoryDTO() {
@@ -17,6 +18,20 @@ public class StoryDTO {
 		// TODO Auto-generated constructor stub
 	}
 	
+	public StoryDTO(String location, String description, List<TagDTO> tags, String username, Long userId,
+			String fileName, boolean highlighted, String following, LocationDTO locationDTO, List<byte[]> imageBytes) {
+		super();
+		this.location = location;
+		this.description = description;
+		this.tags = tags;
+		this.username = username;
+		this.userId = userId;
+		this.fileName = fileName;
+		this.highlighted = highlighted;
+		this.following = following;
+		this.locationDTO = locationDTO;
+		this.imageBytes = imageBytes;
+	}
 	public StoryDTO(String description, String username, String fileName, LocationDTO locationDTO,boolean highlighted) {
 		super();
 		this.description = description;
@@ -105,6 +120,14 @@ public class StoryDTO {
 	}
 	public void setDescription(String description) {
 		this.description = description;
+	}
+
+	public String getFollowing() {
+		return following;
+	}
+
+	public void setFollowing(String following) {
+		this.following = following;
 	}
 	
     

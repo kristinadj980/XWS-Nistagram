@@ -10,4 +10,5 @@ public interface IStoryService {
 	List<StoryDTO> findMyStories(String username);
 	List<StoryDTO> findArchiveStories(String username);
 	List<StoryDTO> findHighlightedStories(String username);
+	//List<StoryDTO> sortByDate(String username);
 }

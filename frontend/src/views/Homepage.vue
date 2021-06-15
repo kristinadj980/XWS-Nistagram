@@ -28,6 +28,33 @@
                 </span>
         </div>
         <b-card class="content_surface">
+
+            <!--***************FRIEND'S STORIES************-->
+             <b-button  class="btn btn-info btn-lg space_style"  style="background-color:#f08080;margin-left:-1300px;" v-b-modal.modal-1>Show stories</b-button>
+                            <b-modal ref="modal-ref" id="modal-1" title="Stories" hide-footer>
+                                <b-tabs 
+            style="margin-top:70px;" 
+            align="center"
+            active-nav-item-class="font-weight-bold text-uppercase text-danger"
+            active-tab-class="font-weight-bold"
+            content-class="mt-3">
+                <b-tab active>
+                <template #title>
+                   <b-icon icon="grid3x3-gap" aria-hidden="true"></b-icon><strong> Stories </strong>
+                </template>
+                    <b-card class="post_look" v-for="story in stories" v-bind:key="story.fileName">
+                        <b-row >
+                        <h4 align="left"><b-icon icon="person-circle" aria-hidden="true"></b-icon>  {{story.username}}</h4>
+                        </b-row>
+                        <h6 align="left">{{story.locationDTO.city}},{{story.locationDTO.street}},{{story.locationDTO.objectName}},{{story.locationDTO.country}}</h6>
+                        <b-img v-if="!story.fileName.includes(videoText)" thumbnail  v-bind:src="story.imageBytes" alt="Image 1"></b-img>
+                        <video v-if="story.fileName.includes(videoText)" autoplay controls v-bind:src="story.imageBytes" width="400" height="400" style="display:block; margin-left:auto; margin-right:auto"></video>
+                        <h4 align="left">{{story.description}}</h4>
+                    </b-card>
+                </b-tab>
+            </b-tabs>
+         </b-modal>
+         <!--FRIEND'S POSTS-->
              <b-card class="post_look" v-for="post in posts" v-bind:key="post.fileName">
                         <b-row >
                         <h4 align="left"><b-icon icon="person-circle" aria-hidden="true"></b-icon>  {{post.username}}</h4>
@@ -52,6 +79,7 @@ export default {
         users: [],
         username: "",
         posts: [],
+        stories: [],
         videoText: "mp4",
         numberOfLikes:0,
         numberOfDislikes:0,
@@ -68,6 +96,7 @@ export default {
          }).then(response => {
                this.users = response.data
                this.getFriednsPosts(response.data);
+               this.getFriendsStories(response.data);
          }).catch(res => {
                        alert("Error");
                         console.log(res);
@@ -115,6 +144,24 @@ export default {
                         this.posts[i].imageBytes = 'data:image/jpeg;base64,' + this.posts[i].imageBytes; 
                     }else{
                         this.posts[i].imageBytes = 'data:video/mp4;base64,' + this.posts[i].imageBytes;     
+                    }            
+                } 
+            }).catch(res => {
+                        alert("Profile is private");
+                            console.log(res);
+                    });
+        },
+        getFriendsStories: function(usernames) {
+
+            this.axios.post('http://localhost:8083/mediaMicroservice/story/getFriendsStories',usernames)
+            .then(response => {
+                this.stories = response.data;
+                let video = "mp4";
+                for(let i=0; i< response.data.length; i++){
+                     if(!this.stories[i].fileName.includes(video)){
+                        this.stories[i].imageBytes = 'data:image/jpeg;base64,' + this.stories[i].imageBytes; 
+                    }else{
+                        this.stories[i].imageBytes = 'data:video/mp4;base64,' + this.stories[i].imageBytes;     
                     }            
                 } 
             }).catch(res => {
