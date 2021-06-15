@@ -50,17 +50,15 @@ public class CollectionService implements ICollectionService{
 			myProfile.getFavouritesCollections().add(favouritesCollection);
 			collectionRepository.save(favouritesCollection);
 			profileMediaRepositoty.save(myProfile);
-			
+			return collectionDTO.getCollectionName();
 			
 		}else 
 			for (FavouritesCollection f : myCollections) 
 				if(f.getId().equals(collectionDTO.getSelectedCollection())) {
 					f.getPosts().add(post);
-					myProfile.setFavouritesCollections(myCollections);
 					collectionRepository.save(f);
-					profileMediaRepositoty.save(myProfile);
 				}
-		return collectionDTO.getCollectionName();
+		return " ";
 	}
 	
 	public List<CollectionInfoDTO> findMyCollections(String username){
@@ -73,11 +71,9 @@ public class CollectionService implements ICollectionService{
 		int numberOfComments = 0;
 		for (FavouritesCollection f : myCollections) {
 			List<Post> posts = f.getPosts();
-			System.out.println(" PRVI SIZE" + posts.size());
 			CollectionInfoDTO collectionInfoDTO = new CollectionInfoDTO();
 			List<PostDTO> myPosts = new ArrayList<PostDTO>();
 			for (Post post : posts) {
-				System.out.println("NAZIV KOLEKCIJE" + f.getName());
 				List<Media> medias = post.getMedias();
 				for (Media m : medias) {
 					LocationDTO locationDTO = new LocationDTO(post.getLocation().getCity(), post.getLocation().getStreet(),post.getLocation().getCountry(),
@@ -128,16 +124,14 @@ public class CollectionService implements ICollectionService{
 				postService.sortByDate(allPosts);
 				
 				collectionInfoDTO.setPosts(allPosts);
-				System.out.println("SIZE OVDE " + myPosts.size());
-				collectionInfoDTO.setName(f.getName());
-				collectionInfoDTO.setId(f.getId());
-				collectionInfoDTOs.add(collectionInfoDTO);
 				
 			}
+			collectionInfoDTO.setName(f.getName());
+			collectionInfoDTO.setId(f.getId());
+			collectionInfoDTOs.add(collectionInfoDTO);
 			
 		}
 		
-	    
 	    return collectionInfoDTOs;
 	}
 

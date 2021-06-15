@@ -268,8 +268,8 @@
                          <div class="modal-body">
                             <div class="row">
                             <select style="width:250px;" v-model="selectedCollectionID">
-                            <option v-for="collection in collections" v-bind:key="collection.id" v-on:click ="addSelected($event, collection.id)">
-                            {{collection.name}} {{collection.id}}</option> 
+                            <option v-for="collection in collections" v-bind:value="collection.id" v-bind:key="collection.id" v-on:click ="addSelected($event, collection.id)">
+                            {{collection.name}}</option> 
                             </select>
                                 <div class=" form-group col">  
                                     <input type="text" class="form-control" v-model="collectionName" placeholder="Enter collection name...">
@@ -557,6 +557,7 @@ export default {
             alert(this.postId)
         },
         addPostToCollection : function(){
+            console.log("Sad smo u funkciji i selected id je" + this.selectedCollectionID)
            const postInfo = {
                 myProfile : this.username,
                 postId : this.postId,
