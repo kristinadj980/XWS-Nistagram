@@ -15,20 +15,22 @@
                 <b-button pill variant="outline-danger" class = "btn btn-lg space_style" v-on:click = "editProfile">
                     <b-icon icon="gear" aria-hidden="true"></b-icon> Edit profile</b-button>
                 <b-input-group class=" serach_look">
-                    <b-form-input placeholder="search.."></b-form-input>
                     <b-input-group-append>
                         <input 
                         list="my-list-id" 
-                        v-model="selectedLocation" 
+                        v-model="selectedUser" 
                         class="input_style" 
-                        placeholder="enter location.."
-                        style="margin-top: 1% !important; width:500px;">
-                            <datalist id="my-list-id">
-                        <option v-for="location in locations" v-bind:key="location.id">
-                            {{ location.country }}, {{location.city}},  {{location.street}}, {{location.objectName}} 
-                        </option>
-                    </datalist>
-                    <b-button variant="outline-danger"><b-icon icon="search" aria-hidden="true"></b-icon></b-button>
+                        placeholder="enter username..."
+                        style="margin-top: 3% !important; width:400px; height:35px;">
+                        <datalist id="my-list-id">
+                            <option v-for="user in users" v-bind:key="user.id">
+                                {{ user.username }} 
+                            </option>
+                        </datalist>
+                    <router-link :to="{ name: 'GeneralProfiles', params: {selectedUsername: this.selectedUser}}" class="search-btn">
+                       <b-button style="margin-top: -15% !important;  margin-left: 100% !important;" variant="outline-danger"><b-icon icon="search" aria-hidden="true"></b-icon></b-button>
+                    </router-link>
+    
                     </b-input-group-append>
                 </b-input-group>
             </span>
@@ -42,7 +44,7 @@
                             <b-modal ref="modal-ref" id="modal-1" title="Stories" hide-footer>
                                 <b-tabs 
             style="margin-top:70px;" 
-            align="center" 
+            align="center"
             active-nav-item-class="font-weight-bold text-uppercase text-danger"
             active-tab-class="font-weight-bold"
             content-class="mt-3">
@@ -118,9 +120,10 @@
                         <h4 align="left"><b-icon icon="person-circle" aria-hidden="true"></b-icon>  {{post.username}}</h4>
                         </b-row>
                         <h6 align="left">{{post.locationDTO.city}},{{post.locationDTO.street}},{{post.locationDTO.objectName}},{{post.locationDTO.country}}</h6>
-                        <b-img thumbnail  v-bind:src="post.imageBytes" alt="Image 1"></b-img>
+                        <b-img v-if="!post.fileName.includes(videoText)" thumbnail  v-bind:src="post.imageBytes" alt="Image 1"></b-img>
+                        <video v-if="post.fileName.includes(videoText)" autoplay controls v-bind:src="post.imageBytes" width="400" height="400" style="display:block; margin-left:auto; margin-right:auto"></video>
                         <h4 align="left">{{post.description}}</h4>
-                        <h5 align="left"><b-icon icon="hand-thumbs-up" aria-hidden="true"></b-icon>  likes <b-icon icon="hand-thumbs-down" aria-hidden="true"></b-icon> <span style="margin-left:430px;"></span> <b-icon icon="bookmark" aria-hidden="true" align="right"></b-icon></h5>
+                        <h5 align="left"><b-icon icon="hand-thumbs-up" aria-hidden="true"></b-icon> {{post.numberOfLikes}} likes <b-icon icon="hand-thumbs-down" aria-hidden="true"></b-icon> {{post.numberOfDislikes}} dislikes<span style="margin-left:430px;"></span> <b-icon icon="bookmark" aria-hidden="true" align="right"></b-icon></h5>
                         <h4 align="left"><b-icon icon="chat-square" aria-hidden="true"></b-icon>  comments</h4>
                     </b-card>
                 </b-tab>
@@ -155,9 +158,13 @@ export default {
         biography: "",
         posts: [],
         users: [],
+        selectedUser:[''],
         stories: [],
         highlighted:[],
         videoText: "mp4",
+        numberOfLikes:0,
+        numberOfDislikes:0,
+
         }
     },
     mounted(){
@@ -175,16 +182,16 @@ export default {
                        alert("Error");
                         console.log(res);
                  });
-     /*   this.axios.get('http://localhost:8083/profileMicroservice/api/profile/getAllUsers',{ 
+        this.axios.get('http://localhost:8083/profileMicroservice/api/profile/getAllUsers',{ 
              headers: {
                  'Authorization': 'Bearer ' + token,
              }
          }).then(response => {
-               this.users = response.data;
+               this.users = response.data
          }).catch(res => {
                        alert("Error");
                         console.log(res);
-                 });*/
+                 });
    },
     methods:{
          toggle () {
@@ -216,8 +223,16 @@ export default {
             this.axios.get('http://localhost:8083/mediaMicroservice/post/getMyPosts/'+ person.username,)
             .then(response => {
                 this.posts = response.data;
+                let video = "mp4";
+                
                 for(let i=0; i< response.data.length; i++){
-                        this.posts[i].imageBytes = 'data:image/jpeg;base64,' + this.posts[i].imageBytes;                
+                     if(!this.posts[i].fileName.includes(video)){
+                        console.log("slika jeee");
+                        this.posts[i].imageBytes = 'data:image/jpeg;base64,' + this.posts[i].imageBytes; 
+                    }else{
+                        console.log("video jeee");
+                        this.posts[i].imageBytes = 'data:video/mp4;base64,' + this.posts[i].imageBytes;     
+                    }            
                 } 
             }).catch(res => {
                         alert("Error");
@@ -225,6 +240,7 @@ export default {
                     });
                     
         },
+       
         getMyStories: function(person) {
             this.axios.get('http://localhost:8083/mediaMicroservice/story/getMyStories/'+ person.username,)
             .then(response => {

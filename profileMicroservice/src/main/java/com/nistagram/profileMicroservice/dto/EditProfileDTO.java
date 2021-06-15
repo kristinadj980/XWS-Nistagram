@@ -6,32 +6,25 @@ import javax.persistence.Column;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 
+import com.nistagram.profileMicroservice.model.FriendRequestStatus;
 import com.nistagram.profileMicroservice.model.Gender;
+import com.nistagram.profileMicroservice.model.ProfileStatus;
 
 public class EditProfileDTO {
+	
 	private String username;
-
 	private String name;
-
 	private String surname;
-
 	private String email;
-
 	private String password;
-
 	private String phoneNumber;
-
 	private LocalDate birthDate;
-
 	private Gender gender;
-	
 	private String website;
-  
 	private String biography;
-	 
 	private String confirmPassword;
-	
-	
+	private ProfileStatus profileStatus;
+	private FriendRequestStatus friendRequestStatus;
 	
 	
 	
@@ -41,7 +34,7 @@ public class EditProfileDTO {
 
 	public EditProfileDTO(String username, String name, String surname, String email, String password,
 			String phoneNumber, LocalDate birthDate, Gender gender, String website, String biography,
-			String confirmPassword) {
+			String confirmPassword, ProfileStatus profileStatus) {
 		super();
 		this.username = username;
 		this.name = name;
@@ -54,10 +47,11 @@ public class EditProfileDTO {
 		this.website = website;
 		this.biography = biography;
 		this.confirmPassword = confirmPassword;
+		this.profileStatus = profileStatus;
 	}
 
 	public EditProfileDTO(String username, String name, String surname, String email, String phoneNumber,
-			LocalDate birthDate, Gender gender, String website, String biography) {
+			LocalDate birthDate, Gender gender, String website, String biography,ProfileStatus profileStatus) {
 		super();
 		this.username = username;
 		this.name = name;
@@ -68,6 +62,7 @@ public class EditProfileDTO {
 		this.gender = gender;
 		this.website = website;
 		this.biography = biography;
+		this.profileStatus = profileStatus;
 	}
 
 	public EditProfileDTO(String password, String confirmPassword) {
@@ -163,6 +158,12 @@ public class EditProfileDTO {
 		this.confirmPassword = confirmPassword;
 	}
 
-	
-	
+	public ProfileStatus getProfileStatus() {
+		return profileStatus;
+	}
+
+	public void setProfileStatus(ProfileStatus profileStatus) {
+		this.profileStatus = profileStatus;
+	}
+
 }

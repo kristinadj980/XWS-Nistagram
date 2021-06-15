@@ -9,4 +9,5 @@ public interface IPostService {
 	
 	Post addNewPost(PostDTO postDTO);
 	List<PostDTO> findMyPosts(String username);
+	List<PostDTO> sortByDate(List<PostDTO> allPosts);
 }

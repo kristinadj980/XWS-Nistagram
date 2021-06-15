@@ -10,20 +10,15 @@
                     <b-icon icon="person" aria-hidden="true"></b-icon>Profile</b-button>
                 <b-button pill variant="outline-danger" class = "btn btn-lg space_style" v-on:click = "addPosts">
                     <b-icon icon="image" aria-hidden="true"></b-icon> Add post</b-button>
-                <b-input-group class=" serach_look">
-                    <b-form-input placeholder="search.."></b-form-input>
-                    <b-input-group-append>
-                    <b-button variant="outline-danger"><b-icon icon="search" aria-hidden="true"></b-icon></b-button>
-                    </b-input-group-append>
-                </b-input-group>
+                
             </span>
-                <span  style="float:right;margin:15px">
-                    <b-button pill variant="outline-danger" class = "btn btn-lg btn-light" style="margin-right:20px;" v-on:click = "findPosts">Log Out</b-button>
-                </span>
+            <span  style="float:right;margin:15px">
+                <b-button pill variant="outline-danger" class = "btn btn-lg btn-light" style="margin-right:20px;" v-on:click = "findPosts">Log Out</b-button>
+            </span>
         </div>
        <form>
             <h4 style="left: 10px;">Choose image </h4>
-            <input type="file" name="image" accept="image/png, image/jpeg" id="file" ref="file" v-on:change="handleFileUpload()">
+            <input type="file" name="image" accept="image/png, image/jpeg, video/mp4,video/x-m4v,video/*" id="file" ref="file" v-on:change="handleFileUpload()">
             <h4 for="textarea-large" 
             class="text-left" 
             style="margin-bottom:2%; 
@@ -103,10 +98,13 @@ export default {
         fileName:'',
         medias:[],
         posts:[],
+        selectedUser:[''],
+       
         }
     },
     mounted() {
          let token = localStorage.getItem('token').substring(1, localStorage.getItem('token').length-1);
+         
           this.axios.get('http://localhost:8083/profileMicroservice/api/profile/loggedUserInfo',{ 
              headers: {
                  'Authorization': 'Bearer ' + token,
@@ -169,10 +167,11 @@ export default {
                     });  
         },
         postPicture :function(){  
+
             const postInfo= {
                 description : this.description,
                 location : this.selectedLocation,
-                //tags : this.tags,
+                tags : this.tags,
                 username: this.user.username,
                 userId: this.user.id,
                 fileName : this.fileName,

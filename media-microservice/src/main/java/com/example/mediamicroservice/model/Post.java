@@ -1,8 +1,8 @@
 package com.example.mediamicroservice.model;
 
 import javax.persistence.*;
-import java.time.LocalDate;
-import java.util.Date;
+
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -12,7 +12,7 @@ public class Post{
 	   @GeneratedValue(strategy = GenerationType.IDENTITY)
 	   private Long id;
 
-	   @Column(name = "description", nullable = false)
+	   @Column(name = "description")
 	   private String description;
 
 	   @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
@@ -20,6 +20,12 @@ public class Post{
 	   joinColumns = @JoinColumn(name = "post_id", referencedColumnName = "id"),
 	   inverseJoinColumns = @JoinColumn(name = "likes_id", referencedColumnName = "id"))
 	   private List<ProfileMedia> likes;
+	   
+	   @Column(name = "numberOfLikes")
+	   private Integer numberOfLikes;
+	   
+	   @Column(name = "numberOfDislikes")
+	   private Integer numberOfDisikes;
 
 	   @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	   @JoinTable(name = "post_dislikes",
@@ -33,8 +39,8 @@ public class Post{
 		inverseJoinColumns = @JoinColumn(name = "comment_id", referencedColumnName = "id"))
 		private List<Comment> comments;
 
-	   @Column(name = "date", nullable = false)
-	   private LocalDate date;
+	   @Column(name = "date")
+	   private LocalDateTime  date;
 
 	   @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	   @JoinTable(name = "post_media",
@@ -59,11 +65,28 @@ public class Post{
 
 	
 	public Post(Long id, String description, List<ProfileMedia> likes, List<ProfileMedia> dislikes, List<Comment> comments,
-			LocalDate date, List<Media> medias, Location location, List<Tag> tags) {
+			LocalDateTime  date, List<Media> medias, Location location, List<Tag> tags) {
 		super();
 		this.id = id;
 		this.description = description;
 		this.likes = likes;
+		this.dislikes = dislikes;
+		this.comments = comments;
+		this.date = date;
+		this.medias = medias;
+		this.location = location;
+		this.tags = tags;
+	}
+
+	public Post(Long id, String description, List<ProfileMedia> likes, Integer numberOfLikes, Integer numberOfDisikes,
+			List<ProfileMedia> dislikes, List<Comment> comments, LocalDateTime date, List<Media> medias,
+			Location location, List<Tag> tags) {
+		super();
+		this.id = id;
+		this.description = description;
+		this.likes = likes;
+		this.numberOfLikes = numberOfLikes;
+		this.numberOfDisikes = numberOfDisikes;
 		this.dislikes = dislikes;
 		this.comments = comments;
 		this.date = date;
@@ -156,11 +179,11 @@ public class Post{
 	}
 
 
-	public LocalDate getDate() {
+	public LocalDateTime  getDate() {
 		return date;
 	}
 
-	public void setDate(LocalDate date) {
+	public void setDate(LocalDateTime  date) {
 		this.date = date;
 	}
 
@@ -187,6 +210,20 @@ public class Post{
 	public void setTag(List<Tag> tag) {
 		this.tags = tag;
 	}
-	   
-	   
+
+	public Integer getNumberOfLikes() {
+		return numberOfLikes;
+	}
+
+	public void setNumberOfLikes(Integer numberOfLikes) {
+		this.numberOfLikes = numberOfLikes;
+	}
+
+	public Integer getNumberOfDisikes() {
+		return numberOfDisikes;
+	}
+
+	public void setNumberOfDisikes(Integer numberOfDisikes) {
+		this.numberOfDisikes = numberOfDisikes;
+	}
 }

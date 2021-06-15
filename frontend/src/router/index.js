@@ -8,6 +8,8 @@ import Profile from '../views/Profile.vue'
 import AddingPosts from '../views/AddingPosts.vue'
 import AddingStories from '../views/AddingStories.vue'
 import ProfileInfo from '../views/ProfileInfo.vue'
+import GeneralProfiles from '../views/GeneralProfiles.vue'
+import FriendRequests from '../views/FriendRequests.vue'
 
 Vue.use(VueRouter)
 
@@ -59,6 +61,16 @@ const routes = [
     path: '/profileInfo',
     name: 'ProfileInfo',
     component: ProfileInfo
+  },
+  {
+    path: '/generalProfiles/:selectedUsername',
+    name: 'GeneralProfiles',
+    component: GeneralProfiles
+  },
+  {
+    path: '/friendRequests',
+    name: 'FriendRequests',
+    component: FriendRequests
   },
 ]
 

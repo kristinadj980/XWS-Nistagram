@@ -1,15 +1,13 @@
 package com.example.mediamicroservice.controller;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.example.mediamicroservice.dto.MediaDTO;
 import com.example.mediamicroservice.dto.PostDTO;
+import com.example.mediamicroservice.dto.LikePostDTO;
 
 import com.example.mediamicroservice.model.Post;
 import com.example.mediamicroservice.service.implService.PostService;
@@ -71,10 +70,55 @@ public class PostController {
 
 	}
 	
+	@PostMapping("/likePost")
+	public int likePost(@RequestBody LikePostDTO likePostDTO) {
+        int likes = postService.likeThisPost(likePostDTO);
+        
+		return likes;
+		
+	}
+	
+	@PostMapping("/dislikePost")
+	public int dislikePost(@RequestBody LikePostDTO likePostDTO) {
+        int dislikes = postService.dislikeThisPost(likePostDTO);
+        
+		return dislikes;
+		
+	}
+	
 	@GetMapping("/proba")
 	public String getProba() {
 		System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@");
 		return "uspesno";
 	}
 	
+	
+	@PostMapping("/getFriendsPosts")
+	public ResponseEntity<List<PostDTO>> getFriendsPosts(@RequestBody List<PostDTO> postDTOs) {
+		System.out.println("USPELOOOOOOOOOOOOOOOO");
+		try {
+			List<PostDTO> posts = new ArrayList<PostDTO>();
+			System.out.println("USPELOOOOOOOOOOOOOOOO");
+			for(PostDTO p:postDTOs) {
+				System.out.println("USPELOOOOOOOOOOOOOOOO");
+				List<PostDTO> friendPosts = new ArrayList<PostDTO>();
+				System.out.println("USPELOOOOOOOOOOOOOOOO"+p.getFollowing());
+				friendPosts = postService.findMyPosts(p.getFollowing());
+				System.out.println("USPELOOOOOOOOOOOOOOOO");
+				for(PostDTO pf:friendPosts) {
+					System.out.println("USPELOOOOOOOOOOOOOOOO");
+					posts.add(pf);
+				}
+				
+			}
+			System.out.println("USPELOOOOOOOOOOOOOOOO");
+			posts = postService.sortByDate(posts);
+			return new ResponseEntity(posts, HttpStatus.OK); 
+		}catch(Exception e) {
+			System.out.println("USPELOOOOOOOOOOOOOOOO" + e.getMessage());
+			e.printStackTrace();
+			return new ResponseEntity(HttpStatus.BAD_REQUEST);
+		}
+		
+	}
 }
