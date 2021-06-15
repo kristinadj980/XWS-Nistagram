@@ -11,6 +11,7 @@ public class PostDTO {
 	private String username;
 	private Long userId;
 	private String fileName;
+	private List<String> fileNames;
 	private LocalDateTime date;
 	private LocationDTO locationDTO;
     private List<byte[]> imageBytes;
@@ -26,6 +27,30 @@ public class PostDTO {
 
 	
 	
+	public PostDTO(String description, String location, List<TagDTO> tags, String username, Long userId,
+			String fileName, List<String> fileNames, LocalDateTime date, LocationDTO locationDTO,
+			List<byte[]> imageBytes, String following, int numberOfLikes, int numberOfDislikes, int numberOfComments,
+			Long id) {
+		super();
+		this.description = description;
+		this.location = location;
+		this.tags = tags;
+		this.username = username;
+		this.userId = userId;
+		this.fileName = fileName;
+		this.fileNames = fileNames;
+		this.date = date;
+		this.locationDTO = locationDTO;
+		this.imageBytes = imageBytes;
+		this.following = following;
+		this.numberOfLikes = numberOfLikes;
+		this.numberOfDislikes = numberOfDislikes;
+		this.numberOfComments = numberOfComments;
+		this.id = id;
+	}
+
+
+
 	public PostDTO(String description, String location, List<TagDTO> tags, String username, Long userId,
 			String fileName, LocationDTO locationDTO, List<byte[]> imageBytes) {
 		super();
@@ -120,6 +145,18 @@ public class PostDTO {
 	public void setUsername(String username) {
 		this.username = username;
 	}
+
+	public List<String> getFileNames() {
+		return fileNames;
+	}
+
+
+
+	public void setFileNames(List<String> fileNames) {
+		this.fileNames = fileNames;
+	}
+
+
 
 	public Long getUserId() {
 		return userId;

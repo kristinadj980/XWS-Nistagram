@@ -65,10 +65,13 @@ public class PostService implements IPostService {
 			tags.add(tag);
 		}
         post.setTags(tags);
-        Media media = new Media();
-        media.setFileName(postDTO.getFileName());
         List<Media> medias = new ArrayList<Media>();
-        medias.add(media);
+        for(String s:postDTO.getFileNames()) {
+        	System.out.println(s);
+        	Media media = new Media();
+        	media.setFileName(s);
+        	medias.add(media);
+        }
         post.setMedia(medias);
         post.setDate(LocalDateTime.now());
         profileMediaService.addPostToProfile(postDTO, post);
