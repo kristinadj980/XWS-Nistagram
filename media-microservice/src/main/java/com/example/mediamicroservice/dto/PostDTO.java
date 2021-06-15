@@ -18,6 +18,7 @@ public class PostDTO {
     private int numberOfLikes;
     private int numberOfDislikes;
     private int numberOfComments;
+    private Long id;
 	
 	public PostDTO() {
 		super();
@@ -60,7 +61,7 @@ public class PostDTO {
 	}
 
 	public PostDTO(String description, String username, String fileName, LocationDTO locationDTO, LocalDateTime date,int numberOfLikes,int numberOfDislikes,
-			int numberOfComments,List<TagDTO> tags) {
+			int numberOfComments,List<TagDTO> tags,Long id) {
 		super();
 		this.description = description;
 		this.username = username;
@@ -71,6 +72,7 @@ public class PostDTO {
 		this.numberOfDislikes = numberOfDislikes;
 		this.numberOfComments = numberOfComments;
 		this.tags = tags;
+		this.id = id;
 	}
 	
 	public PostDTO(String description, String username, String fileName, LocationDTO locationDTO, List<byte[]> imageBytes) {
@@ -190,5 +192,14 @@ public class PostDTO {
 	public void setNumberOfComments(int numberOfComments) {
 		this.numberOfComments = numberOfComments;
 	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+	
 
 }
