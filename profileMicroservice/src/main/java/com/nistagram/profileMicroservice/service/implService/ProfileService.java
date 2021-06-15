@@ -189,4 +189,22 @@ public class ProfileService implements IProfileService {
 		}
 		return followingDTO;
 	}
+
+	@Override
+	public void addCloseFriend(String username) {
+		// TODO Auto-generated method stub
+		System.out.println(username);
+		System.out.println("U SERVISU SAM");
+		Authentication currentUser = SecurityContextHolder.getContext().getAuthentication();
+		Person person = (Person) currentUser.getPrincipal();
+		Profile logedUser = findById(person.getId());
+		System.out.println(logedUser.getName());
+		
+		Profile closeFriend=findByUsername(username.substring(0, username.length()-1));
+		System.out.println(closeFriend.getName());
+		
+		List<Profile> closedFriends=logedUser.getCloseFriends();
+		closedFriends.add(closeFriend);
+		profileRepository.save(logedUser);
+	}
 }

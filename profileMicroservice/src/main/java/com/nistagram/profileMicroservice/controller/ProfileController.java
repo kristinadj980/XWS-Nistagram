@@ -164,7 +164,7 @@ public class ProfileController {
 	}
 	
 	@GetMapping("/getFollowers/{username}")
-	//@PreAuthorize("hasRole('REGISTRED_USER')")  
+	@PreAuthorize("hasRole('REGISTRED_USER')")  
 	public ResponseEntity<List<FollowingDTO>> getFollowers(@PathVariable String username) {
 		System.out.println("AAAAAAAAAAAAAAAAAAAAAAA");
 		try {
@@ -175,4 +175,18 @@ public class ProfileController {
 		}
 		
 	}
+	
+	@PostMapping("/addCloseFriend")
+	@PreAuthorize("hasRole('REGISTRED_USER')")
+	public ResponseEntity addCloseFriend(@RequestBody String username) {
+		System.out.println("KONTROLER");
+		try {
+			profileService.addCloseFriend(username);
+			System.out.println("U TRY SAM");
+			return new ResponseEntity<>(HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+	}
+	
 }

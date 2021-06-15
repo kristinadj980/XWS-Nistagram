@@ -22,4 +22,5 @@ public interface IProfileService {
 	List<FollowingDTO> getFollowingUsers();
 	List<FollowingDTO> getFollowers(String username);
 	FriendRequestStatus getFriendStatus(String username);
+	void addCloseFriend(String username);
 }

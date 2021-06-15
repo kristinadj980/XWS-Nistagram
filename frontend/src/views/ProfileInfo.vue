@@ -59,8 +59,8 @@
                     <b-card class="post_look" v-for="friend in friends" v-bind:key="friend.following">
                         <b-row >
                         <h4 align="left"><b-icon icon="person-circle" aria-hidden="true"></b-icon>  {{friend.following}}</h4>
-                        <b-button  class="btn btn-info btn-lg space_style"  style="background-color:#f08080;" v-on:click = "addToCloseFriends"  >Add</b-button>
-                        <b-button  class="btn btn-info btn-lg space_style"  style="background-color:#f08080;" v-on:click = "deleteFromCloseFriends"  >Delete</b-button>
+                        <b-button  align="right" class="btn btn-info btn-lg space_style" size="sm" style="background-color:#f08080;"  @click="addCloseFriend($event,friend)"  >Add</b-button>
+                        <b-button  align="right" class="btn btn-info btn-lg space_style" size="sm" style="background-color:#f08080;" @click="addCloseFriend($event,friend)"  >Delete</b-button>
                         </b-row>
                     </b-card>
                 </b-tab>
@@ -386,7 +386,36 @@ export default {
                             console.log(res);
                     });
                     
-        }
+        },
+        addCloseFriend: async function(event,friend){
+            console.log(friend.following);
+             let token = localStorage.getItem('token').substring(1, localStorage.getItem('token').length-1);
+            this.axios.get('http://localhost:8083/profileMicroservice/api/profile/account',{ 
+             headers: {
+                 'Authorization': 'Bearer ' + token,
+             }
+         }).then(response => {
+               this.profile = response.data;
+               console.log(this.profile.username);
+               //this.getMyStories(response.data);
+              // this.getFollowers(response.data);
+         }).catch(res => {
+                       alert("Error");
+                        console.log(res);
+                 });
+            this.axios.post('http://localhost:8083/profileMicroservice/api/profile/addCloseFriend',friend.following,{ 
+                headers: {
+                    'Authorization': 'Bearer ' + token,
+                }
+                }).then(response => {
+                    alert("Close friend added!");
+                    console.log(response);                
+                }).catch(res => {
+                    alert("GRESKA");
+                    console.log(res.response.data.message);
+
+                });
+        },
     }
 }
 </script>
