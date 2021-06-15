@@ -20,5 +20,6 @@ public interface IProfileService {
 	List<Profile> findAll();
 	void updateProfileStatus(String username);
 	List<FollowingDTO> getFollowingUsers();
+	List<FollowingDTO> getFollowers(String username);
 	FriendRequestStatus getFriendStatus(String username);
 }

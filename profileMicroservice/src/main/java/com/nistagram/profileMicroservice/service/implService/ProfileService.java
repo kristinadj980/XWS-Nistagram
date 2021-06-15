@@ -170,4 +170,23 @@ public class ProfileService implements IProfileService {
 			
 		return status;
 	}
+
+	@Override
+	public List<FollowingDTO> getFollowers(String username) {
+		System.out.println(username);
+		//Authentication currentUser = SecurityContextHolder.getContext().getAuthentication();
+		//Person person = (Person) currentUser.getPrincipal();
+		Profile user = findByUsername(username);
+		System.out.println(user.getUsername());
+		System.out.println("**********************");
+		List<Profile> followers = user.getFollowers();
+		List<FollowingDTO> followingDTO = new ArrayList<FollowingDTO>();
+		
+		for(Profile p: followers) {
+			followingDTO.add(new FollowingDTO(p.getUsername()));
+		
+			System.out.println(p.getUsername());
+		}
+		return followingDTO;
+	}
 }

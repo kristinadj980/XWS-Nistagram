@@ -42,6 +42,31 @@
                 </b-tab>
             </b-tabs>
          </b-modal>
+
+        <!--BLISKI PRIJATELJI-->
+         <b-button  class="btn btn-info btn-lg space_style"  style="background-color:#f08080;margin-left:-1300px;" v-on:click = "getFollowers"  v-b-modal.modal-4>Close friends</b-button>
+                  <b-modal ref="modal-ref4" id="modal-4" title="Close friends" hide-footer>
+                                <b-tabs 
+            style="margin-top:70px;" 
+            align="center" 
+            active-nav-item-class="font-weight-bold text-uppercase text-danger"
+            active-tab-class="font-weight-bold"
+            content-class="mt-4">
+                <b-tab active>
+                <template #title>
+                   <b-icon icon="grid3x3-gap" aria-hidden="true"></b-icon><strong> Close friends</strong>
+                </template>
+                    <b-card class="post_look" v-for="friend in friends" v-bind:key="friend.following">
+                        <b-row >
+                        <h4 align="left"><b-icon icon="person-circle" aria-hidden="true"></b-icon>  {{friend.following}}</h4>
+                        <b-button  class="btn btn-info btn-lg space_style"  style="background-color:#f08080;" v-on:click = "addToCloseFriends"  >Add</b-button>
+                        <b-button  class="btn btn-info btn-lg space_style"  style="background-color:#f08080;" v-on:click = "deleteFromCloseFriends"  >Delete</b-button>
+                        </b-row>
+                    </b-card>
+                </b-tab>
+            </b-tabs>
+         </b-modal>       
+                <!-- INFO-->
                 <div class="card"  >
                 <div class="profile-img">
                    <!--   <img class="img-responsive" src="@/assets/user.png" style=" height:150px;" width="100%" /> -->
@@ -195,6 +220,7 @@ export default {
         selectedUser:[''],
         profileStatus: "",
         stories: [],
+        friends: [],
         }
     },
      mounted(){
@@ -206,6 +232,7 @@ export default {
          }).then(response => {
                this.profile = response.data;
                this.getMyStories(response.data);
+               //this.getFollowers(response.data);
          }).catch(res => {
                        alert("Error");
                         console.log(res);
@@ -237,6 +264,7 @@ export default {
          cancelPassword() {
             this.$refs['modal-ref2'].hide();
         },
+       
          update : function(){
             let token = localStorage.getItem('token').substring(1, localStorage.getItem('token').length-1);
            
@@ -326,6 +354,35 @@ export default {
                 } 
             }).catch(res => {
                         alert("Error");
+                            console.log(res);
+                    });
+                    
+        },
+        getFollowers: function() {
+            let token = localStorage.getItem('token').substring(1, localStorage.getItem('token').length-1);
+            this.axios.get('http://localhost:8083/profileMicroservice/api/profile/account',{ 
+             headers: {
+                 'Authorization': 'Bearer ' + token,
+             }
+         }).then(response => {
+               this.profile = response.data;
+               console.log(this.profile.username);
+               //this.getMyStories(response.data);
+              // this.getFollowers(response.data);
+         }).catch(res => {
+                       alert("Error");
+                        console.log(res);
+                 });
+            console.log(this.profile.username);
+            this.axios.get('http://localhost:8083/profileMicroservice/api/profile/getFollowers/'+this.profile.username,{ 
+                headers: {
+                    'Authorization': 'Bearer ' + token,
+                }})
+            .then(response => {
+                console.log(this.profile.username)
+                this.friends= response.data;
+            }).catch(res => {
+                        alert("Error"+this.profile.username);
                             console.log(res);
                     });
                     

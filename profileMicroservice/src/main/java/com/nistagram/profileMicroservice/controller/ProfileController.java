@@ -153,8 +153,22 @@ public class ProfileController {
 	@GetMapping("/getFollowingUsers")
 	@PreAuthorize("hasRole('REGISTRED_USER')")  
 	public ResponseEntity<List<FollowingDTO>> getFollowingUsers() {
+		
 		try {
 			return new ResponseEntity<>(profileService.getFollowingUsers(), HttpStatus.OK);
+			
+		} catch (Exception e) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+		
+	}
+	
+	@GetMapping("/getFollowers/{username}")
+	//@PreAuthorize("hasRole('REGISTRED_USER')")  
+	public ResponseEntity<List<FollowingDTO>> getFollowers(@PathVariable String username) {
+		System.out.println("AAAAAAAAAAAAAAAAAAAAAAA");
+		try {
+			return new ResponseEntity<>(profileService.getFollowers(username), HttpStatus.OK);
 			
 		} catch (Exception e) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
