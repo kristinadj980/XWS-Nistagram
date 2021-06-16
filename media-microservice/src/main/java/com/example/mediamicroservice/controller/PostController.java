@@ -46,12 +46,15 @@ public class PostController {
 	private static String uploadDir = "user-photos";
 
 	@PostMapping("/saveImage")
-    public String saveImage(@RequestParam("file") MultipartFile multipartFile ) throws IOException {
-		
-        String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename().replaceAll("\\s", "")); 
-        uploadDir = "user-photos";
-        MediaUpload.saveFile(uploadDir, fileName, multipartFile);
-        return fileName;
+    public List<String> saveImage(@RequestParam("file") List<MultipartFile> multipartFiles ) throws IOException {
+		List<String> fileNames = new ArrayList<String>();
+		for(MultipartFile multipartFile:multipartFiles) {
+	        String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename().replaceAll("\\s", "")); 
+	        fileNames.add(fileName);
+	        uploadDir = "user-photos";
+	        MediaUpload.saveFile(uploadDir, fileName, multipartFile);
+		}
+        return fileNames;
     }
 	
 	@PostMapping("/addNewPost")

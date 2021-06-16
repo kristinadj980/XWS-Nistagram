@@ -75,8 +75,12 @@
                         <h4 align="left"><b-icon icon="person-circle" aria-hidden="true"></b-icon>  {{post.username}}</h4>
                         </b-row>
                         <h6 align="left">{{post.locationDTO.city}},{{post.locationDTO.street}},{{post.locationDTO.objectName}},{{post.locationDTO.country}}</h6>
-                        <b-img v-if="!post.fileName.includes(videoText)" thumbnail  v-bind:src="post.imageBytes" alt="Image 1"></b-img>
-                        <video v-if="post.fileName.includes(videoText)" autoplay controls v-bind:src="post.imageBytes" width="400" height="400" style="display:block; margin-left:auto; margin-right:auto"></video>
+                         <!--POKUSAJ NEKI-->
+                        <div v-for="(image, index) in post.images" v-bind:key="image.imageBytes">
+                            <b-img v-if="!post.fileNames[index].includes(videoText)" thumbnail  v-bind:src="image.imageBytes" alt="Image 1"></b-img>
+                             <video v-if="post.fileNames[index].includes(videoText)" autoplay controls v-bind:src="image.imageBytes" width="400" height="400" style="display:block; margin-left:auto; margin-right:auto"></video>
+                        </div>
+                        <!--POKUSAJ NEKI-->
                         <h4 align="left">{{post.description}}</h4>
                         <h5 align="left"><span v-for="(tag,t) in post.tags" :key="t">
                                         #{{tag.name}}
@@ -143,6 +147,7 @@ export default {
         usersWhoCommented:[],
         answer:'',
         commentId:'',
+        postId:''
         }
     },
     async mounted(){
@@ -181,12 +186,15 @@ export default {
             .then(response => {
                 this.posts = response.data;
                 let video = "mp4";
-                for(let i=0; i< response.data.length; i++){
-                     if(!this.posts[i].fileName.includes(video)){
-                        this.posts[i].imageBytes = 'data:image/jpeg;base64,' + this.posts[i].imageBytes; 
-                    }else{
-                        this.posts[i].imageBytes = 'data:video/mp4;base64,' + this.posts[i].imageBytes;     
-                    }            
+                for(let i=0; i< this.posts.length; i++){
+                    for(let j=0; j< this.posts[i].fileNames.length; j++){
+                        if(!this.posts[i].fileNames[j].includes(video)){
+                            console.log("usao je u if");
+                            this.posts[i].images[j].imageBytes = 'data:image/jpeg;base64,' + this.posts[i].images[j].imageBytes;
+                        }else{
+                            this.posts[i].images[j].imageBytes = 'data:video/mp4;base64,' + this.posts[i].images[j].imageBytes;     
+                        }      
+                    }      
                 } 
             }).catch(res => {
                         alert("Profile is private");
@@ -214,7 +222,8 @@ export default {
             const postInfo = {
                 usernameTo : post.username,
                 usernameFrom : this.loggeduser.username,
-                fileName : post.fileName,
+                fileNames : post.fileNames,
+                postId: post.id,
             }
             this.axios.post('http://localhost:8083/mediaMicroservice/post/likePost',postInfo,{ 
                 }).then(response => {
@@ -234,7 +243,8 @@ export default {
             const postInfo = {
                 usernameTo : post.username,
                 usernameFrom : this.loggeduser.username,
-                fileName : post.fileName,
+                fileNames : post.fileNames,
+                postId: post.id,
             }
             this.axios.post('http://localhost:8083/mediaMicroservice/post/dislikePost',postInfo,{ 
                 }).then(response => {
@@ -254,8 +264,9 @@ export default {
             const postInfo = {
                 usernameTo : post.username,
                 usernameFrom : this.loggeduser.username,
-                fileName : post.fileName,
+                fileNames : post.fileNames,
                 comment : this.comment,
+                postId: post.id,
             }
             this.axios.post('http://localhost:8083/mediaMicroservice/post/commentPost',postInfo,{ 
                 }).then(response => {
