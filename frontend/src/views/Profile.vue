@@ -121,11 +121,9 @@
                         </b-row>
                         <h6 align="left">{{post.locationDTO.city}},{{post.locationDTO.street}},{{post.locationDTO.objectName}},{{post.locationDTO.country}}</h6>
                         <!--POKUSAJ NEKI-->
-                        <div v-for="image in post.images" v-bind:key="image.imageBytes">
-                            <div v-for="fileName in post.fileNames" v-bind:key="fileName"> 
-                            <b-img v-if="!fileName.includes(videoText)" thumbnail  v-bind:src="image.imageBytes" alt="Image 1"></b-img>
-                             <video v-if="fileName.includes(videoText)" autoplay controls v-bind:src="image.imageBytes" width="400" height="400" style="display:block; margin-left:auto; margin-right:auto"></video>
-                            </div>
+                        <div v-for="(image, index) in post.images" v-bind:key="image.imageBytes">
+                            <b-img v-if="!post.fileNames[index].includes(videoText)" thumbnail  v-bind:src="image.imageBytes" alt="Image 1"></b-img>
+                             <video v-if="post.fileNames[index].includes(videoText)" autoplay controls v-bind:src="image.imageBytes" width="400" height="400" style="display:block; margin-left:auto; margin-right:auto"></video>
                         </div>
                         <!--POKUSAJ NEKI-->
                        <h4 align="left">{{post.description}}</h4>
@@ -158,11 +156,9 @@
                         </b-row>
                         <h6 align="left">{{post.locationDTO.city}},{{post.locationDTO.street}},{{post.locationDTO.objectName}},{{post.locationDTO.country}}</h6>
                         <!--POKUSAJ NEKI-->
-                        <div v-for="image in post.images" v-bind:key="image.imageBytes">
-                            <div v-for="fileName in post.fileNames" v-bind:key="fileName"> 
-                            <b-img v-if="!fileName.includes(videoText)" thumbnail  v-bind:src="image.imageBytes" alt="Image 1"></b-img>
-                             <video v-if="fileName.includes(videoText)" autoplay controls v-bind:src="image.imageBytes" width="400" height="400" style="display:block; margin-left:auto; margin-right:auto"></video>
-                            </div>
+                        <div v-for="(image, index) in post.images" v-bind:key="image.imageBytes">
+                            <b-img v-if="!post.fileNames[index].includes(videoText)" thumbnail  v-bind:src="image.imageBytes" alt="Image 1"></b-img>
+                            <video v-if="post.fileNames[index].includes(videoText)" autoplay controls v-bind:src="image.imageBytes" width="400" height="400" style="display:block; margin-left:auto; margin-right:auto"></video>
                         </div>
                         <!--POKUSAJ NEKI-->
                         <h4 align="left">{{post.description}}</h4>
@@ -185,11 +181,10 @@
                         </b-row>
                         <h6 align="left">{{post.locationDTO.city}},{{post.locationDTO.street}},{{post.locationDTO.objectName}},{{post.locationDTO.country}}</h6>
                         <!--POKUSAJ NEKI-->
-                        <div v-for="image in post.images" v-bind:key="image.imageBytes">
-                            <div v-for="fileName in post.fileNames" v-bind:key="fileName"> 
-                            <b-img v-if="!fileName.includes(videoText)" thumbnail  v-bind:src="image.imageBytes" alt="Image 1"></b-img>
-                             <video v-if="fileName.includes(videoText)" autoplay controls v-bind:src="image.imageBytes" width="400" height="400" style="display:block; margin-left:auto; margin-right:auto"></video>
-                            </div>
+                        <div v-for="(image, index) in post.images" v-bind:key="image.imageBytes">
+                            <b-img v-if="!post.fileNames[index].includes(videoText)" thumbnail  v-bind:src="image.imageBytes" alt="Image 1"></b-img>
+                            <video v-if="post.fileNames[index].includes(videoText)" autoplay controls v-bind:src="image.imageBytes" width="400" height="400" style="display:block; margin-left:auto; margin-right:auto"></video>
+
                         </div>
                         <!--POKUSAJ NEKI-->
                         <h4 align="left">{{post.description}}</h4>
