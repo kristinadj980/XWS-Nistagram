@@ -120,11 +120,20 @@
                         <h4 align="left"><b-icon icon="person-circle" aria-hidden="true"></b-icon>  {{post.username}}</h4>
                         </b-row>
                         <h6 align="left">{{post.locationDTO.city}},{{post.locationDTO.street}},{{post.locationDTO.objectName}},{{post.locationDTO.country}}</h6>
-                        <b-img v-if="!post.fileName.includes(videoText)" thumbnail  v-bind:src="post.imageBytes" alt="Image 1"></b-img>
-                        <video v-if="post.fileName.includes(videoText)" autoplay controls v-bind:src="post.imageBytes" width="400" height="400" style="display:block; margin-left:auto; margin-right:auto"></video>
-                        <h4 align="left">{{post.description}}</h4>
-                        <h5 align="left"><b-icon icon="hand-thumbs-up" aria-hidden="true"></b-icon> {{post.numberOfLikes}} likes <b-icon icon="hand-thumbs-down" aria-hidden="true"></b-icon> {{post.numberOfDislikes}} dislikes<span style="margin-left:430px;"></span> <b-icon icon="bookmark" aria-hidden="true" align="right"></b-icon></h5>
-                        <h4 align="left"><b-icon icon="chat-square" aria-hidden="true"></b-icon>  comments</h4>
+                        <!--POKUSAJ NEKI-->
+                        <div v-for="(image, index) in post.images" v-bind:key="image.imageBytes">
+                            <b-img v-if="!post.fileNames[index].includes(videoText)" thumbnail  v-bind:src="image.imageBytes" alt="Image 1"></b-img>
+                             <video v-if="post.fileNames[index].includes(videoText)" autoplay controls v-bind:src="image.imageBytes" width="400" height="400" style="display:block; margin-left:auto; margin-right:auto"></video>
+                        </div>
+                        <!--POKUSAJ NEKI-->
+                       <h4 align="left">{{post.description}}</h4>
+                        <h5 align="left"><span v-for="(tag,t) in post.tags" :key="t">
+                                        #{{tag.name}}
+                                    </span>
+                        </h5>
+                        <h5 align="left"><b-icon icon="hand-thumbs-up" aria-hidden="true" @click="getLikes($event,post)"></b-icon > {{post.numberOfLikes}} likes <b-icon icon="hand-thumbs-down" aria-hidden="true"  @click="getDislikes($event,post)"></b-icon> {{post.numberOfDislikes}} dislikes<span style="margin-left:430px;"></span>
+                         <b-icon icon="bookmark" aria-hidden="true" align="right" @click="saveAsFavourite($event,post)"></b-icon></h5>
+                        <h4 align="left"><b-icon icon="chat-square" aria-hidden="true"  @click="getComments($event,post)"></b-icon> {{post.numberOfComments}}  comments</h4>
                     </b-card>
                 </b-tab>
 
@@ -132,11 +141,160 @@
                 <template #title>
                    <b-icon icon="emoji-heart-eyes" aria-hidden="true"></b-icon><strong>   favourites</strong>
                 </template>
+
+
+                <b-tabs card>
+                    <!-- ovaj tab je za sve favourites postove-->
+                    <b-tab>
+                    <template #title>
+                        <b-icon icon="emoji-heart-eyes" aria-hidden="true"></b-icon><strong>   favourites</strong>
+                    </template>
+                     <b-card class="post_look" v-for="post in favouritePosts" v-bind:key="post.fileName">
+                        <b-row >
+                        <h4 align="left"><b-icon icon="person-circle" aria-hidden="true"></b-icon>  {{post.username}}</h4>
+                         <b-icon font-scale="2" style="margin-top:-38px; margin-left:288px;" icon="plus-circle" aria-hidden="true" @click="addToCollection($event,post)"></b-icon>
+                        </b-row>
+                        <h6 align="left">{{post.locationDTO.city}},{{post.locationDTO.street}},{{post.locationDTO.objectName}},{{post.locationDTO.country}}</h6>
+                        <!--POKUSAJ NEKI-->
+                        <div v-for="(image, index) in post.images" v-bind:key="image.imageBytes">
+                            <b-img v-if="!post.fileNames[index].includes(videoText)" thumbnail  v-bind:src="image.imageBytes" alt="Image 1"></b-img>
+                            <video v-if="post.fileNames[index].includes(videoText)" autoplay controls v-bind:src="image.imageBytes" width="400" height="400" style="display:block; margin-left:auto; margin-right:auto"></video>
+                        </div>
+                        <!--POKUSAJ NEKI-->
+                        <h4 align="left">{{post.description}}</h4>
+                        <h5 align="left"><span v-for="(tag,t) in post.tags" :key="t">
+                                        #{{tag.name}}
+                                    </span>
+                        </h5>
+                        <h5 align="left"><b-icon icon="hand-thumbs-up" aria-hidden="true" @click="getLikes($event,post)"></b-icon > {{post.numberOfLikes}} likes <b-icon icon="hand-thumbs-down" aria-hidden="true"  @click="getDislikes($event,post)"></b-icon> {{post.numberOfDislikes}} dislikes<span style="margin-left:430px;"></span>
+                         <b-icon icon="bookmark" aria-hidden="true" align="right" @click="saveAsFavourite($event,post)"></b-icon></h5>
+                        <h4 align="left"><b-icon icon="chat-square" aria-hidden="true"  @click="getComments($event,post)"></b-icon> {{post.numberOfComments}}  comments</h4>
+                    </b-card>
                     
+                </b-tab>
+                 <!-- ovo su dodatni tabovi-->
+                <b-tab v-for="collection in collections" :key="collection.name" :title="collection.name">
+                    <b-card class="post_look" v-for="post in collection.posts" v-bind:key="post.fileName">
+                        <b-row >
+                        <h4 align="left"><b-icon icon="person-circle" aria-hidden="true"></b-icon>  {{post.username}}</h4>
+                        <b-icon font-scale="2" style="margin-top:-38px; margin-left:288px;" icon="plus-circle" aria-hidden="true" @click="addToCollection($event,post)"></b-icon>
+                        </b-row>
+                        <h6 align="left">{{post.locationDTO.city}},{{post.locationDTO.street}},{{post.locationDTO.objectName}},{{post.locationDTO.country}}</h6>
+                        <!--POKUSAJ NEKI-->
+                        <div v-for="(image, index) in post.images" v-bind:key="image.imageBytes">
+                            <b-img v-if="!post.fileNames[index].includes(videoText)" thumbnail  v-bind:src="image.imageBytes" alt="Image 1"></b-img>
+                            <video v-if="post.fileNames[index].includes(videoText)" autoplay controls v-bind:src="image.imageBytes" width="400" height="400" style="display:block; margin-left:auto; margin-right:auto"></video>
+
+                        </div>
+                        <!--POKUSAJ NEKI-->
+                        <h4 align="left">{{post.description}}</h4>
+                        <h5 align="left"><span v-for="(tag,t) in post.tags" :key="t">
+                                        #{{tag.name}}
+                                    </span>
+                        </h5>
+                        <h5 align="left"><b-icon icon="hand-thumbs-up" aria-hidden="true" @click="getLikes($event,post)"></b-icon > {{post.numberOfLikes}} likes <b-icon icon="hand-thumbs-down" aria-hidden="true"  @click="getDislikes($event,post)"></b-icon> {{post.numberOfDislikes}} dislikes<span style="margin-left:430px;"></span>
+                         <b-icon icon="bookmark" aria-hidden="true" align="right" @click="saveAsFavourite($event,post)"></b-icon></h5>
+                        <h4 align="left"><b-icon icon="chat-square" aria-hidden="true"  @click="getComments($event,post)"></b-icon> {{post.numberOfComments}}  comments</h4>
+                    </b-card>
+                </b-tab>
+                </b-tabs>
                 </b-tab>
             </b-tabs>
             
         </b-card>
+
+        <div> 
+          <b-modal ref="modal" hide-footer scrollable title="Profiles who liked your photo" size="lg" modal-class="b-modal">
+               <div modal-class="modal-dialog" role="document">
+                    <div class="modal-content" style="background-color:#e4e4e4;">
+                         <div v-for="user in usersWhoLiked" v-bind:key="user" class="modal-body">
+                             
+                             <div class="row">
+                                <div class=" form-group col">
+                                <label > Username : {{user.username}}</label>
+                            </div>
+                             </div>
+                                                       
+                         </div>                
+                    </div>
+               </div>
+          </b-modal>
+       </div>
+        <div> 
+          <b-modal ref="modal2" hide-footer scrollable title="Profiles who disliked your photo" size="lg" modal-class="b-modal">
+               <div modal-class="modal-dialog" role="document">
+                    <div class="modal-content" style="background-color:#e4e4e4; ">
+                         <div v-for="user in usersWhoDisliked" v-bind:key="user" class="modal-body">
+                             
+                             <div class="row">
+                                <div class=" form-group col">
+                                <label > Username : {{user.username}}</label>
+                            </div>
+                             </div>
+                                                       
+                         </div>                
+                    </div>
+               </div>
+          </b-modal>
+       </div>
+        <div> 
+          <b-modal ref="modal3" hide-footer scrollable title="Profiles who commented your photo" size="lg" modal-class="b-modal">
+               <div modal-class="modal-dialog" role="document">
+                    <div class="modal-content" style="background-color:#e4e4e4; ">
+                         <div v-for="user in usersWhoCommented" v-bind:key="user.username" class="modal-body">
+                             
+                            <div class="row">
+                                <div class=" form-group col">
+                                     <label>Profile: {{user.usernameFrom}} </label><span style="margin-left:30px;" ></span>
+                                     <label > Comment : {{user.comment}}</label><span style="margin-left:30px;" ></span>
+                                     <label > Answer : {{user.answer}}</label>
+                                </div>
+                             </div><span style="margin-left:610px;" ></span>
+                             <b-button style="margin-left: 30px;" pill variant="outline-danger" class = "btn btn-lg space_style" @click="sendAnswer($event,user)">Replay</b-button> 
+                             </div>
+                                            
+                    </div>                
+                </div>
+          </b-modal>
+       </div>
+       <div> 
+          <b-modal ref="modal4" hide-footer scrollable title="Profiles who commented your photo" size="lg" modal-class="b-modal">
+               <div modal-class="modal-dialog" role="document">
+                    <div class="modal-content" style="background-color:#e4e4e4; ">
+                         <div class="modal-body">
+                            <div class="row">
+                                <div class=" form-group col">  
+                                    <input type="text" class="form-control" v-model="answer" placeholder="Answer...">
+                                </div>
+                             </div>
+                            <b-button style="margin-top: 10px; margin-left:640px; " pill variant="outline-danger" class = "btn btn-lg space_style" @click="answerOnComment">Replay</b-button> 
+                             </div>
+                                            
+                    </div>                
+                </div>
+          </b-modal>
+       </div>
+       <div> 
+          <b-modal ref="modal5" hide-footer scrollable title="Choose or create new collection" size="lg" modal-class="b-modal">
+               <div modal-class="modal-dialog" role="document">
+                    <div class="modal-content" style="background-color:#e4e4e4; ">
+                         <div class="modal-body">
+                            <div class="row">
+                            <select style="width:250px;" v-model="selectedCollectionID">
+                            <option v-for="collection in collections" v-bind:value="collection.id" v-bind:key="collection.id" v-on:click ="addSelected($event, collection.id)">
+                            {{collection.name}}</option> 
+                            </select>
+                                <div class=" form-group col">  
+                                    <input type="text" class="form-control" v-model="collectionName" placeholder="Enter collection name...">
+                                </div>
+                             </div>
+                            <b-button style="margin-top: 10px; margin-left:640px; " pill variant="outline-danger" class = "btn btn-lg space_style" @click="addPostToCollection">Create</b-button> 
+                             </div>
+                                            
+                    </div>                
+                </div>
+          </b-modal>
+       </div>
     </div>
 </template>
 
@@ -164,7 +322,20 @@ export default {
         videoText: "mp4",
         numberOfLikes:0,
         numberOfDislikes:0,
-
+        usersWhoLiked:[],
+        usersWhoDisliked:[],
+        tags:[],
+        usersWhoCommented:[],
+        answer:'',
+        commentId:'',
+        favouritePosts:[],
+        fileName:'',
+        selectedCollection:'',
+        collections:[],
+        collectionName:'',
+        postId:'',
+        selectedCollectionID: '',
+        fileNames:[]
         }
     },
     mounted(){
@@ -178,6 +349,8 @@ export default {
                this.getMyPosts(response.data);
                this.getMyStories(response.data);
                this.getHighlightedStories(response.data);
+               this.getMyFavouritePosts(response.data);
+               this.getMyCollections(response.data);
          }).catch(res => {
                        alert("Error");
                         console.log(res);
@@ -192,6 +365,7 @@ export default {
                        alert("Error");
                         console.log(res);
                  });
+        
    },
     methods:{
          toggle () {
@@ -225,7 +399,7 @@ export default {
                 this.posts = response.data;
                 let video = "mp4";
                 
-                for(let i=0; i< response.data.length; i++){
+               /* for(let i=0; i< response.data.length; i++){
                      if(!this.posts[i].fileName.includes(video)){
                         console.log("slika jeee");
                         this.posts[i].imageBytes = 'data:image/jpeg;base64,' + this.posts[i].imageBytes; 
@@ -233,6 +407,17 @@ export default {
                         console.log("video jeee");
                         this.posts[i].imageBytes = 'data:video/mp4;base64,' + this.posts[i].imageBytes;     
                     }            
+                } */
+
+                for(let i=0; i< this.posts.length; i++){
+                    for(let j=0; j< this.posts[i].fileNames.length; j++){
+                        if(!this.posts[i].fileNames[j].includes(video)){
+                            console.log("usao je u if");
+                            this.posts[i].images[j].imageBytes = 'data:image/jpeg;base64,' + this.posts[i].images[j].imageBytes;
+                        }else{
+                            this.posts[i].images[j].imageBytes = 'data:video/mp4;base64,' + this.posts[i].images[j].imageBytes;     
+                        }      
+                    }      
                 } 
             }).catch(res => {
                         alert("Error");
@@ -240,7 +425,8 @@ export default {
                     });
                     
         },
-       
+
+
         getMyStories: function(person) {
             this.axios.get('http://localhost:8083/mediaMicroservice/story/getMyStories/'+ person.username,)
             .then(response => {
@@ -280,7 +466,184 @@ export default {
                             console.log(res);
                     });
                     
+        },
+        getLikes: async function(event,post){
+            const postInfo = {
+                myProfile : post.username,
+                fileNames : post.fileNames,
+                
+            }
+            this.axios.post('http://localhost:8083/mediaMicroservice/post/getMyLikesInfo',postInfo,{ 
+                }).then(response => {
+                    this.usersWhoLiked = response.data
+                    this.$refs['modal'].show();
+                    console.log(response);                
+                }).catch(res => {
+                    alert("Error,please try later");
+                    console.log(res.response.data.message);
+
+                });
+        },
+        getDislikes: async function(event,post){
+            const postInfo = {
+                myProfile : post.username,
+                fileName : post.fileName,
+            }
+            this.axios.post('http://localhost:8083/mediaMicroservice/post/getMyDislikesInfo',postInfo,{ 
+                }).then(response => {
+                    this.usersWhoDisliked = response.data
+                    this.$refs['modal2'].show();
+                    console.log(response);                
+                }).catch(res => {
+                    alert("Error,please try later");
+                    console.log(res.response.data.message);
+
+                });
+        },
+        getComments: async function(event,post){
+            const postInfo = {
+                usernameTo : post.username,
+                fileName : post.fileName,
+                comment : this.comment,
+            }
+            this.axios.post('http://localhost:8083/mediaMicroservice/post/getMyCommentsInfo',postInfo,{ 
+                }).then(response => {
+                    this.usersWhoCommented = response.data
+                    this.$refs['modal3'].show();
+                    console.log(response);                
+                }).catch(res => {
+                    alert("Error,please try later");
+                    console.log(res.response.data.message);
+
+                });
+        },
+        sendAnswer:function(event,user){
+            this.$refs['modal3'].hide();
+            this.$refs['modal4'].show();
+            this.commentId = user.commentId;
+        },
+        answerOnComment:function(){
+            const answerInfo = {
+               answer : this.answer,
+               id: this.commentId,
+            }
+            this.axios.post('http://localhost:8083/mediaMicroservice/comment/answer',answerInfo,{ 
+                }).then(response => {
+                    this.usersWhoCommented = response.data
+                    this.$refs['modal4'].hide();
+                    console.log(response);                
+                }).catch(res => {
+                    alert("You have already answered");
+                    this.$refs['modal4'].hide();
+                    console.log(res.response.data.message);
+
+                });
+        },
+        saveAsFavourite: async function(event,post){
+            const postInfo = {
+                myProfile : post.username,
+                fileNames : post.fileNames,
+                postId : post.id,
+            }
+            this.axios.post('http://localhost:8083/mediaMicroservice/profile/saveFavourites',postInfo,{ 
+                }).then(response => {
+                    //this.usersWhoLiked = response.data
+                    alert("Post is added in the favourites!")
+                    console.log(response);                
+                }).catch(res => {
+                    //alert("Error,please try later");
+                    console.log(res.response.data.message);
+
+                });
+        },
+        getMyFavouritePosts: function(person) {
+            this.axios.get('http://localhost:8083/mediaMicroservice/post/getMyFavouritePosts/'+ person.username,)
+            .then(response => {
+                this.favouritePosts = response.data;
+                let video = "mp4";
+                
+                 for(let i=0; i< this.favouritePosts.length; i++){
+                    for(let j=0; j< this.favouritePosts[i].fileNames.length; j++){
+                        if(!this.favouritePosts[i].fileNames[j].includes(video)){
+                            console.log("usao je u if");
+                            this.favouritePosts[i].images[j].imageBytes = 'data:image/jpeg;base64,' + this.favouritePosts[i].images[j].imageBytes;
+                        }else{
+                            this.favouritePosts[i].images[j].imageBytes = 'data:video/mp4;base64,' + this.favouritePosts[i].images[j].imageBytes;     
+                        }      
+                    }      
+                } 
+                
+            }).catch(res => {
+                        alert("Error");
+                            console.log(res);
+                    });
+                    
+        },
+        addToCollection: function(event,post){
+            this.$refs['modal5'].show();
+            this.fileName = post.fileName,
+            this.username = post.username,
+            this.postId = post.id;
+            alert(this.postId)
+        },
+        addPostToCollection : function(){
+            console.log("Sad smo u funkciji i selected id je" + this.selectedCollectionID)
+           const postInfo = {
+                myProfile : this.username,
+                postId : this.postId,
+                collectionName : this.collectionName,
+                selectedCollection : this.selectedCollectionID,
+            }
+            this.axios.post('http://localhost:8083/mediaMicroservice/collection/addToCollection',postInfo,{ 
+                }).then(response => {
+                    //this.usersWhoLiked = response.data
+                    alert("Post is added in the favourites!")
+                    console.log(response);                
+                }).catch(res => {
+                    alert("Error,please try later");
+                    console.log(res.response.data.message);
+
+                });
+        },
+        getMyCollections: function(person){
+        
+        this.axios.get('http://localhost:8083/mediaMicroservice/collection/getMyCollections/'+ person.username,)
+            .then(response => {
+                this.collections = response.data;
+                let video = "mp4";
+                
+                /* for(let i=0; i< this.collections.length; i++){
+                    for(let j=0; j< this.collections[i].fileNames.length; j++){
+                        if(!this.collections[i].fileNames[j].includes(video)){
+                            console.log("usao je u if");
+                            this.collections[i].images[j].imageBytes = 'data:image/jpeg;base64,' + this.collections[i].images[j].imageBytes;
+                        }else{
+                            this.collections[i].images[j].imageBytes = 'data:video/mp4;base64,' + this.collections[i].images[j].imageBytes;     
+                        }      
+                    }      
+                } */
+                 for(let i=0; i< this.collections.length; i++){
+                    for(let j=0; j< this.collections[i].posts.length; j++){
+                        for(let k=0; k< this.collections[i].posts[j].fileNames.length; k++){
+                        if(!this.collections[i].posts[j].fileNames[k].includes(video)){
+                            this.collections[i].posts[j].images[k].imageBytes = 'data:image/jpeg;base64,' + this.collections[i].posts[j].images[k].imageBytes; 
+                        }else{
+                            this.collections[i].posts[j].images[k].imageBytes = 'data:video/mp4;base64,' + this.collections[i].posts[j].images[k].imageBytes;     
+                        }  
+                        }    
+                    }      
+                } 
+                alert("Ok")
+            }).catch(res => {
+                        alert("Error");
+                            console.log(res);
+                    });
+        },addSelected: function(event,collectionID){
+            this.selectedCollection = collectionID;
+            alert(this.collectionID)
         }
+
+        
     }
 }
 </script>
@@ -337,4 +700,8 @@ export default {
         margin-bottom: 4%;
         margin-top: 4%;
     }
+
+
+
+
 </style>

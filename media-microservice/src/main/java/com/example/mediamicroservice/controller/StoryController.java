@@ -31,7 +31,6 @@ public class StoryController {
 	
 	private final ProfileMediaService profileMediaService;
 	private final StoryService storyService;
-	@Autowired 
 	private final ProfileConnection profileConnection;
 	
 	@Autowired
