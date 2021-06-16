@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,6 +28,7 @@ import com.example.mediamicroservice.model.Story;
 import com.example.mediamicroservice.service.implService.ProfileMediaService;
 import com.example.mediamicroservice.service.implService.StoryService;
 import com.example.mediamicroservice.utils.MediaUpload;
+
 
 @RestController
 @RequestMapping(value = "/story", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -85,29 +88,63 @@ public class StoryController {
 		
 	}
 	
-	@GetMapping("/proba")
-	public ResponseEntity<String> Proba() {
-		 System.out.println("AAAAAAA");
-        String proba=profileConnection.proba();
-        System.out.println("AAAAAAA");
-		return ResponseEntity.ok(proba);
-		
-	}
 	@PostMapping("/getFriendsStories")
 	public ResponseEntity<List<StoryDTO>> getFriendsStories(@RequestBody List<StoryDTO> storyDTOs) {
+		System.out.println("U KONTROLERU SAM SVEGA MI");
+		/*List<String> lista=profileConnection.getCloseFriends(username);
+		
+		for(String l:lista) {
+			System.out.println(l);
+		}*/
+		
 		System.out.println("USPELOOOOOOOOOOOOOOOO");
 		try {
 			List<StoryDTO> stories = new ArrayList<StoryDTO>();
-			System.out.println("USPELOOOOOOOOOOOOOOOO");
+			System.out.println("USPELOOOOOOOOOOOOOOO1111111111111111111O");
 			for(StoryDTO p:storyDTOs) {
-				System.out.println("USPELOOOOOOOOOOOOOOOO");
+				System.out.println("USPELOOOOOOOOOOOOOOOO1111111111111111111");
 				List<StoryDTO> friendStories = new ArrayList<StoryDTO>();
-				System.out.println("USPELOOOOOOOOOOOOOOOO"+p.getFollowing());
+				System.out.println("USPELOOOOOOOOOOOOOOOO11111111111111111"+p.getFollowing());
 				friendStories = storyService.findMyStories(p.getFollowing());
-				System.out.println("USPELOOOOOOOOOOOOOOOO");
+				System.out.println("USPELOOOOOOOOOOOOOOOO1111111111111111111");
 				for(StoryDTO pf:friendStories) {
-					System.out.println("USPELOOOOOOOOOOOOOOOO");
-					stories.add(pf);
+					System.out.println("USPELOOOOOOOOOOOOOOOO111111111111111111111111");
+					if(!pf.isCloseFriends()) {
+						stories.add(pf);
+					}
+				
+			}
+				}
+			System.out.println("USPELOOOOOOOOOOOOOOOO");
+			//stories = storyService.sortByDate(stories);
+			return new ResponseEntity(stories, HttpStatus.OK); 
+		}catch(Exception e) {
+			System.out.println("USPELOOOOOOOOOOOOOOOO" + e.getMessage());
+			e.printStackTrace();
+			return new ResponseEntity(HttpStatus.BAD_REQUEST);
+		}
+		
+	}
+	@PostMapping("/getCloseFriendsStories")
+	public ResponseEntity<List<StoryDTO>> getCloseFriendsStories(@RequestBody List<StoryDTO> storyDTOs) {
+		System.out.println("CLOSE FRIENDS");
+		
+		try {
+			List<StoryDTO> stories = new ArrayList<StoryDTO>();
+			System.out.println("CLOSE FRIENDS222222222222222222");
+			
+			for(StoryDTO p:storyDTOs) {
+				System.out.println("CLOSE FRIENDS1111111111111111111");
+				List<StoryDTO> friendStories = new ArrayList<StoryDTO>();
+				System.out.println("Close friend"+p.getFollowing());
+				friendStories = storyService.findMyStories(p.getFollowing());
+				
+				for(StoryDTO pf:friendStories) {
+					System.out.println("storijiiiiiiiiii");
+					if(pf.isCloseFriends()) {
+						stories.add(pf);
+					}
+					
 				}
 				
 			}

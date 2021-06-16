@@ -246,10 +246,38 @@ public class ProfileController {
 		}else {
 			profileService.deleteCloseFriend(username);
 			return new ResponseEntity<>("Close friend successfully deleted!", HttpStatus.CREATED);
+		}	
+	}
+	@GetMapping("/getCloseFriends")
+	@PreAuthorize("hasRole('REGISTRED_USER')")
+	public ResponseEntity<List<FollowingDTO>> getCloseFriends(){
+		
+		System.out.println("U KONTROLERU SAM");
+		Authentication currentUser = SecurityContextHolder.getContext().getAuthentication();
+		Person person = (Person) currentUser.getPrincipal();
+		Profile logedUser = profileService.findByUsername(person.getUsername());
+		
+		System.out.println("KONTROLER"+logedUser.getUsername());
+		
+		List<Profile> following=new ArrayList<>();
+		List<Profile> usernames=logedUser.getFollowing();
+		
+		for(Profile u:usernames) {
+			Profile p=profileService.findByUsername(u.getUsername());
+			following.add(p);
 		}
 		
-		
-		
+		List<FollowingDTO> profiles=new ArrayList<>();
+		for(Profile p:following) {
+			if(p.getCloseFriends().contains(logedUser)) {
+				profiles.add(new FollowingDTO(p.getUsername()));
+			}
+		}
+		/*
+		for(String s:profiles) {
+			System.out.println(s);
+		}*/
+		//Vracam listu prpfila kod koga je ulogovani u bliskim
+		return new ResponseEntity<>(profiles,HttpStatus.OK);
 	}
-	
 }

@@ -71,6 +71,11 @@
                     <input type="checkbox" id="checkbox" v-model="highlight" value="true" >
                     <label for="checkbox"> {{highlight}} </label>      
                  </section>
+                  <section>
+                    <h3> Close friends </h3>
+                    <input type="checkbox" id="checkbox" v-model="closeFriends" value="true" >
+                    <label for="checkbox"> {{closeFriends}} </label>      
+                 </section>
                 <b-button 
                 variant="outline-secondary"  
                
@@ -110,6 +115,7 @@ export default {
         fileName:'',
         medias:[],
         highlight:'',
+        closeFriends:'',
         }
     },
     mounted() {
@@ -188,6 +194,7 @@ export default {
                 userId: this.user.id,
                 fileName : this.fileName,
                 highlighted: this.highlight,
+                closeFriends: this.closeFriends,
                  }
           
 

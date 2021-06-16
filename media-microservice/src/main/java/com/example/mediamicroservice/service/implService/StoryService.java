@@ -72,6 +72,7 @@ public class StoryService implements IStoryService {
 	        story.setStartTime(LocalDateTime.now());
 	        story.setEndTime(story.getStartTime().plusMinutes(4));//izmijeniti na 24h
 	        story.setHighlighted(storyDTO.isHighlighted());
+	        story.setCloseFriends(storyDTO.isCloseFriends());
 	        
 	        profileMediaService.addStoryToProfile(storyDTO, story);
 	        
@@ -95,7 +96,7 @@ public class StoryService implements IStoryService {
 				LocationDTO locationDTO = new LocationDTO(story.getLocation().getCity(), story.getLocation().getStreet(),story.getLocation().getCountry(),
 						story.getLocation().getObjectName());
 			
-				myStories.add(new StoryDTO(story.getDescription(),username,m.getFileName(),locationDTO,story.isHighlighted()));
+				myStories.add(new StoryDTO(story.getDescription(),username,m.getFileName(),locationDTO,story.isHighlighted(),story.isCloseFriends()));
 			}
 		}
 		}
@@ -150,7 +151,7 @@ public class StoryService implements IStoryService {
 					LocationDTO locationDTO = new LocationDTO(story.getLocation().getCity(), story.getLocation().getStreet(),story.getLocation().getCountry(),
 							story.getLocation().getObjectName());
 				
-					myStories.add(new StoryDTO(story.getDescription(),username,m.getFileName(),locationDTO,story.isHighlighted()));
+					myStories.add(new StoryDTO(story.getDescription(),username,m.getFileName(),locationDTO,story.isHighlighted(),story.isCloseFriends()));
 			}
 			}
 			
@@ -175,7 +176,7 @@ public class StoryService implements IStoryService {
 					LocationDTO locationDTO = new LocationDTO(story.getLocation().getCity(), story.getLocation().getStreet(),story.getLocation().getCountry(),
 							story.getLocation().getObjectName());
 				
-					myStories.add(new StoryDTO(story.getDescription(),username,m.getFileName(),locationDTO,story.isHighlighted()));
+					myStories.add(new StoryDTO(story.getDescription(),username,m.getFileName(),locationDTO,story.isHighlighted(),story.isCloseFriends()));
 			}
 				}
 			}

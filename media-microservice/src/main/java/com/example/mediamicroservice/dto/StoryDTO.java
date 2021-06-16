@@ -2,6 +2,8 @@ package com.example.mediamicroservice.dto;
 
 import java.util.List;
 
+import com.netflix.client.ssl.ClientSslSocketFactoryException;
+
 public class StoryDTO {
 	private String location;
 	private String description;
@@ -13,13 +15,17 @@ public class StoryDTO {
 	 private String following;
 	private LocationDTO locationDTO;
     private List<byte[]> imageBytes;
+    private boolean closeFriends;
+	
+
 	public StoryDTO() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 	
 	public StoryDTO(String location, String description, List<TagDTO> tags, String username, Long userId,
-			String fileName, boolean highlighted, String following, LocationDTO locationDTO, List<byte[]> imageBytes) {
+			String fileName, boolean highlighted, String following, LocationDTO locationDTO, List<byte[]> imageBytes,
+			boolean closeFriends) {
 		super();
 		this.location = location;
 		this.description = description;
@@ -31,18 +37,21 @@ public class StoryDTO {
 		this.following = following;
 		this.locationDTO = locationDTO;
 		this.imageBytes = imageBytes;
+		this.closeFriends = closeFriends;
 	}
-	public StoryDTO(String description, String username, String fileName, LocationDTO locationDTO,boolean highlighted) {
+	
+	public StoryDTO(String description, String username, String fileName, LocationDTO locationDTO,boolean highlighted,boolean closeFriends) {
 		super();
 		this.description = description;
 		this.username = username;
 		this.fileName = fileName;
 		this.locationDTO = locationDTO;
 		this.highlighted=highlighted;
+		this.closeFriends=closeFriends;
 	}
 
 	public StoryDTO(String location, String description, String username, String fileName, LocationDTO locationDTO,
-			List<byte[]> imageBytes,boolean highlighted) {
+			List<byte[]> imageBytes,boolean highlighted,boolean closeFriends) {
 		super();
 		this.location = location;
 		this.description = description;
@@ -51,6 +60,15 @@ public class StoryDTO {
 		this.locationDTO = locationDTO;
 		this.imageBytes = imageBytes;
 		this.highlighted=highlighted;
+		this.closeFriends=closeFriends;
+	}
+
+	public boolean isCloseFriends() {
+		return closeFriends;
+	}
+
+	public void setCloseFriends(boolean closeFriends) {
+		this.closeFriends = closeFriends;
 	}
 
 	public boolean isHighlighted() {
