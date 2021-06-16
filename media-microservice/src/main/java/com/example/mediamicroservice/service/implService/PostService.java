@@ -124,6 +124,14 @@ public class PostService implements IPostService {
 			numberOfComments = post.getNumberOfComments();
 			myPosts.add(new PostDTO(post.getDescription(),username,mediasFileName,locationDTO, post.getDate(),numberOfLikes,0,numberOfComments,tagsDTO,post.getId()));
 		    }
+		    else if (post.getNumberOfDisikes() != null && post.getNumberOfLikes() == null && post.getNumberOfComments() == null ) {
+		    	numberOfDislikes = post.getNumberOfDisikes();
+				myPosts.add(new PostDTO(post.getDescription(),username,mediasFileName,locationDTO, post.getDate(),0,numberOfDislikes,0,tagsDTO,post.getId()));
+		    }
+		    else if (post.getNumberOfDisikes() == null && post.getNumberOfLikes() != null && post.getNumberOfComments() == null ) {
+				numberOfLikes = post.getNumberOfLikes();
+				myPosts.add(new PostDTO(post.getDescription(),username,mediasFileName,locationDTO, post.getDate(),numberOfLikes,0,0,tagsDTO,post.getId()));
+			    }
 			else if(post.getNumberOfLikes() == null && post.getNumberOfDisikes() == null && post.getNumberOfComments() == null) 
 			{
 				myPosts.add(new PostDTO(post.getDescription(),username,mediasFileName,locationDTO, post.getDate(),0,0,0,tagsDTO,post.getId()));
@@ -169,8 +177,7 @@ public class PostService implements IPostService {
 		 int updatedNumberOfLikes = 0;
 		 for (Post post : myPosts) {
 			 medias = post.getMedia();
-			 for (Media media : medias) {
-				if(media.getFileName().equals(likePostDTO.getFileName())) {
+			if(likePostDTO.getPostId() == post.getId()) {
 					List<ProfileMedia> currentLikes = post.getLikes();
 					List<ProfileMedia> currentDislikes = post.getDislikes();
 						for (ProfileMedia profileMedia : currentLikes) {
@@ -197,7 +204,6 @@ public class PostService implements IPostService {
 						postRepository.save(post);
 				}
 			}
-		}
 		
 		return updatedNumberOfLikes;
 	 }
@@ -211,8 +217,7 @@ public class PostService implements IPostService {
 		 int updatedNumberOfDislikes= 0;
 		 for (Post post : myPosts) {
 			 medias = post.getMedia();
-			 for (Media media : medias) {
-				if(media.getFileName().equals(likePostDTO.getFileName())) {
+			 if(likePostDTO.getPostId() == post.getId()) {
 					List<ProfileMedia> currentDislikes = post.getDislikes();
 					List<ProfileMedia> currentLikes = post.getLikes();
 					for (ProfileMedia profileMedia : currentDislikes) {
@@ -238,7 +243,6 @@ public class PostService implements IPostService {
 					postRepository.save(post);
 				}
 			}
-		}
 
 		return updatedNumberOfDislikes;		
 	 }
@@ -326,9 +330,7 @@ public class PostService implements IPostService {
 			 List<Media> medias = new ArrayList<Media>();
 			 int updatedNumberOfComments = 0;
 			 for (Post post : myPosts) {
-				 medias = post.getMedia();
-				 for (Media media : medias) {
-					 if(media.getFileName().equals(dto.getFileName())) {
+				 if(dto.getPostId() == post.getId()) {
 						 List<Comment> currentComments = post.getComments();
 						 List<Comment> comments = new ArrayList<Comment>();
 						 if(currentComments.size() != 0) {
@@ -358,7 +360,6 @@ public class PostService implements IPostService {
 					 }
 				 }
 			}
-	    }
 	    
 	    @Override
 	    public List<LikePostDTO> findMyComments(LikePostDTO dtoInfo){

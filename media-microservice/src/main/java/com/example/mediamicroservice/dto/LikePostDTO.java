@@ -9,13 +9,15 @@ public class LikePostDTO {
 	private int numberOfComments;
 	private Long commentId;
 	private String answer;
+	private Long postId;
+	
 	
 	public LikePostDTO() {
 		super();
 	}
-	
+
 	public LikePostDTO(String usernameTo, String fileName, String usernameFrom, int likes, String comment,
-			int numberOfComments, Long commentId, String answer) {
+			int numberOfComments, Long commentId, String answer, Long postId) {
 		super();
 		this.usernameTo = usernameTo;
 		this.fileName = fileName;
@@ -25,6 +27,7 @@ public class LikePostDTO {
 		this.numberOfComments = numberOfComments;
 		this.commentId = commentId;
 		this.answer = answer;
+		this.postId = postId;
 	}
 
 	public LikePostDTO(String usernameFrom, String comment,String answer, int numberOfComments,Long commentId) {
@@ -98,5 +101,13 @@ public class LikePostDTO {
 
 	public void setAnswer(String answer) {
 		this.answer = answer;
+	}
+
+	public Long getPostId() {
+		return postId;
+	}
+
+	public void setPostId(Long postId) {
+		this.postId = postId;
 	}
 }

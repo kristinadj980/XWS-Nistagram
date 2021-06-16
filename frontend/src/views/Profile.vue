@@ -469,7 +469,8 @@ export default {
         getLikes: async function(event,post){
             const postInfo = {
                 myProfile : post.username,
-                fileName : post.fileName,
+                fileNames : post.fileNames,
+                
             }
             this.axios.post('http://localhost:8083/mediaMicroservice/post/getMyLikesInfo',postInfo,{ 
                 }).then(response => {
