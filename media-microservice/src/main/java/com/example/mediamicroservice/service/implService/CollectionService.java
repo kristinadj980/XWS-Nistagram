@@ -75,7 +75,10 @@ public class CollectionService implements ICollectionService{
 			List<PostDTO> myPosts = new ArrayList<PostDTO>();
 			for (Post post : posts) {
 				List<Media> medias = post.getMedias();
+				List<String> mediasFileName = new ArrayList<String>();
 				for (Media m : medias) {
+					mediasFileName.add(m.getFileName());
+				}
 					LocationDTO locationDTO = new LocationDTO(post.getLocation().getCity(), post.getLocation().getStreet(),post.getLocation().getCountry(),
 							post.getLocation().getObjectName());
 					List<TagDTO> tagsDTO = new ArrayList<TagDTO>();
@@ -85,41 +88,39 @@ public class CollectionService implements ICollectionService{
 					}
 					if( post.getNumberOfLikes() == null && post.getNumberOfDisikes() != null && post.getNumberOfComments() == null) {
 						numberOfDislikes = post.getNumberOfDisikes();
-						myPosts.add(new PostDTO(post.getDescription(),username,m.getFileName(),locationDTO, post.getDate(),0,numberOfDislikes,0,tagsDTO,post.getId()));
+						myPosts.add(new PostDTO(post.getDescription(),username,mediasFileName,locationDTO, post.getDate(),0,numberOfDislikes,0,tagsDTO,post.getId()));
 						
 					}else if( post.getNumberOfLikes() == null && post.getNumberOfDisikes() != null && post.getNumberOfComments() != null) {
 							numberOfDislikes = post.getNumberOfDisikes();
 							numberOfComments = post.getNumberOfComments();
-							myPosts.add(new PostDTO(post.getDescription(),username,m.getFileName(),locationDTO, post.getDate(),0,numberOfDislikes,numberOfComments,tagsDTO,post.getId()));
+							myPosts.add(new PostDTO(post.getDescription(),username,mediasFileName,locationDTO, post.getDate(),0,numberOfDislikes,numberOfComments,tagsDTO,post.getId()));
 					
 					}else if (post.getNumberOfDisikes() == null && post.getNumberOfLikes() != null && post.getNumberOfComments() == null ) {
 						numberOfLikes = post.getNumberOfLikes();
-						myPosts.add(new PostDTO(post.getDescription(),username,m.getFileName(),locationDTO, post.getDate(),numberOfLikes,0,0,tagsDTO,post.getId()));
+						myPosts.add(new PostDTO(post.getDescription(),username,mediasFileName,locationDTO, post.getDate(),numberOfLikes,0,0,tagsDTO,post.getId()));
 					
 				    }else if (post.getNumberOfDisikes() == null && post.getNumberOfLikes() != null && post.getNumberOfComments() != null ) {
 					numberOfLikes = post.getNumberOfLikes();
 					numberOfComments = post.getNumberOfComments();
-					myPosts.add(new PostDTO(post.getDescription(),username,m.getFileName(),locationDTO, post.getDate(),numberOfLikes,0,numberOfComments,tagsDTO,post.getId()));
+					myPosts.add(new PostDTO(post.getDescription(),username,mediasFileName,locationDTO, post.getDate(),numberOfLikes,0,numberOfComments,tagsDTO,post.getId()));
 				    }
 					else if(post.getNumberOfLikes() == null && post.getNumberOfDisikes() == null && post.getNumberOfComments() == null) 
 					{
-						myPosts.add(new PostDTO(post.getDescription(),username,m.getFileName(),locationDTO, post.getDate(),0,0,0,tagsDTO,post.getId()));
+						myPosts.add(new PostDTO(post.getDescription(),username,mediasFileName,locationDTO, post.getDate(),0,0,0,tagsDTO,post.getId()));
 					}
 					else if(post.getNumberOfLikes() == null && post.getNumberOfDisikes() == null && post.getNumberOfComments() != null) 
 					{
 						numberOfComments = post.getNumberOfComments();
-						myPosts.add(new PostDTO(post.getDescription(),username,m.getFileName(),locationDTO, post.getDate(),0,0,numberOfComments,tagsDTO,post.getId()));
+						myPosts.add(new PostDTO(post.getDescription(),username,mediasFileName,locationDTO, post.getDate(),0,0,numberOfComments,tagsDTO,post.getId()));
 					}
 					else 
 					{
 					numberOfLikes = post.getNumberOfLikes();
 					numberOfDislikes = post.getNumberOfDisikes();
 					numberOfComments = post.getNumberOfComments();
-					myPosts.add(new PostDTO(post.getDescription(),username,m.getFileName(),locationDTO, post.getDate(),numberOfLikes,numberOfDislikes,numberOfComments,tagsDTO,post.getId()));
+					myPosts.add(new PostDTO(post.getDescription(),username,mediasFileName,locationDTO, post.getDate(),numberOfLikes,numberOfDislikes,numberOfComments,tagsDTO,post.getId()));
 					}
 					
-					
-				}
 				List<PostDTO> allPosts = postService.getImagesFiles(myPosts);
 				postService.sortByDate(allPosts);
 				

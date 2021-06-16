@@ -184,8 +184,14 @@
                         <b-icon font-scale="2" style="margin-top:-38px; margin-left:288px;" icon="plus-circle" aria-hidden="true" @click="addToCollection($event,post)"></b-icon>
                         </b-row>
                         <h6 align="left">{{post.locationDTO.city}},{{post.locationDTO.street}},{{post.locationDTO.objectName}},{{post.locationDTO.country}}</h6>
-                        <b-img v-if="!post.fileName.includes(videoText)" thumbnail  v-bind:src="post.imageBytes" alt="Image 1"></b-img>
-                        <video v-if="post.fileName.includes(videoText)" autoplay controls v-bind:src="post.imageBytes" width="400" height="400" style="display:block; margin-left:auto; margin-right:auto"></video>
+                        <!--POKUSAJ NEKI-->
+                        <div v-for="image in post.images" v-bind:key="image.imageBytes">
+                            <div v-for="fileName in post.fileNames" v-bind:key="fileName"> 
+                            <b-img v-if="!fileName.includes(videoText)" thumbnail  v-bind:src="image.imageBytes" alt="Image 1"></b-img>
+                             <video v-if="fileName.includes(videoText)" autoplay controls v-bind:src="image.imageBytes" width="400" height="400" style="display:block; margin-left:auto; margin-right:auto"></video>
+                            </div>
+                        </div>
+                        <!--POKUSAJ NEKI-->
                         <h4 align="left">{{post.description}}</h4>
                         <h5 align="left"><span v-for="(tag,t) in post.tags" :key="t">
                                         #{{tag.name}}
@@ -611,13 +617,25 @@ export default {
                 this.collections = response.data;
                 let video = "mp4";
                 
-                for(let i=0; i< this.collections.length; i++){
-                    for(let j=0; j< this.collections[i].posts.length; j++){
-                        if(!this.collections[i].posts[j].fileName.includes(video)){
-                            this.collections[i].posts[j].imageBytes = 'data:image/jpeg;base64,' + this.collections[i].posts[j].imageBytes; 
+                /* for(let i=0; i< this.collections.length; i++){
+                    for(let j=0; j< this.collections[i].fileNames.length; j++){
+                        if(!this.collections[i].fileNames[j].includes(video)){
+                            console.log("usao je u if");
+                            this.collections[i].images[j].imageBytes = 'data:image/jpeg;base64,' + this.collections[i].images[j].imageBytes;
                         }else{
-                            this.collections[i].posts[j].imageBytes = 'data:video/mp4;base64,' + this.collections[i].posts[j].imageBytes;     
+                            this.collections[i].images[j].imageBytes = 'data:video/mp4;base64,' + this.collections[i].images[j].imageBytes;     
                         }      
+                    }      
+                } */
+                 for(let i=0; i< this.collections.length; i++){
+                    for(let j=0; j< this.collections[i].posts.length; j++){
+                        for(let k=0; k< this.collections[i].posts[j].fileNames.length; k++){
+                        if(!this.collections[i].posts[j].fileNames[k].includes(video)){
+                            this.collections[i].posts[j].images[k].imageBytes = 'data:image/jpeg;base64,' + this.collections[i].posts[j].images[k].imageBytes; 
+                        }else{
+                            this.collections[i].posts[j].images[k].imageBytes = 'data:video/mp4;base64,' + this.collections[i].posts[j].images[k].imageBytes;     
+                        }  
+                        }    
                     }      
                 } 
                 alert("Ok")
