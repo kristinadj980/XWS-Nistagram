@@ -59,8 +59,8 @@
                     <b-card class="post_look" v-for="friend in friends" v-bind:key="friend.following">
                         <b-row >
                         <h4 align="left"><b-icon icon="person-circle" aria-hidden="true"></b-icon>  {{friend.following}}</h4>
-                        <b-button  align="right" class="btn btn-info btn-lg space_style" size="sm" style="background-color:#f08080;"  @click="addCloseFriend($event,friend)"  >Add</b-button>
-                        <b-button  align="right" class="btn btn-info btn-lg space_style" size="sm" style="background-color:#f08080;" @click="addCloseFriend($event,friend)"  >Delete</b-button>
+                        <b-button  variant="danger" align="right" class="btn btn-info btn-lg space_style" size="sm" style="background-color:#f08080;"  @click="addCloseFriend($event,friend)"  >Add</b-button>
+                        <b-button  align="right" class="btn btn-info btn-lg space_style" size="sm" style="background-color:#f08080;" @click="deleteCloseFriend($event,friend)"  >Delete</b-button>
                         </b-row>
                     </b-card>
                 </b-tab>
@@ -237,6 +237,7 @@ export default {
                        alert("Error");
                         console.log(res);
                  });
+        
    },
     methods:{
         toggle () {
@@ -388,7 +389,7 @@ export default {
                     
         },
         addCloseFriend: async function(event,friend){
-            console.log(friend.following);
+            console.log(friend.following);  
              let token = localStorage.getItem('token').substring(1, localStorage.getItem('token').length-1);
             this.axios.get('http://localhost:8083/profileMicroservice/api/profile/account',{ 
              headers: {
@@ -403,15 +404,48 @@ export default {
                        alert("Error");
                         console.log(res);
                  });
+        
             this.axios.post('http://localhost:8083/profileMicroservice/api/profile/addCloseFriend',friend.following,{ 
                 headers: {
                     'Authorization': 'Bearer ' + token,
                 }
                 }).then(response => {
-                    alert("Close friend added!");
+                    
+                    alert("Close friend successfully added ");
                     console.log(response);                
                 }).catch(res => {
-                    alert("GRESKA");
+                    alert("Already close friend");
+                    console.log(res.response.data.message);
+
+                });
+        },
+        deleteCloseFriend: async function(event,friend){
+            console.log(friend.following);  
+             let token = localStorage.getItem('token').substring(1, localStorage.getItem('token').length-1);
+            this.axios.get('http://localhost:8083/profileMicroservice/api/profile/account',{ 
+             headers: {
+                 'Authorization': 'Bearer ' + token,
+             }
+         }).then(response => {
+               this.profile = response.data;
+               console.log(this.profile.username);
+               //this.getMyStories(response.data);
+              // this.getFollowers(response.data);
+         }).catch(res => {
+                       alert("Error");
+                        console.log(res);
+                 });
+        
+            this.axios.post('http://localhost:8083/profileMicroservice/api/profile/deleteCloseFriend',friend.following,{ 
+                headers: {
+                    'Authorization': 'Bearer ' + token,
+                }
+                }).then(response => {
+                    
+                    alert("Close friend successfully deleted ");
+                    console.log(response);                
+                }).catch(res => {
+                    alert("Not close friend");
                     console.log(res.response.data.message);
 
                 });

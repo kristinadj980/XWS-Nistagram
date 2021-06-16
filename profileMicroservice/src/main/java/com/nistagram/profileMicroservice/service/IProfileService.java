@@ -23,4 +23,6 @@ public interface IProfileService {
 	List<FollowingDTO> getFollowers(String username);
 	FriendRequestStatus getFriendStatus(String username);
 	void addCloseFriend(String username);
+	void deleteCloseFriend(String username);
+	Boolean closeFriends(List<Profile> profiles);
 }

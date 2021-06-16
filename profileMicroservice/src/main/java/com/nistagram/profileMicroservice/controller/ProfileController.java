@@ -150,9 +150,17 @@ public class ProfileController {
 		return new ResponseEntity(profileService.getFriendStatus(username), HttpStatus.OK); 
 	}
 	
+	@GetMapping("/getCloseFriendsStatus/{username}")
+	public ResponseEntity getCloseFriendsStatus(@PathVariable List<Profile> profile) {
+		System.out.print("U kontroleru jeeeeeeeeeeeeeeeeeeeeee");
+		
+		return new ResponseEntity(profileService.closeFriends(profile), HttpStatus.OK); 
+	}
+	
 	@GetMapping("/getFollowingUsers")
 	@PreAuthorize("hasRole('REGISTRED_USER')")  
 	public ResponseEntity<List<FollowingDTO>> getFollowingUsers() {
+		
 		
 		try {
 			return new ResponseEntity<>(profileService.getFollowingUsers(), HttpStatus.OK);
@@ -178,15 +186,70 @@ public class ProfileController {
 	
 	@PostMapping("/addCloseFriend")
 	@PreAuthorize("hasRole('REGISTRED_USER')")
-	public ResponseEntity addCloseFriend(@RequestBody String username) {
-		System.out.println("KONTROLER");
-		try {
-			profileService.addCloseFriend(username);
-			System.out.println("U TRY SAM");
-			return new ResponseEntity<>(HttpStatus.OK);
-		} catch (Exception e) {
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+	public ResponseEntity<String> addCloseFriend(@RequestBody String username) {
+		System.out.println("KONTROLER"+username);
+		  
+		Authentication currentUser = SecurityContextHolder.getContext().getAuthentication();
+		Person person = (Person) currentUser.getPrincipal();
+		Profile logedUser = profileService.findById(person.getId());
+		System.out.println(logedUser.getUsername());
+		
+		List<Profile> closedFriends=logedUser.getCloseFriends();
+		Boolean ima=false;
+		for(Profile p:closedFriends) {
+			if(p.getUsername().equals(username.substring(0, username.length()-1))) {
+				//throw new IllegalArgumentException("Already close friend!");
+				//return new ResponseEntity<>("Already close friend!!", HttpStatus.BAD_REQUEST);
+				System.out.println("U ifu jeeeee");
+				ima=true;
+				break;
+		}else {
+			ima=false;
 		}
+	    }
+		
+		if(ima) {
+			return new ResponseEntity<>("Already close friend!!", HttpStatus.BAD_REQUEST);
+			 //throw new IllegalArgumentException("Already close friendwd");
+		}else {
+			profileService.addCloseFriend(username);
+			return new ResponseEntity<>("Close friend successfully added!", HttpStatus.CREATED);
+		}	
+	}
+	@PostMapping("/deleteCloseFriend")
+	@PreAuthorize("hasRole('REGISTRED_USER')")
+	public ResponseEntity<String> deleteCloseFriend(@RequestBody String username) {
+		System.out.println("KONTROLER"+username);
+		  
+		Authentication currentUser = SecurityContextHolder.getContext().getAuthentication();
+		Person person = (Person) currentUser.getPrincipal();
+		Profile logedUser = profileService.findById(person.getId());
+		System.out.println(logedUser.getUsername());
+		
+		List<Profile> closedFriends=logedUser.getCloseFriends();
+		Boolean ima=false;
+		for(Profile p:closedFriends) {
+			if(p.getUsername().equals(username.substring(0, username.length()-1))) {
+				//throw new IllegalArgumentException("Already close friend!");
+				//return new ResponseEntity<>("Already close friend!!", HttpStatus.BAD_REQUEST);
+				System.out.println("U ifu jeeeee");
+				ima=true;
+				break;
+		}else {
+			ima=false;
+		}
+	    }
+		
+		if(!ima) {
+			return new ResponseEntity<>("Not close friend!!", HttpStatus.BAD_REQUEST);
+			 //throw new IllegalArgumentException("Already close friendwd");
+		}else {
+			profileService.deleteCloseFriend(username);
+			return new ResponseEntity<>("Close friend successfully deleted!", HttpStatus.CREATED);
+		}
+		
+		
+		
 	}
 	
 }

@@ -204,7 +204,48 @@ public class ProfileService implements IProfileService {
 		System.out.println(closeFriend.getName());
 		
 		List<Profile> closedFriends=logedUser.getCloseFriends();
+		/*for(Profile p:closedFriends) {
+			if(p.getUsername().equals(username))
+				System.out.println("Already close friend");
+		}*/
 		closedFriends.add(closeFriend);
 		profileRepository.save(logedUser);
+	}
+
+	@Override
+	public Boolean closeFriends(List<Profile> profiles) {
+		System.out.print("U servisu jeeeeeeeeeeeeeeeeeeeeee");
+		Authentication currentUser = SecurityContextHolder.getContext().getAuthentication();
+		Person person = (Person) currentUser.getPrincipal();
+		Profile logedUser = findById(person.getId());
+		
+		System.out.print("U servisu jeeeeeeeeeeeeeeeeeeeeee");
+		
+		List<Profile> closeFriends = logedUser.getCloseFriends();
+		
+		for(Profile p: closeFriends)
+			for(Profile p1:profiles) {
+				if(p.getUsername().equals(p1))
+					return true;
+			}
+			
+		return false;	}
+
+	@Override
+	public void deleteCloseFriend(String username) {
+		System.out.println(username);
+		System.out.println("U SERVISU SAM");
+		Authentication currentUser = SecurityContextHolder.getContext().getAuthentication();
+		Person person = (Person) currentUser.getPrincipal();
+		Profile logedUser = findById(person.getId());
+		System.out.println(logedUser.getName());
+		
+		Profile closeFriend=findByUsername(username.substring(0, username.length()-1));
+		System.out.println(closeFriend.getName());
+		
+		List<Profile> closedFriends=logedUser.getCloseFriends();
+		closedFriends.remove(closeFriend);
+		profileRepository.save(logedUser);
+		
 	}
 }
