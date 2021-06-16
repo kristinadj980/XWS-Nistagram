@@ -120,9 +120,14 @@
                         <h4 align="left"><b-icon icon="person-circle" aria-hidden="true"></b-icon>  {{post.username}}</h4>
                         </b-row>
                         <h6 align="left">{{post.locationDTO.city}},{{post.locationDTO.street}},{{post.locationDTO.objectName}},{{post.locationDTO.country}}</h6>
-                        <b-img v-if="!post.fileName.includes(videoText)" thumbnail  v-bind:src="post.imageBytes" alt="Image 1"></b-img>
-                        <video v-if="post.fileName.includes(videoText)" autoplay controls v-bind:src="post.imageBytes" width="400" height="400" style="display:block; margin-left:auto; margin-right:auto"></video>
-                        <h4 align="left">{{post.description}}</h4>
+                        <!--POKUSAJ NEKI-->
+                        <div v-for="image in post.images" v-bind:key="image.imageBytes">
+
+                            <b-img thumbnail  v-bind:src="image.imageBytes" alt="Image 1"></b-img>
+                           
+                        </div>
+                        <!--POKUSAJ NEKI-->
+                       <h4 align="left">{{post.description}}</h4>
                         <h5 align="left"><span v-for="(tag,t) in post.tags" :key="t">
                                         #{{tag.name}}
                                     </span>
@@ -151,6 +156,11 @@
                         <b-icon font-scale="2" style="margin-top:-38px; margin-left:288px;" icon="plus-circle" aria-hidden="true" @click="addToCollection($event,post)"></b-icon>
                         </b-row>
                         <h6 align="left">{{post.locationDTO.city}},{{post.locationDTO.street}},{{post.locationDTO.objectName}},{{post.locationDTO.country}}</h6>
+                        <div v-for="image in post.images" v-bind:key="image.imageBytes">
+
+                            <b-img thumbnail  v-bind:src="image.imageBytes" alt="Image 1"></b-img>
+                           
+                        </div>
                         <b-img v-if="!post.fileName.includes(videoText)" thumbnail  v-bind:src="post.imageBytes" alt="Image 1"></b-img>
                         <video v-if="post.fileName.includes(videoText)" autoplay controls v-bind:src="post.imageBytes" width="400" height="400" style="display:block; margin-left:auto; margin-right:auto"></video>
                         <h4 align="left">{{post.description}}</h4>
@@ -385,7 +395,7 @@ export default {
                 this.posts = response.data;
                 let video = "mp4";
                 
-                for(let i=0; i< response.data.length; i++){
+               /* for(let i=0; i< response.data.length; i++){
                      if(!this.posts[i].fileName.includes(video)){
                         console.log("slika jeee");
                         this.posts[i].imageBytes = 'data:image/jpeg;base64,' + this.posts[i].imageBytes; 
@@ -393,6 +403,17 @@ export default {
                         console.log("video jeee");
                         this.posts[i].imageBytes = 'data:video/mp4;base64,' + this.posts[i].imageBytes;     
                     }            
+                } */
+
+                for(let i=0; i< this.posts.length; i++){
+                    for(let j=0; j< this.posts[i].fileNames.length; j++){
+                        if(!this.posts[i].fileNames[j].includes(video)){
+                            console.log("usao je u if");
+                            this.posts[i].images[j].imageBytes = 'data:image/jpeg;base64,' + this.posts[i].images[j].imageBytes;
+                        }else{
+                            this.posts[i].images[j].imageBytes = 'data:video/mp4;base64,' + this.posts[i].images[j].imageBytes;     
+                        }      
+                    }      
                 } 
             }).catch(res => {
                         alert("Error");
@@ -400,7 +421,8 @@ export default {
                     });
                     
         },
-       
+
+
         getMyStories: function(person) {
             this.axios.get('http://localhost:8083/mediaMicroservice/story/getMyStories/'+ person.username,)
             .then(response => {
@@ -536,13 +558,12 @@ export default {
                 
                 for(let i=0; i< response.data.length; i++){
                      if(!this.favouritePosts[i].fileName.includes(video)){
-                        console.log("slika jeee");
                         this.favouritePosts[i].imageBytes = 'data:image/jpeg;base64,' + this.favouritePosts[i].imageBytes; 
                     }else{
-                        console.log("video jeee");
                         this.favouritePosts[i].imageBytes = 'data:video/mp4;base64,' + this.favouritePosts[i].imageBytes;     
                     }            
                 } 
+                
             }).catch(res => {
                         alert("Error");
                             console.log(res);
@@ -658,4 +679,8 @@ export default {
         margin-bottom: 4%;
         margin-top: 4%;
     }
+
+
+
+
 </style>

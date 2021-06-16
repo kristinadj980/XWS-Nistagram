@@ -258,29 +258,31 @@ public class PostService implements IPostService {
 
 
 	    public PostDTO imageFile(PostDTO post, String filePath) {
-	    	PostDTO postsDto = post;
-			List<byte[]> imageBytes = new ArrayList<byte[]>();
+			//List<byte[]> imageBytes = new ArrayList<byte[]>();
 			//post.setImageBytes(imageBytes); 
 			List<ImageDTO> images = new ArrayList<>();
-			for(int i=0; i<post.getFileNames().size(); i++) 
-				images.add(new ImageDTO(imageBytes));
+			//for(int i=0; i<post.getFileNames().size(); i++) 
+			//	images.add(new ImageDTO(imageBytes));
 			
-			post.setImages(images);
+			//post.setImages(images);
+			PostDTO postsDto = post;
 			
 			for(String fileName:post.getFileNames()) {
 				ImageDTO imageDTO = new ImageDTO();
-				List<byte[]> bytes = new ArrayList<>();
+				List<byte[]> bytes = new ArrayList<byte[]>();
 				imageDTO.setImageBytes(bytes);
 		        File in = new File(filePath + "/"+fileName);
 		        try {
-		        	imageDTO.getImageBytes().add(IOUtils.toByteArray(new FileInputStream(in)));
-		        	postsDto.getImages().add(imageDTO);
+		        	bytes.add(IOUtils.toByteArray(new FileInputStream(in)));
+		        	imageDTO.setImageBytes(bytes);
+		        	images.add(imageDTO);
 		        } catch (IOException e) {
 		            e.printStackTrace();
 		        }catch(NullPointerException n) {
 		            n.printStackTrace();
 		        }
 	        }
+			postsDto.setImages(images);
 	        return postsDto;
 	    }
 	    
