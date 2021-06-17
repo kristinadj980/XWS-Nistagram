@@ -12,7 +12,8 @@
                     <b-icon icon="image" aria-hidden="true"></b-icon> Add post</b-button>
                 <b-button pill variant="outline-danger" class = "btn btn-lg space_style" v-on:click = "editProfile">
                     <b-icon icon="gear" aria-hidden="true"></b-icon> Edit profile</b-button>
-                
+                 <b-button pill variant="outline-danger" class = "btn btn-lg space_style" v-on:click = "verificationRequest">
+                    <b-icon icon="gear" aria-hidden="true"></b-icon> Verification request</b-button>
             </span>
                 <span  style="float:right;margin:15px">
                     <b-button pill variant="outline-danger" class = "btn btn-lg btn-light" style="margin-right:20px;" v-on:click = "logOut">Log Out</b-button>
@@ -267,6 +268,9 @@ export default {
         },
         cancelUsername() {
             this.$refs['modal-ref4'].hide();
+        },
+        verificationRequest(){
+            window.location.href="/verificationRequest";
         },
          update : function(){
             let token = localStorage.getItem('token').substring(1, localStorage.getItem('token').length-1);
