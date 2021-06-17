@@ -63,6 +63,8 @@ public class ProfileService implements IProfileService {
         profile.setUsername(userRequest.getUsername());
         profile.setBirthDate(userRequest.getBirthDate());
         profile.setProfileStatus(ProfileStatus.publicProfile);
+        profile.setAllowedTags(false);
+        profile.setAllowedMessages(false);
         Authority authority = authService.findByname("ROLE_REGISTRED_USER");
         List<Authority> auth = new ArrayList<Authority>();
         if(authority==null) {
@@ -193,5 +195,22 @@ public class ProfileService implements IProfileService {
 			return true;
 		}
 		return false;
+	}
+
+	@Override
+	public Boolean updateMessageAllowance(Boolean messageAllowance) {
+		Profile profile = (Profile) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		profile.setAllowedMessages(!messageAllowance);
+
+		profileRepository.save(profile);
+		return !messageAllowance;
+	}
+
+	@Override
+	public Boolean updateTagAllowance(Boolean tagAllowance) {
+		Profile profile = (Profile) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		profile.setAllowedTags(!tagAllowance);
+		profileRepository.save(profile);
+		return !tagAllowance;
 	}
 }

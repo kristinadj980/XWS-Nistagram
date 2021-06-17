@@ -22,4 +22,6 @@ public interface IProfileService {
 	void updateProfileStatus(String username);
 	List<FollowingDTO> getFollowingUsers();
 	FriendRequestStatus getFriendStatus(String username);
+	Boolean updateMessageAllowance(Boolean messageAllowance);
+	Boolean updateTagAllowance(Boolean tagAllowance);
 }

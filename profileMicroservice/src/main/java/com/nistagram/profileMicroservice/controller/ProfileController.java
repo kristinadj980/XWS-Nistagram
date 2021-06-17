@@ -61,7 +61,7 @@ public class ProfileController {
 		Person person = (Person) currentUser.getPrincipal();
 		Profile profile = profileService.findById(person.getId());
 		EditProfileDTO editProfileDTO = new EditProfileDTO(profile.getUsername(), profile.getName(), profile.getSurname(), profile.getEmail(), profile.getPhoneNumber(),
-				profile.getBirthDate(), profile.getGender(), profile.getWebsite(), profile.getBiography(), profile.getProfileStatus());
+				profile.getBirthDate(), profile.getGender(), profile.getWebsite(), profile.getBiography(), profile.getProfileStatus(), profile.getAllowedTags(), profile.getAllowedMessages());
 		
 		return (ResponseEntity<EditProfileDTO>) (profile == null ? new ResponseEntity<>(HttpStatus.NOT_FOUND) : ResponseEntity.ok(editProfileDTO));
 
@@ -170,6 +170,25 @@ public class ProfileController {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
 		
+	}
+	@PostMapping("/editTagAllowance")
+	@PreAuthorize("hasRole('REGISTRED_USER')")
+	public ResponseEntity<Boolean> updateTagAllowance(@RequestBody EditProfileDTO editProfileDTO) {
+		try {
+			
+			return new ResponseEntity<>(profileService.updateTagAllowance(editProfileDTO.getAllowedTags()),HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+	}
+	@PostMapping("/editMessageAllowance")
+	@PreAuthorize("hasRole('REGISTRED_USER')")
+	public ResponseEntity<Boolean> updateMessageAllowance(@RequestBody EditProfileDTO editProfileDTO) {
+		try {
+			return new ResponseEntity<>(profileService.updateMessageAllowance(editProfileDTO.getAllowedMessages()),HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
 	}
 	
 }
