@@ -6,38 +6,54 @@ import javax.persistence.Column;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 
+import com.nistagram.profileMicroservice.model.FriendRequestStatus;
 import com.nistagram.profileMicroservice.model.Gender;
 import com.nistagram.profileMicroservice.model.ProfileStatus;
 
+import lombok.Data;
+@Data
 public class EditProfileDTO {
+	
 	private String username;
-
 	private String name;
-
 	private String surname;
-
 	private String email;
-
 	private String password;
-
 	private String phoneNumber;
-
 	private LocalDate birthDate;
-
 	private Gender gender;
-	
 	private String website;
-  
 	private String biography;
-	 
 	private String confirmPassword;
-	
 	private ProfileStatus profileStatus;
-	
-	
+	private FriendRequestStatus friendRequestStatus;
+	private String currentUsername;
+	private String newUsername;
 	
 	public EditProfileDTO() {
 		super();
+	}
+	
+	public EditProfileDTO(String username, String name, String surname, String email, String password,
+			String phoneNumber, LocalDate birthDate, Gender gender, String website, String biography,
+			String confirmPassword, ProfileStatus profileStatus, FriendRequestStatus friendRequestStatus,
+			String currentUsername, String newUsername) {
+		super();
+		this.username = username;
+		this.name = name;
+		this.surname = surname;
+		this.email = email;
+		this.password = password;
+		this.phoneNumber = phoneNumber;
+		this.birthDate = birthDate;
+		this.gender = gender;
+		this.website = website;
+		this.biography = biography;
+		this.confirmPassword = confirmPassword;
+		this.profileStatus = profileStatus;
+		this.friendRequestStatus = friendRequestStatus;
+		this.currentUsername = currentUsername;
+		this.newUsername = newUsername;
 	}
 
 	public EditProfileDTO(String username, String name, String surname, String email, String password,
@@ -72,6 +88,7 @@ public class EditProfileDTO {
 		this.biography = biography;
 		this.profileStatus = profileStatus;
 	}
+	
 
 	public EditProfileDTO(String password, String confirmPassword) {
 		super();
@@ -172,6 +189,30 @@ public class EditProfileDTO {
 
 	public void setProfileStatus(ProfileStatus profileStatus) {
 		this.profileStatus = profileStatus;
+	}
+
+	public FriendRequestStatus getFriendRequestStatus() {
+		return friendRequestStatus;
+	}
+
+	public void setFriendRequestStatus(FriendRequestStatus friendRequestStatus) {
+		this.friendRequestStatus = friendRequestStatus;
+	}
+
+	public String getCurrentUsername() {
+		return currentUsername;
+	}
+
+	public void setCurrentUsername(String currentUsername) {
+		this.currentUsername = currentUsername;
+	}
+
+	public String getNewUsername() {
+		return newUsername;
+	}
+
+	public void setNewUsername(String newUsername) {
+		this.newUsername = newUsername;
 	}
 
 }

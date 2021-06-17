@@ -31,7 +31,6 @@ public class StoryController {
 	
 	private final ProfileMediaService profileMediaService;
 	private final StoryService storyService;
-	
 	private final ProfileConnection profileConnection;
 	
 	@Autowired
@@ -39,7 +38,7 @@ public class StoryController {
 		super();
 		this.profileMediaService = profileMediaService;
 		this.storyService = storyService;
-		this.profileConnection = profileConnection;
+		this.profileConnection=profileConnection;
 	}
 	
 	private static String uploadDir = "user-photos";
@@ -91,6 +90,4 @@ public class StoryController {
 		return ResponseEntity.ok(proba);
 		
 	}
-	
-	
 }

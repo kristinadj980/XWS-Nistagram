@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import com.nistagram.profileMicroservice.dto.EditUsernameDTO;
 import com.nistagram.profileMicroservice.dto.PostDTO;
 
 
@@ -19,5 +20,8 @@ public interface MediaConnection {
 	
 	@RequestMapping(method=RequestMethod.GET,value="/post/proba",consumes="application/json")
 	String getProba();
+	
+	@RequestMapping(method=RequestMethod.POST,value="/profile/changeUsername",consumes="application/json")
+	void changeUsername(EditUsernameDTO editUsernameDTO);
 
 }

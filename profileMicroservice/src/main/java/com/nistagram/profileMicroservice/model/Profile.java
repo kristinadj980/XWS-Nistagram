@@ -61,7 +61,10 @@ public class Profile extends Person{
 	inverseJoinColumns = @JoinColumn(name = "blockedUsers_id", referencedColumnName = "id"))
 	private List<Profile> blockedUsers;  
 
-	@OneToMany(mappedBy = "profile", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@JoinTable(name = "profile_friend_requests",
+	joinColumns = @JoinColumn(name = "profile_id", referencedColumnName = "id"),
+	inverseJoinColumns = @JoinColumn(name = "friend_requests_id", referencedColumnName = "id"))
 	private List<FriendRequest> friendRequests;  
 
 	@Enumerated(EnumType.ORDINAL)

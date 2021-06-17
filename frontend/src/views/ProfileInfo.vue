@@ -86,12 +86,10 @@
                         <!-- Modal --> 
                         <div class="mt-5 text-center top-buffer">
                             <b-button  class="btn btn-info btn-lg space_style" style="background-color:#f08080;" v-b-modal.modal-2>Edit password</b-button>
+                            <b-button  class="btn btn-info btn-lg space_style" style="background-color:#f08080;" v-b-modal.modal-4>Edit username</b-button>
                             <b-button  class="btn btn-info btn-lg space_style"  style="background-color:#f08080;" v-b-modal.modal-1>Edit profile info</b-button>
                             <b-modal ref="modal-ref" id="modal-1" title="Edit profile info" hide-footer>
                                 <div>
-                                    <h5 class ="text-justify top-buffer"> Username:
-                                        <b-form-input v-model="profile.username" label="Username" filled placeholder="Enter your username"></b-form-input>
-                                    </h5>
                                     <h5 class ="text-justify top-buffer"> Name:
                                         <b-form-input v-model="profile.name" label="First Name" filled placeholder="Enter your name"></b-form-input>
                                     </h5>
@@ -138,7 +136,7 @@
                                         <label for="password">New Password:</label>
                                         <VuePassword
                                             v-model="profile.newPassword"
-                                            id="password1"
+                                            id="password2"
                                             placeholder="Enter your current password"
                                            
                                         />
@@ -149,7 +147,7 @@
                                         <label for="password">Repeat New Password:</label>
                                         <VuePassword
                                             v-model="profile.repeatNewPassword"
-                                            id="password1"
+                                            id="password3"
                                             placeholder="Enter your current password"
                                         />
                                         </div>
@@ -160,10 +158,38 @@
                                     </b-row>
                                 </div>
                             </b-modal>
-                            </div>
-                            </div>
-                            </div>
-                            </div>
+                            <b-modal ref="modal-ref4" id="modal-4" title="Edit username" hide-footer>
+                                <div>
+                                    <b-row>
+                                        <b-col sm="6"> <h5 class ="text-justify top-buffer">Current username: </h5></b-col>
+                                    </b-row>
+                                    <b-row style="margin-top:10px;">
+                                        <b-col>
+                                            <b-form-input v-model="currentUsername"> </b-form-input>
+                                        </b-col>
+                                    </b-row>
+                                    <b-row style="margin-top:10px;">
+                                        <b-col sm="6"><h5 class ="text-justify top-buffer">New username: </h5></b-col>
+                                    </b-row>
+                                    <b-row style="margin-top:10px;">
+                                        <b-col>
+                                            <b-form-input v-model="newUsername" > </b-form-input>
+                                        </b-col>
+                                    </b-row>
+                                    <b-row style="margin-top:10px;" class="border border-danger"> 
+                                        <b-col sm="14"  style="background:#FFE6E6;"><h6 class ="text-justify top-buffer"><b-icon icon="info-circle" variant="danger" aria-hidden="true" ></b-icon>  After successfully edited username you will need to relog!</h6></b-col>
+                                        <b-col sm="14"  style="background:#FFE6E6;"><h6 class ="text-justify top-buffer">The system will automatically log you out!</h6></b-col>
+                                    </b-row>
+                                    <b-row style="float: left; margin: 30px;">
+                                        <b-button class="btn btn-info btn-lg space_style" style="background-color:#f08080; width:5cm;" v-on:click = "cancelUsername">Cancel</b-button>
+                                        <b-button class="btn btn-info btn-lg space_style" style="background-color:#f08080; width:5cm;" v-on:click = "updateUsername">Update</b-button>
+                                    </b-row>
+                                </div>
+                            </b-modal>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </b-card>
     </div>
 </template>
@@ -195,9 +221,11 @@ export default {
         selectedUser:[''],
         profileStatus: "",
         stories: [],
+        currentUsername: "",
+        newUsername: "",
         }
     },
-     mounted(){
+    mounted(){
      let token = localStorage.getItem('token').substring(1, localStorage.getItem('token').length-1);
         this.axios.get('http://localhost:8083/profileMicroservice/api/profile/account',{ 
              headers: {
@@ -234,8 +262,11 @@ export default {
         cancel() {
             this.$refs['modal-ref'].hide();
         },
-         cancelPassword() {
+        cancelPassword() {
             this.$refs['modal-ref2'].hide();
+        },
+        cancelUsername() {
+            this.$refs['modal-ref4'].hide();
         },
          update : function(){
             let token = localStorage.getItem('token').substring(1, localStorage.getItem('token').length-1);
@@ -289,6 +320,30 @@ export default {
                     console.log(response);
                 })
         },
+        updateUsername : function () {
+            const changeUsername ={
+                currentUsername : this.currentUsername,
+                newUsername : this.newUsername,
+            } 
+            let token = localStorage.getItem('token').substring(1, localStorage.getItem('token').length-1);
+            this.axios.post('http://localhost:8083/profileMicroservice/api/profile/updateUsername',changeUsername, { 
+                headers: {
+                    'Authorization': 'Bearer ' + token,
+                }})
+                .then(response => {
+                    console.log(response.data)
+                    if(response.data){
+                        this.logOut();
+                    }else{
+                        alert("The chosen username already exists!");
+                        this.newUsername = "";
+                    }
+                })
+                .catch(response => {
+                    alert("Please, try later.")
+                    console.log(response);
+                })
+        },
         editPrivacy:  function () {
             let token = localStorage.getItem('token').substring(1, localStorage.getItem('token').length-1);
             const userUsername ={
@@ -318,6 +373,7 @@ export default {
                 })
         },
         getMyStories: function(person) {
+            console.log(person);
             this.axios.get('http://localhost:8083/mediaMicroservice/story/getArchiveStories/'+ person.username,)
             .then(response => {
                 this.stories = response.data;
@@ -349,7 +405,7 @@ export default {
         height: 90px;
     }
     .space_style{
-        margin-right:15px;
+        margin-right:1px;
         margin-left:10px;
     }
     .object_space {

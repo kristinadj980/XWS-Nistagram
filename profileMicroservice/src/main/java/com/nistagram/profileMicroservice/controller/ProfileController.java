@@ -43,6 +43,17 @@ public class ProfileController {
 		this.mediaConnection = mediaConnection;
 	}
 
+	@PostMapping("/proba")
+	public ResponseEntity<?> proba()
+	{
+		System.out.println("Probaaaaaaaaaaaaaa");
+		Profile pr=profileService.findById(102L);
+		String username=pr.getUsername();
+		
+		System.out.println("Probaaaaaaaaaaaaaa"+username);
+		return ResponseEntity.ok(username);
+	}
+	
 	@GetMapping("/account")
 	@PreAuthorize("hasRole('REGISTRED_USER')")
 	public ResponseEntity<EditProfileDTO> getMyAccount() {
@@ -78,6 +89,16 @@ public class ProfileController {
 		}
 	}
 	
+	@PostMapping("/updateUsername")
+	@PreAuthorize("hasRole('REGISTRED_USER')")
+	public ResponseEntity<Boolean> updateUsername(@RequestBody EditProfileDTO editProfileDTO) {
+		try {
+			return new ResponseEntity<>(profileService.updateUsername(editProfileDTO), HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+	}
+	
 	
 	@GetMapping("/loggedUserInfo")
 	@PreAuthorize("hasRole('REGISTRED_USER')")  
@@ -99,29 +120,15 @@ public class ProfileController {
 		Person person = (Person) currentUser.getPrincipal();
 		Profile user = profileService.findById(person.getId());
 		try {
-			System.out.println("***********************************");
 			ResponseEntity<List<PostDTO>> postDTOs = mediaConnection.getMyPosts(user.getUsername());
 			System.out.println(postDTOs.getStatusCode());
-			System.out.println("***********************************");
 			return postDTOs ;
 		} catch (Exception e) {
-			// TODO: handle exception
 			System.out.println(e.getMessage());
 			return null;
 		}
 		
 	}
-	
-	@GetMapping("/find")
-	@PreAuthorize("hasRole('REGISTRED_USER')")  
-	public String find() {
-		System.out.println("###########################");
-		String response =  mediaConnection.getProba();
-		
-		return response;
-	}
-	
-	
 	@GetMapping("/getAllUsers")
 	public ResponseEntity<List<Profile>> getAllUsers() {	
 		List<Profile> usersProfiles = profileService.findAll();
@@ -147,6 +154,12 @@ public class ProfileController {
 		}
 	}
 	
+	@GetMapping("/getFriendStatus/{username}")
+	public ResponseEntity getFriendStatus(@PathVariable String username) {
+		System.out.print("U kontroleru jeeeeeeeeeeeeeeeeeeeeee");
+		return new ResponseEntity(profileService.getFriendStatus(username), HttpStatus.OK); 
+	}
+	
 	@GetMapping("/getFollowingUsers")
 	@PreAuthorize("hasRole('REGISTRED_USER')")  
 	public ResponseEntity<List<FollowingDTO>> getFollowingUsers() {
@@ -157,17 +170,6 @@ public class ProfileController {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
 		
-	}
-	
-	@PostMapping("/proba")
-	public ResponseEntity<?> proba()
-	{
-		System.out.println("Probaaaaaaaaaaaaaa");
-		Profile pr=profileService.findById(102L);
-		String username=pr.getUsername();
-		
-		System.out.println("Probaaaaaaaaaaaaaa"+username);
-		return ResponseEntity.ok(username);
 	}
 	
 }
