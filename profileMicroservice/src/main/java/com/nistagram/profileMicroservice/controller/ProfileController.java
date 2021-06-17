@@ -26,6 +26,7 @@ import com.nistagram.profileMicroservice.dto.RegistredUserDTO;
 import com.nistagram.profileMicroservice.model.Person;
 import com.nistagram.profileMicroservice.model.Profile;
 import com.nistagram.profileMicroservice.model.ProfileStatus;
+import com.nistagram.profileMicroservice.repository.PersonRepository;
 import com.nistagram.profileMicroservice.service.implService.ProfileService;
 
 
@@ -36,12 +37,18 @@ public class ProfileController {
 	
 	private final ProfileService profileService;
 	private final MediaConnection mediaConnection;
+	private final PersonRepository personRepository;
 	
 	@Autowired
-	public ProfileController(ProfileService profileServie,MediaConnection mediaConnection) {
-		this.profileService = profileServie;
+	public ProfileController(ProfileService profileService, MediaConnection mediaConnection,
+			PersonRepository personRepository) {
+		super();
+		this.profileService = profileService;
 		this.mediaConnection = mediaConnection;
+		this.personRepository = personRepository;
 	}
+
+	
 
 	@PostMapping("/proba")
 	public ResponseEntity<?> proba()
@@ -279,5 +286,13 @@ public class ProfileController {
 		}*/
 		//Vracam listu prpfila kod koga je ulogovani u bliskim
 		return new ResponseEntity<>(profiles,HttpStatus.OK);
+	}
+	
+	@GetMapping("/getPublicProfiles")
+	public ResponseEntity<List<String>> getPublicProfiles() {	
+		List<String> publicProfiles = personRepository.getPublicProfiles();
+		
+		return (ResponseEntity<List<String>>) (publicProfiles == null
+				? new ResponseEntity<>(HttpStatus.NOT_FOUND) : ResponseEntity.ok(publicProfiles));
 	}
 }

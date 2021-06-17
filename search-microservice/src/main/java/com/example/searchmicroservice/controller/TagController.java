@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.searchmicroservice.connection.MediaConnection;
+import com.example.searchmicroservice.connection.ProfileConnection;
 import com.example.searchmicroservice.dto.PostDTO;
 import com.example.searchmicroservice.model.Post;
 import com.example.searchmicroservice.model.Tag;
@@ -30,24 +31,36 @@ public class TagController {
 	private final MediaConnection mediaConnection;
 	
 	@Autowired
-	public TagController(MediaConnection mediaConnection) {
+	private final ProfileConnection profileConnection;
+	
+	@Autowired
+	public TagController(MediaConnection mediaConnection,ProfileConnection profileConnection) {
 		super();
 		this.mediaConnection = mediaConnection;
+		this.profileConnection=profileConnection;
 	}
 
 	@GetMapping("/findPostsByTag/{tag}")
 	public ResponseEntity<List<PostDTO>> findPostsByTag(@PathVariable String tag){
 		System.out.println("KONTROLER SEARCH BY TAG");
 		System.out.println(tag);
-		List<Tag> allTags=mediaConnection.getAllTags();
 		
 		List<PostDTO> posts=mediaConnection.findPostsByTag(tag);
 		
+		List<String> usernames=profileConnection.getPublicProfiles();
+		
+		List<PostDTO> publicPosts= new ArrayList<>();
+		
+		
 		System.out.println("ISPOD IFA SAM");
 		for(PostDTO p:posts) {
-			System.out.println(p.getDate().toString());
+			for(String u:usernames) {
+			if(p.getUsername().equals(u)) {
+				publicPosts.add(p);
+			}
 		}
-		return new ResponseEntity<List<PostDTO>>(posts, HttpStatus.OK); 
+		}
+		return new ResponseEntity<List<PostDTO>>(publicPosts, HttpStatus.OK); 
 	}
 
 	

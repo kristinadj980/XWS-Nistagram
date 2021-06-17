@@ -292,9 +292,9 @@ public class PostService implements IPostService {
 			List<PostDTO> dto=new ArrayList<>();
 			List<PostDTO> posts=findAllPosts();
 			
-			Tag t=tagRepository.findByName(tag);
-			System.out.println(t.getName());
-			TagDTO t1=new TagDTO(t.getName());
+			//Tag t=tagRepository.findByName(tag);
+			//System.out.println(t.getName());
+			TagDTO t1=new TagDTO(tag);
 			System.out.println(t1.getName());
 			
 			for(PostDTO p:posts) {
