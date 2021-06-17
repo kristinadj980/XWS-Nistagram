@@ -12,12 +12,7 @@
                     <b-icon icon="image" aria-hidden="true"></b-icon> Add post</b-button>
                 <b-button pill variant="outline-danger" class = "btn btn-lg space_style" v-on:click = "addStories">
                     <b-icon icon="image" aria-hidden="true"></b-icon> Add story</b-button>
-                <b-input-group class=" serach_look">
-                    <b-form-input placeholder="search.."></b-form-input>
-                    <b-input-group-append>
-                    <b-button variant="outline-danger"><b-icon icon="search" aria-hidden="true"></b-icon></b-button>
-                    </b-input-group-append>
-                </b-input-group>
+                
             </span>
                 <span  style="float:right;margin:15px">
                     <b-button pill variant="outline-danger" class = "btn btn-lg btn-light" style="margin-right:20px;" v-on:click = "logOut">Log Out</b-button>

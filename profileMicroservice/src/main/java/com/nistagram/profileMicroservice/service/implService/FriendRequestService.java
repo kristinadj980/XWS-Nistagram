@@ -125,6 +125,15 @@ public class FriendRequestService implements IFriendRequestService{
 		profileRepository.save(requestSender);
 		profileRepository.save(requestReceiver);
 		
+		
+		List<FriendRequest> requests = requestReceiver.getFriendRequests();
+		
+		for(FriendRequest f:requests) 
+			if(f.getProfile().getUsername().equals(requestSender.getUsername())) {
+				f.setFriendRequestStatus(FriendRequestStatus.notFriends);
+				friendRequestRepository.save(f);
+			}
+		
 		requestReceiver.getFriendRequests();
 		
 	}

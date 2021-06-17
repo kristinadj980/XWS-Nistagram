@@ -89,6 +89,16 @@ public class ProfileController {
 		}
 	}
 	
+	@PostMapping("/updateUsername")
+	@PreAuthorize("hasRole('REGISTRED_USER')")
+	public ResponseEntity<Boolean> updateUsername(@RequestBody EditProfileDTO editProfileDTO) {
+		try {
+			return new ResponseEntity<>(profileService.updateUsername(editProfileDTO), HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+	}
+	
 	
 	@GetMapping("/loggedUserInfo")
 	@PreAuthorize("hasRole('REGISTRED_USER')")  

@@ -12,8 +12,6 @@
                     <b-icon icon="image" aria-hidden="true"></b-icon> Add post</b-button>
                 <b-button pill variant="outline-danger" class = "btn btn-lg space_style" v-on:click = "addStories">
                     <b-icon icon="image" aria-hidden="true"></b-icon> Add story</b-button>
-                <b-button pill variant="outline-danger" class = "btn btn-lg space_style" v-on:click = "editProfile">
-                    <b-icon icon="gear" aria-hidden="true"></b-icon> Edit profile</b-button>
                 <b-input-group class=" serach_look">
                     <b-input-group-append>
                         <input 
@@ -40,9 +38,9 @@
         </div>
         <b-card class="content_surface" align="left">
             
-             <b-button  class="btn btn-info btn-lg space_style"  style="background-color:#f08080;" v-b-modal.modal-1>Show stories</b-button>
-                            <b-modal ref="modal-ref" id="modal-1" title="Stories" hide-footer>
-                                <b-tabs 
+            <b-button  class="btn btn-info btn-lg space_style"  style="background-color:#f08080;" v-b-modal.modal-1>Show stories</b-button>
+            <b-modal ref="modal-ref" id="modal-1" title="Stories" hide-footer>
+            <b-tabs 
             style="margin-top:70px;" 
             align="center"
             active-nav-item-class="font-weight-bold text-uppercase text-danger"
@@ -65,9 +63,18 @@
             </b-tabs>
          </b-modal>
 
-          <b-button  class="btn btn-info btn-lg space_style"  style="background-color:#f08080;margin-left:-500" v-b-modal.modal-4>Show highlights</b-button>
-                            <b-modal ref="modal-ref4" id="modal-4" title="Highlights" hide-footer>
-                                <b-tabs 
+        <b-button  class="btn btn-info btn-lg space_style"  style="background-color:#f08080;margin-left:-500" v-b-modal.modal-4>Show highlights</b-button>
+        <b-icon
+        icon="gear"
+        font-scale="3"
+        variant="danger"
+        aria-hidden="true"  
+        v-on:click = "editProfile"
+        style="margin-left:95%;
+        margin-top:-30%;"
+        ></b-icon>
+            <b-modal ref="modal-ref4" id="modal-4" title="Highlights" hide-footer>
+            <b-tabs 
             style="margin-top:70px;" 
             align="center" 
             active-nav-item-class="font-weight-bold text-uppercase text-danger"
@@ -89,7 +96,6 @@
                 </b-tab>
             </b-tabs>
          </b-modal>
-
             <div class="card header_surface" style="margin-top:10px; border-color: #d4bcce; margin-left:50px;"  >
                   <img class="img-circle img-responsive rounded-circle"  src="https://images.vexels.com/media/users/3/147101/isolated/preview/b4a49d4b864c74bb73de63f080ad7930-instagram-profile-button-by-vexels.png" style=" width:120px; height:120px;"  /> 
                     
@@ -104,6 +110,7 @@
                         <h4 align="left">  <strong>123</strong> posts <strong>123</strong> followers <strong>123</strong> following </h4>
                         <h4 align="left">{{profile.biography}}</h4>
                     </b-col>
+                    
             </div>
             <b-tabs 
             style="margin-top:70px;" 
@@ -120,19 +127,16 @@
                         <h4 align="left"><b-icon icon="person-circle" aria-hidden="true"></b-icon>  {{post.username}}</h4>
                         </b-row>
                         <h6 align="left">{{post.locationDTO.city}},{{post.locationDTO.street}},{{post.locationDTO.objectName}},{{post.locationDTO.country}}</h6>
-                        <!--POKUSAJ NEKI-->
                         <div v-for="(image, index) in post.images" v-bind:key="image.imageBytes">
                             <b-img v-if="!post.fileNames[index].includes(videoText)" thumbnail  v-bind:src="image.imageBytes" alt="Image 1"></b-img>
-                             <video v-if="post.fileNames[index].includes(videoText)" autoplay controls v-bind:src="image.imageBytes" width="400" height="400" style="display:block; margin-left:auto; margin-right:auto"></video>
+                            <video v-if="post.fileNames[index].includes(videoText)" autoplay controls v-bind:src="image.imageBytes" width="400" height="400" style="display:block; margin-left:auto; margin-right:auto"></video>
                         </div>
-                        <!--POKUSAJ NEKI-->
                        <h4 align="left">{{post.description}}</h4>
                         <h5 align="left"><span v-for="(tag,t) in post.tags" :key="t">
                                         #{{tag.name}}
                                     </span>
                         </h5>
-                        <h5 align="left"><b-icon icon="hand-thumbs-up" aria-hidden="true" @click="getLikes($event,post)"></b-icon > {{post.numberOfLikes}} likes <b-icon icon="hand-thumbs-down" aria-hidden="true"  @click="getDislikes($event,post)"></b-icon> {{post.numberOfDislikes}} dislikes<span style="margin-left:430px;"></span>
-                         <b-icon icon="bookmark" aria-hidden="true" align="right" @click="saveAsFavourite($event,post)"></b-icon></h5>
+                        <h5 align="left"><b-icon icon="hand-thumbs-up" aria-hidden="true" @click="getLikes($event,post)"></b-icon > {{post.numberOfLikes}} likes <b-icon icon="hand-thumbs-down" aria-hidden="true"  @click="getDislikes($event,post)"></b-icon> {{post.numberOfDislikes}} dislikes<span style="margin-left:330px;"></span><b-icon icon="bookmark" aria-hidden="true" align="right" @click="saveAsFavourite($event,post)"></b-icon></h5>
                         <h4 align="left"><b-icon icon="chat-square" aria-hidden="true"  @click="getComments($event,post)"></b-icon> {{post.numberOfComments}}  comments</h4>
                     </b-card>
                 </b-tab>
@@ -398,16 +402,6 @@ export default {
             .then(response => {
                 this.posts = response.data;
                 let video = "mp4";
-                
-               /* for(let i=0; i< response.data.length; i++){
-                     if(!this.posts[i].fileName.includes(video)){
-                        console.log("slika jeee");
-                        this.posts[i].imageBytes = 'data:image/jpeg;base64,' + this.posts[i].imageBytes; 
-                    }else{
-                        console.log("video jeee");
-                        this.posts[i].imageBytes = 'data:video/mp4;base64,' + this.posts[i].imageBytes;     
-                    }            
-                } */
 
                 for(let i=0; i< this.posts.length; i++){
                     for(let j=0; j< this.posts[i].fileNames.length; j++){
@@ -596,7 +590,6 @@ export default {
             }
             this.axios.post('http://localhost:8083/mediaMicroservice/collection/addToCollection',postInfo,{ 
                 }).then(response => {
-                    //this.usersWhoLiked = response.data
                     alert("Post is added in the favourites!")
                     console.log(response);                
                 }).catch(res => {
@@ -612,16 +605,6 @@ export default {
                 this.collections = response.data;
                 let video = "mp4";
                 
-                /* for(let i=0; i< this.collections.length; i++){
-                    for(let j=0; j< this.collections[i].fileNames.length; j++){
-                        if(!this.collections[i].fileNames[j].includes(video)){
-                            console.log("usao je u if");
-                            this.collections[i].images[j].imageBytes = 'data:image/jpeg;base64,' + this.collections[i].images[j].imageBytes;
-                        }else{
-                            this.collections[i].images[j].imageBytes = 'data:video/mp4;base64,' + this.collections[i].images[j].imageBytes;     
-                        }      
-                    }      
-                } */
                  for(let i=0; i< this.collections.length; i++){
                     for(let j=0; j< this.collections[i].posts.length; j++){
                         for(let k=0; k< this.collections[i].posts[j].fileNames.length; k++){
@@ -687,7 +670,7 @@ export default {
 
     }
     .serach_look{
-         margin-left: 150%;
+        margin-left: 155%;
         width: 50%;
         margin-top: -8%;
     }

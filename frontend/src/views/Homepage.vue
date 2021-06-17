@@ -12,12 +12,23 @@
                     <b-icon icon="image" aria-hidden="true"></b-icon> Add post</b-button>
                 <b-button pill variant="outline-danger" class = "btn btn-lg space_style" v-on:click = "addStories">
                     <b-icon icon="image" aria-hidden="true"></b-icon> Add story</b-button>
-                    <b-button pill variant="outline-danger" class = "btn btn-lg space_style" v-on:click = "proba">
-                    <b-icon icon="image" aria-hidden="true"></b-icon> PROBA </b-button>
                 <b-input-group class=" serach_look">
-                    <b-form-input placeholder="search.."></b-form-input>
                     <b-input-group-append>
-                    <b-button variant="outline-danger" ><b-icon icon="search" aria-hidden="true"></b-icon></b-button>
+                        <input 
+                        list="my-list-id" 
+                        v-model="selectedUser" 
+                        class="input_style" 
+                        placeholder="enter username..."
+                        style="margin-top: 3% !important; width:300px; height:35px;">
+                        <datalist id="my-list-id">
+                            <option v-for="user in users" v-bind:key="user.id">
+                                {{ user.username }} 
+                            </option>
+                        </datalist>
+                    <router-link :to="{ name: 'GeneralProfiles', params: {selectedUsername: this.selectedUser}}" class="search-btn">
+                       <b-button style="margin-top: -20% !important;  margin-left: 100% !important;" variant="outline-danger"><b-icon icon="search" aria-hidden="true"></b-icon></b-button>
+                    </router-link>
+    
                     </b-input-group-append>
                 </b-input-group>
             </span>
@@ -44,10 +55,10 @@
                                     </span>
                         </h5>
                         <h5 align="left"><b-icon icon="hand-thumbs-up" aria-hidden="true" @click="likePost($event,post)"></b-icon>{{post.numberOfLikes}}  likes 
-                        <b-icon icon="hand-thumbs-down" aria-hidden="true" @click="dislikePost($event,post)"></b-icon>{{post.numberOfDislikes}} dislikes <span style="margin-left:430px;"></span>
+                        <b-icon icon="hand-thumbs-down" aria-hidden="true" @click="dislikePost($event,post)"></b-icon>{{post.numberOfDislikes}} dislikes <span style="margin-left:330px;"></span>
                         <b-icon icon="bookmark" aria-hidden="true" align="right"></b-icon></h5>
-                         <h4 align="left"><b-icon icon="chat-square" aria-hidden="true"  @click="getComments($event,post)"></b-icon> {{post.numberOfComments}}  comments
-                        <input style="width: 94%; margin-top:10px;" type="text" v-model="comment"><span style="margin-left:10px;" ></span>
+                        <h4 align="left"><b-icon icon="chat-square" aria-hidden="true"  @click="getComments($event,post)"></b-icon> {{post.numberOfComments}}  comments
+                        <input style="width: 90%; margin-top:10px;" type="text" v-model="comment"><span style="margin-left:10px;" ></span>
                         <b-icon icon="check-circle" aria-hidden="true" @click="commentPost($event,post)"></b-icon></h4>
                     </b-card>
         </b-card>
@@ -272,7 +283,8 @@ export default {
 
     }
     .serach_look{
-        margin-left: 190%;
+        margin-left: 138%;
+        width: 20%;
         margin-top: -8%;
     }
     .post_look {

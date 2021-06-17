@@ -17,6 +17,7 @@ public interface IProfileService {
 	Profile findByUsername(String username);
 	void update(EditProfileDTO editProfileDTO);
 	void updatePassword(EditProfileDTO editProfileDTO);
+	Boolean updateUsername(EditProfileDTO editProfileDTO);
 	List<Profile> findAll();
 	void updateProfileStatus(String username);
 	List<FollowingDTO> getFollowingUsers();

@@ -1,9 +1,11 @@
 package com.example.mediamicroservice.service.implService;
 
+import com.example.mediamicroservice.dto.EditUsernameDTO;
 import com.example.mediamicroservice.dto.FavouritesDTO;
 import com.example.mediamicroservice.dto.LocationDTO;
 import com.example.mediamicroservice.dto.MediaDTO;
 import com.example.mediamicroservice.dto.PostDTO;
+import com.example.mediamicroservice.dto.ProfileDTO;
 import com.example.mediamicroservice.dto.StoryDTO;
 import com.example.mediamicroservice.model.Media;
 import com.example.mediamicroservice.model.Post;
@@ -104,6 +106,18 @@ public class ProfileMediaService implements IProfileMediaService {
 					}
 				}
 		return postToSave;
+	}
+	
+	@Override
+	public void changeUsername(EditUsernameDTO editUsernameDTO) {
+		try {
+		ProfileMedia profile = profileMediaRepository.findByUsername(editUsernameDTO.getCurrentUsername());
+		profile.setUsername(editUsernameDTO.getNewUsername());
+		profileMediaRepository.save(profile);
+		}catch(NullPointerException e) {
+			e.printStackTrace();
+		}
+		
 	}
 	
 }

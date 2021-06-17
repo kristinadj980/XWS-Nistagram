@@ -1,5 +1,7 @@
 package com.nistagram.profileMicroservice.service.implService;
+import com.nistagram.profileMicroservice.connections.MediaConnection;
 import com.nistagram.profileMicroservice.dto.EditProfileDTO;
+import com.nistagram.profileMicroservice.dto.EditUsernameDTO;
 import com.nistagram.profileMicroservice.dto.FollowingDTO;
 import com.nistagram.profileMicroservice.dto.PersonRequestDTO;
 import com.nistagram.profileMicroservice.model.Authority;
@@ -28,12 +30,16 @@ import org.springframework.stereotype.Service;
 public class ProfileService implements IProfileService {
 	
 	private final ProfileRepository profileRepository;
-	private final  PasswordEncoder passwordEncoder;
+	private final PasswordEncoder passwordEncoder;
 	private final AuthorityService authService;
 	private final AuthorityRepository authorityRepository;
 	
 	@Autowired
-	public ProfileService(ProfileRepository profileRepository,PasswordEncoder passwordEncoder,AuthorityService authService,AuthorityRepository authorityRepository) {
+	private MediaConnection mediaConnection;
+	
+	@Autowired
+	public ProfileService(ProfileRepository profileRepository,PasswordEncoder passwordEncoder,AuthorityService authService,
+			AuthorityRepository authorityRepository) {
 		this.profileRepository = profileRepository;
 		this.passwordEncoder = passwordEncoder;
 		this.authService = authService;
@@ -78,6 +84,15 @@ public class ProfileService implements IProfileService {
         return profile;
 	}
 
+	private Boolean checkUsername(String username) {
+		List<String> allUsernames = profileRepository.findAllUsernames();
+		
+		for(String u:allUsernames)
+			if(u.equals(username))
+				return false;
+		
+		return true;
+	}
 	
 	@Override
 	public Profile findById(Long id) {
@@ -148,20 +163,15 @@ public class ProfileService implements IProfileService {
 
 	@Override
 	public FriendRequestStatus getFriendStatus(String username) {
-		System.out.print("U servisu jeeeeeeeeeeeeeeeeeeeeee");
 		Authentication currentUser = SecurityContextHolder.getContext().getAuthentication();
 		Person person = (Person) currentUser.getPrincipal();
 		Profile logedUser = findById(person.getId());
-		System.out.print("U servisu jeeeeeeeeeeeeeeeeeeeeee");
 		Profile searchedUser = findByUsername(username);
-		System.out.print("U servisu jeeeeeeeeeeeeeeeeeeeeee"  + username);
 		List<Profile> following = logedUser.getFollowing();
 		FriendRequestStatus status  = FriendRequestStatus.notFriends;
-		System.out.print("U servisu jeeeeeeeeeeeeeeeeeeeeee" + status);
 		for(Profile p: following)
 			if(p.getUsername().equals(username))
 				return FriendRequestStatus.friends;
-		System.out.print("U servisu jeeeeeeeeeeeeeeeeeeeeee");
 		List<FriendRequest> requests = searchedUser.getFriendRequests();
 		for(FriendRequest r:requests)
 			if(r.getProfile().getUsername().equals(logedUser.getUsername()))
@@ -169,5 +179,19 @@ public class ProfileService implements IProfileService {
 		
 			
 		return status;
+	}
+
+	@Override
+	public Boolean updateUsername(EditProfileDTO editProfileDTO) {
+		Profile profile = (Profile) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		checkUsername(editProfileDTO.getNewUsername());
+		if(checkUsername(editProfileDTO.getCurrentUsername()) == false && checkUsername(editProfileDTO.getNewUsername()) == true) {
+			profile.setUsername(editProfileDTO.getNewUsername());
+			profileRepository.save(profile);
+			mediaConnection.changeUsername(new EditUsernameDTO(editProfileDTO.getCurrentUsername(), editProfileDTO.getNewUsername()));
+			System.out.println("Proslo");
+			return true;
+		}
+		return false;
 	}
 }
