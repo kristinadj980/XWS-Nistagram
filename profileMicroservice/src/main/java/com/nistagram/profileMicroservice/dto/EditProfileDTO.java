@@ -29,6 +29,8 @@ public class EditProfileDTO {
 	private FriendRequestStatus friendRequestStatus;
 	private String currentUsername;
 	private String newUsername;
+	private Boolean allowedTags; 
+	private Boolean allowedMessages;  
 	
 	public EditProfileDTO() {
 		super();
@@ -37,7 +39,7 @@ public class EditProfileDTO {
 	public EditProfileDTO(String username, String name, String surname, String email, String password,
 			String phoneNumber, LocalDate birthDate, Gender gender, String website, String biography,
 			String confirmPassword, ProfileStatus profileStatus, FriendRequestStatus friendRequestStatus,
-			String currentUsername, String newUsername) {
+			String currentUsername, String newUsername, Boolean allowedTags, Boolean allowedMessages) {
 		super();
 		this.username = username;
 		this.name = name;
@@ -54,6 +56,24 @@ public class EditProfileDTO {
 		this.friendRequestStatus = friendRequestStatus;
 		this.currentUsername = currentUsername;
 		this.newUsername = newUsername;
+		this.allowedTags = allowedTags;
+		this.allowedMessages = allowedMessages;
+	}
+	public EditProfileDTO(String username, String name, String surname, String email, String phoneNumber,
+			LocalDate birthDate, Gender gender, String website, String biography,ProfileStatus profileStatus,Boolean allowedTags, Boolean allowedMessages) {
+		super();
+		this.username = username;
+		this.name = name;
+		this.surname = surname;
+		this.email = email;
+		this.phoneNumber = phoneNumber;
+		this.birthDate = birthDate;
+		this.gender = gender;
+		this.website = website;
+		this.biography = biography;
+		this.profileStatus = profileStatus;
+		this.allowedTags = allowedTags;
+		this.allowedMessages = allowedMessages;
 	}
 
 	public EditProfileDTO(String username, String name, String surname, String email, String password,
@@ -213,6 +233,22 @@ public class EditProfileDTO {
 
 	public void setNewUsername(String newUsername) {
 		this.newUsername = newUsername;
+	}
+
+	public Boolean getAllowedTags() {
+		return allowedTags;
+	}
+
+	public void setAllowedTags(Boolean allowedTags) {
+		this.allowedTags = allowedTags;
+	}
+
+	public Boolean getAllowedMessages() {
+		return allowedMessages;
+	}
+
+	public void setAllowedMessages(Boolean allowedMessages) {
+		this.allowedMessages = allowedMessages;
 	}
 
 }
