@@ -10,6 +10,8 @@ import com.example.mediamicroservice.model.Post;
 import com.example.mediamicroservice.model.ProfileMedia;
 import com.example.mediamicroservice.model.Tag;
 import com.example.mediamicroservice.repository.PostRepository;
+import com.example.mediamicroservice.repository.ProfileMediaRepository;
+import com.example.mediamicroservice.repository.TagRepository;
 import com.example.mediamicroservice.service.IPostService;
 
 import java.io.File;
@@ -25,6 +27,7 @@ import java.util.List;
 
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.orm.jpa.support.PersistenceAnnotationBeanPostProcessor;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -32,15 +35,24 @@ public class PostService implements IPostService {
 	
 	
 	private final PostRepository postRepository;
+	private final ProfileMediaRepository profileMediaRepository;
 	private final ProfileMediaService profileMediaService;
 	private static String uploadDir = "user-photos";
-
+	private final TagRepository tagRepository;
+	
 	@Autowired
-	public PostService(PostRepository postRepository,ProfileMediaService profileMediaService) {
+	public PostService(PostRepository postRepository, ProfileMediaRepository profileMediaRepository,
+			ProfileMediaService profileMediaService, TagRepository tagRepository) {
 		super();
 		this.postRepository = postRepository;
+		this.profileMediaRepository = profileMediaRepository;
 		this.profileMediaService = profileMediaService;
+		this.tagRepository = tagRepository;
 	}
+
+
+
+
 
 	@Override
 	public Post addNewPost(PostDTO postDTO) {
@@ -271,5 +283,79 @@ public class PostService implements IPostService {
 	        }
 	        return postsDto;
 	    }
+
+		@Override
+		public List<PostDTO> findPostsByTag(String tag) {
+			
+			System.out.println("U Post SERVISU FIND BY TAG");
+			System.out.println(tag);
+			List<PostDTO> dto=new ArrayList<>();
+			List<PostDTO> posts=findAllPosts();
+			
+			Tag t=tagRepository.findByName(tag);
+			System.out.println(t.getName());
+			TagDTO t1=new TagDTO(t.getName());
+			System.out.println(t1.getName());
+			
+			for(PostDTO p:posts) {
+				for(TagDTO td:p.getTags()) {
+					if(td.getName().equals(t1.getName())) {
+						dto.add(p);
+						System.out.println(p.getUsername());
+					}
+				}
+			}
+			System.out.println("Kraaaaaj post servisa");
+			return dto;
+			
+		}
+
+
+
+
+
+		@Override
+		public List<PostDTO> findAllPosts() {
+			List<Post> posts=new ArrayList<>();
+			posts=postRepository.findAll();
+			List<PostDTO> postsDTO=new ArrayList<>();
+			int numberOfLikes = 0;
+			int numberOfDislikes = 0;
+			for (Post post : posts) {
+				
+				List<Media> medias = post.getMedias();
+				for (Media m : medias) {
+					LocationDTO locationDTO = new LocationDTO(post.getLocation().getCity(), post.getLocation().getStreet(),post.getLocation().getCountry(),
+							post.getLocation().getObjectName());
+					List<TagDTO> tagsDTO=new ArrayList<>();
+					for(Tag t:post.getTags()) {
+						tagsDTO.add(new TagDTO(t.getName()));
+					
+					}
+					if( post.getNumberOfLikes() == null && post.getNumberOfDisikes() != null) {
+						numberOfDislikes = post.getNumberOfDisikes();
+						postsDTO.add(new PostDTO(post.getDescription(),tagsDTO,profileMediaRepository.findByPostId(post.getId()),m.getFileName(),locationDTO, post.getDate(),0,numberOfDislikes));
+					}else if (post.getNumberOfDisikes() == null && post.getNumberOfLikes() != null ) {
+						numberOfLikes = post.getNumberOfLikes();
+						postsDTO.add(new PostDTO(post.getDescription(),tagsDTO,profileMediaRepository.findByPostId(post.getId()),m.getFileName(),locationDTO, post.getDate(),numberOfLikes,0));
+					}
+					else if(post.getNumberOfLikes() == null && post.getNumberOfDisikes() == null) 
+					{
+						postsDTO.add(new PostDTO(post.getDescription(),tagsDTO,profileMediaRepository.findByPostId(post.getId()),m.getFileName(),locationDTO, post.getDate(),0,0));
+					}
+					else 
+					{
+					numberOfLikes = post.getNumberOfLikes();
+					numberOfDislikes = post.getNumberOfDisikes();
+					postsDTO.add(new PostDTO(post.getDescription(),tagsDTO,profileMediaRepository.findByPostId(post.getId()),m.getFileName(),locationDTO, post.getDate(),numberOfLikes,numberOfDislikes));
+					}
+			}
+			}
+			String username=profileMediaRepository.findByPostId(27L);
+			System.out.println("UPITTTTTTTTTTTT"+username);
+			List<PostDTO> allPosts = getImagesFiles(postsDTO);
+			return allPosts;
+		}
+		
 	
 }

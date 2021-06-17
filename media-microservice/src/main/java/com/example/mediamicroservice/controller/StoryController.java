@@ -36,15 +36,14 @@ public class StoryController {
 	
 	private final ProfileMediaService profileMediaService;
 	private final StoryService storyService;
-	@Autowired 
-	private final ProfileConnection profileConnection;
+	
 	
 	@Autowired
-	public StoryController(ProfileMediaService profileMediaService, StoryService storyService,ProfileConnection profileConnection) {
+	public StoryController(ProfileMediaService profileMediaService, StoryService storyService) {
 		super();
 		this.profileMediaService = profileMediaService;
 		this.storyService = storyService;
-		this.profileConnection=profileConnection;
+		
 	}
 	
 	private static String uploadDir = "user-photos";

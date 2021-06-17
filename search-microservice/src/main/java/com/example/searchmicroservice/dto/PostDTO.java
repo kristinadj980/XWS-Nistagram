@@ -1,12 +1,10 @@
-package com.example.mediamicroservice.dto;
+package com.example.searchmicroservice.dto;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
-import com.example.mediamicroservice.model.Tag;
 
 public class PostDTO {
-	
 	private String description;
 	private String location;
 	private List<TagDTO> tags;
@@ -101,21 +99,6 @@ public class PostDTO {
 			this.date=date;
 			this.numberOfLikes=numberOfLikes;
 			this.numberOfDislikes=numberOfDislikes;
-	}
-
-
-
-	public PostDTO(String description, List<TagDTO> tagsDTO, String username, String fileName,
-			LocationDTO locationDTO, LocalDateTime date, int numberOfLikes, int numberOfDislikes) {
-		
-		this.description=description;
-		this.fileName=fileName;
-		this.username=username;
-		this.locationDTO=locationDTO;
-		this.date=date;
-		this.numberOfLikes=numberOfLikes;
-		this.numberOfDislikes=numberOfDislikes;
-		this.tags=tagsDTO;
 	}
 
 

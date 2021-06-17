@@ -15,10 +15,22 @@
                     <b-button pill variant="outline-danger" class = "btn btn-lg space_style" v-on:click = "proba">
                     <b-icon icon="image" aria-hidden="true"></b-icon> PROBA </b-button>
                 <b-input-group class=" serach_look">
-                    <b-form-input placeholder="search.."></b-form-input>
                     <b-input-group-append>
-                    <b-button variant="outline-danger" ><b-icon icon="search" aria-hidden="true"></b-icon></b-button>
-                    </b-input-group-append>
+                        <input 
+                        list="my-list-id" 
+                        v-model="selectedTag" 
+                        class="input_style" 
+                        placeholder="enter username..."
+                        style="margin-top: 3% !important; width:400px; height:35px;">
+                       <datalist id="my-list-id">
+                            <option v-for="user in tags" v-bind:key="user.id">
+                                {{ user.name}} 
+                            </option>
+                        </datalist> 
+                    <router-link :to="{ name: 'SearchPost', params: {selectedTag: this.selectedTag}}" class="search-btn">
+                       <b-button style="margin-top: -15% !important;  margin-left: 100% !important;" variant="outline-danger"><b-icon icon="search" aria-hidden="true"></b-icon></b-button>
+                    </router-link>
+                     </b-input-group-append>
                 </b-input-group>
             </span>
                 <span  style="float:right;margin:15px">
@@ -111,6 +123,8 @@ export default {
         numberOfDislikes:0,
         loggeduser: "",
         closeFriends: [],
+        selectedTag:[''],
+        tags:[],
         }
     },
     async mounted(){
@@ -151,6 +165,18 @@ export default {
                alert(Error)
                 console.log(res);
             });
+            
+             this.axios.get('http://localhost:8083/searchMicroservice/tag/getAllTags',{ 
+             headers: {
+                 'Authorization': 'Bearer ' + token,
+             }
+         }).then(response => {
+               this.tags = response.data
+                console.log(this.tags);
+         }).catch(res => {
+                       alert("Error");
+                        console.log(res);
+                 });
    },
     methods:{
         showHomepage: function(){

@@ -9,6 +9,7 @@ import AddingPosts from '../views/AddingPosts.vue'
 import AddingStories from '../views/AddingStories.vue'
 import ProfileInfo from '../views/ProfileInfo.vue'
 import GeneralProfiles from '../views/GeneralProfiles.vue'
+import SearchPost from '../views/SearchPost.vue'
 import FriendRequests from '../views/FriendRequests.vue'
 
 Vue.use(VueRouter)
@@ -66,6 +67,11 @@ const routes = [
     path: '/generalProfiles/:selectedUsername',
     name: 'GeneralProfiles',
     component: GeneralProfiles
+  },
+  {
+    path: '/searchPost/:selectedTag',
+    name: 'SearchPost',
+    component: SearchPost
   },
   {
     path: '/friendRequests',
