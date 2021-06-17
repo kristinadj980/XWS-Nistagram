@@ -176,6 +176,8 @@ export default {
                 usernameTo : post.username,
                 usernameFrom : this.loggeduser.username,
                 fileName : post.fileName,
+                fileNames : post.fileNames,
+                postId: post.id,
             }
             this.axios.post('http://localhost:8083/mediaMicroservice/post/likePost',postInfo,{ 
                 }).then(response => {
@@ -195,7 +197,8 @@ export default {
             const postInfo = {
                 usernameTo : post.username,
                 usernameFrom : this.loggeduser.username,
-                fileName : post.fileName,
+                fileNames : post.fileNames,
+                postId: post.id,
             }
             this.axios.post('http://localhost:8083/mediaMicroservice/post/dislikePost',postInfo,{ 
                 }).then(response => {
@@ -215,7 +218,8 @@ export default {
             const postInfo = {
                 usernameTo : post.username,
                 usernameFrom : this.loggeduser.username,
-                fileName : post.fileName,
+                fileNames : post.fileNames,
+                postId: post.id,
                 comment : this.comment,
             }
             this.axios.post('http://localhost:8083/mediaMicroservice/post/commentPost',postInfo,{ 

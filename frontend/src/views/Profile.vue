@@ -578,7 +578,6 @@ export default {
             this.fileName = post.fileName,
             this.username = post.username,
             this.postId = post.id;
-            alert(this.postId)
         },
         addPostToCollection : function(){
             console.log("Sad smo u funkciji i selected id je" + this.selectedCollectionID)
@@ -590,7 +589,9 @@ export default {
             }
             this.axios.post('http://localhost:8083/mediaMicroservice/collection/addToCollection',postInfo,{ 
                 }).then(response => {
-                    alert("Post is added in the favourites!")
+                    //this.usersWhoLiked = response.data
+                    alert("Post is added in the collection!")
+                    this.$refs['modal5'].hide();
                     console.log(response);                
                 }).catch(res => {
                     alert("Error,please try later");
@@ -616,7 +617,7 @@ export default {
                         }    
                     }      
                 } 
-                alert("Ok")
+               
             }).catch(res => {
                         alert("Error");
                             console.log(res);
