@@ -36,7 +36,8 @@
                         <h4 align="left"><b-icon icon="person-circle" aria-hidden="true"></b-icon>  {{story.username}}</h4>
                         </b-row>
                         <h6 align="left">{{story.locationDTO.city}},{{story.locationDTO.street}},{{story.locationDTO.objectName}},{{story.locationDTO.country}}</h6>
-                        <b-img thumbnail  v-bind:src="story.imageBytes" alt="Image 1"></b-img>
+                        <b-img v-if="!story.fileName.includes(videoText)" thumbnail  v-bind:src="story.imageBytes" alt="Image 1"></b-img>
+                        <video v-if="story.fileName.includes(videoText)" autoplay controls v-bind:src="story.imageBytes" width="400" height="400" style="display:block; margin-left:auto; margin-right:auto"></video>
                         <h4 align="left">{{story.description}}</h4>
                     </b-card>
                 </b-tab>
@@ -221,6 +222,8 @@ export default {
         profileStatus: "",
         stories: [],
         friends: [],
+         fileNames:[],
+        fileName:'',
         }
     },
      mounted(){
@@ -350,8 +353,15 @@ export default {
             this.axios.get('http://localhost:8083/mediaMicroservice/story/getArchiveStories/'+ person.username,)
             .then(response => {
                 this.stories = response.data;
+                 let video = "mp4"
                 for(let i=0; i< response.data.length; i++){
-                        this.stories[i].imageBytes = 'data:image/jpeg;base64,' + this.stories[i].imageBytes;                
+                        if(!this.stories[i].fileName.includes(video)){
+                        console.log("slika jeee");
+                        this.stories[i].imageBytes = 'data:image/jpeg;base64,' + this.stories[i].imageBytes; 
+                    }else{
+                        console.log("video jeee");
+                        this.stories[i].imageBytes = 'data:video/mp4;base64,' + this.stories[i].imageBytes;     
+                    }                            
                 } 
             }).catch(res => {
                         alert("Error");

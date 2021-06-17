@@ -11,6 +11,7 @@ import ProfileInfo from '../views/ProfileInfo.vue'
 import GeneralProfiles from '../views/GeneralProfiles.vue'
 import SearchPost from '../views/SearchPost.vue'
 import FriendRequests from '../views/FriendRequests.vue'
+import SearchPostUnregistered from '../views/SearchPostUnregistered.vue'
 
 Vue.use(VueRouter)
 
@@ -72,6 +73,11 @@ const routes = [
     path: '/searchPost/:selectedTag',
     name: 'SearchPost',
     component: SearchPost
+  },
+  {
+    path: '/searchPostUnregistered/:selectedTag',
+    name: 'SearchPostUnregistered',
+    component: SearchPostUnregistered
   },
   {
     path: '/friendRequests',

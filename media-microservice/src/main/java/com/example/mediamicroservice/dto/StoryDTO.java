@@ -10,12 +10,14 @@ public class StoryDTO {
 	private List<TagDTO> tags;
 	private String username;
 	private Long userId;
+	private List<String> fileNames;
 	private String fileName;
 	private boolean highlighted;
 	 private String following;
 	private LocationDTO locationDTO;
     private List<byte[]> imageBytes;
     private boolean closeFriends;
+    private List<ImageDTO> images;
 	
 
 	public StoryDTO() {
@@ -23,8 +25,42 @@ public class StoryDTO {
 		// TODO Auto-generated constructor stub
 	}
 	
+	public String getFileName() {
+		return fileName;
+	}
+
+	public void setFileName(String fileName) {
+		this.fileName = fileName;
+	}
+
+	public List<ImageDTO> getImages() {
+		return images;
+	}
+
+	public void setImages(List<ImageDTO> images) {
+		this.images = images;
+	}
+
 	public StoryDTO(String location, String description, List<TagDTO> tags, String username, Long userId,
-			String fileName, boolean highlighted, String following, LocationDTO locationDTO, List<byte[]> imageBytes,
+			List<String> fileNames, boolean highlighted, String following, LocationDTO locationDTO,
+			List<byte[]> imageBytes, boolean closeFriends, List<ImageDTO> images) {
+		super();
+		this.location = location;
+		this.description = description;
+		this.tags = tags;
+		this.username = username;
+		this.userId = userId;
+		this.fileNames = fileNames;
+		this.highlighted = highlighted;
+		this.following = following;
+		this.locationDTO = locationDTO;
+		this.imageBytes = imageBytes;
+		this.closeFriends = closeFriends;
+		this.images = images;
+	}
+
+	public StoryDTO(String location, String description, List<TagDTO> tags, String username, Long userId,
+			List<String> fileNames, boolean highlighted, String following, LocationDTO locationDTO, List<byte[]> imageBytes,
 			boolean closeFriends) {
 		super();
 		this.location = location;
@@ -32,7 +68,7 @@ public class StoryDTO {
 		this.tags = tags;
 		this.username = username;
 		this.userId = userId;
-		this.fileName = fileName;
+		this.fileNames = fileNames;
 		this.highlighted = highlighted;
 		this.following = following;
 		this.locationDTO = locationDTO;
@@ -40,23 +76,23 @@ public class StoryDTO {
 		this.closeFriends = closeFriends;
 	}
 	
-	public StoryDTO(String description, String username, String fileName, LocationDTO locationDTO,boolean highlighted,boolean closeFriends) {
+	public StoryDTO(String description, String username,List<String> fileNames, LocationDTO locationDTO,boolean highlighted,boolean closeFriends) {
 		super();
 		this.description = description;
 		this.username = username;
-		this.fileName = fileName;
+		this.fileNames = fileNames;
 		this.locationDTO = locationDTO;
 		this.highlighted=highlighted;
 		this.closeFriends=closeFriends;
 	}
 
-	public StoryDTO(String location, String description, String username, String fileName, LocationDTO locationDTO,
+	public StoryDTO(String location, String description, String username, List<String> fileNames, LocationDTO locationDTO,
 			List<byte[]> imageBytes,boolean highlighted,boolean closeFriends) {
 		super();
 		this.location = location;
 		this.description = description;
 		this.username = username;
-		this.fileName = fileName;
+		this.fileNames = fileNames;
 		this.locationDTO = locationDTO;
 		this.imageBytes = imageBytes;
 		this.highlighted=highlighted;
@@ -79,7 +115,7 @@ public class StoryDTO {
 		this.highlighted = highlighted;
 	}
 
-	public StoryDTO(String location,String description, List<TagDTO> tags, String username, Long userId, String fileName,
+	public StoryDTO(String location,String description, List<TagDTO> tags, String username, Long userId, List<String> fileNames,
 			LocationDTO locationDTO, List<byte[]> imageBytes) {
 		super();
 		this.location = location;
@@ -87,10 +123,22 @@ public class StoryDTO {
 		this.tags = tags;
 		this.username = username;
 		this.userId = userId;
-		this.fileName = fileName;
+		this.fileNames = fileNames;
 		this.locationDTO = locationDTO;
 		this.imageBytes = imageBytes;
 	}
+	
+
+	public StoryDTO(String description, String username, String fileName, LocationDTO locationDTO,
+			boolean highlighted, boolean closeFriends) {
+		this.description = description;
+		this.username = username;
+		this.fileName = fileName;
+		this.locationDTO = locationDTO;
+		this.highlighted=highlighted;
+		this.closeFriends=closeFriends;
+	}
+
 	public String getLocation() {
 		return location;
 	}
@@ -115,11 +163,11 @@ public class StoryDTO {
 	public void setUserId(Long userId) {
 		this.userId = userId;
 	}
-	public String getFileName() {
-		return fileName;
+	public List<String> getFileNames() {
+		return fileNames;
 	}
-	public void setFileName(String fileName) {
-		this.fileName = fileName;
+	public void setFileNames(List<String> fileNames) {
+		this.fileNames = fileNames;
 	}
 	public LocationDTO getLocationDTO() {
 		return locationDTO;

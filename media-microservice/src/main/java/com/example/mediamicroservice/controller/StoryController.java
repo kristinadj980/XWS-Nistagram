@@ -49,17 +49,21 @@ public class StoryController {
 	private static String uploadDir = "user-photos";
 	
 	@PostMapping("/saveImage")
-    public String saveImage(@RequestParam("file") MultipartFile multipartFile ) throws IOException {
+    public List<String> saveImage(@RequestParam("file") List<MultipartFile> multipartFiles ) throws IOException {
 		
-        String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename().replaceAll("\\s", "")); 
-        uploadDir = "user-photos";
-        MediaUpload.saveFile(uploadDir, fileName, multipartFile);
-        return fileName;
+		List<String> fileNames = new ArrayList<String>();
+		for(MultipartFile multipartFile:multipartFiles) {
+	        String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename().replaceAll("\\s", "")); 
+	        fileNames.add(fileName);
+	        uploadDir = "user-photos";
+	        MediaUpload.saveFile(uploadDir, fileName, multipartFile);
+		}
+        return fileNames;
     }
 	
 	@PostMapping("/addNewStory")
 	public ResponseEntity<Story> addNewStory(@RequestBody StoryDTO storyDTO) {
-        Story response = storyService.addNewStory(storyDTO);
+        List<Story> response = storyService.addNewStory(storyDTO);
         
 		return (ResponseEntity<Story>) (response == null ? new ResponseEntity<>(HttpStatus.NOT_FOUND) : ResponseEntity.ok(response));
 		
