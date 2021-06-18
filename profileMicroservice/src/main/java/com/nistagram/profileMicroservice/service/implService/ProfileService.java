@@ -214,6 +214,7 @@ public class ProfileService implements IProfileService {
 		request.setRequestStatus(RequestStatus.sent);
 		request.setName(verificationRequestDTO.getName());
 		request.setSurname(verificationRequestDTO.getSurname());
+		request.setUsername(verificationRequestDTO.getUsername());
 		myProfile.setVerificationRequest(request);
 		
 		return profileRepository.save(myProfile);

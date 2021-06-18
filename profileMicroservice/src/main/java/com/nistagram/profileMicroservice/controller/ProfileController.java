@@ -27,7 +27,9 @@ import com.nistagram.profileMicroservice.dto.VerificationRequestDTO;
 import com.nistagram.profileMicroservice.model.Person;
 import com.nistagram.profileMicroservice.model.Profile;
 import com.nistagram.profileMicroservice.model.ProfileStatus;
+import com.nistagram.profileMicroservice.model.VerificationRequest;
 import com.nistagram.profileMicroservice.service.implService.ProfileService;
+import com.nistagram.profileMicroservice.service.implService.VerificationRequestService;
 
 
 @RestController
@@ -37,11 +39,13 @@ public class ProfileController {
 	
 	private final ProfileService profileService;
 	private final MediaConnection mediaConnection;
+	private final VerificationRequestService verificationRequestService;
 	
 	@Autowired
-	public ProfileController(ProfileService profileServie,MediaConnection mediaConnection) {
+	public ProfileController(ProfileService profileServie,MediaConnection mediaConnection,VerificationRequestService verificationRequestService) {
 		this.profileService = profileServie;
 		this.mediaConnection = mediaConnection;
+		this.verificationRequestService = verificationRequestService;
 	}
 
 	@PostMapping("/proba")
@@ -172,6 +176,7 @@ public class ProfileController {
 		}
 		
 	}
+	
 	@PostMapping("/editTagAllowance")
 	@PreAuthorize("hasRole('REGISTRED_USER')")
 	public ResponseEntity<Boolean> updateTagAllowance(@RequestBody EditProfileDTO editProfileDTO) {
@@ -200,6 +205,18 @@ public class ProfileController {
 		} catch (Exception e) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
+	}
+	
+	@GetMapping("/getAllRequests")
+	@PreAuthorize("hasRole('ADMINISTRATOR')")  
+	public ResponseEntity<List<VerificationRequestDTO>> getVerificationRequests() {
+		try {
+			return new ResponseEntity<>(verificationRequestService.getVerificationRequests(), HttpStatus.OK);
+			
+		} catch (Exception e) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+		
 	}
 	
 	

@@ -1,5 +1,6 @@
 package com.nistagram.profileMicroservice.dto;
 
+import com.nistagram.profileMicroservice.model.RequestStatus;
 import com.nistagram.profileMicroservice.model.VerificationCategory;
 
 public class VerificationRequestDTO {
@@ -8,20 +9,25 @@ public class VerificationRequestDTO {
 	private VerificationCategory verificationCategory;
 	private String fileName;
 	private String username;
+	private Long id;
+	private RequestStatus requestStatus;
 	
 	public VerificationRequestDTO() {
 		super();
 	}
-
+	
 	public VerificationRequestDTO(String name, String surname, VerificationCategory verificationCategory,
-			String fileName, String username) {
+			String fileName, String username, Long id, RequestStatus requestStatus) {
 		super();
 		this.name = name;
 		this.surname = surname;
 		this.verificationCategory = verificationCategory;
 		this.fileName = fileName;
 		this.username = username;
+		this.id = id;
+		this.requestStatus = requestStatus;
 	}
+
 
 	public String getName() {
 		return name;
@@ -61,6 +67,22 @@ public class VerificationRequestDTO {
 
 	public void setUsername(String username) {
 		this.username = username;
+	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public RequestStatus getRequestStatus() {
+		return requestStatus;
+	}
+
+	public void setRequestStatus(RequestStatus requestStatus) {
+		this.requestStatus = requestStatus;
 	}
 
 }

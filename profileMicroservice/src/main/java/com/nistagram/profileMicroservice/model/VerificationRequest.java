@@ -16,6 +16,9 @@ public class VerificationRequest {
 
 	@Column(name = "surname", nullable = false)
 	private String surname;
+	
+	@Column(name = "username", nullable = false)
+	private String username;
 
 	@Enumerated(EnumType.ORDINAL)
 	private VerificationCategory category;
@@ -23,7 +26,10 @@ public class VerificationRequest {
 	@Enumerated(EnumType.ORDINAL)
 	private RequestStatus requestStatus;
 	
-	@OneToMany(mappedBy = "verificationRequest", fetch = FetchType.LAZY)
+	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@JoinTable(name = "verification_request_profiles",
+	joinColumns = @JoinColumn(name = "verification_request_id", referencedColumnName = "id"),
+	inverseJoinColumns = @JoinColumn(name = "profile_id", referencedColumnName = "id"))
 	private List<Profile> profiles;
 	
 	@OneToOne(cascade = CascadeType.ALL)
@@ -33,12 +39,13 @@ public class VerificationRequest {
 		super();
 	}
 
-	public VerificationRequest(Long id, String name, String surname, VerificationCategory category,
+	public VerificationRequest(Long id, String name, String surname, String username, VerificationCategory category,
 			RequestStatus requestStatus, List<Profile> profiles, Media media) {
 		super();
 		this.id = id;
 		this.name = name;
 		this.surname = surname;
+		this.username = username;
 		this.category = category;
 		this.requestStatus = requestStatus;
 		this.profiles = profiles;
@@ -100,7 +107,13 @@ public class VerificationRequest {
 	public void setMedia(Media media) {
 		this.media = media;
 	}
-	
-	
+
+	public String getUsername() {
+		return username;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
+	}
 
 }
