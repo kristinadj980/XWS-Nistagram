@@ -22,7 +22,7 @@
         <b-card class="content_surface">
             <b-button  class="btn btn-info btn-lg space_style"  style="background-color:#f08080;margin-left:-1300px;" v-b-modal.modal-3>Archive stories</b-button>
                             <b-modal ref="modal-ref3" id="modal-3" title="Archive stories" hide-footer>
-                                <b-tabs 
+            <b-tabs 
             style="margin-top:70px;" 
             align="center" 
             active-nav-item-class="font-weight-bold text-uppercase text-danger"
@@ -43,6 +43,10 @@
                 </b-tab>
             </b-tabs>
          </b-modal>
+        <b-card no-body>
+            <b-tabs pills card>
+                <b-tab title="Profile info" active>
+      
                 <div class="card"  >
                 <div class="profile-img">
                    <!--   <img class="img-responsive" src="@/assets/user.png" style=" height:150px;" width="100%" /> -->
@@ -191,7 +195,43 @@
                     </div>
                 </div>
             </div>
+        </b-tab>
+        <b-tab title="Profile Privacy">
+            <b-row>
+                <b-col sm="5"><h5 class ="text-justify top-buffer" align="left" style="margin-left:100px;"> Profile privacy: </h5></b-col>
+                <b-col sm="1">
+                    <b-button variant="outline-danger" size="lg" class = " mb-2 btn btn-lg space_style" v-on:click = "editPrivacy()">
+                        <b-icon v-if="profile.profileStatus == 'privateProfile'" icon="lock-fill" aria-hidden="true" tooltip="click to go public"></b-icon> 
+                        <b-icon v-if="profile.profileStatus == 'publicProfile'" icon="unlock-fill" aria-hidden="true"  tooltip="click to go private"></b-icon> 
+                    </b-button>
+                </b-col>
+            </b-row>
+
+            <b-row>
+                <b-col sm="5"><h5 class ="text-justify top-buffer" align="left" style="margin-left:100px;"> Tag allowance: </h5></b-col>
+                <b-col sm="1">
+                    <b-button  variant="outline-danger" size="lg" class = " mb-2 btn btn-lg space_style" v-on:click = "editTagAllowance()">
+                        <b-icon v-if="profile.allowedTags == true" icon="toggle-on" aria-hidden="true" tooltip="click to disable tags"></b-icon> 
+                        <b-icon v-if="profile.allowedTags == false" icon="toggle-off" aria-hidden="true"  tooltip="click to allow tags"></b-icon> 
+                    </b-button>
+                </b-col>
+            </b-row>
+
+            <b-row>
+                <b-col sm="5"><h5 class ="text-justify top-buffer" style="margin-left:100px;" align="left"> Message allowance: </h5></b-col>
+                <b-col sm="1">
+                    <b-button variant="outline-danger" size="lg" class=" mb-2 btn btn-lg space_style " v-on:click = "editMessageAllowance">
+                        <b-icon v-if="profile.allowedMessages == true" value="true" icon="toggle-on" aria-hidden="true" tooltip="click to disable messages"></b-icon>
+                        <b-icon v-if="profile.allowedMessages == false" value="false" icon="toggle-off" aria-hidden="true"  tooltip="click to allow messages"></b-icon> 
+                    </b-button>
+                </b-col>
+            </b-row>
+            
+        </b-tab>
+            </b-tabs>
         </b-card>
+        </b-card>
+
     </div>
 </template>
 
@@ -370,6 +410,42 @@ export default {
                             });
                     
                     console.log(response);
+                })
+                .catch(response => {
+                    alert("Please, try later.")
+                    console.log(response);
+                })
+        },
+        editTagAllowance: function(){
+            let token = localStorage.getItem('token').substring(1, localStorage.getItem('token').length-1);
+            const editAllowance ={
+                allowedTags : this.profile.allowedTags,
+            }
+            this.axios.post('http://localhost:8083/profileMicroservice/api/profile/editTagAllowance',editAllowance, { 
+                headers: {
+                    'Authorization': 'Bearer ' + token,
+                }})
+                .then(response => {
+                    console.log(response);
+                    this.profile.allowedTags = response.data;
+                })
+                .catch(response => {
+                    alert("Please, try later.")
+                    console.log(response);
+                })
+        },
+        editMessageAllowance: async function(){
+            let token = localStorage.getItem('token').substring(1, localStorage.getItem('token').length-1);
+            const editAllowance ={
+                allowedMessages : this.profile.allowedMessages,
+            } 
+            this.axios.post('http://localhost:8083/profileMicroservice/api/profile/editMessageAllowance',editAllowance, { 
+                headers: {
+                    'Authorization': 'Bearer ' + token,
+                }})
+                .then(response => {
+                    console.log(response);
+                    this.profile.allowedMessages = response.data;
                 })
                 .catch(response => {
                     alert("Please, try later.")
