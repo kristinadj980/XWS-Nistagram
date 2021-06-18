@@ -59,7 +59,7 @@ export default {
                             if(this.authority==="ROLE_REGISTRED_USER") {
                                   window.location.href = '/homepage';
                             }
-                            if(this.authority==="ROLE_ADMINISTRATOR") {
+                            else if(this.authority==="ROLE_ADMINISTRATOR") {
                                   window.location.href = '/homePageAdmin';
                             }
                            

@@ -8,10 +8,47 @@
                     <b-icon icon="house" aria-hidden="true"></b-icon>Home</b-button>
                 <b-button  pill variant="outline-danger" class = "btn btn-lg space_style" v-on:click = "showVerificationRequests">
                     <b-icon icon="person" aria-hidden="true"></b-icon>Verification requests</b-button>
-               
             </span>
-                
         </div>
+         <!-- table -->
+         <div style = "background-color:#f5f1f4; margin: auto; width: 60%;border: 2px solid #692d5a;padding: 10px;margin-top:45px;">
+               <div class="row" style="margin-top: 10px;">
+                    <div class=" form-group col" >
+                        <h4 >Request from</h4>
+                    </div>
+                    <div class=" form-group col">
+                        <h4> Category</h4>
+                    </div>
+                    <div class=" form-group col" >
+                        <h4 >Request status</h4>
+                    </div>
+                    <div class=" form-group col">
+                        <label ></label>
+                    </div>
+                    <div class=" form-group col">
+                        <label ></label>
+                    </div>  
+               </div>
+               <div v-for="request in requests"   v-bind:key="request.id">
+                    <div class="row" >
+                            <div class=" form-group col" style="margin-top: 10px;margin-left: 30px;">
+                                <h5>{{request.name}}  {{request.surname}}</h5>
+                            </div>
+                             <div class=" form-group col" style="margin-top: 10px;margin-left: 70px;">
+                                <h5 >{{request.category}}</h5>
+                            </div>
+                            <div  class=" form-group col" style="margin-top: 10px;margin-left: 70px;">          
+                                <h5 >{{request.requestStatus}}</h5>
+                            </div>
+                            <div class=" form-group col">
+                                <b-button style="margin-left: 150px;" pill variant="outline-danger" class = "btn btn-lg space_style">Approve</b-button>
+                            </div>
+                            <div class=" form-group col" >
+                               <b-button style="margin-left: -30px;" pill variant="outline-danger" class = "btn btn-lg space_style">Reject</b-button>
+                            </div>
+                    </div>
+               </div>
+         </div>
       
          
     </div>
@@ -23,8 +60,22 @@ export default {
     data() {
     return {
         username: "",
+        requests:[],
         }
     },
+     mounted(){
+     let token = localStorage.getItem('token').substring(1, localStorage.getItem('token').length-1);
+        this.axios.get('http://localhost:8083/profileMicroservice/api/profile/getAllRequests',{ 
+             headers: {
+                 'Authorization': 'Bearer ' + token,
+             }
+         }).then(response => {
+               this.requests = response.data;
+         }).catch(res => {
+                       alert("Error");
+                        console.log(res);
+                 });
+   },
     methods:{
         showHomepage: function(){
            window.location.href = "/homePageAdmin";

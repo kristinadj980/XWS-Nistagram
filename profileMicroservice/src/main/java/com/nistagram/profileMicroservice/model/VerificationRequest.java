@@ -23,7 +23,10 @@ public class VerificationRequest {
 	@Enumerated(EnumType.ORDINAL)
 	private RequestStatus requestStatus;
 	
-	@OneToMany(mappedBy = "verificationRequest", fetch = FetchType.LAZY)
+	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@JoinTable(name = "verification_request_profiles",
+	joinColumns = @JoinColumn(name = "verification_request_id", referencedColumnName = "id"),
+	inverseJoinColumns = @JoinColumn(name = "profile_id", referencedColumnName = "id"))
 	private List<Profile> profiles;
 	
 	@OneToOne(cascade = CascadeType.ALL)
