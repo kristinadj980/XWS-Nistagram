@@ -27,6 +27,7 @@ public class VerificationRequestService implements IVerificationRequestService {
 		this.profileRepository = profileRepository;
 	}
 	
+	@Override
 	public List<VerificationRequestDTO> getVerificationRequests() {
 		List<VerificationRequest> requests = verificationRequestRepository.findAll();
 		List<VerificationRequestDTO> requestDTOs = new ArrayList<VerificationRequestDTO>();
@@ -39,6 +40,7 @@ public class VerificationRequestService implements IVerificationRequestService {
 		return requestDTOs;
 	}
 	
+	@Override
 	public VerificationRequest acceptRequest(VerificationRequestDTO requestDTO) {
 		Profile profile = profileService.findByUsername(requestDTO.getUsername());
 		if(profile == null)
@@ -47,17 +49,30 @@ public class VerificationRequestService implements IVerificationRequestService {
 		if(request == null) {
 			throw new IllegalArgumentException("This profile doesn't have a verification request!");
 		}
-		System.out.println("****************OVDE*******************");
-		System.out.println(request.getId());
-		System.out.println(requestDTO.getId());
 		if(request.getId() == requestDTO.getId()) {
-			//to je taj request
-			System.out.println("************USAO U IF********************");
 			request.setRequestStatus(RequestStatus.accepted);
 			profile.setVerificationRequest(request);
 			profileRepository.save(profile);
 		}
 		
+		
+		return request;
+	}
+	
+	@Override
+	public VerificationRequest rejectRequest(VerificationRequestDTO requestDTO) {
+		Profile profile = profileService.findByUsername(requestDTO.getUsername());
+		if(profile == null)
+			throw new IllegalArgumentException("Profile doesn't exist!");
+		VerificationRequest request = profile.getVerificationRequest();
+		if(request == null) {
+			throw new IllegalArgumentException("This profile doesn't have a verification request!");
+		}
+		if(request.getId() == requestDTO.getId()) {
+			request.setRequestStatus(RequestStatus.rejected);
+			profile.setVerificationRequest(request);
+			profileRepository.save(profile);
+		}
 		
 		return request;
 	}

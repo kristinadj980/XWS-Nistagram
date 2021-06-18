@@ -32,7 +32,18 @@ public class VerificationRequestController {
 	public ResponseEntity<String> acceptVerificationRequest(@RequestBody VerificationRequestDTO requestDTO) {
 		try {
 			verificationRequestService.acceptRequest(requestDTO);
-			return new ResponseEntity<>("Profile successfully updated!", HttpStatus.OK);
+			return new ResponseEntity<>("Request successfully updated!", HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<>("Something went wrong!", HttpStatus.BAD_REQUEST);
+		}
+	}
+	
+	@PostMapping("/rejectRequest")
+	@PreAuthorize("hasRole('ADMINISTRATOR')")
+	public ResponseEntity<String> rejectVerificationRequest(@RequestBody VerificationRequestDTO requestDTO) {
+		try {
+			verificationRequestService.rejectRequest(requestDTO);
+			return new ResponseEntity<>("Request successfully updated!", HttpStatus.OK);
 		} catch (Exception e) {
 			return new ResponseEntity<>("Something went wrong!", HttpStatus.BAD_REQUEST);
 		}

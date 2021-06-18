@@ -44,7 +44,7 @@
                                 <b-button style="margin-left: 150px;" pill variant="outline-danger" class = "btn btn-lg space_style" @click="approveRequest($event,request)">Approve</b-button>
                             </div>
                             <div class=" form-group col" >
-                               <b-button style="margin-left: -30px;" pill variant="outline-danger" class = "btn btn-lg space_style">Reject</b-button>
+                               <b-button style="margin-left: -30px;" pill variant="outline-danger" class = "btn btn-lg space_style" @click="rejectRequest($event,request)">Reject</b-button>
                             </div>
                     </div>
                </div>
@@ -105,6 +105,27 @@ export default {
                                 'Authorization': 'Bearer ' + token,
                 }}).then(response => {
                     alert("You have successfully accepted verification request!");
+                    this.getVerificationRequests()
+                    console.log(response); 
+                }).catch(res => {
+                       alert("Please try later.");
+                        console.log(res);
+                });
+        },
+        rejectRequest : function(event,request){
+            const requestInfo= {
+                 name: request.name,
+                 surname: request.surname,
+                 verificationCategory : request.verificationCategory,
+                 username : request.username,
+                 id : request.id
+            }
+            let token = localStorage.getItem('token').substring(1, localStorage.getItem('token').length-1);
+            this.axios.post('http://localhost:8083/profileMicroservice/api/request/rejectRequest',requestInfo,{ 
+                         headers: {
+                                'Authorization': 'Bearer ' + token,
+                }}).then(response => {
+                    alert("You have successfully rejected verification request!");
                     this.getVerificationRequests()
                     console.log(response); 
                 }).catch(res => {
