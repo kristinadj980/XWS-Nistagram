@@ -100,5 +100,7 @@ public class VerificationRequest {
 	public void setMedia(Media media) {
 		this.media = media;
 	}
+	
+	
 
 }

@@ -4,14 +4,19 @@ import com.nistagram.profileMicroservice.dto.EditProfileDTO;
 import com.nistagram.profileMicroservice.dto.EditUsernameDTO;
 import com.nistagram.profileMicroservice.dto.FollowingDTO;
 import com.nistagram.profileMicroservice.dto.PersonRequestDTO;
+import com.nistagram.profileMicroservice.dto.VerificationRequestDTO;
 import com.nistagram.profileMicroservice.model.Authority;
 import com.nistagram.profileMicroservice.model.FriendRequest;
 import com.nistagram.profileMicroservice.model.FriendRequestStatus;
+import com.nistagram.profileMicroservice.model.Media;
 import com.nistagram.profileMicroservice.model.Person;
 import com.nistagram.profileMicroservice.model.Profile;
 import com.nistagram.profileMicroservice.model.ProfileStatus;
+import com.nistagram.profileMicroservice.model.RequestStatus;
+import com.nistagram.profileMicroservice.model.VerificationRequest;
 import com.nistagram.profileMicroservice.repository.AuthorityRepository;
 import com.nistagram.profileMicroservice.repository.ProfileRepository;
+import com.nistagram.profileMicroservice.repository.VerificationRequestrepository;
 import com.nistagram.profileMicroservice.service.IProfileService;
 
 
@@ -21,6 +26,7 @@ import java.util.List;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -33,17 +39,18 @@ public class ProfileService implements IProfileService {
 	private final PasswordEncoder passwordEncoder;
 	private final AuthorityService authService;
 	private final AuthorityRepository authorityRepository;
-	
+	private final VerificationRequestrepository verificationRequestRepository;
 	@Autowired
 	private MediaConnection mediaConnection;
 	
 	@Autowired
 	public ProfileService(ProfileRepository profileRepository,PasswordEncoder passwordEncoder,AuthorityService authService,
-			AuthorityRepository authorityRepository) {
+			AuthorityRepository authorityRepository,VerificationRequestrepository verificationRequestRepository) {
 		this.profileRepository = profileRepository;
 		this.passwordEncoder = passwordEncoder;
 		this.authService = authService;
 		this.authorityRepository = authorityRepository;
+		this.verificationRequestRepository = verificationRequestRepository;
 	}
 
 	@Override
@@ -198,6 +205,21 @@ public class ProfileService implements IProfileService {
 	}
 
 	@Override
+	public Profile sendRequest(VerificationRequestDTO verificationRequestDTO ) {
+		VerificationRequest request = new VerificationRequest();
+		Profile myProfile = profileRepository.findByUsername(verificationRequestDTO.getUsername());
+		Media media = mediaConnection.saveVerificationDocument(verificationRequestDTO.getFileName());
+		request.setCategory(verificationRequestDTO.getVerificationCategory());
+		request.setMedia(media);
+		request.setRequestStatus(RequestStatus.sent);
+		request.setName(verificationRequestDTO.getName());
+		request.setSurname(verificationRequestDTO.getSurname());
+		myProfile.setVerificationRequest(request);
+		
+		return profileRepository.save(myProfile);
+	}
+
+	@Override
 	public Boolean updateMessageAllowance(Boolean messageAllowance) {
 		Profile profile = (Profile) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		profile.setAllowedMessages(!messageAllowance);
@@ -212,5 +234,6 @@ public class ProfileService implements IProfileService {
 		profile.setAllowedTags(!tagAllowance);
 		profileRepository.save(profile);
 		return !tagAllowance;
+
 	}
 }
