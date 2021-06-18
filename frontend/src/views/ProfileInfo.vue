@@ -226,7 +226,7 @@
             </b-row>
             
         </b-tab>
-        <!-- VERIFICATION REQUEST -->
+       
             <b-tab title="Verification request" active>
             <div id="verificationRequest">  
             <form>
