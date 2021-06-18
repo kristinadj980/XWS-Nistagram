@@ -58,8 +58,10 @@ export default {
                             alert("OK?")
                             if(this.authority==="ROLE_REGISTRED_USER") {
                                   window.location.href = '/homepage';
-                                }
-                        
+                            }
+                            if(this.authority==="ROLE_ADMINISTRATOR") {
+                                  window.location.href = '/homePageAdmin';
+                            }
                            
                             else alert("Error has occured."); 
 
