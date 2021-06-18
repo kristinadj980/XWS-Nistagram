@@ -24,13 +24,13 @@
             <form>
             <h4 style="left: 10px;">Name: {{name}} </h4>
             <h4 style="left: 10px;">Surname: {{surname}}</h4>
-            <select style="width:250px;" v-model="selectedCategoryID">
-                <option v-for="category in categories" v-bind:value="category.id" v-bind:key="category.id" v-on:click ="addSelected($event, category.id)">
-                {{category}}</option> 
-                </select>
+            <select style="width:250px;" v-model="selectedCategory">
+                <option v-for="item in this.categories"  v-on:click ="addCategoryTolist($event, item)" v-bind:key="item.id" >
+                {{item}}</option> 
+            </select>
             <h4 style="left: 10px; margin-top: 50px;" >Choose document image</h4>
-            <input type="file" multiple name="image" accept="image/png, image/jpeg, video/mp4,video/x-m4v,video/*" id="file" ref="file" v-on:change="handleFileUpload()">
-           <b-button style="margin-left: 370px; margin-top: 50px;" pill variant="outline-danger" class = "btn btn-lg space_style" v-on:click = "verificationRequest">
+             <input type="file" name="image" accept="image/png, image/jpeg, video/mp4,video/x-m4v,video/*" id="file" ref="file" v-on:change="handleFileUpload()">
+           <b-button style="margin-left: 370px; margin-top: 50px;" pill variant="outline-danger" class = "btn btn-lg space_style" v-on:click = "sendVerificationRequest">
                 <b-icon icon="check-circle" aria-hidden="true"></b-icon> Send</b-button>
            </form>
     <!--****** -->    
@@ -49,7 +49,11 @@ export default {
         surname: "",
         email: "",
         categories:["influencer","sports","media","business","brand","organization"],
-        user:''
+        user:'',
+        file:'',
+        fileName:'',
+        selectedCategory:'',
+        formData:''
         }
     },
     mounted(){
@@ -91,6 +95,60 @@ export default {
         verificationRequest(){
             window.location.href = "/verificationRequest";
         },
+        handleFileUpload(){
+            this.file = this.$refs.file.files[0];
+        },
+        addCategoryTolist : function(event, item) {
+            this.selectedCategory = item;
+            alert(this.selectedCategory)
+        },
+        sendRequest :function(){  
+        let token = localStorage.getItem('token').substring(1, localStorage.getItem('token').length-1);
+            const info= {
+                name : this.name,
+                surname : this.surname,
+                verificationCategory : this.selectedCategory,
+                fileName : this.fileName,
+                username : this.user.username,
+                 }
+          
+          this.axios.post('http://localhost:8083/profileMicroservice/api/profile/verificationRequest',info,{ 
+               headers: {
+                 'Authorization': 'Bearer ' + token,
+             }
+                }).then(response => {
+                    alert("Request is sent!");
+                    console.log(response);                
+                }).catch(res => {
+                    alert(res.response.data.message);
+                });
+        },
+        sendVerificationRequest: function(){
+            let token = localStorage.getItem('token').substring(1, localStorage.getItem('token').length-1);
+            let formData = new FormData();
+            formData.append('file', this.file);
+            
+            this.axios.post('http://localhost:8083/mediaMicroservice/post/saveImageForRequest',formData,{
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                    'Authorization': 'Bearer ' + token
+                }
+                }).then(response => {
+                        this.fileName = response.data
+                       //alert(this.fileName)
+                       //alert("Success")
+                       console.log(response.data)
+                       this.sendRequest();
+                       
+                  
+                    })
+                    .catch(response => {
+                    console.log(response.data)
+                    alert("Eror")
+                    
+                    });  
+        }
+        
   
        
     }
