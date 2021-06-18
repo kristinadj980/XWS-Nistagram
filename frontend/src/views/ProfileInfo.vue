@@ -52,7 +52,7 @@
                   <img class="img-circle img-responsive rounded-circle"  src="@/assets/user.png" style="width:120px; height:120px;"  />  
                 </div>
                 <div class="custom-control custom-switch">
-                <b-button style="margin-left:905px; margin-top:-190px;" variant="outline-danger" size="lg" class = " mb-2 btn btn-lg space_style" v-on:click = "editPrivacy()">
+                <b-button style="margin-left:850px; margin-top:-190px;" variant="outline-danger" size="lg" class = " mb-2 btn btn-lg space_style" v-on:click = "editPrivacy()">
                     <b-icon v-if="profile.profileStatus == 'privateProfile'" icon="lock-fill" aria-hidden="true" tooltip="click to go public"></b-icon> 
                     <b-icon v-if="profile.profileStatus == 'publicProfile'" icon="unlock-fill" aria-hidden="true"  tooltip="click to go public"></b-icon> 
                 </b-button>

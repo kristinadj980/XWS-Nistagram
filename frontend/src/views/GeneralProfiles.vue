@@ -310,12 +310,11 @@ export default {
                 })
         },
         unfollow: async function() {
-            console.log("u funckiji je");
             let token = localStorage.getItem('token').substring(1, localStorage.getItem('token').length-1);
-            const followRequest ={
+            const unfollowUserInfo ={
                 userReceiver : this.user.username,
             } 
-            this.axios.post('http://localhost:8083/profileMicroservice/api/friendRequest/unfollow',followRequest, { 
+            this.axios.post('http://localhost:8083/profileMicroservice/api/friendRequest/unfollow',unfollowUserInfo, { 
                 headers: {
                     'Authorization': 'Bearer ' + token,
                 }})

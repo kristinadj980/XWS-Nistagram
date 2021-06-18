@@ -263,13 +263,7 @@ public class PostService implements IPostService {
 
 
 	    public PostDTO imageFile(PostDTO post, String filePath) {
-			//List<byte[]> imageBytes = new ArrayList<byte[]>();
-			//post.setImageBytes(imageBytes); 
 			List<ImageDTO> images = new ArrayList<>();
-			//for(int i=0; i<post.getFileNames().size(); i++) 
-			//	images.add(new ImageDTO(imageBytes));
-			
-			//post.setImages(images);
 			PostDTO postsDto = post;
 			
 			for(String fileName:post.getFileNames()) {

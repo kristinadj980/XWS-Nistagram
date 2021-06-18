@@ -171,6 +171,19 @@ public class ProfileController {
 		}
 		
 	}
+	
+	@GetMapping("/getFollowers")
+	@PreAuthorize("hasRole('REGISTRED_USER')")  
+	public ResponseEntity<List<FollowingDTO>> getFollowers() {
+		try {
+			return new ResponseEntity<>(profileService.getFollowers(), HttpStatus.OK);
+			
+		} catch (Exception e) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+		
+	}
+	
 	@PostMapping("/editTagAllowance")
 	@PreAuthorize("hasRole('REGISTRED_USER')")
 	public ResponseEntity<Boolean> updateTagAllowance(@RequestBody EditProfileDTO editProfileDTO) {

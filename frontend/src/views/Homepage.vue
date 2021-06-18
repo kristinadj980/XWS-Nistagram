@@ -91,6 +91,7 @@ export default {
     return {
         selectedUser:[''],
         users: [],
+        friendsNotMuted: [],
         username: "",
         posts: [],
         videoText: "mp4",
@@ -113,12 +114,21 @@ export default {
              }
          }).then(response => {
                this.users = response.data
+         }).catch(res => {
+                       alert("Error");
+                        console.log(res);
+                 });
+       this.axios.get('http://localhost:8083/profileMicroservice/api/profile/getNotMuted',{ 
+             headers: {
+                 'Authorization': 'Bearer ' + token,
+             }
+         }).then(response => {
+               this.friendsNotMuted = response.data
                this.getFriednsPosts(response.data);
          }).catch(res => {
                        alert("Error");
                         console.log(res);
                  });
-       
         this.axios.get('http://localhost:8083/profileMicroservice/api/profile/loggedUserInfo',{ 
              headers: {
                  'Authorization': 'Bearer ' + token,

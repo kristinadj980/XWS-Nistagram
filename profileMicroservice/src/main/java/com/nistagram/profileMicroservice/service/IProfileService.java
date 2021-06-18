@@ -28,4 +28,5 @@ public interface IProfileService {
 	List<String> getNotMuted();
 	List<String> muteFriend(EditProfileDTO editProfileDTO);
 	void unmuteFriend(EditProfileDTO editProfileDTO);
+	List<FollowingDTO> getFollowers();
 }
