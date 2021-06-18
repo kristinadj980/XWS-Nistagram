@@ -10,6 +10,7 @@ import AddingStories from '../views/AddingStories.vue'
 import ProfileInfo from '../views/ProfileInfo.vue'
 import GeneralProfiles from '../views/GeneralProfiles.vue'
 import SearchPost from '../views/SearchPost.vue'
+import SearchPostByLocation from '../views/SearchPostByLocation.vue'
 import FriendRequests from '../views/FriendRequests.vue'
 import SearchPostUnregistered from '../views/SearchPostUnregistered.vue'
 
@@ -73,6 +74,11 @@ const routes = [
     path: '/searchPost/:selectedTag',
     name: 'SearchPost',
     component: SearchPost
+  },
+  {
+    path: '/searchPostByLocation/:selectedLocation',
+    name: 'SearchPostByLocation',
+    component: SearchPostByLocation
   },
   {
     path: '/searchPostUnregistered/:selectedTag',

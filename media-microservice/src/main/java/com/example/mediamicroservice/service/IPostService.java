@@ -2,6 +2,7 @@ package com.example.mediamicroservice.service;
 
 import java.util.List;
 
+import com.example.mediamicroservice.dto.LocationDTO;
 import com.example.mediamicroservice.dto.PostDTO;
 import com.example.mediamicroservice.model.Post;
 
@@ -12,4 +13,5 @@ public interface IPostService {
 	List<PostDTO> findAllPosts();
 	List<PostDTO> sortByDate(List<PostDTO> allPosts);
 	List<PostDTO> findPostsByTag(String tag);
+	List<PostDTO> findPostsByLocation(LocationDTO location);
 }

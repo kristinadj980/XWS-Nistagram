@@ -27,6 +27,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
 		
 		web.ignoring().antMatchers(HttpMethod.GET, "/tag/getAllTags");	
 		web.ignoring().antMatchers(HttpMethod.GET, "/tag/findPostsByTag/{tag}");
+		web.ignoring().antMatchers(HttpMethod.GET, "/location/findPostsByLocation/{location}");
 		web.ignoring().antMatchers(HttpMethod.GET, "/", "/webjars/**", "/*.html", "/favicon.ico", "/**/*.html",
 				"/**/*.css", "/**/*.js");
 	}

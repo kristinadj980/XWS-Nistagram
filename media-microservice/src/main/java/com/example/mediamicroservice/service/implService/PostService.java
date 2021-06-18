@@ -351,11 +351,43 @@ public class PostService implements IPostService {
 					}
 			}
 			}
-			String username=profileMediaRepository.findByPostId(27L);
-			System.out.println("UPITTTTTTTTTTTT"+username);
+			
 			List<PostDTO> allPosts = getImagesFiles(postsDTO);
 			return allPosts;
 		}
+
+
+
+
+
+		@Override
+		public List<PostDTO> findPostsByLocation(LocationDTO location) {
+			System.out.println("U Post SERVISU FIND BY LOK=CATION");
+			System.out.println(location.getCity());
+			List<PostDTO> dto=new ArrayList<>();
+			List<PostDTO> posts=findAllPosts();
+			
+			/*
+			String[] s=location.split(",");
+			
+			LocationDTO loc=new LocationDTO();
+			loc.setCountry(s[0]);
+			loc.setCity(s[1]);
+			loc.setStreet(s[2]);
+			loc.setObjectName(s[3]);
+			*/
+			for(PostDTO p:posts) {
+				 if(p.getLocationDTO().getCountry().equals(location.getCountry()) && p.getLocationDTO().getCity().equals(location.getCity()) &&
+						 p.getLocationDTO().getStreet().equals(location.getStreet()) && p.getLocationDTO().getObjectName().equals(location.getObjectName())) {
+						dto.add(p);
+						System.out.println(p.getUsername());
+					}
+				}
+			
+			System.out.println("Kraj post servisa za lokacije");
+			return dto;
+
 		
+		}	
 	
 }

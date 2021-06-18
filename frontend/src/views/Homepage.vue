@@ -14,13 +14,34 @@
                     <b-icon icon="image" aria-hidden="true"></b-icon> Add story</b-button>
                     <b-button pill variant="outline-danger" class = "btn btn-lg space_style" v-on:click = "proba">
                     <b-icon icon="image" aria-hidden="true"></b-icon> PROBA </b-button>
+                <!--LOKACIJE-->
+                <b-input-group class=" serach_look1">
+                    <b-input-group-append>
+                        <input 
+                        list="my-list-id1" 
+                        v-model="selectedLocation" 
+                        class="input_style" 
+                        placeholder="enter location..."
+                        style="margin-top: 3% !important; width:400px; height:35px;">
+                        <datalist id="my-list-id1">
+                        <option v-for="location in locations" v-bind:key="location.id">
+                            {{ location.country }}, {{location.city}},  {{location.street}}, {{location.objectName}} 
+                        </option>
+                    </datalist>
+                    <router-link :to="{ name: 'SearchPostByLocation', params: {selectedLocation: this.selectedLocation}}" class="search-btn">
+                       <b-button style="margin-top: -15% !important;  margin-left: 100% !important;" variant="outline-danger"><b-icon icon="search" aria-hidden="true"></b-icon></b-button>
+                    </router-link>
+                     </b-input-group-append>
+
+                    <!--TAGOVI-->
+                </b-input-group>    
                 <b-input-group class=" serach_look">
                     <b-input-group-append>
                         <input 
                         list="my-list-id" 
                         v-model="selectedTag" 
                         class="input_style" 
-                        placeholder="enter username..."
+                        placeholder="enter tag..."
                         style="margin-top: 3% !important; width:400px; height:35px;">
                        <datalist id="my-list-id">
                             <option v-for="user in tags" v-bind:key="user.id">
@@ -124,7 +145,9 @@ export default {
         loggeduser: "",
         closeFriends: [],
         selectedTag:[''],
+        selectedLocation:[''],
         tags:[],
+        locations:[],
         }
     },
     async mounted(){
@@ -166,13 +189,24 @@ export default {
                 console.log(res);
             });
             
-             this.axios.get('http://localhost:8083/searchMicroservice/tag/getAllTags',{ 
+            this.axios.get('http://localhost:8083/searchMicroservice/tag/getAllTags',{ 
              headers: {
                  'Authorization': 'Bearer ' + token,
              }
          }).then(response => {
                this.tags = response.data
                 console.log(this.tags);
+         }).catch(res => {
+                       alert("Error");
+                        console.log(res);
+                 });
+                 this.axios.get('http://localhost:8083/mediaMicroservice/location/getLocations',{ 
+             headers: {
+                 'Authorization': 'Bearer ' + token,
+             }
+         }).then(response => {
+               this.locations = response.data
+                console.log(this.locations);
          }).catch(res => {
                        alert("Error");
                         console.log(res);
@@ -331,7 +365,11 @@ export default {
 
     }
     .serach_look{
-        margin-left: 190%;
+        margin-left: 205%;
+        margin-top: -8%;
+    }
+    .serach_look1{
+        margin-left: 145%;
         margin-top: -8%;
     }
     .post_look {
