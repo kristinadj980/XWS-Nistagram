@@ -35,13 +35,13 @@
                                 <h5>{{request.name}}  {{request.surname}}</h5>
                             </div>
                              <div class=" form-group col" style="margin-top: 10px;margin-left: 70px;">
-                                <h5 >{{request.category}}</h5>
+                                <h5 >{{request.verificationCategory}}</h5>
                             </div>
                             <div  class=" form-group col" style="margin-top: 10px;margin-left: 70px;">          
                                 <h5 >{{request.requestStatus}}</h5>
                             </div>
                             <div class=" form-group col">
-                                <b-button style="margin-left: 150px;" pill variant="outline-danger" class = "btn btn-lg space_style">Approve</b-button>
+                                <b-button style="margin-left: 150px;" pill variant="outline-danger" class = "btn btn-lg space_style" @click="approveRequest($event,request)">Approve</b-button>
                             </div>
                             <div class=" form-group col" >
                                <b-button style="margin-left: -30px;" pill variant="outline-danger" class = "btn btn-lg space_style">Reject</b-button>
@@ -61,20 +61,11 @@ export default {
     return {
         username: "",
         requests:[],
+        selectedRequest:'',
         }
     },
      mounted(){
-     let token = localStorage.getItem('token').substring(1, localStorage.getItem('token').length-1);
-        this.axios.get('http://localhost:8083/profileMicroservice/api/profile/getAllRequests',{ 
-             headers: {
-                 'Authorization': 'Bearer ' + token,
-             }
-         }).then(response => {
-               this.requests = response.data;
-         }).catch(res => {
-                       alert("Error");
-                        console.log(res);
-                 });
+     this.getVerificationRequests();
    },
     methods:{
         showHomepage: function(){
@@ -87,7 +78,40 @@ export default {
             localStorage.removeItem('token');
             window.location.href = "/login";
         },
-       
+        getVerificationRequests:function(){
+            let token = localStorage.getItem('token').substring(1, localStorage.getItem('token').length-1);
+        this.axios.get('http://localhost:8083/profileMicroservice/api/profile/getAllRequests',{ 
+             headers: {
+                 'Authorization': 'Bearer ' + token,
+             }
+         }).then(response => {
+               this.requests = response.data;
+         }).catch(res => {
+                       alert("Error");
+                        console.log(res);
+                 });
+        },
+        approveRequest : function(event,request){
+            const requestInfo= {
+                 name: request.name,
+                 surname: request.surname,
+                 verificationCategory : request.verificationCategory,
+                 username : request.username,
+                 id : request.id
+            }
+            let token = localStorage.getItem('token').substring(1, localStorage.getItem('token').length-1);
+            this.axios.post('http://localhost:8083/profileMicroservice/api/request/acceptRequest',requestInfo,{ 
+                         headers: {
+                                'Authorization': 'Bearer ' + token,
+                }}).then(response => {
+                    alert("You have successfully accepted verification request!");
+                    this.getVerificationRequests()
+                    console.log(response); 
+                }).catch(res => {
+                       alert("Please try later.");
+                        console.log(res);
+                });
+        },
      
        
         

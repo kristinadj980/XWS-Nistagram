@@ -209,7 +209,7 @@ public class ProfileController {
 	
 	@GetMapping("/getAllRequests")
 	@PreAuthorize("hasRole('ADMINISTRATOR')")  
-	public ResponseEntity<List<VerificationRequest>> getVerificationRequests() {
+	public ResponseEntity<List<VerificationRequestDTO>> getVerificationRequests() {
 		try {
 			return new ResponseEntity<>(verificationRequestService.getVerificationRequests(), HttpStatus.OK);
 			
