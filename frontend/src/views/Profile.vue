@@ -107,7 +107,7 @@
                         {{profile.username}}
                         </b>
                         </h3>
-                        <h4 align="left">  <strong>123</strong> posts <strong>123</strong> followers <strong>123</strong> following </h4>
+                        <h4 align="left">  <strong>123</strong> posts <strong>123</strong> followers <strong>{{this.following}}</strong> following </h4>
                         <h4 align="left">{{profile.biography}}</h4>
                     </b-col>
                     
@@ -339,7 +339,8 @@ export default {
         collectionName:'',
         postId:'',
         selectedCollectionID: '',
-        fileNames:[]
+        fileNames:[],
+        following: 0,
         }
     },
     mounted(){
@@ -365,6 +366,19 @@ export default {
              }
          }).then(response => {
                this.users = response.data
+         }).catch(res => {
+                       alert("Error");
+                        console.log(res);
+                 });
+        
+        this.axios.get('http://localhost:8083/profileMicroservice/api/profile/getFollowingUsers',{ 
+             headers: {
+                 'Authorization': 'Bearer ' + token,
+             }
+         }).then(response => {
+             
+            console.log("ooook je"+ response.data);
+            this.following = response.data.length;
          }).catch(res => {
                        alert("Error");
                         console.log(res);

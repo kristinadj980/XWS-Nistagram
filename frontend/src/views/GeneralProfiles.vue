@@ -17,6 +17,18 @@
                 </span>
         </div>
         <b-card class="content_surface" align="left">
+            <b-dropdown
+            variant="outline-danger" 
+            class="m-2" 
+            menu-class="w-100" 
+            v-if="friendStatus == 'approved' || friendStatus == 'friends'"
+            style="left:46%;">
+                <template #button-content>
+                   <b-icon icon="three-dots" aria-hidden="true" ></b-icon>
+                </template>
+                <b-dropdown-item >Mute</b-dropdown-item>
+                <b-dropdown-item>Block</b-dropdown-item>
+            </b-dropdown>
             <div class="card header_surface" style="margin-top:10px; border-color: #d4bcce; margin-left:50px;"  >
                   <img class="img-circle img-responsive rounded-circle"  src="https://images.vexels.com/media/users/3/147101/isolated/preview/b4a49d4b864c74bb73de63f080ad7930-instagram-profile-button-by-vexels.png" style=" width:120px; height:120px;"  /> 
                     
@@ -59,6 +71,7 @@
             margin-left:100px;">
             Unfollow
             </b-button>
+             
             <b-tabs v-if="user.profileStatus == 'publicProfile' || friendStatus == 'friends'"
             style="margin-top:70px;" 
             align="center" 

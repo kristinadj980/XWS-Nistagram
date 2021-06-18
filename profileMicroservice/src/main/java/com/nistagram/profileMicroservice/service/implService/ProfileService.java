@@ -150,9 +150,7 @@ public class ProfileService implements IProfileService {
 
 	@Override
 	public List<FollowingDTO> getFollowingUsers() {
-		Authentication currentUser = SecurityContextHolder.getContext().getAuthentication();
-		Person person = (Person) currentUser.getPrincipal();
-		Profile user = findById(person.getId());
+		Profile user = getLoggeduser();
 		List<Profile> following = user.getFollowing();
 		List<FollowingDTO> followingDTO = new ArrayList<FollowingDTO>();
 		
@@ -165,9 +163,7 @@ public class ProfileService implements IProfileService {
 
 	@Override
 	public FriendRequestStatus getFriendStatus(String username) {
-		Authentication currentUser = SecurityContextHolder.getContext().getAuthentication();
-		Person person = (Person) currentUser.getPrincipal();
-		Profile logedUser = findById(person.getId());
+		Profile logedUser = getLoggeduser();
 		Profile searchedUser = findByUsername(username);
 		List<Profile> following = logedUser.getFollowing();
 		FriendRequestStatus status  = FriendRequestStatus.notFriends;
@@ -185,7 +181,7 @@ public class ProfileService implements IProfileService {
 
 	@Override
 	public Boolean updateUsername(EditProfileDTO editProfileDTO) {
-		Profile profile = (Profile) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		Profile profile = getLoggeduser();
 		checkUsername(editProfileDTO.getNewUsername());
 		if(checkUsername(editProfileDTO.getCurrentUsername()) == false && checkUsername(editProfileDTO.getNewUsername()) == true) {
 			profile.setUsername(editProfileDTO.getNewUsername());
@@ -199,7 +195,7 @@ public class ProfileService implements IProfileService {
 
 	@Override
 	public Boolean updateMessageAllowance(Boolean messageAllowance) {
-		Profile profile = (Profile) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		Profile profile = getLoggeduser();
 		profile.setAllowedMessages(!messageAllowance);
 
 		profileRepository.save(profile);
@@ -208,9 +204,86 @@ public class ProfileService implements IProfileService {
 
 	@Override
 	public Boolean updateTagAllowance(Boolean tagAllowance) {
-		Profile profile = (Profile) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		Profile profile = getLoggeduser();
 		profile.setAllowedTags(!tagAllowance);
 		profileRepository.save(profile);
 		return !tagAllowance;
+	}
+
+
+	@Override
+	public List<String> getMuted() {
+		Profile profile = getLoggeduser();
+		List<Profile> mutedFriends = profile.getMutedFriends();
+		List<String> mutedUsernames = new ArrayList<String>();
+		if(mutedFriends == null) 
+			return mutedUsernames;
+		else
+			for(Profile m:mutedFriends)
+				mutedUsernames.add(m.getUsername());
+		
+		return mutedUsernames;
+	}
+
+	@Override
+	public List<String> muteFriend(EditProfileDTO editProfileDTO) {
+		Profile profile = getLoggeduser();
+		Profile profileToMute = profileRepository.findByUsername(editProfileDTO.getUsername());
+		List<Profile> pokusaj = new ArrayList<Profile>();
+		if(profile.getMutedFriends() == null) {
+			pokusaj.add(profileToMute);
+			profile.setMutedFriends(pokusaj);
+		}else {
+			List<Profile> mutedFriends = profile.getMutedFriends();
+			mutedFriends.add(profileToMute);
+			profile.setMutedFriends(mutedFriends);
+		}
+		profileRepository.save(profile);
+		List<String> mutedUsernames = new ArrayList<>();
+		try {
+		mutedUsernames =  getMuted();
+		}catch(Exception e) {
+			System.out.println(e.getMessage());
+			e.printStackTrace();
+		}
+		return mutedUsernames;
+	}
+
+	@Override
+	public List<String> getNotMuted() {
+		List<FollowingDTO> following = getFollowingUsers();
+		List<String> muted = getMuted();
+		List<String> notMuted = new ArrayList<>();
+		
+		if(muted.isEmpty())
+			for(FollowingDTO f:following)
+				notMuted.add(f.getFollowing());
+		else if(following.isEmpty() && muted.isEmpty())
+			return notMuted;
+		else if(following.isEmpty() && !muted.isEmpty())
+			return muted;
+		else
+			for(FollowingDTO f:following)
+				for(String m:muted)
+					if(!m.equals(f.getFollowing())) 
+						notMuted.add(f.getFollowing());
+		
+		return notMuted;
+	}
+
+	@Override
+	public void unmuteFriend(EditProfileDTO editProfileDTO) {
+		Profile profile = getLoggeduser();
+		Profile profileToUnmute = profileRepository.findByUsername(editProfileDTO.getUsername());
+
+		profile.getMutedFriends().remove(profileToUnmute);
+		profileRepository.save(profile);
+		
+	}
+	
+	private Profile getLoggeduser() {
+		Authentication currentUser = SecurityContextHolder.getContext().getAuthentication();
+		Person person = (Person) currentUser.getPrincipal();
+		return  findById(person.getId());
 	}
 }

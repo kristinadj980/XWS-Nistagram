@@ -227,6 +227,23 @@
             </b-row>
             
         </b-tab>
+        <b-tab title="Mute friends" @click="showResult()">
+            <b-row v-for="(muted, index) in mutedFriends" v-bind:key="index" style="background: #f5f1f4;" >
+                <b-col sm="6" align-self="center"><strong><h3 class ="text-justify top-buffer" align="left" style="margin-left:350px;">{{muted}} </h3></strong></b-col>
+                <b-col sm="1" align-self="center">
+                    <b-button variant="outline-danger"  size="lg" class = " mb-2 btn btn-lg  space_style" v-on:click = "unmuteFriend(muted)"> Unmute</b-button>
+                </b-col>
+                <hr>
+            </b-row>
+            <b-row v-for="follow,index in following" v-bind:key="index" style="background: #f5f1f4;" >
+                <b-col sm="6" align-self="center"><strong><h3 class ="text-justify top-buffer" align="left" style="margin-left:350px;">{{follow}} </h3></strong></b-col>
+                <b-col sm="1" align-self="center">
+                    <b-button variant="outline-danger"  size="lg" class = " mb-2 btn btn-lg  space_style" v-on:click = "muteFriend(follow)"> Mute</b-button>
+                </b-col>
+                <hr>
+            </b-row>
+
+        </b-tab>
             </b-tabs>
         </b-card>
         </b-card>
@@ -263,6 +280,8 @@ export default {
         stories: [],
         currentUsername: "",
         newUsername: "",
+        following: [],
+        mutedFriends: [],
         }
     },
     mounted(){
@@ -277,7 +296,10 @@ export default {
          }).catch(res => {
                        alert("Error");
                         console.log(res);
-                 });
+        });
+
+        
+
    },
     methods:{
         toggle () {
@@ -448,6 +470,42 @@ export default {
                     console.log(response);
                 })
         },
+        muteFriend :function(friendForMute){
+            let token = localStorage.getItem('token').substring(1, localStorage.getItem('token').length-1);
+            const friendForMuteInfo ={
+                username : friendForMute,
+            } 
+            this.axios.post('http://localhost:8083/profileMicroservice/api/profile/mute',friendForMuteInfo, { 
+                headers: {
+                    'Authorization': 'Bearer ' + token,
+                }})
+                .then(response => {
+                    console.log(response.data);
+                    this.showResult();
+                })
+                .catch(response => {
+                    alert("Please, try later.")
+                    console.log(response);
+                })
+        },
+        unmuteFriend :function(friendForMute){
+            let token = localStorage.getItem('token').substring(1, localStorage.getItem('token').length-1);
+            const friendForMuteInfo ={
+                username : friendForMute,
+            } 
+            this.axios.post('http://localhost:8083/profileMicroservice/api/profile/unmute',friendForMuteInfo, { 
+                headers: {
+                    'Authorization': 'Bearer ' + token,
+                }})
+                .then(response => {
+                    console.log(response.data);
+                    this.showResult();
+                })
+                .catch(response => {
+                    alert("Please, try later.")
+                    console.log(response);
+                })
+        },
         getMyStories: function(person) {
             console.log(person);
             this.axios.get('http://localhost:8083/mediaMicroservice/story/getArchiveStories/'+ person.username,)
@@ -461,6 +519,31 @@ export default {
                             console.log(res);
                     });
                     
+        },
+        showResult: async function(){
+            let token = localStorage.getItem('token').substring(1, localStorage.getItem('token').length-1);
+            this.axios.get('http://localhost:8083/profileMicroservice/api/profile/getNotMuted',{ 
+             headers: {
+                 'Authorization': 'Bearer ' + token,
+             }
+            }).then(response => {
+                this.following = response.data;
+            }).catch(res => {
+                        alert("Error");
+                            console.log(res);
+            });
+
+            this.axios.get('http://localhost:8083/profileMicroservice/api/profile/getMuted',{ 
+                headers: {
+                    'Authorization': 'Bearer ' + token,
+                }
+            }).then(response => {
+                this.mutedFriends = response.data;
+            }).catch(res => {
+                        alert("Error");
+                            console.log(res);
+            });
+
         }
     }
 }

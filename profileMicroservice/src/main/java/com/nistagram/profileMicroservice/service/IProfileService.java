@@ -24,4 +24,8 @@ public interface IProfileService {
 	FriendRequestStatus getFriendStatus(String username);
 	Boolean updateMessageAllowance(Boolean messageAllowance);
 	Boolean updateTagAllowance(Boolean tagAllowance);
+	List<String> getMuted();
+	List<String> getNotMuted();
+	List<String> muteFriend(EditProfileDTO editProfileDTO);
+	void unmuteFriend(EditProfileDTO editProfileDTO);
 }
