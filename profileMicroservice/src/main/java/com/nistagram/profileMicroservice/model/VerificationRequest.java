@@ -4,6 +4,8 @@ import java.util.List;
 
 import javax.persistence.*;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 @Entity
 public class VerificationRequest {
 
@@ -26,6 +28,7 @@ public class VerificationRequest {
 	@Enumerated(EnumType.ORDINAL)
 	private RequestStatus requestStatus;
 	
+	@JsonManagedReference
 	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@JoinTable(name = "verification_request_profiles",
 	joinColumns = @JoinColumn(name = "verification_request_id", referencedColumnName = "id"),
