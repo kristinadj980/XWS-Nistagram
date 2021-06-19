@@ -130,12 +130,19 @@ public class ProfileController {
 		
 	}
 	@GetMapping("/getAllUsers")
-	//@PreAuthorize("hasRole('REGISTRED_USER')")
+	@PreAuthorize("hasRole('REGISTRED_USER')")
 	public ResponseEntity<List<Profile>> getAllUsers() {	
 		List<Profile> usersProfiles = profileService.findAll();
-		//Authentication currentUser = SecurityContextHolder.getContext().getAuthentication();
-		//Person person = (Person) currentUser.getPrincipal();
-		//Profile user = profileService.findById(person.getId());
+		
+		Authentication currentUser = SecurityContextHolder.getContext().getAuthentication();
+		Person person = (Person) currentUser.getPrincipal();
+		Profile user = profileService.findById(person.getId());
+		List<Profile> blockedUsers=user.getBlockedUsers();
+		for(Profile p:blockedUsers) {
+			
+				usersProfiles.remove(p);
+				System.out.println("UKLANJA PRETRAGA");
+			}
 		
 		
 		return (ResponseEntity<List<Profile>>) (usersProfiles == null
@@ -347,7 +354,13 @@ public class ProfileController {
 		
 		Profile p=profileService.findByUsername(username.substring(0, username.length()-1));
 		logedUser.getBlockedUsers().remove(p);
+		logedUser.getFollowing().add(p);
+		logedUser.getFollowers().add(p);
 		profileRepository.save(logedUser);
+		
+		p.getFollowing().add(logedUser);
+		p.getFollowers().add(logedUser);
+		profileRepository.save(p);
 		
 			return new ResponseEntity<>("User successufully unblocked!", HttpStatus.CREATED);
 		}	

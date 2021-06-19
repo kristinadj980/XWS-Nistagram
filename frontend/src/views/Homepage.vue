@@ -42,7 +42,7 @@
                         v-model="selectedTag" 
                         class="input_style" 
                         placeholder="enter tag..."
-                        style="margin-top: 3% !important; width:400px; height:35px;">
+                        style="margin-top: 3% !important; width:300px; height:35px;">
                        <datalist id="my-list-id">
                             <option v-for="user in tags" v-bind:key="user.id">
                                 {{ user.name}} 
@@ -53,6 +53,7 @@
                     </router-link>
                      </b-input-group-append>
                 </b-input-group>
+
             </span>
                 <span  style="float:right;margin:15px">
                     <b-button pill variant="outline-danger" class = "btn btn-lg space_style" v-on:click = "friendRequests">
@@ -366,11 +367,11 @@ export default {
 
     }
     .serach_look{
-        margin-left: 205%;
+        margin-left: 170%;
         margin-top: -8%;
     }
     .serach_look1{
-        margin-left: 145%;
+        margin-left: 115%;
         margin-top: -8%;
     }
     .post_look {
