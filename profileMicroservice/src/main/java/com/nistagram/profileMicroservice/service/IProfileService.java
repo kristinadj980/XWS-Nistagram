@@ -25,4 +25,6 @@ public interface IProfileService {
 	void addCloseFriend(String username);
 	void deleteCloseFriend(String username);
 	Boolean closeFriends(List<Profile> profiles);
+	void blockUser(String username);
+	void unblockUser(String username);
 }

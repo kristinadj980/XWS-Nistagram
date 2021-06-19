@@ -45,7 +45,7 @@
          </b-modal>
 
         <!--BLISKI PRIJATELJI-->
-         <b-button  class="btn btn-info btn-lg space_style"  style="background-color:#f08080;margin-left:-1300px;" v-on:click = "getFollowers"  v-b-modal.modal-4>Close friends</b-button>
+         <b-button  class="btn btn-info btn-lg space_style"  style="background-color:#f08080;margin-left:-1000px;" v-on:click = "getFollowers"  v-b-modal.modal-4>Close friends</b-button>
                   <b-modal ref="modal-ref4" id="modal-4" title="Close friends" hide-footer>
                                 <b-tabs 
             style="margin-top:70px;" 
@@ -62,6 +62,28 @@
                         <h4 align="left"><b-icon icon="person-circle" aria-hidden="true"></b-icon>  {{friend.following}}</h4>
                         <b-button  variant="danger" align="right" class="btn btn-info btn-lg space_style" size="sm" style="background-color:#f08080;"  @click="addCloseFriend($event,friend)"  >Add</b-button>
                         <b-button  align="right" class="btn btn-info btn-lg space_style" size="sm" style="background-color:#f08080;" @click="deleteCloseFriend($event,friend)"  >Delete</b-button>
+                        </b-row>
+                    </b-card>
+                </b-tab>
+            </b-tabs>
+         </b-modal>       
+         <!--   BLOKIRANI  -->
+          <b-button  class="btn btn-info btn-lg space_style"  style="background-color:#f08080;margin-top:150px" v-on:click = "getBlockedUsers"  v-b-modal.modal-6>Blocked users</b-button>
+                  <b-modal ref="modal-ref6" id="modal-6" title="Blocked users" hide-footer>
+                                <b-tabs 
+            style="margin-top:70px;" 
+            align="center" 
+            active-nav-item-class="font-weight-bold text-uppercase text-danger"
+            active-tab-class="font-weight-bold"
+            content-class="mt-4">
+                <b-tab active>
+                <template #title>
+                   <b-icon icon="grid3x3-gap" aria-hidden="true"></b-icon><strong>Blocked users </strong>
+                </template>
+                    <b-card class="post_look" v-for="friend in blocked" v-bind:key="friend.following">
+                        <b-row >
+                        <h4 align="left"><b-icon icon="person-circle" aria-hidden="true"></b-icon>  {{friend.following}}</h4>
+                        <b-button  variant="danger" align="right" class="btn btn-info btn-lg space_style" size="sm" style="background-color:#f08080;"  @click="unblockUser($event,friend)"  >Unblock</b-button>
                         </b-row>
                     </b-card>
                 </b-tab>
@@ -224,6 +246,7 @@ export default {
         friends: [],
          fileNames:[],
         fileName:'',
+        blocked:[],
         }
     },
      mounted(){
@@ -398,6 +421,66 @@ export default {
                     });
                     
         },
+        getBlockedUsers: function(){
+let token = localStorage.getItem('token').substring(1, localStorage.getItem('token').length-1);
+            this.axios.get('http://localhost:8083/profileMicroservice/api/profile/account',{ 
+             headers: {
+                 'Authorization': 'Bearer ' + token,
+             }
+         }).then(response => {
+               this.profile = response.data;
+               console.log(this.profile.username);
+               //this.getMyStories(response.data);
+              // this.getFollowers(response.data);
+         }).catch(res => {
+                       alert("Error");
+                        console.log(res);
+                 });
+            console.log(this.profile.username);
+            this.axios.get('http://localhost:8083/profileMicroservice/api/profile/getBlockedUsers',{ 
+                headers: {
+                    'Authorization': 'Bearer ' + token,
+                }})
+            .then(response => {
+                console.log(this.profile.username)
+                this.blocked= response.data;
+            }).catch(res => {
+                        alert("Error"+this.profile.username);
+                            console.log(res);
+                    });
+                    
+        },
+         unblockUser: async function(event,friend){
+            console.log(friend.following);  
+             let token = localStorage.getItem('token').substring(1, localStorage.getItem('token').length-1);
+            this.axios.get('http://localhost:8083/profileMicroservice/api/profile/account',{ 
+             headers: {
+                 'Authorization': 'Bearer ' + token,
+             }
+         }).then(response => {
+               this.profile = response.data;
+               console.log(this.profile.username);
+               //this.getMyStories(response.data);
+              // this.getFollowers(response.data);
+         }).catch(res => {
+                       alert("Error");
+                        console.log(res);
+                 });
+        
+            this.axios.post('http://localhost:8083/profileMicroservice/api/profile/unblockUser',friend.following,{ 
+                headers: {
+                    'Authorization': 'Bearer ' + token,
+                }
+                }).then(response => {
+                    
+                    alert("User unblocked");
+                    console.log(response);                
+                }).catch(res => {
+                    alert("Error");
+                    console.log(res.response.data.message);
+
+                });
+        },
         addCloseFriend: async function(event,friend){
             console.log(friend.following);  
              let token = localStorage.getItem('token').substring(1, localStorage.getItem('token').length-1);
@@ -479,6 +562,10 @@ export default {
         height: 90px;
     }
     .space_style{
+        margin-right:15px;
+        margin-left:10px;
+    }
+    .block_style{
         margin-right:15px;
         margin-left:10px;
     }

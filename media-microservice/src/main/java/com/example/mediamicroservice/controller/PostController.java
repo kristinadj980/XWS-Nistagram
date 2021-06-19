@@ -102,6 +102,7 @@ public class PostController {
 			for(PostDTO p:postDTOs) {
 				System.out.println("USPELOOOOOOOOOOOOOOOO");
 				List<PostDTO> friendPosts = new ArrayList<PostDTO>();
+				
 				System.out.println("USPELOOOOOOOOOOOOOOOO"+p.getFollowing());
 				friendPosts = postService.findMyPosts(p.getFollowing());
 				System.out.println("USPELOOOOOOOOOOOOOOOO");

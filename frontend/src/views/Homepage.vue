@@ -184,11 +184,12 @@ export default {
              }
          }).then(response => {
               this.loggeduser = response.data;
+              console.log(response.data.name);
          }).catch(res => {
                alert(Error)
                 console.log(res);
             });
-            
+           
             this.axios.get('http://localhost:8083/searchMicroservice/tag/getAllTags',{ 
              headers: {
                  'Authorization': 'Bearer ' + token,

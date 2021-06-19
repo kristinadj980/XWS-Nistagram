@@ -27,6 +27,7 @@ import com.nistagram.profileMicroservice.model.Person;
 import com.nistagram.profileMicroservice.model.Profile;
 import com.nistagram.profileMicroservice.model.ProfileStatus;
 import com.nistagram.profileMicroservice.repository.PersonRepository;
+import com.nistagram.profileMicroservice.repository.ProfileRepository;
 import com.nistagram.profileMicroservice.service.implService.ProfileService;
 
 
@@ -38,14 +39,16 @@ public class ProfileController {
 	private final ProfileService profileService;
 	private final MediaConnection mediaConnection;
 	private final PersonRepository personRepository;
+	private final ProfileRepository profileRepository;
 	
 	@Autowired
 	public ProfileController(ProfileService profileService, MediaConnection mediaConnection,
-			PersonRepository personRepository) {
+			PersonRepository personRepository, ProfileRepository profileRepository) {
 		super();
 		this.profileService = profileService;
 		this.mediaConnection = mediaConnection;
 		this.personRepository = personRepository;
+		this.profileRepository=profileRepository;
 	}
 
 	
@@ -127,8 +130,13 @@ public class ProfileController {
 		
 	}
 	@GetMapping("/getAllUsers")
+	//@PreAuthorize("hasRole('REGISTRED_USER')")
 	public ResponseEntity<List<Profile>> getAllUsers() {	
 		List<Profile> usersProfiles = profileService.findAll();
+		//Authentication currentUser = SecurityContextHolder.getContext().getAuthentication();
+		//Person person = (Person) currentUser.getPrincipal();
+		//Profile user = profileService.findById(person.getId());
+		
 		
 		return (ResponseEntity<List<Profile>>) (usersProfiles == null
 				? new ResponseEntity<>(HttpStatus.NOT_FOUND) : ResponseEntity.ok(usersProfiles));
@@ -287,6 +295,63 @@ public class ProfileController {
 		//Vracam listu prpfila kod koga je ulogovani u bliskim
 		return new ResponseEntity<>(profiles,HttpStatus.OK);
 	}
+	@GetMapping("/getBlockedUsers")
+	@PreAuthorize("hasRole('REGISTRED_USER')")
+	public ResponseEntity<List<FollowingDTO>> getBlockedUsers(){
+		
+		System.out.println("KONTROLER ZA BLOKIRANE USERE");
+		Authentication currentUser = SecurityContextHolder.getContext().getAuthentication();
+		Person person = (Person) currentUser.getPrincipal();
+		Profile logedUser = profileService.findByUsername(person.getUsername());
+		
+		System.out.println("KONTROLER"+logedUser.getUsername());
+		
+		List<Profile> usernames=logedUser.getBlockedUsers();
+		
+		List<FollowingDTO> profiles=new ArrayList<>();
+	
+		for(Profile u:usernames) {
+			profiles.add(new FollowingDTO(u.getUsername()));
+		}
+		//Vracam listu prpfila kod koga je ulogovani u bliskim
+		return new ResponseEntity<>(profiles,HttpStatus.OK);
+	}
+	
+	@PostMapping("/blockUser")
+	@PreAuthorize("hasRole('REGISTRED_USER')")
+	public ResponseEntity<String> blockUser(@RequestBody String username) {
+		System.out.println("KONTROLER za blokiranje"+username);
+		  
+		Authentication currentUser = SecurityContextHolder.getContext().getAuthentication();
+		Person person = (Person) currentUser.getPrincipal();
+		Profile logedUser = profileService.findById(person.getId());
+		System.out.println(logedUser.getUsername());
+		
+		//List<Profile> blockedFriends=logedUser.getBlockedUsers();
+		
+		
+			profileService.blockUser(username);
+			return new ResponseEntity<>("User successufully blocked!", HttpStatus.CREATED);
+		}	
+	
+
+	@PostMapping("/unblockUser")
+	@PreAuthorize("hasRole('REGISTRED_USER')")
+	public ResponseEntity<String> unblockUser(@RequestBody String username) {
+		System.out.println("KONTROLER UNBLOCK "+username);
+		  
+		Authentication currentUser = SecurityContextHolder.getContext().getAuthentication();
+		Person person = (Person) currentUser.getPrincipal();
+		Profile logedUser = profileService.findById(person.getId());
+		System.out.println(logedUser.getUsername());
+		
+		Profile p=profileService.findByUsername(username.substring(0, username.length()-1));
+		logedUser.getBlockedUsers().remove(p);
+		profileRepository.save(logedUser);
+		
+			return new ResponseEntity<>("User successufully unblocked!", HttpStatus.CREATED);
+		}	
+	
 	
 	@GetMapping("/getPublicProfiles")
 	public ResponseEntity<List<String>> getPublicProfiles() {	
@@ -294,5 +359,13 @@ public class ProfileController {
 		
 		return (ResponseEntity<List<String>>) (publicProfiles == null
 				? new ResponseEntity<>(HttpStatus.NOT_FOUND) : ResponseEntity.ok(publicProfiles));
+	}
+	
+	@GetMapping("/getPrivateProfiles")
+	public ResponseEntity<List<String>> getPrivateProfiles(Long id) {	
+		List<String> privateProfiles = personRepository.getPrivateProfiles(id);
+		
+		return (ResponseEntity<List<String>>) (privateProfiles == null
+				? new ResponseEntity<>(HttpStatus.NOT_FOUND) : ResponseEntity.ok(privateProfiles));
 	}
 }

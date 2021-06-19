@@ -64,9 +64,34 @@ export default {
     },
     async mounted(){
         this.choosenTag = this.$route.params.selectedTag;
-        //let token = localStorage.getItem('token').substring(1, localStorage.getItem('token').length-1);
+        let token = localStorage.getItem('token').substring(1, localStorage.getItem('token').length-1);
         console.log(this.choosenTag);
-         this.axios.get('http://localhost:8083/searchMicroservice/tag/findPostsByTag/'+ this.$route.params.selectedTag)
+
+        this.axios.get('http://localhost:8083/profileMicroservice/api/profile/loggedUserInfo',{ 
+             headers: {
+                 'Authorization': 'Bearer ' + token,
+             }
+         }).then(response => {
+              this.loggeduser = response.data;
+              console.log(response.data.name);
+         }).catch(res => {
+               alert(Error)
+                console.log(res);
+            });
+            this.axios.get('http://localhost:8083/profileMicroservice/api/profile/account',{ 
+             headers: {
+                 'Authorization': 'Bearer ' + token,
+             }
+         }).then(response => {
+               this.profile = response.data;
+               console.log(response.data.name);
+              
+         }).catch(res => {
+                       alert("Error");
+                        console.log(res);
+                 });
+                console.log(this.profile.name)
+        this.axios.get('http://localhost:8083/searchMicroservice/tag/findPostsByTag/'+ this.$route.params.selectedTag)
             .then(response => {
                 this.posts = response.data;
                 let video = "mp4";

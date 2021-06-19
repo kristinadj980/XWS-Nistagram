@@ -19,7 +19,7 @@
         <b-card class="content_surface" align="left">
 
 <!--  HIGHLIGHTS -->
-             <b-button  class="btn btn-info btn-lg space_style"  style="background-color:#f08080;margin-left:-1300px;" v-b-modal.modal-5>Show highlights</b-button>
+             <b-button  class="btn btn-info btn-lg space_style"  style="background-color:#f08080;margin-left:100px;" v-b-modal.modal-5>Show highlights</b-button>
                             <b-modal ref="modal-ref" id="modal-5" title="Highlights" hide-footer>
                                 <b-tabs 
             style="margin-top:70px;" 
@@ -44,7 +44,9 @@
             </b-tabs>
          </b-modal>
 
-
+        <b-button style="margin-left:1000px; margin-top:100px;" variant="outline-danger" size="lg"  v-on:click = "blockUser">
+                    Block 
+                </b-button>
 
             <div class="card header_surface" style="margin-top:10px; border-color: #d4bcce; margin-left:50px;"  >
                   <img class="img-circle img-responsive rounded-circle"  src="https://images.vexels.com/media/users/3/147101/isolated/preview/b4a49d4b864c74bb73de63f080ad7930-instagram-profile-button-by-vexels.png" style=" width:120px; height:120px;"  /> 
@@ -338,9 +340,38 @@ export default {
                         alert("Profile is private");
                             console.log(res);
                     });
-            }
+            },
+        blockUser: function(){
+            console.log(this.user.username);  
+             let token = localStorage.getItem('token').substring(1, localStorage.getItem('token').length-1);
+            this.axios.get('http://localhost:8083/profileMicroservice/api/profile/account',{ 
+                headers: {
+                 'Authorization': 'Bearer ' + token,
+                }
+                }).then(response => {
+               this.profile = response.data;
+               console.log(this.profile.username);
+
+                 }).catch(res => {
+                       alert("Error");
+                        console.log(res);
+                 });
+        console.log(this.user.username);
+            this.axios.post('http://localhost:8083/profileMicroservice/api/profile/blockUser',this.user.username,{ 
+                headers: {
+                    'Authorization': 'Bearer ' + token,
+                }
+                }).then(response => {
+                    
+                    alert("Successfully blocked");
+                    console.log(response);                
+                }).catch(res => {
+                    alert("Error");
+                    console.log(res.response.data.message);
+
+                });
         },
-        
+    }   
 }
 </script>
 <style scoped>

@@ -15,4 +15,8 @@ public interface PersonRepository extends JpaRepository<Person, Long>{
 	
 	@Query(value="SELECT username FROM person WHERE profile_status=1",nativeQuery=true)
 	List<String> getPublicProfiles();
+	
+	@Query(value="select username from person p join profile_following pf where pf.followers_id=p.id and pf.profile_id=?1 and p.profile_status=0",nativeQuery=true)
+	List<String> getPrivateProfiles(Long id);
+
 }

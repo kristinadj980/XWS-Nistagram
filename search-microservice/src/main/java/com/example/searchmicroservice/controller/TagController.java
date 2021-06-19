@@ -2,6 +2,7 @@ package com.example.searchmicroservice.controller;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,9 +17,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.searchmicroservice.connection.MediaConnection;
 import com.example.searchmicroservice.connection.ProfileConnection;
+import com.example.searchmicroservice.dto.LoggedUserDTO;
 import com.example.searchmicroservice.dto.PostDTO;
 import com.example.searchmicroservice.model.Post;
 import com.example.searchmicroservice.model.Tag;
+import com.sun.el.stream.Stream;
 
 
 
@@ -45,11 +48,19 @@ public class TagController {
 		System.out.println("KONTROLER SEARCH BY TAG");
 		System.out.println(tag);
 		
+		
 		List<PostDTO> posts=mediaConnection.findPostsByTag(tag);
 		
 		List<String> usernames=profileConnection.getPublicProfiles();
 		
+		
+		//List<String> privateUsernames=profileConnection.getPrivateProfiles(user.getId());
+		
 		List<PostDTO> publicPosts= new ArrayList<>();
+		
+		//List<String> usernames1=new ArrayList<>(usernames);
+		//usernames1.addAll(privateUsernames);
+		
 		
 		
 		System.out.println("ISPOD IFA SAM");
