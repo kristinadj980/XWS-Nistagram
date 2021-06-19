@@ -21,6 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.example.mediamicroservice.dto.MediaDTO;
 import com.example.mediamicroservice.dto.PostDTO;
 import com.example.mediamicroservice.dto.CommentDTO;
+import com.example.mediamicroservice.dto.InapropriateContentDTO;
 import com.example.mediamicroservice.dto.LikeDislikeInfoDTO;
 import com.example.mediamicroservice.dto.LikePostDTO;
 
@@ -168,6 +169,12 @@ public class PostController {
 		
 		return new ResponseEntity(postService.findMyFavouritePosts(username), HttpStatus.OK); 
 
+	}
+	
+	@PostMapping("/reportPost")
+	public ResponseEntity reportPost(@RequestBody InapropriateContentDTO dto) {
+		
+		return new ResponseEntity(postService.reportPost(dto), HttpStatus.OK); 
 	}
 
 }
