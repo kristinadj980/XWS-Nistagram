@@ -3,17 +3,21 @@ package com.example.mediamicroservice.service.implService;
 import com.example.mediamicroservice.dto.CommentDTO;
 import com.example.mediamicroservice.dto.ImageDTO;
 import com.example.mediamicroservice.dto.ImagesFrontDTO;
+import com.example.mediamicroservice.dto.InapropriateContentDTO;
 import com.example.mediamicroservice.dto.LikeDislikeInfoDTO;
 import com.example.mediamicroservice.dto.LikePostDTO;
 import com.example.mediamicroservice.dto.LocationDTO;
 import com.example.mediamicroservice.dto.PostDTO;
 import com.example.mediamicroservice.dto.TagDTO;
 import com.example.mediamicroservice.model.Comment;
+import com.example.mediamicroservice.model.InappropriateContent;
 import com.example.mediamicroservice.model.Location;
 import com.example.mediamicroservice.model.Media;
 import com.example.mediamicroservice.model.Post;
 import com.example.mediamicroservice.model.ProfileMedia;
+import com.example.mediamicroservice.model.RequestStatus;
 import com.example.mediamicroservice.model.Tag;
+import com.example.mediamicroservice.repository.InappropriateContentRepository;
 import com.example.mediamicroservice.repository.PostRepository;
 import com.example.mediamicroservice.service.IPostService;
 
@@ -39,12 +43,14 @@ public class PostService implements IPostService {
 	private final PostRepository postRepository;
 	private final ProfileMediaService profileMediaService;
 	private static String uploadDir = "user-photos";
+	private final InappropriateContentRepository inappropriateContentRepository;
 
 	@Autowired
-	public PostService(PostRepository postRepository,ProfileMediaService profileMediaService) {
+	public PostService(PostRepository postRepository,ProfileMediaService profileMediaService,InappropriateContentRepository inappropriateContentRepository) {
 		super();
 		this.postRepository = postRepository;
 		this.profileMediaService = profileMediaService;
+		this.inappropriateContentRepository = inappropriateContentRepository;
 	}
 
 	@Override
@@ -475,6 +481,22 @@ public class PostService implements IPostService {
 		public Post findById(Long id) {
 			return postRepository.findById(id).get();
 		}
-	   
-	
+		
+		public InappropriateContent reportPost(InapropriateContentDTO dto) {
+	    	 ProfileMedia profileMediaTo = profileMediaService.findByUsername(dto.getUsernameTo());
+			 ProfileMedia profileMediaFrom =profileMediaService.findByUsername(dto.getUsernameFrom());
+			 InappropriateContent inapropriateContent = new InappropriateContent();
+			 List<Post> myPosts = profileMediaTo.getPosts();
+			 for (Post post : myPosts) {
+				 if(dto.getPostId() == post.getId()) {
+						inapropriateContent.setDescription(dto.getDescription());
+						inapropriateContent.setPost(post);
+						inapropriateContent.setStatus(RequestStatus.sent);
+						inapropriateContent.setProfileToId(profileMediaTo.getId());
+						inapropriateContent.setProfileFromId(profileMediaFrom.getId());
+				 }
+			}
+			 
+	     return inappropriateContentRepository.save(inapropriateContent);
+		}
 }
