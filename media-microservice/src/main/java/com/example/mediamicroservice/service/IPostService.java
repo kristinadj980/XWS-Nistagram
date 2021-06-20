@@ -21,4 +21,5 @@ public interface IPostService {
 	List<LikePostDTO> findMyComments(LikePostDTO dtoInfo);
 	List<Comment> sortCommentsByDate(List<Comment> comments);
 	Post findById(Long id);
+	List<PostDTO> findMyFavouritePosts(String username);
 }

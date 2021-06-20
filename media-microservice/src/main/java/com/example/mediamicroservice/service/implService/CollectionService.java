@@ -89,7 +89,6 @@ public class CollectionService implements ICollectionService{
 					if( post.getNumberOfLikes() == null && post.getNumberOfDisikes() != null && post.getNumberOfComments() == null) {
 						numberOfDislikes = post.getNumberOfDisikes();
 						myPosts.add(new PostDTO(post.getDescription(),username,mediasFileName,locationDTO, post.getDate(),0,numberOfDislikes,0,tagsDTO,post.getId()));
-						
 					}else if( post.getNumberOfLikes() == null && post.getNumberOfDisikes() != null && post.getNumberOfComments() != null) {
 							numberOfDislikes = post.getNumberOfDisikes();
 							numberOfComments = post.getNumberOfComments();
@@ -104,6 +103,15 @@ public class CollectionService implements ICollectionService{
 					numberOfComments = post.getNumberOfComments();
 					myPosts.add(new PostDTO(post.getDescription(),username,mediasFileName,locationDTO, post.getDate(),numberOfLikes,0,numberOfComments,tagsDTO,post.getId()));
 				    }
+				    else if (post.getNumberOfDisikes() != null && post.getNumberOfLikes() == null && post.getNumberOfComments() == null ) {
+				    	numberOfDislikes = post.getNumberOfDisikes();
+						myPosts.add(new PostDTO(post.getDescription(),username,mediasFileName,locationDTO, post.getDate(),0,numberOfDislikes,0,tagsDTO,post.getId()));
+				    }
+				    else if (post.getNumberOfDisikes() != null && post.getNumberOfLikes() != null && post.getNumberOfComments() == null ) {
+						numberOfLikes = post.getNumberOfLikes();
+						numberOfDislikes = post.getNumberOfDisikes();
+						myPosts.add(new PostDTO(post.getDescription(),username,mediasFileName,locationDTO, post.getDate(),numberOfLikes,numberOfDislikes,0,tagsDTO,post.getId()));
+					    }
 					else if(post.getNumberOfLikes() == null && post.getNumberOfDisikes() == null && post.getNumberOfComments() == null) 
 					{
 						myPosts.add(new PostDTO(post.getDescription(),username,mediasFileName,locationDTO, post.getDate(),0,0,0,tagsDTO,post.getId()));

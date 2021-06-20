@@ -4,6 +4,8 @@ import java.util.List;
 
 import javax.persistence.*;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 @Entity
 public class VerificationRequest {
 
@@ -16,6 +18,9 @@ public class VerificationRequest {
 
 	@Column(name = "surname", nullable = false)
 	private String surname;
+	
+	@Column(name = "username", nullable = false)
+	private String username;
 
 	@Enumerated(EnumType.ORDINAL)
 	private VerificationCategory category;
@@ -23,8 +28,12 @@ public class VerificationRequest {
 	@Enumerated(EnumType.ORDINAL)
 	private RequestStatus requestStatus;
 	
-	@OneToMany(mappedBy = "verificationRequest", fetch = FetchType.LAZY)
-	private List<Profile> profiles;
+	/*@JsonManagedReference
+	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@JoinTable(name = "verification_request_profiles",
+	joinColumns = @JoinColumn(name = "verification_request_id", referencedColumnName = "id"),
+	inverseJoinColumns = @JoinColumn(name = "profile_id", referencedColumnName = "id"))
+	private List<Profile> profiles;*/
 	
 	@OneToOne(cascade = CascadeType.ALL)
 	private Media media;
@@ -33,15 +42,15 @@ public class VerificationRequest {
 		super();
 	}
 
-	public VerificationRequest(Long id, String name, String surname, VerificationCategory category,
-			RequestStatus requestStatus, List<Profile> profiles, Media media) {
+	public VerificationRequest(Long id, String name, String surname, String username, VerificationCategory category,
+			RequestStatus requestStatus, Media media) {
 		super();
 		this.id = id;
 		this.name = name;
 		this.surname = surname;
+		this.username = username;
 		this.category = category;
 		this.requestStatus = requestStatus;
-		this.profiles = profiles;
 		this.media = media;
 	}
 
@@ -85,20 +94,20 @@ public class VerificationRequest {
 		this.requestStatus = requestStatus;
 	}
 
-	public List<Profile> getProfiles() {
-		return profiles;
-	}
-
-	public void setProfiles(List<Profile> profiles) {
-		this.profiles = profiles;
-	}
-
 	public Media getMedia() {
 		return media;
 	}
 
 	public void setMedia(Media media) {
 		this.media = media;
+	}
+
+	public String getUsername() {
+		return username;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
 	}
 
 }

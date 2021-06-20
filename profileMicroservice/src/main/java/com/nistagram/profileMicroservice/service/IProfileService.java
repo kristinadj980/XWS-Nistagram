@@ -6,6 +6,7 @@ import java.util.Optional;
 import com.nistagram.profileMicroservice.dto.EditProfileDTO;
 import com.nistagram.profileMicroservice.dto.FollowingDTO;
 import com.nistagram.profileMicroservice.dto.PersonRequestDTO;
+import com.nistagram.profileMicroservice.dto.VerificationRequestDTO;
 import com.nistagram.profileMicroservice.model.FriendRequestStatus;
 import com.nistagram.profileMicroservice.model.Person;
 import com.nistagram.profileMicroservice.model.Profile;
@@ -29,4 +30,5 @@ public interface IProfileService {
 	List<String> muteFriend(EditProfileDTO editProfileDTO);
 	void unmuteFriend(EditProfileDTO editProfileDTO);
 	List<FollowingDTO> getFollowers();
+	Profile sendRequest(VerificationRequestDTO verificationRequestDTO );
 }

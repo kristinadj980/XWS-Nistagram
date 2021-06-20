@@ -106,6 +106,7 @@
                         ><b>
                         {{profile.username}}
                         </b>
+                         <h4 align="left" ><b-icon v-if="profile.verificated == true" style="margin-top:-10%;  margin-left:0px;" icon="star-fill" aria-hidden="true"></b-icon>  {{profile.category}}</h4>
                         </h3>
                         <h4 align="left"  v-b-modal.modal6>  <strong>{{this.postsNumber}}</strong> posts <strong>{{this.followersNumber}}</strong> followers <strong >{{this.followingNumber}}</strong> following </h4>
                         <h4 align="left">{{profile.biography}}</h4>

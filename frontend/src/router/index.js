@@ -10,6 +10,8 @@ import AddingStories from '../views/AddingStories.vue'
 import ProfileInfo from '../views/ProfileInfo.vue'
 import GeneralProfiles from '../views/GeneralProfiles.vue'
 import FriendRequests from '../views/FriendRequests.vue'
+import HomePageAdmin from '../views/HomePageAdmin.vue'
+import VerificationRequests from '../views/VerificationRequests.vue'
 
 Vue.use(VueRouter)
 
@@ -71,6 +73,16 @@ const routes = [
     path: '/friendRequests',
     name: 'FriendRequests',
     component: FriendRequests
+  },
+  {
+    path: '/homePageAdmin',
+    name: 'HomePageAdmin',
+    component: HomePageAdmin
+  },
+  {
+    path: '/verificationRequests',
+    name: 'VerificationRequests',
+    component: VerificationRequests
   },
 ]
 

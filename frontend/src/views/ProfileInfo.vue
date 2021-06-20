@@ -12,7 +12,6 @@
                     <b-icon icon="image" aria-hidden="true"></b-icon> Add post</b-button>
                 <b-button pill variant="outline-danger" class = "btn btn-lg space_style" v-on:click = "editProfile">
                     <b-icon icon="gear" aria-hidden="true"></b-icon> Edit profile</b-button>
-                
             </span>
                 <span  style="float:right;margin:15px">
                     <b-button pill variant="outline-danger" class = "btn btn-lg btn-light" style="margin-right:20px;" v-on:click = "logOut">Log Out</b-button>
@@ -244,7 +243,24 @@
             </b-row>
 
         </b-tab>
-            </b-tabs>
+       
+            <b-tab title="Verification request" active>
+            <div id="verificationRequest">  
+            <form>
+            <h4 style="left: 10px;">Name: {{name}} </h4>
+            <h4 style="left: 10px;">Surname: {{surname}}</h4>
+            <select style="width:250px;" v-model="selectedCategory">
+                <option v-for="item in this.categories"  v-on:click ="addCategoryTolist($event, item)" v-bind:key="item.id" >
+                {{item}}</option> 
+            </select>
+            <h4 style="left: 10px; margin-top: 50px;" >Choose document image</h4>
+             <input type="file" name="image" accept="image/png, image/jpeg, video/mp4,video/x-m4v,video/*" id="file" ref="file" v-on:change="handleFileUpload()">
+            <b-button style="margin-left: 240px; margin-top: 40px;" pill variant="outline-danger" class = "btn btn-lg space_style" v-on:click = "sendVerificationRequest">
+                <b-icon icon="check-circle" aria-hidden="true"></b-icon> Send</b-button>
+            </form>
+            </div>   
+            </b-tab>  
+        </b-tabs>
         </b-card>
         </b-card>
 
@@ -282,6 +298,12 @@ export default {
         newUsername: "",
         following: [],
         mutedFriends: [],
+        categories:["influencer","sports","media","business","brand","organization"],
+        user:'',
+        file:'',
+        fileName:'',
+        selectedCategory:'',
+        formData:''
         }
     },
     mounted(){
@@ -297,9 +319,18 @@ export default {
                        alert("Error");
                         console.log(res);
         });
-
-        
-
+         this.axios.get('http://localhost:8083/profileMicroservice/api/profile/account',{ 
+             headers: {
+                 'Authorization': 'Bearer ' + token,
+             }
+         }).then(response => {
+              this.user = response.data;
+              this.name = this.user.name;
+              this.surname = this.user.surname;
+         }).catch(res => {
+               alert(Error)
+                console.log(res);
+            });
    },
     methods:{
         toggle () {
@@ -329,6 +360,9 @@ export default {
         },
         cancelUsername() {
             this.$refs['modal-ref4'].hide();
+        },
+        verificationRequest(){
+            window.location.href="/verificationRequest";
         },
          update : function(){
             let token = localStorage.getItem('token').substring(1, localStorage.getItem('token').length-1);
@@ -544,7 +578,60 @@ export default {
                             console.log(res);
             });
 
-        }
+        },
+         handleFileUpload(){
+            this.file = this.$refs.file.files[0];
+        },
+        addCategoryTolist : function(event, item) {
+            this.selectedCategory = item;
+            alert(this.selectedCategory)
+        },
+        sendRequest :function(){  
+        let token = localStorage.getItem('token').substring(1, localStorage.getItem('token').length-1);
+            const info= {
+                name : this.name,
+                surname : this.surname,
+                verificationCategory : this.selectedCategory,
+                fileName : this.fileName,
+                username : this.user.username,
+                 }
+          
+          this.axios.post('http://localhost:8083/profileMicroservice/api/profile/verificationRequest',info,{ 
+               headers: {
+                 'Authorization': 'Bearer ' + token,
+             }
+                }).then(response => {
+                    alert("Request is sent!");
+                    console.log(response);                
+                }).catch(res => {
+                    alert(res.response.data.message);
+                });
+        },
+        sendVerificationRequest: function(){
+            let token = localStorage.getItem('token').substring(1, localStorage.getItem('token').length-1);
+            let formData = new FormData();
+            formData.append('file', this.file);
+            
+            this.axios.post('http://localhost:8083/mediaMicroservice/post/saveImageForRequest',formData,{
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                    'Authorization': 'Bearer ' + token
+                }
+                }).then(response => {
+                        this.fileName = response.data
+                       //alert(this.fileName)
+                       //alert("Success")
+                       console.log(response.data)
+                       this.sendRequest();
+                       
+                  
+                    })
+                    .catch(response => {
+                    console.log(response.data)
+                    alert("Eror")
+                    
+                    });  
+        },
     }
 }
 </script>
@@ -585,4 +672,21 @@ export default {
         width: 50%;
         margin-top: -8%;
     }
+     form{
+        margin-left: 60px;
+        width: 500px;
+    }
+    #verificationRequest {
+        font-family: Avenir, Helvetica, Arial, sans-serif;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        text-align: left;
+        color: #692d5a;
+        margin: auto;
+        margin-top: 40px;
+        margin-bottom: 40px;
+        width: 50%;
+        border: 4px solid #692d5a;
+        padding: 40px;
+        }
 </style>

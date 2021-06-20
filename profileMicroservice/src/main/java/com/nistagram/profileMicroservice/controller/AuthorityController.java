@@ -64,7 +64,7 @@ public class AuthorityController {
 	}
 	
 	@GetMapping("/authority")
-	@PreAuthorize("hasRole('REGISTRED_USER')")
+	@PreAuthorize("hasAnyRole('REGISTRED_USER','ADMINISTRATOR')")
     public ResponseEntity<Person> getMyAccount()
     {
 		Person userWithId = new Person();

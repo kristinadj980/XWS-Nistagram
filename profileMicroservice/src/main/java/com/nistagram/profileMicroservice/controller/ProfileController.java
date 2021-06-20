@@ -23,10 +23,14 @@ import com.nistagram.profileMicroservice.dto.EditProfileDTO;
 import com.nistagram.profileMicroservice.dto.FollowingDTO;
 import com.nistagram.profileMicroservice.dto.PostDTO;
 import com.nistagram.profileMicroservice.dto.RegistredUserDTO;
+import com.nistagram.profileMicroservice.dto.VerificationRequestDTO;
 import com.nistagram.profileMicroservice.model.Person;
 import com.nistagram.profileMicroservice.model.Profile;
 import com.nistagram.profileMicroservice.model.ProfileStatus;
+import com.nistagram.profileMicroservice.model.RequestStatus;
+import com.nistagram.profileMicroservice.model.VerificationRequest;
 import com.nistagram.profileMicroservice.service.implService.ProfileService;
+import com.nistagram.profileMicroservice.service.implService.VerificationRequestService;
 
 
 @RestController
@@ -36,11 +40,13 @@ public class ProfileController {
 	
 	private final ProfileService profileService;
 	private final MediaConnection mediaConnection;
+	private final VerificationRequestService verificationRequestService;
 	
 	@Autowired
-	public ProfileController(ProfileService profileServie,MediaConnection mediaConnection) {
+	public ProfileController(ProfileService profileServie,MediaConnection mediaConnection,VerificationRequestService verificationRequestService) {
 		this.profileService = profileServie;
 		this.mediaConnection = mediaConnection;
+		this.verificationRequestService = verificationRequestService;
 	}
 
 	@PostMapping("/proba")
@@ -60,9 +66,14 @@ public class ProfileController {
 		Authentication currentUser = SecurityContextHolder.getContext().getAuthentication();
 		Person person = (Person) currentUser.getPrincipal();
 		Profile profile = profileService.findById(person.getId());
-		EditProfileDTO editProfileDTO = new EditProfileDTO(profile.getUsername(), profile.getName(), profile.getSurname(), profile.getEmail(), profile.getPhoneNumber(),
-				profile.getBirthDate(), profile.getGender(), profile.getWebsite(), profile.getBiography(), profile.getProfileStatus(), profile.getAllowedTags(), profile.getAllowedMessages());
-		
+		EditProfileDTO editProfileDTO = new EditProfileDTO();
+		if(profile.getVerificationRequest() != null && profile.getVerificationRequest().getRequestStatus().equals(RequestStatus.accepted)) {
+		editProfileDTO = new EditProfileDTO(profile.getUsername(), profile.getName(), profile.getSurname(), profile.getEmail(), profile.getPhoneNumber(),
+				profile.getBirthDate(), profile.getGender(), profile.getWebsite(), profile.getBiography(), profile.getProfileStatus(), profile.getAllowedTags(), profile.getAllowedMessages(),true, profile.getVerificationRequest().getCategory());
+		}else {
+		editProfileDTO = new EditProfileDTO(profile.getUsername(), profile.getName(), profile.getSurname(), profile.getEmail(), profile.getPhoneNumber(),
+					profile.getBirthDate(), profile.getGender(), profile.getWebsite(), profile.getBiography(), profile.getProfileStatus(), profile.getAllowedTags(), profile.getAllowedMessages(),false,null);
+		}
 		return (ResponseEntity<EditProfileDTO>) (profile == null ? new ResponseEntity<>(HttpStatus.NOT_FOUND) : ResponseEntity.ok(editProfileDTO));
 
 	}
@@ -204,7 +215,6 @@ public class ProfileController {
 		}
 	}
 	
-	
 	@GetMapping("/getMuted")
 	@PreAuthorize("hasRole('REGISTRED_USER')")
 	public ResponseEntity<List<String>> getMuted() {
@@ -214,7 +224,17 @@ public class ProfileController {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
 	}
-	
+
+	@PostMapping("/verificationRequest")
+	@PreAuthorize("hasRole('REGISTRED_USER')")
+	public ResponseEntity sendRequest(@RequestBody VerificationRequestDTO verificationRequestDTO){
+		try {
+			return new ResponseEntity<>(profileService.sendRequest(verificationRequestDTO), HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+	}
+
 	@GetMapping("/getNotMuted")
 	@PreAuthorize("hasRole('REGISTRED_USER')")
 	public ResponseEntity<List<String>> getNotMuted() {
@@ -245,4 +265,17 @@ public class ProfileController {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
 	}
+	
+	@GetMapping("/getAllRequests")
+	@PreAuthorize("hasRole('ADMINISTRATOR')")  
+	public ResponseEntity<List<VerificationRequestDTO>> getVerificationRequests() {
+		try {
+			return new ResponseEntity<>(verificationRequestService.getVerificationRequests(), HttpStatus.OK);
+			
+		} catch (Exception e) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+		
+	}
+	
 }

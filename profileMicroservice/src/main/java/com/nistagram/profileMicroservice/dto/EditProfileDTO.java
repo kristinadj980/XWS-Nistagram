@@ -9,6 +9,7 @@ import javax.persistence.Enumerated;
 import com.nistagram.profileMicroservice.model.FriendRequestStatus;
 import com.nistagram.profileMicroservice.model.Gender;
 import com.nistagram.profileMicroservice.model.ProfileStatus;
+import com.nistagram.profileMicroservice.model.VerificationCategory;
 
 import lombok.Data;
 @Data
@@ -31,6 +32,8 @@ public class EditProfileDTO {
 	private String newUsername;
 	private Boolean allowedTags; 
 	private Boolean allowedMessages;  
+	private Boolean verificated;
+	private VerificationCategory category;
 	
 	public EditProfileDTO() {
 		super();
@@ -39,7 +42,7 @@ public class EditProfileDTO {
 	public EditProfileDTO(String username, String name, String surname, String email, String password,
 			String phoneNumber, LocalDate birthDate, Gender gender, String website, String biography,
 			String confirmPassword, ProfileStatus profileStatus, FriendRequestStatus friendRequestStatus,
-			String currentUsername, String newUsername, Boolean allowedTags, Boolean allowedMessages) {
+			String currentUsername, String newUsername, Boolean allowedTags, Boolean allowedMessages,Boolean verificated) {
 		super();
 		this.username = username;
 		this.name = name;
@@ -58,9 +61,11 @@ public class EditProfileDTO {
 		this.newUsername = newUsername;
 		this.allowedTags = allowedTags;
 		this.allowedMessages = allowedMessages;
+		this.verificated = verificated;
 	}
 	public EditProfileDTO(String username, String name, String surname, String email, String phoneNumber,
-			LocalDate birthDate, Gender gender, String website, String biography,ProfileStatus profileStatus,Boolean allowedTags, Boolean allowedMessages) {
+			LocalDate birthDate, Gender gender, String website, String biography,ProfileStatus profileStatus,Boolean allowedTags, 
+			Boolean allowedMessages,Boolean verificated, VerificationCategory category) {
 		super();
 		this.username = username;
 		this.name = name;
@@ -74,6 +79,8 @@ public class EditProfileDTO {
 		this.profileStatus = profileStatus;
 		this.allowedTags = allowedTags;
 		this.allowedMessages = allowedMessages;
+		this.verificated = verificated;
+		this.category = category;
 	}
 
 	public EditProfileDTO(String username, String name, String surname, String email, String password,
@@ -249,6 +256,22 @@ public class EditProfileDTO {
 
 	public void setAllowedMessages(Boolean allowedMessages) {
 		this.allowedMessages = allowedMessages;
+	}
+
+	public Boolean getVerificated() {
+		return verificated;
+	}
+
+	public void setVerificated(Boolean verificated) {
+		this.verificated = verificated;
+	}
+
+	public VerificationCategory getCategory() {
+		return category;
+	}
+
+	public void setCategory(VerificationCategory category) {
+		this.category = category;
 	}
 
 }

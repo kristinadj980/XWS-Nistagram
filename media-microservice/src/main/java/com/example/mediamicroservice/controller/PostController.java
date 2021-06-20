@@ -21,6 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.example.mediamicroservice.dto.MediaDTO;
 import com.example.mediamicroservice.dto.PostDTO;
 import com.example.mediamicroservice.dto.CommentDTO;
+import com.example.mediamicroservice.dto.InapropriateContentDTO;
 import com.example.mediamicroservice.dto.LikeDislikeInfoDTO;
 import com.example.mediamicroservice.dto.LikePostDTO;
 
@@ -44,6 +45,7 @@ public class PostController {
 	}
 	
 	private static String uploadDir = "user-photos";
+	private static String uploadDir2 = "verification-photos";
 
 	@PostMapping("/saveImage")
     public List<String> saveImage(@RequestParam("file") List<MultipartFile> multipartFiles ) throws IOException {
@@ -55,6 +57,15 @@ public class PostController {
 	        MediaUpload.saveFile(uploadDir, fileName, multipartFile);
 		}
         return fileNames;
+    }
+	
+	@PostMapping("/saveImageForRequest")
+    public String saveImageForRequest(@RequestParam("file") MultipartFile multipartFile ) throws IOException {
+		
+        String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename().replaceAll("\\s", "")); 
+        uploadDir2 = "verification-photos";
+        MediaUpload.saveFile(uploadDir2, fileName, multipartFile);
+        return fileName;
     }
 	
 	@PostMapping("/addNewPost")
@@ -148,6 +159,12 @@ public class PostController {
 		
 		return new ResponseEntity(postService.findMyFavouritePosts(username), HttpStatus.OK); 
 
+	}
+	
+	@PostMapping("/reportPost")
+	public ResponseEntity reportPost(@RequestBody InapropriateContentDTO dto) {
+		
+		return new ResponseEntity(postService.reportPost(dto), HttpStatus.OK); 
 	}
 
 }

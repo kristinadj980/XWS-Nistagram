@@ -49,11 +49,14 @@
                              <video v-if="post.fileNames[index].includes(videoText)" autoplay controls v-bind:src="image.imageBytes" width="400" height="400" style="display:block; margin-left:auto; margin-right:auto"></video>
 
                         </div>
-                        <h4 align="left">{{post.description}}</h4>
+                         <h4 style="margin-left:500px; margin-top:10px"><b-icon icon="exclamation-circle" aria-hidden="true" align="right" @click="showModalReportPost($event,post)"></b-icon></h4>
+                         
+                        <h4 align="left" style="margin-top:-35px;">{{post.description}}</h4>
                          <h5 align="left"><span v-for="(tag,t) in post.tags" :key="t">
                                         #{{tag.name}}
                                     </span>
                         </h5>
+                        
                         <h5 align="left"><b-icon icon="hand-thumbs-up" aria-hidden="true" @click="likePost($event,post)"></b-icon>{{post.numberOfLikes}}  likes 
                         <b-icon icon="hand-thumbs-down" aria-hidden="true" @click="dislikePost($event,post)"></b-icon>{{post.numberOfDislikes}} dislikes <span style="margin-left:330px;"></span>
                         <b-icon icon="bookmark" aria-hidden="true" align="right"></b-icon></h5>
@@ -81,6 +84,22 @@
                 </div>
           </b-modal>
        </div>
+        <div> 
+          <b-modal ref="modal4" hide-footer scrollable title="Report inappropriate content" size="lg" modal-class="b-modal">
+               <div modal-class="modal-dialog" role="document">
+                    <div class="modal-content" style="background-color:#e4e4e4; ">
+                            <div class="row">
+                                <div class=" form-group col">
+                                     <span style="margin-left:30px;" ></span>
+                                     <input style="margin-left: 10px;" type="text" class="form-control" v-model="description" placeholder="Enter description...">
+                                     <span style="margin-left:30px;" ></span>
+                                </div>
+                                 <b-button style="margin-top: 18px; width:100px ;height:50px;" pill variant="outline-danger" class = "btn btn-lg space_style" @click="reportPost">Report</b-button> 
+                             </div><span style="margin-top:30px;" ></span>               
+                    </div>                
+                </div>
+          </b-modal>
+       </div>
     </div>
 </template>
 
@@ -103,6 +122,10 @@ export default {
         usersWhoCommented:[],
         answer:'',
         commentId:'',
+        usernameTo:'',
+        usernameFrom:'',
+        postId:'',
+        description:''
         }
     },
     async mounted(){
@@ -255,6 +278,30 @@ export default {
                     console.log(response);                
                 }).catch(res => {
                     alert("Error,please try later");
+                    console.log(res.response.data.message);
+
+                });
+        },
+        showModalReportPost : function(event,post){
+               this.$refs['modal4'].show();
+               this.usernameTo = post.username,
+                this.usernameFrom = this.loggeduser.username,
+                this.postId= post.id;
+        },
+        reportPost: function(){
+            const postInfo = {
+                usernameTo : this.usernameTo,
+                usernameFrom : this.usernameFrom,
+                postId: this.postId,
+                description : this.description
+            }
+            this.axios.post('http://localhost:8083/mediaMicroservice/post/reportPost',postInfo,{ 
+                }).then(response => {
+                    alert("Picture is reported!");
+                    this.$refs['modal4'].hide();
+                    console.log(response);                
+                }).catch(res => {
+                    alert(res.response.data.message);
                     console.log(res.response.data.message);
 
                 });
