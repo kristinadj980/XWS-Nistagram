@@ -183,5 +183,12 @@ public class PostController {
 		return new ResponseEntity(postService.getMyLikeDislikeHistory(username), HttpStatus.OK); 
 
 	}
+	
+	@PostMapping("/findPostPictureById")
+	public ResponseEntity findPostPictureById(@RequestBody PostDTO dto) {
+		
+		return new ResponseEntity(postService.findPostPictureById(dto.getId(),dto.getUsername()), HttpStatus.OK); 
+	}
+	
 
 }
