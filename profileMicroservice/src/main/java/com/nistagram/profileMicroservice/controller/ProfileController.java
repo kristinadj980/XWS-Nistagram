@@ -27,6 +27,7 @@ import com.nistagram.profileMicroservice.dto.VerificationRequestDTO;
 import com.nistagram.profileMicroservice.model.Person;
 import com.nistagram.profileMicroservice.model.Profile;
 import com.nistagram.profileMicroservice.model.ProfileStatus;
+import com.nistagram.profileMicroservice.model.RequestStatus;
 import com.nistagram.profileMicroservice.model.VerificationRequest;
 import com.nistagram.profileMicroservice.service.implService.ProfileService;
 import com.nistagram.profileMicroservice.service.implService.VerificationRequestService;
@@ -65,9 +66,14 @@ public class ProfileController {
 		Authentication currentUser = SecurityContextHolder.getContext().getAuthentication();
 		Person person = (Person) currentUser.getPrincipal();
 		Profile profile = profileService.findById(person.getId());
-		EditProfileDTO editProfileDTO = new EditProfileDTO(profile.getUsername(), profile.getName(), profile.getSurname(), profile.getEmail(), profile.getPhoneNumber(),
-				profile.getBirthDate(), profile.getGender(), profile.getWebsite(), profile.getBiography(), profile.getProfileStatus(), profile.getAllowedTags(), profile.getAllowedMessages());
-		
+		EditProfileDTO editProfileDTO = new EditProfileDTO();
+		if(profile.getVerificationRequest() != null && profile.getVerificationRequest().getRequestStatus().equals(RequestStatus.accepted)) {
+		editProfileDTO = new EditProfileDTO(profile.getUsername(), profile.getName(), profile.getSurname(), profile.getEmail(), profile.getPhoneNumber(),
+				profile.getBirthDate(), profile.getGender(), profile.getWebsite(), profile.getBiography(), profile.getProfileStatus(), profile.getAllowedTags(), profile.getAllowedMessages(),true, profile.getVerificationRequest().getCategory());
+		}else {
+		editProfileDTO = new EditProfileDTO(profile.getUsername(), profile.getName(), profile.getSurname(), profile.getEmail(), profile.getPhoneNumber(),
+					profile.getBirthDate(), profile.getGender(), profile.getWebsite(), profile.getBiography(), profile.getProfileStatus(), profile.getAllowedTags(), profile.getAllowedMessages(),false,null);
+		}
 		return (ResponseEntity<EditProfileDTO>) (profile == null ? new ResponseEntity<>(HttpStatus.NOT_FOUND) : ResponseEntity.ok(editProfileDTO));
 
 	}

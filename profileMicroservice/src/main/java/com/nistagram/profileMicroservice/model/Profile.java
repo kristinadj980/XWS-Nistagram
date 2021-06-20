@@ -2,7 +2,9 @@ package com.nistagram.profileMicroservice.model;
 
 import javax.persistence.*;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import java.time.LocalDate;
 import java.util.Date;
@@ -74,8 +76,9 @@ public class Profile extends Person{
 	private Boolean allowedTags; 
 	
 	@Column
-	private Boolean allowedMessages;  
+	private Boolean allowedMessages; 
 	
+	@JsonBackReference
 	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private VerificationRequest verificationRequest;
 	

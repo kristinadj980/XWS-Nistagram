@@ -27,7 +27,12 @@ public class VerificationRequestDTO {
 		this.id = id;
 		this.requestStatus = requestStatus;
 	}
-
+	
+	public VerificationRequestDTO(VerificationCategory verificationCategory, String username) {
+		super();
+		this.verificationCategory = verificationCategory;
+		this.username = username;
+	}
 
 	public String getName() {
 		return name;

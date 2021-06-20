@@ -1,4 +1,5 @@
 package com.nistagram.profileMicroservice.service.implService;
+import com.nistagram.profileMicroservice.connections.MediaConnection;
 import com.nistagram.profileMicroservice.dto.VerificationRequestDTO;
 import com.nistagram.profileMicroservice.model.Profile;
 import com.nistagram.profileMicroservice.model.RequestStatus;
@@ -20,11 +21,14 @@ public class VerificationRequestService implements IVerificationRequestService {
 	private final ProfileService profileService;
 	private final ProfileRepository profileRepository;
 	
+	
 	@Autowired
-	public VerificationRequestService(VerificationRequestrepository verificationRequestRepository,ProfileService profileService,ProfileRepository profileRepository) {
+	public VerificationRequestService(VerificationRequestrepository verificationRequestRepository,ProfileService profileService,
+			ProfileRepository profileRepository) {
 		this.verificationRequestRepository = verificationRequestRepository;
 		this.profileService = profileService;
 		this.profileRepository = profileRepository;
+		
 	}
 	
 	@Override
@@ -52,6 +56,7 @@ public class VerificationRequestService implements IVerificationRequestService {
 		if(request.getId() == requestDTO.getId()) {
 			request.setRequestStatus(RequestStatus.accepted);
 			profile.setVerificationRequest(request);
+			
 			profileRepository.save(profile);
 		}
 		

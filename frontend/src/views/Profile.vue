@@ -106,6 +106,7 @@
                         ><b>
                         {{profile.username}}
                         </b>
+                         <h4 align="left" ><b-icon v-if="profile.verificated == true" style="margin-top:-10%;  margin-left:0px;" icon="star-fill" aria-hidden="true"></b-icon>  {{profile.category}}</h4>
                         </h3>
                         <h4 align="left">  <strong>123</strong> posts <strong>123</strong> followers <strong>123</strong> following </h4>
                         <h4 align="left">{{profile.biography}}</h4>
@@ -339,7 +340,7 @@ export default {
         collectionName:'',
         postId:'',
         selectedCollectionID: '',
-        fileNames:[]
+        fileNames:[],
         }
     },
     mounted(){
