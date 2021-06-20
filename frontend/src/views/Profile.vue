@@ -108,10 +108,58 @@
                         </b>
                          <h4 align="left" ><b-icon v-if="profile.verificated == true" style="margin-top:-10%;  margin-left:0px;" icon="star-fill" aria-hidden="true"></b-icon>  {{profile.category}}</h4>
                         </h3>
-                        <h4 align="left">  <strong>123</strong> posts <strong>123</strong> followers <strong>123</strong> following </h4>
+                        <h4 align="left"  v-b-modal.modal6>  <strong>{{this.postsNumber}}</strong> posts <strong>{{this.followersNumber}}</strong> followers <strong >{{this.followingNumber}}</strong> following </h4>
                         <h4 align="left">{{profile.biography}}</h4>
                     </b-col>
                     
+            </div>
+             <div> 
+                <b-modal ref="modal6" id="modal6" hide-footer scrollable size="lg" modal-class="b-modal">
+                    <b-tabs content-class="mt-3" align="center">
+                        <b-tab title="Followers" active>
+                            <b-row text-align-center class="request_look" v-for="f in followers" v-bind:key="f" >
+                                <b-col sm="5">
+                                    <router-link :to="{ name: 'GeneralProfiles', params: {selectedUsername: f.following }}" class="search-btn">
+                                    <h4
+                                    align="right"
+                                    text-align-center
+                                    v-bind:style="{ align: 'center', justify: 'center' }"
+                                    >
+                                    <b>{{f.following }}</b>
+                                    </h4>
+                                    </router-link>
+                                </b-col>
+                                <b-col sm="5">
+                                    <b-button class="btn btn-info btn-lg space_style" style="background-color:#f08080; width:40%;" v-on:click = "removeFollowera(f.following)">Remove</b-button>
+                                </b-col>
+                                <hr>
+                            </b-row>
+                            <b-row style="float:center; margin-top:15px;">
+                                <b-button class="btn btn-info btn-lg "  style="background-color:#f08080; width:100%;" v-on:click = "closeFriendsInfo">Close</b-button>
+                            </b-row>
+                        </b-tab>
+                        <b-tab title="Following">
+                            <b-row text-align-center class="request_look" v-for="f in following" v-bind:key="f" >
+                                <b-col sm="5">
+                                    <h4
+                                    align="right"
+                                    text-align-center
+                                    v-bind:style="{ align: 'center', justify: 'center' }"
+                                    >
+                                    <b>{{f.following }}</b>
+                                    </h4>
+                                 </b-col>
+                                <b-col sm="5">
+                                    <b-button class="btn btn-info btn-lg space_style" style="background-color:#f08080; width:40%;" v-on:click = "removeFollowing(f.following)">Remove</b-button>
+                                </b-col>
+                                <hr>
+                            </b-row>
+                            <b-row style="float:center; margin-top:15px;">
+                                <b-button class="btn btn-info btn-lg "  style="background-color:#f08080; width:100%;" v-on:click = "closeFriendsInfo">Close</b-button>
+                            </b-row>
+                        </b-tab>
+                    </b-tabs>
+                </b-modal>
             </div>
             <b-tabs 
             style="margin-top:70px;" 
@@ -341,6 +389,11 @@ export default {
         postId:'',
         selectedCollectionID: '',
         fileNames:[],
+        following: [],
+        followingNumber: 0,
+        followers: [],
+        followersNumber: 0,
+        postsNumber: 0,
         }
     },
     mounted(){
@@ -366,6 +419,34 @@ export default {
              }
          }).then(response => {
                this.users = response.data
+         }).catch(res => {
+                       alert("Error");
+                        console.log(res);
+                 });
+        
+        this.axios.get('http://localhost:8083/profileMicroservice/api/profile/getFollowingUsers',{ 
+             headers: {
+                 'Authorization': 'Bearer ' + token,
+             }
+         }).then(response => {
+             
+            console.log("ooook je"+ response.data);
+            this.following = response.data;
+            this.followingNumber = response.data.length;
+         }).catch(res => {
+                       alert("Error");
+                        console.log(res);
+                 });
+
+        this.axios.get('http://localhost:8083/profileMicroservice/api/profile/getFollowers',{ 
+             headers: {
+                 'Authorization': 'Bearer ' + token,
+             }
+         }).then(response => {
+             
+            console.log("ooook je"+ response.data);
+            this.followers = response.data;
+            this.followersNumber = response.data.length;
          }).catch(res => {
                        alert("Error");
                         console.log(res);
@@ -398,12 +479,15 @@ export default {
         editProfile: function(){
             window.location.href="/profileInfo";
         },
+        closeFriendsInfo: function() {
+            this.$refs['modal6'].hide();
+        },
         getMyPosts: function(person) {
             this.axios.get('http://localhost:8083/mediaMicroservice/post/getMyPosts/'+ person.username,)
             .then(response => {
                 this.posts = response.data;
                 let video = "mp4";
-
+                this.postsNumber = this.posts.length;
                 for(let i=0; i< this.posts.length; i++){
                     for(let j=0; j< this.posts[i].fileNames.length; j++){
                         if(!this.posts[i].fileNames[j].includes(video)){
@@ -420,8 +504,42 @@ export default {
                     });
                     
         },
-
-
+        removeFollowing: function(unfollowUser) {
+            let token = localStorage.getItem('token').substring(1, localStorage.getItem('token').length-1);
+            const unfollowUserInfo ={
+                userReceiver : unfollowUser,
+            } 
+            this.axios.post('http://localhost:8083/profileMicroservice/api/friendRequest/unfollow',unfollowUserInfo, { 
+                headers: {
+                    'Authorization': 'Bearer ' + token,
+                }})
+                .then(response => {
+                    alert(response.data)
+                        console.log(response);
+                })
+                .catch(response => {
+                    alert("Please, try later.")
+                    console.log(response);
+                })
+        },
+        removeFollowera: function(unfollowUser) {
+            let token = localStorage.getItem('token').substring(1, localStorage.getItem('token').length-1);
+            const unfollowUserInfo ={
+                userReceiver : unfollowUser,
+            } 
+            this.axios.post('http://localhost:8083/profileMicroservice/api/friendRequest/removeFollowera',unfollowUserInfo, { 
+                headers: {
+                    'Authorization': 'Bearer ' + token,
+                }})
+                .then(response => {
+                    alert(response.data)
+                        console.log(response);
+                })
+                .catch(response => {
+                    alert("Please, try later.")
+                    console.log(response);
+                })
+        },
         getMyStories: function(person) {
             this.axios.get('http://localhost:8083/mediaMicroservice/story/getMyStories/'+ person.username,)
             .then(response => {

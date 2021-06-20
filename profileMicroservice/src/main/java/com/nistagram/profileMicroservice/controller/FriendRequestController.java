@@ -77,4 +77,15 @@ public class FriendRequestController {
 		}
 	}
 	
+	
+	@PostMapping("/removeFollowera")
+	@PreAuthorize("hasRole('REGISTRED_USER')")
+	public ResponseEntity removeFollowera(@RequestBody FriendRequestDTO friendRequestDTO) {
+		try {
+			friendRequestService.removeFollowera(friendRequestDTO);
+			return new ResponseEntity<>("You have removed this account from followers!",HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+	}
 }

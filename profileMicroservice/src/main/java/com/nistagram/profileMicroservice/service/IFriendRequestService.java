@@ -11,4 +11,5 @@ public interface IFriendRequestService {
 	String setRequestResponse(FriendRequestDTO friendRequestDTO);
 	void cancelRequest(FriendRequestDTO friendRequestDTO);
 	void unfollowFriend(FriendRequestDTO friendRequestDTO);
+	void removeFollowera(FriendRequestDTO friendRequestDTO);
 }

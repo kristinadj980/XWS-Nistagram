@@ -109,27 +109,17 @@ public class PostController {
 	
 	@PostMapping("/getFriendsPosts")
 	public ResponseEntity<List<PostDTO>> getFriendsPosts(@RequestBody List<PostDTO> postDTOs) {
-		System.out.println("USPELOOOOOOOOOOOOOOOO");
 		try {
 			List<PostDTO> posts = new ArrayList<PostDTO>();
-			System.out.println("USPELOOOOOOOOOOOOOOOO");
 			for(PostDTO p:postDTOs) {
-				System.out.println("USPELOOOOOOOOOOOOOOOO");
 				List<PostDTO> friendPosts = new ArrayList<PostDTO>();
-				System.out.println("USPELOOOOOOOOOOOOOOOO"+p.getFollowing());
 				friendPosts = postService.findMyPosts(p.getFollowing());
-				System.out.println("USPELOOOOOOOOOOOOOOOO");
-				for(PostDTO pf:friendPosts) {
-					System.out.println("USPELOOOOOOOOOOOOOOOO");
+				for(PostDTO pf:friendPosts)
 					posts.add(pf);
-				}
-				
 			}
-			System.out.println("USPELOOOOOOOOOOOOOOOO");
 			posts = postService.sortByDate(posts);
 			return new ResponseEntity(posts, HttpStatus.OK); 
 		}catch(Exception e) {
-			System.out.println("USPELOOOOOOOOOOOOOOOO" + e.getMessage());
 			e.printStackTrace();
 			return new ResponseEntity(HttpStatus.BAD_REQUEST);
 		}
