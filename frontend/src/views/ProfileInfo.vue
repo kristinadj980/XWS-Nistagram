@@ -51,7 +51,7 @@
                   <img class="img-circle img-responsive rounded-circle"  src="@/assets/user.png" style="width:120px; height:120px;"  />  
                 </div>
                 <div class="custom-control custom-switch">
-                <b-button style="margin-left:905px; margin-top:-190px;" variant="outline-danger" size="lg" class = " mb-2 btn btn-lg space_style" v-on:click = "editPrivacy()">
+                <b-button style="margin-left:850px; margin-top:-190px;" variant="outline-danger" size="lg" class = " mb-2 btn btn-lg space_style" v-on:click = "editPrivacy()">
                     <b-icon v-if="profile.profileStatus == 'privateProfile'" icon="lock-fill" aria-hidden="true" tooltip="click to go public"></b-icon> 
                     <b-icon v-if="profile.profileStatus == 'publicProfile'" icon="unlock-fill" aria-hidden="true"  tooltip="click to go public"></b-icon> 
                 </b-button>
@@ -226,6 +226,23 @@
             </b-row>
             
         </b-tab>
+        <b-tab title="Mute friends" @click="showResult()">
+            <b-row v-for="(muted, index) in mutedFriends" v-bind:key="index" style="background: #f5f1f4;" >
+                <b-col sm="6" align-self="center"><strong><h3 class ="text-justify top-buffer" align="left" style="margin-left:350px;">{{muted}} </h3></strong></b-col>
+                <b-col sm="1" align-self="center">
+                    <b-button variant="outline-danger"  size="lg" class = " mb-2 btn btn-lg  space_style" v-on:click = "unmuteFriend(muted)"> Unmute</b-button>
+                </b-col>
+                <hr>
+            </b-row>
+            <b-row v-for="follow,index in following" v-bind:key="index" style="background: #f5f1f4;" >
+                <b-col sm="6" align-self="center"><strong><h3 class ="text-justify top-buffer" align="left" style="margin-left:350px;">{{follow}} </h3></strong></b-col>
+                <b-col sm="1" align-self="center">
+                    <b-button variant="outline-danger"  size="lg" class = " mb-2 btn btn-lg  space_style" v-on:click = "muteFriend(follow)"> Mute</b-button>
+                </b-col>
+                <hr>
+            </b-row>
+
+        </b-tab>
        
             <b-tab title="Verification request" >
             <div id="verificationRequest">  
@@ -279,6 +296,8 @@ export default {
         stories: [],
         currentUsername: "",
         newUsername: "",
+        following: [],
+        mutedFriends: [],
         categories:["influencer","sports","media","business","brand","organization"],
         user:'',
         file:'',
@@ -299,8 +318,7 @@ export default {
          }).catch(res => {
                        alert("Error");
                         console.log(res);
-                 });
-
+        });
          this.axios.get('http://localhost:8083/profileMicroservice/api/profile/account',{ 
              headers: {
                  'Authorization': 'Bearer ' + token,
@@ -486,6 +504,42 @@ export default {
                     console.log(response);
                 })
         },
+        muteFriend :function(friendForMute){
+            let token = localStorage.getItem('token').substring(1, localStorage.getItem('token').length-1);
+            const friendForMuteInfo ={
+                username : friendForMute,
+            } 
+            this.axios.post('http://localhost:8083/profileMicroservice/api/profile/mute',friendForMuteInfo, { 
+                headers: {
+                    'Authorization': 'Bearer ' + token,
+                }})
+                .then(response => {
+                    console.log(response.data);
+                    this.showResult();
+                })
+                .catch(response => {
+                    alert("Please, try later.")
+                    console.log(response);
+                })
+        },
+        unmuteFriend :function(friendForMute){
+            let token = localStorage.getItem('token').substring(1, localStorage.getItem('token').length-1);
+            const friendForMuteInfo ={
+                username : friendForMute,
+            } 
+            this.axios.post('http://localhost:8083/profileMicroservice/api/profile/unmute',friendForMuteInfo, { 
+                headers: {
+                    'Authorization': 'Bearer ' + token,
+                }})
+                .then(response => {
+                    console.log(response.data);
+                    this.showResult();
+                })
+                .catch(response => {
+                    alert("Please, try later.")
+                    console.log(response);
+                })
+        },
         getMyStories: function(person) {
             console.log(person);
             this.axios.get('http://localhost:8083/mediaMicroservice/story/getArchiveStories/'+ person.username,)
@@ -499,6 +553,31 @@ export default {
                             console.log(res);
                     });
                     
+        },
+        showResult: async function(){
+            let token = localStorage.getItem('token').substring(1, localStorage.getItem('token').length-1);
+            this.axios.get('http://localhost:8083/profileMicroservice/api/profile/getNotMuted',{ 
+             headers: {
+                 'Authorization': 'Bearer ' + token,
+             }
+            }).then(response => {
+                this.following = response.data;
+            }).catch(res => {
+                        alert("Error");
+                            console.log(res);
+            });
+
+            this.axios.get('http://localhost:8083/profileMicroservice/api/profile/getMuted',{ 
+                headers: {
+                    'Authorization': 'Bearer ' + token,
+                }
+            }).then(response => {
+                this.mutedFriends = response.data;
+            }).catch(res => {
+                        alert("Error");
+                            console.log(res);
+            });
+
         },
          handleFileUpload(){
             this.file = this.$refs.file.files[0];

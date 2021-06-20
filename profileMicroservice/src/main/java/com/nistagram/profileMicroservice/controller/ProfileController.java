@@ -183,6 +183,18 @@ public class ProfileController {
 		
 	}
 	
+	@GetMapping("/getFollowers")
+	@PreAuthorize("hasRole('REGISTRED_USER')")  
+	public ResponseEntity<List<FollowingDTO>> getFollowers() {
+		try {
+			return new ResponseEntity<>(profileService.getFollowers(), HttpStatus.OK);
+			
+		} catch (Exception e) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+		
+	}
+	
 	@PostMapping("/editTagAllowance")
 	@PreAuthorize("hasRole('REGISTRED_USER')")
 	public ResponseEntity<Boolean> updateTagAllowance(@RequestBody EditProfileDTO editProfileDTO) {
@@ -203,11 +215,52 @@ public class ProfileController {
 		}
 	}
 	
+	@GetMapping("/getMuted")
+	@PreAuthorize("hasRole('REGISTRED_USER')")
+	public ResponseEntity<List<String>> getMuted() {
+		try {
+			return new ResponseEntity<>(profileService.getMuted(),HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+	}
+
 	@PostMapping("/verificationRequest")
 	@PreAuthorize("hasRole('REGISTRED_USER')")
 	public ResponseEntity sendRequest(@RequestBody VerificationRequestDTO verificationRequestDTO){
 		try {
 			return new ResponseEntity<>(profileService.sendRequest(verificationRequestDTO), HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+	}
+
+	@GetMapping("/getNotMuted")
+	@PreAuthorize("hasRole('REGISTRED_USER')")
+	public ResponseEntity<List<String>> getNotMuted() {
+		try {
+			return new ResponseEntity<>(profileService.getNotMuted(),HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+	}
+	
+	@PostMapping("/mute")
+	@PreAuthorize("hasRole('REGISTRED_USER')")
+	public ResponseEntity<List<String>> muteFriend(@RequestBody EditProfileDTO editProfileDTO) {
+		try {
+			return new ResponseEntity<>(profileService.muteFriend(editProfileDTO),HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+	}
+	
+	@PostMapping("/unmute")
+	@PreAuthorize("hasRole('REGISTRED_USER')")
+	public ResponseEntity unmuteFriend(@RequestBody EditProfileDTO editProfileDTO) {
+		try {
+			profileService.unmuteFriend(editProfileDTO);
+			return new ResponseEntity<>(HttpStatus.OK);
 		} catch (Exception e) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
@@ -224,6 +277,5 @@ public class ProfileController {
 		}
 		
 	}
-	
 	
 }
