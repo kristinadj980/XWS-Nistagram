@@ -105,8 +105,7 @@ public class ProfileMedia {
 
 	public void setFavouritesCollections(List<FavouritesCollection> favouritesCollections) {
 		this.favouritesCollections = favouritesCollections;
-	}	
-	
-	
+	}
+
 
 }

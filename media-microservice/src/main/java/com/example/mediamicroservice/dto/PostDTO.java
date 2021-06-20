@@ -3,6 +3,7 @@ package com.example.mediamicroservice.dto;
 import java.time.LocalDateTime;
 import java.util.List;
 
+
 import lombok.Data;
 
 @Data
@@ -25,13 +26,11 @@ public class PostDTO {
     private Long id;
 	private List<ImageDTO> images;
     
-    
 	public PostDTO() {
 		super();
 	}
 
-	
-	
+
 	public PostDTO(String description, String location, List<TagDTO> tags, String username, Long userId,
 			String fileName, List<String> fileNames, LocalDateTime date, LocationDTO locationDTO,
 			List<byte[]> imageBytes, String following, int numberOfLikes, int numberOfDislikes, int numberOfComments,
@@ -52,6 +51,7 @@ public class PostDTO {
 		this.numberOfDislikes = numberOfDislikes;
 		this.numberOfComments = numberOfComments;
 		this.id = id;
+		
 	}
 
 
@@ -103,6 +103,7 @@ public class PostDTO {
 		this.numberOfComments = numberOfComments;
 		this.tags = tags;
 		this.id = id;
+		
 	}
 	
 	public PostDTO(String description, String username, String fileName, LocationDTO locationDTO, List<byte[]> imageBytes) {
@@ -256,13 +257,9 @@ public class PostDTO {
 		return images;
 	}
 
-
-
 	public void setImages(List<ImageDTO> images) {
 		this.images = images;
 	}
-
-
 
 	public Long getId() {
 		return id;
@@ -271,6 +268,6 @@ public class PostDTO {
 	public void setId(Long id) {
 		this.id = id;
 	}
-	
 
+	
 }

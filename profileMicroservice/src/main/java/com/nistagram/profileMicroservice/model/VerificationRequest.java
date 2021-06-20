@@ -28,12 +28,12 @@ public class VerificationRequest {
 	@Enumerated(EnumType.ORDINAL)
 	private RequestStatus requestStatus;
 	
-	@JsonManagedReference
+	/*@JsonManagedReference
 	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@JoinTable(name = "verification_request_profiles",
 	joinColumns = @JoinColumn(name = "verification_request_id", referencedColumnName = "id"),
 	inverseJoinColumns = @JoinColumn(name = "profile_id", referencedColumnName = "id"))
-	private List<Profile> profiles;
+	private List<Profile> profiles;*/
 	
 	@OneToOne(cascade = CascadeType.ALL)
 	private Media media;
@@ -43,7 +43,7 @@ public class VerificationRequest {
 	}
 
 	public VerificationRequest(Long id, String name, String surname, String username, VerificationCategory category,
-			RequestStatus requestStatus, List<Profile> profiles, Media media) {
+			RequestStatus requestStatus, Media media) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -51,7 +51,6 @@ public class VerificationRequest {
 		this.username = username;
 		this.category = category;
 		this.requestStatus = requestStatus;
-		this.profiles = profiles;
 		this.media = media;
 	}
 
@@ -93,14 +92,6 @@ public class VerificationRequest {
 
 	public void setRequestStatus(RequestStatus requestStatus) {
 		this.requestStatus = requestStatus;
-	}
-
-	public List<Profile> getProfiles() {
-		return profiles;
-	}
-
-	public void setProfiles(List<Profile> profiles) {
-		this.profiles = profiles;
 	}
 
 	public Media getMedia() {

@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.nistagram.profileMicroservice.dto.EditUsernameDTO;
 import com.nistagram.profileMicroservice.dto.PostDTO;
+import com.nistagram.profileMicroservice.dto.VerificationRequestDTO;
 import com.nistagram.profileMicroservice.model.Media;
 
 
@@ -28,5 +29,7 @@ public interface MediaConnection {
 	
 	@RequestMapping(method=RequestMethod.POST,value="/media/saveDocument",consumes="application/json")
 	Media saveVerificationDocument(@RequestBody String fileName);
+	
+	
 
 }

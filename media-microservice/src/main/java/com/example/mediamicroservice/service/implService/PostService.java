@@ -96,7 +96,7 @@ public class PostService implements IPostService {
 		if(existingProfile == null) 
 			throw new IllegalArgumentException("Profile doesn't exist!");
 		List<Post> posts = existingProfile.getPosts();
-		int numberOfLikes = 0;
+		int numberOfLikes = 0; 
 		int numberOfDislikes = 0;
 		int numberOfComments = 0;
 		for (Post post : posts) {
@@ -115,7 +115,6 @@ public class PostService implements IPostService {
 			if( post.getNumberOfLikes() == null && post.getNumberOfDisikes() != null && post.getNumberOfComments() == null) {
 				numberOfDislikes = post.getNumberOfDisikes();
 				myPosts.add(new PostDTO(post.getDescription(),username,mediasFileName,locationDTO, post.getDate(),0,numberOfDislikes,0,tagsDTO,post.getId()));
-				
 			}else if( post.getNumberOfLikes() == null && post.getNumberOfDisikes() != null && post.getNumberOfComments() != null) {
 					numberOfDislikes = post.getNumberOfDisikes();
 					numberOfComments = post.getNumberOfComments();
