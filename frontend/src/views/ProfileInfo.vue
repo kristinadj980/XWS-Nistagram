@@ -244,7 +244,7 @@
 
         </b-tab>
        
-            <b-tab title="Verification request" active>
+            <b-tab title="Verification request" >
             <div id="verificationRequest">  
             <form>
             <h4 style="left: 10px;">Name: {{name}} </h4>

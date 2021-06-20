@@ -119,6 +119,10 @@ public class ProfileMediaService implements IProfileMediaService {
 		}
 		
 	}
+	@Override
+	public List<ProfileMedia> findAll() {
+		return profileMediaRepository.findAll();
+	}
 	
 	
 	

@@ -18,7 +18,7 @@ public class Post{
 	   @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	   @JoinTable(name = "post_likes",
 	   joinColumns = @JoinColumn(name = "post_id", referencedColumnName = "id"),
-	   inverseJoinColumns = @JoinColumn(name = "likes_id", referencedColumnName = "id"))
+	   inverseJoinColumns = @JoinColumn(name = "profile_who_liked_id", referencedColumnName = "id"))
 	   private List<ProfileMedia> likes;
 	   
 	   @Column(name = "numberOfLikes")
@@ -33,7 +33,7 @@ public class Post{
 	   @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	   @JoinTable(name = "post_dislikes",
 	   joinColumns = @JoinColumn(name = "post_id", referencedColumnName = "id"),
-	   inverseJoinColumns = @JoinColumn(name = "dislikes_id", referencedColumnName = "id"))
+	   inverseJoinColumns = @JoinColumn(name = "profile_who_disliked_id", referencedColumnName = "id"))
 	   private List<ProfileMedia> dislikes;
 
 	   @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)

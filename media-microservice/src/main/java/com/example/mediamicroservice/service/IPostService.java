@@ -2,6 +2,7 @@ package com.example.mediamicroservice.service;
 
 import java.util.List;
 
+import com.example.mediamicroservice.dto.LikeDislikeHistoryDTO;
 import com.example.mediamicroservice.dto.LikeDislikeInfoDTO;
 import com.example.mediamicroservice.dto.LikePostDTO;
 import com.example.mediamicroservice.dto.PostDTO;
@@ -22,4 +23,6 @@ public interface IPostService {
 	List<Comment> sortCommentsByDate(List<Comment> comments);
 	Post findById(Long id);
 	List<PostDTO> findMyFavouritePosts(String username);
+	List<LikeDislikeHistoryDTO> getMyLikeDislikeHistory(String username);
+	List<PostDTO> findPostPictureById(Long postId, String username);
 }
