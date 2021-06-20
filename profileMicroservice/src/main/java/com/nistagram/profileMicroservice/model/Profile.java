@@ -36,8 +36,17 @@ public class Profile extends Person{
 	@Column(name = "biography")  
 	private String biography;
 
-	@OneToMany(mappedBy = "profile", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@JoinTable(name = "profile_notifications",
+	joinColumns = @JoinColumn(name = "profile_id", referencedColumnName = "id"),
+	inverseJoinColumns = @JoinColumn(name = "notification_id", referencedColumnName = "id"))
 	private List<Notification> notifications;  
+	
+	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@JoinTable(name = "profile_friend_notifications",
+	joinColumns = @JoinColumn(name = "profile_id", referencedColumnName = "id"),
+	inverseJoinColumns = @JoinColumn(name = "friendNotifications_id", referencedColumnName = "id"))
+	private List<FriendNotifications> friendNotifications;  
 
 	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@JoinTable(name = "profile_followers",
@@ -86,17 +95,19 @@ public class Profile extends Person{
 		super();
 	}
 
+
 	public Profile(ProfileStatus profileStatus, List<Profile> closeFriends, String website, String biography,
-			List<Notification> notifications, List<Profile> followers, List<Profile> following,
-			List<Profile> mutedFriends, List<Profile> blockedUsers, List<FriendRequest> friendRequests,
-			RequestStatus agentRequestStatus, Boolean allowedTags, Boolean allowedMessages,
-			VerificationRequest verificationRequest) {
+			List<Notification> notifications, List<FriendNotifications> friendNotifications, List<Profile> followers,
+			List<Profile> following, List<Profile> mutedFriends, List<Profile> blockedUsers,
+			List<FriendRequest> friendRequests, RequestStatus agentRequestStatus, Boolean allowedTags,
+			Boolean allowedMessages, VerificationRequest verificationRequest) {
 		super();
 		this.profileStatus = profileStatus;
 		this.closeFriends = closeFriends;
 		this.website = website;
 		this.biography = biography;
 		this.notifications = notifications;
+		this.friendNotifications = friendNotifications;
 		this.followers = followers;
 		this.following = following;
 		this.mutedFriends = mutedFriends;
@@ -107,7 +118,6 @@ public class Profile extends Person{
 		this.allowedMessages = allowedMessages;
 		this.verificationRequest = verificationRequest;
 	}
-
 
 
 	public Profile(Long id, String username, String name, String surname, String email, String password,
@@ -246,6 +256,18 @@ public class Profile extends Person{
 	public void setAgentRequestStatus(RequestStatus agentRequestStatus) {
 		this.agentRequestStatus = agentRequestStatus;
 	}
+
+
+	public List<FriendNotifications> getFriendNotifications() {
+		return friendNotifications;
+	}
+
+
+	public void setFriendNotifications(List<FriendNotifications> friendNotifications) {
+		this.friendNotifications = friendNotifications;
+	}
+	
+	
 	
 	/*@Override
 	public String getUsername() {

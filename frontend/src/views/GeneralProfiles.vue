@@ -22,13 +22,67 @@
             class="m-2" 
             menu-class="w-100" 
             v-if="friendStatus == 'approved' || friendStatus == 'friends'"
-            style="left:46%;">
+            style="left:87%;">
                 <template #button-content>
                    <b-icon icon="three-dots" aria-hidden="true" ></b-icon>
                 </template>
                 <b-dropdown-item >Mute</b-dropdown-item>
                 <b-dropdown-item>Block</b-dropdown-item>
             </b-dropdown>
+            <b-icon 
+            v-if="friendStatus == 'approved' || friendStatus == 'friends'" 
+            icon="bell" 
+            variant="danger"
+            style="margin-left:75%;" 
+            aria-hidden="true"
+            font-scale="2"
+            v-on:click="getFriendNotifications"
+            v-b-modal.modal5>
+            </b-icon>
+            <div> 
+                <b-modal ref="modal5" id="modal5" hide-footer scrollable title="Notifications" size="lg" modal-class="b-modal">
+                    <b-row>
+                        <b-col sm="5"><h5 class ="text-justify top-buffer" align="left" style="margin-left:100px;"> Messages </h5></b-col>
+                        <b-col sm="1">
+                            <b-button  variant="outline-danger" size="lg" class = " mb-2 btn btn-lg space_style" v-on:click = "editTagAllowance()">
+                                <b-icon v-if="friendNotifications.message == true" icon="toggle-on" aria-hidden="true" tooltip="click to disable tags"></b-icon> 
+                                <b-icon v-if="friendNotifications.message == false" icon="toggle-off" aria-hidden="true"  tooltip="click to allow tags"></b-icon> 
+                            </b-button>
+                        </b-col>
+                    </b-row>
+
+                    <b-row>
+                        <b-col sm="5"><h5 class ="text-justify top-buffer" align="left" style="margin-left:100px;"> Posts </h5></b-col>
+                        <b-col sm="1">
+                            <b-button  variant="outline-danger" size="lg" class = " mb-2 btn btn-lg space_style" v-on:click = "editTagAllowance()">
+                                <b-icon v-if="friendNotifications.post == true" icon="toggle-on" aria-hidden="true" tooltip="click to disable tags"></b-icon> 
+                                <b-icon v-if="friendNotifications.post == false" icon="toggle-off" aria-hidden="true"  tooltip="click to allow tags"></b-icon> 
+                            </b-button>
+                        </b-col>
+                    </b-row>
+
+                    <b-row>
+                        <b-col sm="5"><h5 class ="text-justify top-buffer" style="margin-left:100px;" align="left"> Stories </h5></b-col>
+                        <b-col sm="1">
+                            <b-button variant="outline-danger" size="lg" class=" mb-2 btn btn-lg space_style " v-on:click = "editMessageAllowance">
+                                <b-icon v-if="friendNotifications.story == true" value="true" icon="toggle-on" aria-hidden="true" tooltip="click to disable messages"></b-icon>
+                                <b-icon v-if="friendNotifications.story == false" value="false" icon="toggle-off" aria-hidden="true"  tooltip="click to allow messages"></b-icon> 
+                            </b-button>
+                        </b-col>
+                    </b-row>
+
+                    <b-row>
+                        <b-col sm="5"><h5 class ="text-justify top-buffer" style="margin-left:100px;" align="left"> Comments </h5></b-col>
+                        <b-col sm="1">
+                            <b-button variant="outline-danger" size="lg" class=" mb-2 btn btn-lg space_style " v-on:click = "editMessageAllowance">
+                                <b-icon v-if="friendNotifications.comment == true" value="true" icon="toggle-on" aria-hidden="true" tooltip="click to disable messages"></b-icon>
+                                <b-icon v-if="friendNotifications.comment == false" value="false" icon="toggle-off" aria-hidden="true"  tooltip="click to allow messages"></b-icon> 
+                            </b-button>
+                        </b-col>
+                    </b-row>
+
+                </b-modal>
+            </div>
             <div class="card header_surface" style="margin-top:10px; border-color: #d4bcce; margin-left:50px;"  >
                   <img class="img-circle img-responsive rounded-circle"  src="https://images.vexels.com/media/users/3/147101/isolated/preview/b4a49d4b864c74bb73de63f080ad7930-instagram-profile-button-by-vexels.png" style=" width:120px; height:120px;"  /> 
                     
@@ -180,7 +234,8 @@ export default {
         postId:'',
         usernameTo:'',
         usernameFrom:'',
-        description:''
+        description:'',
+        friendNotifications: [],
         }
     },
     async mounted(){
@@ -406,6 +461,18 @@ export default {
                     console.log(res.response.data.message);
 
                 });
+        },getFriendNotifications: function(){
+            let token = localStorage.getItem('token').substring(1, localStorage.getItem('token').length-1);
+            this.axios.get('http://localhost:8083/profileMicroservice/api/friendNotificationsController/friendNotifications/'+ this.$route.params.selectedUsername, { 
+                headers: {
+                    'Authorization': 'Bearer ' + token,
+                }})
+            .then(response => {
+               this.friendNotifications = response.data
+            }).catch(res => {
+                        alert("Error");
+                            console.log(res);
+                    });
         },
         refreshPage: function(selectedUser){
             this.axios.get('http://localhost:8083/profileMicroservice/api/profile/getUserProfile/'+ this.$route.params.selectedUsername)

@@ -9,11 +9,13 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.nistagram.profileMicroservice.dto.FriendRequestDTO;
+import com.nistagram.profileMicroservice.model.FriendNotifications;
 import com.nistagram.profileMicroservice.model.FriendRequest;
 import com.nistagram.profileMicroservice.model.FriendRequestStatus;
 import com.nistagram.profileMicroservice.model.Person;
 import com.nistagram.profileMicroservice.model.Profile;
 import com.nistagram.profileMicroservice.model.ProfileStatus;
+import com.nistagram.profileMicroservice.repository.FriendNotificationsRepository;
 import com.nistagram.profileMicroservice.repository.FriendRequestRepository;
 import com.nistagram.profileMicroservice.repository.ProfileRepository;
 import com.nistagram.profileMicroservice.service.IFriendRequestService;
@@ -24,14 +26,16 @@ public class FriendRequestService implements IFriendRequestService{
 	private final FriendRequestRepository friendRequestRepository;
 	private final ProfileService profileService;
 	private final ProfileRepository profileRepository;
+	private final FriendNotificationsRepository friendNotificationsRepository;
 	
 	@Autowired
 	public FriendRequestService(FriendRequestRepository friendRequestRepository, ProfileService profileService,
-			ProfileRepository profileRepository) {
+			ProfileRepository profileRepository, FriendNotificationsRepository friendNotificationsRepository) {
 		super();
 		this.friendRequestRepository = friendRequestRepository;
 		this.profileService = profileService;
 		this.profileRepository = profileRepository;
+		this.friendNotificationsRepository = friendNotificationsRepository;
 	}
 
 	private Profile getLogedUser() {
@@ -46,10 +50,16 @@ public class FriendRequestService implements IFriendRequestService{
 		Profile userSender = getLogedUser();
 		Profile userReceiver = profileService.findByUsername(friendRequestDTO.getUserReceiver());
 		FriendRequest friendRequest = new FriendRequest();
-
+		FriendNotifications friendNotifications = new FriendNotifications(false, false, false, false, userReceiver);
+		List<FriendNotifications> f = new ArrayList<>();
+		f.add(friendNotifications);
 		if(userReceiver.getProfileStatus().equals(ProfileStatus.publicProfile)) {
 			userSender.getFollowing().add(userReceiver);
 			userReceiver.getFollowers().add(userSender);
+			friendNotificationsRepository.save(friendNotifications);
+			System.out.println("hoce li ovo puci ");
+			userSender.setFriendNotifications(f);
+			System.out.println("hoce li ovo puci ");
 			profileRepository.save(userSender);
 			profileRepository.save(userReceiver);
 			return "You are friends!";
