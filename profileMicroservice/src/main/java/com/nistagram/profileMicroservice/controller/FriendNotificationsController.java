@@ -7,9 +7,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.nistagram.profileMicroservice.dto.EditProfileDTO;
 import com.nistagram.profileMicroservice.dto.FriendNotificationsDTO;
 import com.nistagram.profileMicroservice.service.implService.FriendNotificationsService;
 
@@ -31,6 +34,16 @@ public class FriendNotificationsController {
 		
 		try {
 			return new ResponseEntity(friendNotificationsService.getfriendNotifications(username), HttpStatus.OK); 
+		} catch (Exception e) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+	}
+	
+	@PostMapping("/changeStatus")
+	@PreAuthorize("hasRole('REGISTRED_USER')")
+	public ResponseEntity<FriendNotificationsDTO> changeNotificationStatus(@RequestBody FriendNotificationsDTO friendNotificationsDTO) {
+		try {
+			return new ResponseEntity<>(friendNotificationsService.changeNotificationStatus(friendNotificationsDTO), HttpStatus.OK);
 		} catch (Exception e) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}

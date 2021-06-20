@@ -3,6 +3,7 @@ package com.nistagram.profileMicroservice.dto;
 
 public class FriendNotificationsDTO {
 	
+	private Long id;
 	private Boolean message;
 	private Boolean post;
 	private Boolean story;
@@ -13,14 +14,23 @@ public class FriendNotificationsDTO {
 		super();
 	}
 
-	public FriendNotificationsDTO(Boolean message, Boolean post, Boolean story, Boolean comment) {
+	public FriendNotificationsDTO(Long id, Boolean message, Boolean post, Boolean story, Boolean comment) {
 		super();
+		this.id = id;
 		this.message = message;
 		this.post = post;
 		this.story = story;
 		this.comment = comment;
 	}
 
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
 
 	public Boolean getMessage() {
 		return message;

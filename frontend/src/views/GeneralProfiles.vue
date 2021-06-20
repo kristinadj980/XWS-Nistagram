@@ -44,7 +44,7 @@
                     <b-row>
                         <b-col sm="5"><h5 class ="text-justify top-buffer" align="left" style="margin-left:100px;"> Messages </h5></b-col>
                         <b-col sm="1">
-                            <b-button  variant="outline-danger" size="lg" class = " mb-2 btn btn-lg space_style" v-on:click = "editTagAllowance()">
+                            <b-button  variant="outline-danger" size="lg" class = " mb-2 btn btn-lg space_style" v-on:click = "messageNotificaiton" >
                                 <b-icon v-if="friendNotifications.message == true" icon="toggle-on" aria-hidden="true" tooltip="click to disable tags"></b-icon> 
                                 <b-icon v-if="friendNotifications.message == false" icon="toggle-off" aria-hidden="true"  tooltip="click to allow tags"></b-icon> 
                             </b-button>
@@ -54,7 +54,7 @@
                     <b-row>
                         <b-col sm="5"><h5 class ="text-justify top-buffer" align="left" style="margin-left:100px;"> Posts </h5></b-col>
                         <b-col sm="1">
-                            <b-button  variant="outline-danger" size="lg" class = " mb-2 btn btn-lg space_style" v-on:click = "editTagAllowance()">
+                            <b-button  variant="outline-danger" size="lg" class = " mb-2 btn btn-lg space_style" v-on:click = "postNotificaiton" >
                                 <b-icon v-if="friendNotifications.post == true" icon="toggle-on" aria-hidden="true" tooltip="click to disable tags"></b-icon> 
                                 <b-icon v-if="friendNotifications.post == false" icon="toggle-off" aria-hidden="true"  tooltip="click to allow tags"></b-icon> 
                             </b-button>
@@ -64,7 +64,7 @@
                     <b-row>
                         <b-col sm="5"><h5 class ="text-justify top-buffer" style="margin-left:100px;" align="left"> Stories </h5></b-col>
                         <b-col sm="1">
-                            <b-button variant="outline-danger" size="lg" class=" mb-2 btn btn-lg space_style " v-on:click = "editMessageAllowance">
+                            <b-button variant="outline-danger" size="lg" class=" mb-2 btn btn-lg space_style " v-on:click = "storyNotificaiton">
                                 <b-icon v-if="friendNotifications.story == true" value="true" icon="toggle-on" aria-hidden="true" tooltip="click to disable messages"></b-icon>
                                 <b-icon v-if="friendNotifications.story == false" value="false" icon="toggle-off" aria-hidden="true"  tooltip="click to allow messages"></b-icon> 
                             </b-button>
@@ -74,7 +74,7 @@
                     <b-row>
                         <b-col sm="5"><h5 class ="text-justify top-buffer" style="margin-left:100px;" align="left"> Comments </h5></b-col>
                         <b-col sm="1">
-                            <b-button variant="outline-danger" size="lg" class=" mb-2 btn btn-lg space_style " v-on:click = "editMessageAllowance">
+                            <b-button variant="outline-danger" size="lg" class=" mb-2 btn btn-lg space_style " v-on:click = "commentNotificaiton">
                                 <b-icon v-if="friendNotifications.comment == true" value="true" icon="toggle-on" aria-hidden="true" tooltip="click to disable messages"></b-icon>
                                 <b-icon v-if="friendNotifications.comment == false" value="false" icon="toggle-off" aria-hidden="true"  tooltip="click to allow messages"></b-icon> 
                             </b-button>
@@ -306,6 +306,98 @@ export default {
         },
         editProfile: function(){
             window.location.href="/profileInfo";
+        },
+        messageNotificaiton: async function() {
+            const messageN = {
+                id: this.friendNotifications.id,
+                message : this.friendNotifications.message,
+                post: null,
+                story: null,
+                comment: null
+            }
+
+            let token = localStorage.getItem('token').substring(1, localStorage.getItem('token').length-1);
+            this.axios.post('http://localhost:8083/profileMicroservice/api/friendNotificationsController/changeStatus',messageN, { 
+                headers: {
+                    'Authorization': 'Bearer ' + token,
+                }})
+                .then(response => {
+                    this.friendNotifications = response.data;
+                    console.log(response);
+                })
+                .catch(response => {
+                    alert("Please, try later.")
+                    console.log(response);
+                })
+        },
+        postNotificaiton: async function() {
+            const messageN = {
+                id: this.friendNotifications.id,
+                message : null,
+                post: this.friendNotifications.post,
+                story: null,
+                comment: null
+            }
+
+            let token = localStorage.getItem('token').substring(1, localStorage.getItem('token').length-1);
+            this.axios.post('http://localhost:8083/profileMicroservice/api/friendNotificationsController/changeStatus',messageN, { 
+                headers: {
+                    'Authorization': 'Bearer ' + token,
+                }})
+                .then(response => {
+                    this.friendNotifications = response.data;
+                    console.log(response);
+                })
+                .catch(response => {
+                    alert("Please, try later.")
+                    console.log(response);
+                })
+        },
+        storyNotificaiton: async function() {
+            const messageN = {
+                id: this.friendNotifications.id,
+                message : null,
+                post: null,
+                story: this.friendNotifications.story,
+                comment: null
+            }
+
+            let token = localStorage.getItem('token').substring(1, localStorage.getItem('token').length-1);
+            this.axios.post('http://localhost:8083/profileMicroservice/api/friendNotificationsController/changeStatus',messageN, { 
+                headers: {
+                    'Authorization': 'Bearer ' + token,
+                }})
+                .then(response => {
+                    this.friendNotifications = response.data;
+                    console.log(response);
+                })
+                .catch(response => {
+                    alert("Please, try later.")
+                    console.log(response);
+                })
+        },
+        commentNotificaiton: async function() {
+            const messageN = {
+                id: this.friendNotifications.id,
+                message : null,
+                post: null,
+                story: null,
+                comment: this.friendNotifications.comment
+            }
+
+            let token = localStorage.getItem('token').substring(1, localStorage.getItem('token').length-1);
+            this.axios.post('http://localhost:8083/profileMicroservice/api/friendNotificationsController/changeStatus',messageN, { 
+                headers: {
+                    'Authorization': 'Bearer ' + token,
+                }})
+                .then(response => {
+                    this.friendNotifications = response.data;
+                    console.log(response);
+                })
+                .catch(response => {
+                    alert("Please, try later.")
+                    console.log(response);
+                })
         },
         likePost: async function(event,post){
             const postInfo = {
