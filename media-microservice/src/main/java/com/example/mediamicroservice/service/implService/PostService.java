@@ -4,6 +4,7 @@ import com.example.mediamicroservice.dto.CommentDTO;
 import com.example.mediamicroservice.dto.ImageDTO;
 import com.example.mediamicroservice.dto.ImagesFrontDTO;
 import com.example.mediamicroservice.dto.InapropriateContentDTO;
+import com.example.mediamicroservice.dto.LikeDislikeHistoryDTO;
 import com.example.mediamicroservice.dto.LikeDislikeInfoDTO;
 import com.example.mediamicroservice.dto.LikePostDTO;
 import com.example.mediamicroservice.dto.LocationDTO;
@@ -34,6 +35,7 @@ import java.util.List;
 
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -497,5 +499,62 @@ public class PostService implements IPostService {
 			}
 			 
 	     return inappropriateContentRepository.save(inapropriateContent);
+		}
+		
+		public List<LikeDislikeHistoryDTO> getMyLikeDislikeHistory(String username) {
+			//prodjes kroz listu svih postova tj njegovu listu lajkova
+			List<LikeDislikeHistoryDTO> historyDTOs = new ArrayList<LikeDislikeHistoryDTO>();
+			ProfileMedia myProfile = profileMediaService.findByUsername(username);
+			List<Post> allPosts = postRepository.findAll();
+			List<ProfileMedia> allProfiles = profileMediaService.findAll();
+			
+			for (Post post : allPosts) {
+				List<ProfileMedia> likes = post.getLikes();
+				List<ProfileMedia> dislikes = post.getDislikes();
+				//sad prodjes kroz obe liste
+				for (ProfileMedia p : likes) {
+					if(p.getId() == myProfile.getId()) {
+							for (ProfileMedia profileMedia : allProfiles) {
+								List<Post> posts = profileMedia.getPosts();
+								for (Post pt : posts) {
+									System.out.println("********************");
+									System.out.println(post.getId());
+									if(pt.getId() == post.getId()) {
+										System.out.println("******* IMA LAJKOVA *********");
+										System.out.println(pt.getId());
+										System.out.println(profileMedia.getUsername());
+										System.out.println(p.getUsername());
+										
+										historyDTOs.add(new LikeDislikeHistoryDTO(profileMedia.getUsername(),null,post.getId()));
+									}
+						}
+						
+						
+					}
+				}
+			}
+				for (ProfileMedia p : dislikes) {
+					if(p.getId() == myProfile.getId()) {
+							for (ProfileMedia profileMedia : allProfiles) {
+								List<Post> posts = profileMedia.getPosts();
+								for (Post pt : posts) {
+									System.out.println("********************");
+									System.out.println(post.getId());
+									if(pt.getId() == post.getId()) {
+										System.out.println("******* IMA DISLAJKOVA *********");
+										System.out.println(pt.getId());
+										System.out.println(profileMedia.getUsername());
+										System.out.println(p.getUsername());
+										
+										historyDTOs.add(new LikeDislikeHistoryDTO(null,profileMedia.getUsername(),post.getId()));
+									}
+						}
+						
+						
+					}
+				}
+			}
+			}
+			return historyDTOs;
 		}
 }

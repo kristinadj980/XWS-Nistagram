@@ -141,12 +141,12 @@
                         <h4 align="left"><b-icon icon="chat-square" aria-hidden="true"  @click="getComments($event,post)"></b-icon> {{post.numberOfComments}}  comments</h4>
                     </b-card>
                 </b-tab>
-
+                
                 <b-tab>
                 <template #title>
                    <b-icon icon="emoji-heart-eyes" aria-hidden="true"></b-icon><strong>   favourites</strong>
                 </template>
-
+                
 
                 <b-tabs card>
                     <!-- ovaj tab je za sve favourites postove-->
@@ -177,6 +177,7 @@
                     </b-card>
                     
                 </b-tab>
+                
                  <!-- ovo su dodatni tabovi-->
                 <b-tab v-for="collection in collections" :key="collection.name" :title="collection.name">
                     <b-card class="post_look" v-for="post in collection.posts" v-bind:key="post.fileName">
@@ -204,6 +205,36 @@
                 </b-tab>
                 </b-tabs>
                 </b-tab>
+                 <!-- Za istoriju lajkovanja -->
+                    <b-tab>
+                    <template #title>
+                        <b-icon icon="hand-thumbs-up" aria-hidden="true"></b-icon><b-icon icon="hand-thumbs-down" aria-hidden="true"></b-icon>
+                        <strong> like/dislike history</strong>
+                    </template>
+                  
+                    <div class="container" >
+                        <div class="row">
+                        <div class="col-sm">
+                            <h4>Likes</h4>
+                            <div v-for="h in history" :key="h.id">
+                            <label >{{h.usernemeLike}}</label>
+                            </div>
+                         </div>
+                    <div class="col-sm" >
+                           <h4>Dislikes</h4>
+                           <div v-for="h in history" :key="h.id">
+                            <label >{{h.usernameDislike}}</label>
+                            </div>
+                    </div>
+                    <div class="col-sm">
+                            <h4>Post id</h4>
+                            <div v-for="h in history" :key="h.id">
+                            <label >{{h.postId}}</label>
+                            </div>
+                         </div>
+                   </div>
+                </div>  
+            </b-tab>
             </b-tabs>
             
         </b-card>
@@ -341,6 +372,7 @@ export default {
         postId:'',
         selectedCollectionID: '',
         fileNames:[],
+        history:[],
         }
     },
     mounted(){
@@ -356,6 +388,7 @@ export default {
                this.getHighlightedStories(response.data);
                this.getMyFavouritePosts(response.data);
                this.getMyCollections(response.data);
+               this.getMyHistory(response.data)
          }).catch(res => {
                        alert("Error");
                         console.log(res);
@@ -626,7 +659,17 @@ export default {
         },addSelected: function(event,collectionID){
             this.selectedCollection = collectionID;
             alert(this.collectionID)
-        }
+        },
+         getMyHistory: function(person) {
+            this.axios.get('http://localhost:8083/mediaMicroservice/post/getLikeDislikeHistory/'+ person.username,)
+            .then(response => {
+                this.history = response.data;
+            }).catch(res => {
+                        //alert("Error");
+                            console.log(res);
+                    });
+                    
+        },
 
         
     }

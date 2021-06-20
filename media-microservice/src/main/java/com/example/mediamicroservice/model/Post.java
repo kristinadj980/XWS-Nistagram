@@ -16,7 +16,7 @@ public class Post{
 	   private String description;
 
 	   @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-	   @JoinTable(name = "post_likes",
+	   @JoinTable(name = "profile_who_liked",
 	   joinColumns = @JoinColumn(name = "post_id", referencedColumnName = "id"),
 	   inverseJoinColumns = @JoinColumn(name = "likes_id", referencedColumnName = "id"))
 	   private List<ProfileMedia> likes;
