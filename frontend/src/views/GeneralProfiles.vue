@@ -181,6 +181,9 @@
                         <h4 style="margin-left:500px; margin-top:10px"><b-icon icon="exclamation-circle" aria-hidden="true" align="right" @click="showModalReportPost($event,post)"></b-icon></h4>
                          
                         <h4 align="left" style="margin-top:-35px;">{{post.description}}</h4>
+                         <div  v-for="user in post.taggedUsers" v-bind:key="user.username">
+                       <h5 align="left"> @ {{ user.username}}</h5>
+                       </div>
                          <h5 align="left"><span v-for="(tag,t) in post.tags" :key="t">
                                         #{{tag.name}}
                                     </span>

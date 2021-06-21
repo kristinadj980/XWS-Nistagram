@@ -48,7 +48,7 @@
                     </datalist>
 
                 <h4 style="margin-top:20px">Choose profile to tag</h4>
-                <select style="width:500px; margin-top:5px" v-model="selectedUser">
+                <select multiple="true" style="width:500px; margin-top:5px" v-model="multipleSelections">
                 <option v-for="item in this.usersForTags"  v-on:click ="addCategoryTolist($event, item)" v-bind:key="item.id" >
                 {{item.username}}</option> 
                 </select>
@@ -198,6 +198,7 @@ export default {
                 username: this.user.username,
                 userId: this.user.id,
                 fileNames : this.fileName,
+                taggedUsers:this.multipleSelections
                  }
           
 

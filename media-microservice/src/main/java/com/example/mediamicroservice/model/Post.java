@@ -61,24 +61,34 @@ public class Post{
 		inverseJoinColumns = @JoinColumn(name = "tag_id", referencedColumnName = "id"))
 		public List<Tag> tags;
 	   
+	   @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	   @JoinTable(name = "post_profile_tags",
+	   joinColumns = @JoinColumn(name = "post_id", referencedColumnName = "id"),
+	   inverseJoinColumns = @JoinColumn(name = "profile_tags_id", referencedColumnName = "id"))
+	   private List<ProfileMedia> profileTags;
+	   
 	
 	public Post() {
 		super();
 	}
 
-	
-	public Post(Long id, String description, List<ProfileMedia> likes, List<ProfileMedia> dislikes, List<Comment> comments,
-			LocalDateTime  date, List<Media> medias, Location location, List<Tag> tags) {
+	public Post(Long id, String description, List<ProfileMedia> likes, Integer numberOfLikes, Integer numberOfDisikes,
+			Integer numberOfComments, List<ProfileMedia> dislikes, List<Comment> comments, LocalDateTime date,
+			List<Media> medias, Location location, List<Tag> tags, List<ProfileMedia> profileTags) {
 		super();
 		this.id = id;
 		this.description = description;
 		this.likes = likes;
+		this.numberOfLikes = numberOfLikes;
+		this.numberOfDisikes = numberOfDisikes;
+		this.numberOfComments = numberOfComments;
 		this.dislikes = dislikes;
 		this.comments = comments;
 		this.date = date;
 		this.medias = medias;
 		this.location = location;
 		this.tags = tags;
+		this.profileTags = profileTags;
 	}
 
 	public Post(Long id, String description, List<ProfileMedia> likes, Integer numberOfLikes, Integer numberOfDisikes,Integer numberOfComments,
@@ -237,6 +247,14 @@ public class Post{
 
 	public void setNumberOfComments(Integer numberOfComments) {
 		this.numberOfComments = numberOfComments;
+	}
+
+	public List<ProfileMedia> getProfileTags() {
+		return profileTags;
+	}
+
+	public void setProfileTags(List<ProfileMedia> profileTags) {
+		this.profileTags = profileTags;
 	}
 	
 }

@@ -181,6 +181,9 @@
                             <video v-if="post.fileNames[index].includes(videoText)" autoplay controls v-bind:src="image.imageBytes" width="400" height="400" style="display:block; margin-left:auto; margin-right:auto"></video>
                         </div>
                        <h4 align="left">{{post.description}}</h4>
+                       <div  v-for="user in post.taggedUsers" v-bind:key="user.username">
+                       <h5 align="left"> @ {{ user.username}}</h5>
+                       </div>
                         <h5 align="left"><span v-for="(tag,t) in post.tags" :key="t">
                                         #{{tag.name}}
                                     </span>
@@ -215,6 +218,9 @@
                         </div>
                         <!--POKUSAJ NEKI-->
                         <h4 align="left">{{post.description}}</h4>
+                         <div  v-for="user in post.taggedUsers" v-bind:key="user.username">
+                        <h5 align="left"> @ {{ user.username}}</h5>
+                        </div>
                         <h5 align="left"><span v-for="(tag,t) in post.tags" :key="t">
                                         #{{tag.name}}
                                     </span>
@@ -242,6 +248,9 @@
                         </div>
                         <!--POKUSAJ NEKI-->
                         <h4 align="left">{{post.description}}</h4>
+                         <div  v-for="user in post.taggedUsers" v-bind:key="user.username">
+                       <h5 align="left"> @ {{ user.username}}</h5>
+                       </div>
                         <h5 align="left"><span v-for="(tag,t) in post.tags" :key="t">
                                         #{{tag.name}}
                                     </span>
