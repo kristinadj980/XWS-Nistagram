@@ -473,7 +473,7 @@ export default {
                this.getMyCollections(response.data);
                this.getMyHistory(response.data)
          }).catch(res => {
-                       alert("Error");
+                       //alert("Error");
                         console.log(res);
                  });
         this.axios.get('http://localhost:8083/profileMicroservice/api/profile/getAllUsers',{ 
@@ -483,7 +483,7 @@ export default {
          }).then(response => {
                this.users = response.data
          }).catch(res => {
-                       alert("Error");
+                       //alert("Error");
                         console.log(res);
                  });
         
@@ -497,7 +497,7 @@ export default {
             this.following = response.data;
             this.followingNumber = response.data.length;
          }).catch(res => {
-                       alert("Error");
+                       //alert("Error");
                         console.log(res);
                  });
 
@@ -511,7 +511,7 @@ export default {
             this.followers = response.data;
             this.followersNumber = response.data.length;
          }).catch(res => {
-                       alert("Error");
+                       //alert("Error");
                         console.log(res);
                  });
         
@@ -562,7 +562,7 @@ export default {
                     }      
                 } 
             }).catch(res => {
-                        alert("Error");
+                        //alert("Error");
                             console.log(res);
                     });
                     
@@ -618,7 +618,7 @@ export default {
                     }                            
                 } 
             }).catch(res => {
-                        alert("Error");
+                       // alert("Error");
                             console.log(res);
                     });
                     
@@ -638,7 +638,7 @@ export default {
                     }                            
                 } 
             }).catch(res => {
-                        alert("Error");
+                        //alert("Error");
                             console.log(res);
                     });
                     
@@ -750,7 +750,7 @@ export default {
                 } 
                 
             }).catch(res => {
-                        alert("Error");
+                        //alert("Error");
                             console.log(res);
                     });
                     
@@ -801,7 +801,7 @@ export default {
                 } 
                
             }).catch(res => {
-                        alert("Error");
+                        //alert("Error");
                             console.log(res);
                     });
         },addSelected: function(event,collectionID){
