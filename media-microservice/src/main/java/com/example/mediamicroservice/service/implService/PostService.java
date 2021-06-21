@@ -6,6 +6,7 @@ import com.example.mediamicroservice.dto.CommentNotifyDTO;
 import com.example.mediamicroservice.dto.ImageDTO;
 import com.example.mediamicroservice.dto.ImagesFrontDTO;
 import com.example.mediamicroservice.dto.InapropriateContentDTO;
+import com.example.mediamicroservice.dto.LikeDislikeHistoryDTO;
 import com.example.mediamicroservice.dto.LikeDislikeInfoDTO;
 import com.example.mediamicroservice.dto.LikePostDTO;
 import com.example.mediamicroservice.dto.LocationDTO;
@@ -21,6 +22,8 @@ import com.example.mediamicroservice.model.RequestStatus;
 import com.example.mediamicroservice.model.Tag;
 import com.example.mediamicroservice.repository.InappropriateContentRepository;
 import com.example.mediamicroservice.repository.PostRepository;
+import com.example.mediamicroservice.repository.ProfileMediaRepository;
+import com.example.mediamicroservice.repository.TagRepository;
 import com.example.mediamicroservice.service.IPostService;
 
 import java.io.File;
@@ -43,17 +46,23 @@ public class PostService implements IPostService {
 	
 	
 	private final PostRepository postRepository;
+	private final ProfileMediaRepository profileMediaRepository;
 	private final ProfileMediaService profileMediaService;
 	private static String uploadDir = "user-photos";
+	private final TagRepository tagRepository;
 	private final InappropriateContentRepository inappropriateContentRepository;
 	@Autowired
 	private ProfileConnection profileConnection;
 
 	@Autowired
-	public PostService(PostRepository postRepository,ProfileMediaService profileMediaService,InappropriateContentRepository inappropriateContentRepository) {
+	public PostService(PostRepository postRepository, ProfileMediaRepository profileMediaRepository,
+			ProfileMediaService profileMediaService, TagRepository tagRepository,
+			InappropriateContentRepository inappropriateContentRepository) {
 		super();
 		this.postRepository = postRepository;
+		this.profileMediaRepository = profileMediaRepository;
 		this.profileMediaService = profileMediaService;
+		this.tagRepository = tagRepository;
 		this.inappropriateContentRepository = inappropriateContentRepository;
 	}
 
@@ -292,6 +301,115 @@ public class PostService implements IPostService {
 			postsDto.setImages(images);
 	        return postsDto;
 	    }
+
+
+		@Override
+		public List<PostDTO> findPostsByTag(String tag) {
+			
+			System.out.println("U Post SERVISU FIND BY TAG");
+			System.out.println(tag);
+			List<PostDTO> dto=new ArrayList<>();
+			List<PostDTO> posts=findAllPosts();
+			
+			//Tag t=tagRepository.findByName(tag);
+			//System.out.println(t.getName());
+			TagDTO t1=new TagDTO(tag);
+			System.out.println(t1.getName());
+			
+			for(PostDTO p:posts) {
+				for(TagDTO td:p.getTags()) {
+					if(td.getName().equals(t1.getName())) {
+						dto.add(p);
+						System.out.println(p.getUsername());
+					}
+				}
+			}
+			System.out.println("Kraaaaaj post servisa");
+			return dto;
+			
+		}
+
+
+
+
+
+		@Override
+		public List<PostDTO> findAllPosts() {
+			List<Post> posts=new ArrayList<>();
+			posts=postRepository.findAll();
+			List<PostDTO> postsDTO=new ArrayList<>();
+			int numberOfLikes = 0;
+			int numberOfDislikes = 0;
+			for (Post post : posts) {
+				
+				List<Media> medias = post.getMedias();
+				for (Media m : medias) {
+					LocationDTO locationDTO = new LocationDTO(post.getLocation().getCity(), post.getLocation().getStreet(),post.getLocation().getCountry(),
+							post.getLocation().getObjectName());
+					List<TagDTO> tagsDTO=new ArrayList<>();
+					for(Tag t:post.getTags()) {
+						tagsDTO.add(new TagDTO(t.getName()));
+					
+					}
+					if( post.getNumberOfLikes() == null && post.getNumberOfDisikes() != null) {
+						numberOfDislikes = post.getNumberOfDisikes();
+						postsDTO.add(new PostDTO(post.getDescription(),tagsDTO,profileMediaRepository.findByPostId(post.getId()),m.getFileName(),locationDTO, post.getDate(),0,numberOfDislikes));
+					}else if (post.getNumberOfDisikes() == null && post.getNumberOfLikes() != null ) {
+						numberOfLikes = post.getNumberOfLikes();
+						postsDTO.add(new PostDTO(post.getDescription(),tagsDTO,profileMediaRepository.findByPostId(post.getId()),m.getFileName(),locationDTO, post.getDate(),numberOfLikes,0));
+					}
+					else if(post.getNumberOfLikes() == null && post.getNumberOfDisikes() == null) 
+					{
+						postsDTO.add(new PostDTO(post.getDescription(),tagsDTO,profileMediaRepository.findByPostId(post.getId()),m.getFileName(),locationDTO, post.getDate(),0,0));
+					}
+					else 
+					{
+					numberOfLikes = post.getNumberOfLikes();
+					numberOfDislikes = post.getNumberOfDisikes();
+					postsDTO.add(new PostDTO(post.getDescription(),tagsDTO,profileMediaRepository.findByPostId(post.getId()),m.getFileName(),locationDTO, post.getDate(),numberOfLikes,numberOfDislikes));
+					}
+			}
+			}
+			
+			List<PostDTO> allPosts = getImagesFiles(postsDTO);
+			return allPosts;
+		}
+
+
+
+
+
+		@Override
+		public List<PostDTO> findPostsByLocation(LocationDTO location) {
+			System.out.println("U Post SERVISU FIND BY LOK=CATION");
+			System.out.println(location.getCity());
+			List<PostDTO> dto=new ArrayList<>();
+			List<PostDTO> posts=findAllPosts();
+			
+			/*
+			String[] s=location.split(",");
+			
+			LocationDTO loc=new LocationDTO();
+			loc.setCountry(s[0]);
+			loc.setCity(s[1]);
+			loc.setStreet(s[2]);
+			loc.setObjectName(s[3]);
+			*/
+			for(PostDTO p:posts) {
+				 if(p.getLocationDTO().getCountry().equals(location.getCountry()) && p.getLocationDTO().getCity().equals(location.getCity()) &&
+						 p.getLocationDTO().getStreet().equals(location.getStreet()) && p.getLocationDTO().getObjectName().equals(location.getObjectName())) {
+						dto.add(p);
+						System.out.println(p.getUsername());
+					}
+				}
+			
+			System.out.println("Kraj post servisa za lokacije");
+			return dto;
+
+		
+		}	
+	
+
 	    
 	    @Override
 	    public List<LikeDislikeInfoDTO> findMyLikes(LikeDislikeInfoDTO dtoInfo){
@@ -501,4 +619,110 @@ public class PostService implements IPostService {
 			 
 	     return inappropriateContentRepository.save(inapropriateContent);
 		}
+		
+		@Override
+		public List<LikeDislikeHistoryDTO> getMyLikeDislikeHistory(String username) {
+			List<LikeDislikeHistoryDTO> historyDTOs = new ArrayList<LikeDislikeHistoryDTO>();
+			ProfileMedia myProfile = profileMediaService.findByUsername(username);
+			List<Post> allPosts = postRepository.findAll();
+			List<ProfileMedia> allProfiles = profileMediaService.findAll();
+			for (Post post : allPosts) {
+				List<ProfileMedia> likes = post.getLikes();
+				List<ProfileMedia> dislikes = post.getDislikes();
+				for (ProfileMedia p : likes) {
+					if(p.getId() == myProfile.getId()) {
+							for (ProfileMedia profileMedia : allProfiles) {
+								List<Post> posts = profileMedia.getPosts();
+								for (Post pt : posts) {
+  								  if(pt.getId() == post.getId()) {
+										historyDTOs.add(new LikeDislikeHistoryDTO(profileMedia.getUsername(),null,post.getId()));
+								}
+						    }
+					 }
+				}
+			}
+			for (ProfileMedia p : dislikes) {
+					if(p.getId() == myProfile.getId()) {
+							for (ProfileMedia profileMedia : allProfiles) {
+								List<Post> posts = profileMedia.getPosts();
+								for (Post pt : posts) {
+									if(pt.getId() == post.getId()) {
+										historyDTOs.add(new LikeDislikeHistoryDTO(null,profileMedia.getUsername(),post.getId()));
+									}
+						 }
+					}
+				}
+			}
+			}
+			return historyDTOs;
+		}
+		
+		@Override
+		public List<PostDTO> findPostPictureById(Long postId, String username) {
+			Post post = postRepository.findById(postId).get();
+			PostDTO postDTO = new PostDTO();
+			List<PostDTO> posts = new ArrayList<PostDTO>();
+			int numberOfLikes = 0;
+			int numberOfDislikes = 0;
+			int numberOfComments = 0;
+			List<Media> medias = post.getMedias();
+			List<String> mediasFileName = new ArrayList<String>();
+			for (Media m : medias) {
+				mediasFileName.add(m.getFileName());
+			}
+			LocationDTO locationDTO = new LocationDTO(post.getLocation().getCity(), post.getLocation().getStreet(),post.getLocation().getCountry(),
+					post.getLocation().getObjectName());
+			List<TagDTO> tagsDTO = new ArrayList<TagDTO>();
+			List<Tag> tags = post.getTags();
+			for (Tag tag : tags) {
+				tagsDTO.add(new TagDTO(tag.getName()));
+			}
+			if( post.getNumberOfLikes() == null && post.getNumberOfDisikes() != null && post.getNumberOfComments() == null) {
+				numberOfDislikes = post.getNumberOfDisikes();
+				postDTO = new PostDTO(post.getDescription(),username,mediasFileName,locationDTO, post.getDate(),0,numberOfDislikes,0,tagsDTO,post.getId());
+				
+			}else if( post.getNumberOfLikes() == null && post.getNumberOfDisikes() != null && post.getNumberOfComments() != null) {
+					numberOfDislikes = post.getNumberOfDisikes();
+					numberOfComments = post.getNumberOfComments();
+					postDTO = new PostDTO(post.getDescription(),username,mediasFileName,locationDTO, post.getDate(),0,numberOfDislikes,numberOfComments,tagsDTO,post.getId());
+			
+			}else if (post.getNumberOfDisikes() == null && post.getNumberOfLikes() != null && post.getNumberOfComments() == null ) {
+				numberOfLikes = post.getNumberOfLikes();
+				postDTO = new PostDTO(post.getDescription(),username,mediasFileName,locationDTO, post.getDate(),numberOfLikes,0,0,tagsDTO,post.getId());
+			
+		    }else if (post.getNumberOfDisikes() == null && post.getNumberOfLikes() != null && post.getNumberOfComments() != null ) {
+			numberOfLikes = post.getNumberOfLikes();
+			numberOfComments = post.getNumberOfComments();
+			postDTO = new PostDTO(post.getDescription(),username,mediasFileName,locationDTO, post.getDate(),numberOfLikes,0,numberOfComments,tagsDTO,post.getId());
+		    }
+		    else if (post.getNumberOfDisikes() != null && post.getNumberOfLikes() == null && post.getNumberOfComments() == null ) {
+		    	numberOfDislikes = post.getNumberOfDisikes();
+		    	postDTO = new PostDTO(post.getDescription(),username,mediasFileName,locationDTO, post.getDate(),0,numberOfDislikes,0,tagsDTO,post.getId());
+		    }
+		    else if (post.getNumberOfDisikes() != null && post.getNumberOfLikes() != null && post.getNumberOfComments() == null ) {
+				numberOfLikes = post.getNumberOfLikes();
+				numberOfDislikes = post.getNumberOfDisikes();
+				postDTO = new PostDTO(post.getDescription(),username,mediasFileName,locationDTO, post.getDate(),numberOfLikes,numberOfDislikes,0,tagsDTO,post.getId());
+			    }
+			else if(post.getNumberOfLikes() == null && post.getNumberOfDisikes() == null && post.getNumberOfComments() == null) 
+			{
+				postDTO = new PostDTO(post.getDescription(),username,mediasFileName,locationDTO, post.getDate(),0,0,0,tagsDTO,post.getId());
+			}
+			else if(post.getNumberOfLikes() == null && post.getNumberOfDisikes() == null && post.getNumberOfComments() != null) 
+			{
+				numberOfComments = post.getNumberOfComments();
+				postDTO = new PostDTO(post.getDescription(),username,mediasFileName,locationDTO, post.getDate(),0,0,numberOfComments,tagsDTO,post.getId());
+			}
+			else 
+			{
+			numberOfLikes = post.getNumberOfLikes();
+			numberOfDislikes = post.getNumberOfDisikes();
+			numberOfComments = post.getNumberOfComments();
+			postDTO = new PostDTO(post.getDescription(),username,mediasFileName,locationDTO, post.getDate(),numberOfLikes,numberOfDislikes,numberOfComments,tagsDTO,post.getId());
+			}
+			posts.add(postDTO);
+			List<PostDTO> allPosts = getImagesFiles(posts);
+			return sortByDate(allPosts);
+		}
+
 }

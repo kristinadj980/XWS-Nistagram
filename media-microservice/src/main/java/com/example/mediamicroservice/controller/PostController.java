@@ -106,6 +106,7 @@ public class PostController {
 			List<PostDTO> posts = new ArrayList<PostDTO>();
 			for(PostDTO p:postDTOs) {
 				List<PostDTO> friendPosts = new ArrayList<PostDTO>();
+
 				friendPosts = postService.findMyPosts(p.getFollowing());
 				for(PostDTO pf:friendPosts)
 					posts.add(pf);
@@ -159,5 +160,19 @@ public class PostController {
 		
 		return new ResponseEntity(postService.reportPost(dto), HttpStatus.OK); 
 	}
+	
+	@GetMapping("/getLikeDislikeHistory/{username}")
+	public ResponseEntity getMyLikeDislikeHistory(@PathVariable String username) {
+		
+		return new ResponseEntity(postService.getMyLikeDislikeHistory(username), HttpStatus.OK); 
+
+	}
+	
+	@PostMapping("/findPostPictureById")
+	public ResponseEntity findPostPictureById(@RequestBody PostDTO dto) {
+		
+		return new ResponseEntity(postService.findPostPictureById(dto.getId(),dto.getUsername()), HttpStatus.OK); 
+	}
+	
 
 }

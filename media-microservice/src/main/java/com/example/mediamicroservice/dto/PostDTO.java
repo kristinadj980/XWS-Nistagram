@@ -4,6 +4,10 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 
+import com.example.mediamicroservice.model.Tag;
+
+
+
 import lombok.Data;
 
 @Data
@@ -69,7 +73,11 @@ public class PostDTO {
 		this.imageBytes = imageBytes;
 	}
 
+	public PostDTO(LocalDateTime date) {
+		super();
+		this.date = date;	
 
+	}
 
 	public PostDTO(String description, String location, List<TagDTO> tags, String username,
 			Long userId, String fileName) {
@@ -135,6 +143,34 @@ public class PostDTO {
 		this.tags = tags;
 		this.id = id;
 	}
+
+
+	public PostDTO(String description, String fileName, LocationDTO locationDTO, LocalDateTime date,
+			int numberOfLikes, int numberOfDislikes) {
+		
+			this.description=description;
+			this.fileName=fileName;
+			this.locationDTO=locationDTO;
+			this.date=date;
+			this.numberOfLikes=numberOfLikes;
+			this.numberOfDislikes=numberOfDislikes;
+	}
+
+
+
+	public PostDTO(String description, List<TagDTO> tagsDTO, String username, String fileName,
+			LocationDTO locationDTO, LocalDateTime date, int numberOfLikes, int numberOfDislikes) {
+		
+		this.description=description;
+		this.fileName=fileName;
+		this.username=username;
+		this.locationDTO=locationDTO;
+		this.date=date;
+		this.numberOfLikes=numberOfLikes;
+		this.numberOfDislikes=numberOfDislikes;
+		this.tags=tagsDTO;
+	}
+
 
 
 	public String getDescription() {

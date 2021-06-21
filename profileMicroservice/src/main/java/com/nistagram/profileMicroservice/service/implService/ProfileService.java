@@ -39,18 +39,18 @@ public class ProfileService implements IProfileService {
 	private final PasswordEncoder passwordEncoder;
 	private final AuthorityService authService;
 	private final AuthorityRepository authorityRepository;
-	private final VerificationRequestrepository verificationRequestRepository;
+	
 	@Autowired
 	private MediaConnection mediaConnection;
 	
 	@Autowired
 	public ProfileService(ProfileRepository profileRepository,PasswordEncoder passwordEncoder,AuthorityService authService,
-			AuthorityRepository authorityRepository,VerificationRequestrepository verificationRequestRepository) {
+			AuthorityRepository authorityRepository) {
 		this.profileRepository = profileRepository;
 		this.passwordEncoder = passwordEncoder;
 		this.authService = authService;
 		this.authorityRepository = authorityRepository;
-		this.verificationRequestRepository = verificationRequestRepository;
+		
 	}
 
 	@Override
@@ -191,6 +191,113 @@ public class ProfileService implements IProfileService {
 	}
 
 	@Override
+	public List<FollowingDTO> getFollowers(String username) {
+		System.out.println(username);
+		//Authentication currentUser = SecurityContextHolder.getContext().getAuthentication();
+		//Person person = (Person) currentUser.getPrincipal();
+		Profile user = findByUsername(username);
+		System.out.println(user.getUsername());
+		System.out.println("**********************");
+		List<Profile> followers = user.getFollowers();
+		List<FollowingDTO> followingDTO = new ArrayList<FollowingDTO>();
+		
+		for(Profile p: followers) {
+			followingDTO.add(new FollowingDTO(p.getUsername()));
+		
+			System.out.println(p.getUsername());
+		}
+		return followingDTO;
+	}
+
+	@Override
+	public void addCloseFriend(String username) {
+		// TODO Auto-generated method stub
+		System.out.println(username);
+		System.out.println("U SERVISU SAM");
+		Authentication currentUser = SecurityContextHolder.getContext().getAuthentication();
+		Person person = (Person) currentUser.getPrincipal();
+		Profile logedUser = findById(person.getId());
+		System.out.println(logedUser.getName());
+		
+		Profile closeFriend=findByUsername(username.substring(0, username.length()-1));
+		System.out.println(closeFriend.getName());
+		
+		List<Profile> closedFriends=logedUser.getCloseFriends();
+		/*for(Profile p:closedFriends) {
+			if(p.getUsername().equals(username))
+				System.out.println("Already close friend");
+		}*/
+		closedFriends.add(closeFriend);
+		profileRepository.save(logedUser);
+	}
+
+	@Override
+	public Boolean closeFriends(List<Profile> profiles) {
+		System.out.print("U servisu jeeeeeeeeeeeeeeeeeeeeee");
+		Authentication currentUser = SecurityContextHolder.getContext().getAuthentication();
+		Person person = (Person) currentUser.getPrincipal();
+		Profile logedUser = findById(person.getId());
+		
+		System.out.print("U servisu jeeeeeeeeeeeeeeeeeeeeee");
+		
+		List<Profile> closeFriends = logedUser.getCloseFriends();
+		
+		for(Profile p: closeFriends)
+			for(Profile p1:profiles) {
+				if(p.getUsername().equals(p1))
+					return true;
+			}
+			
+		return false;	}
+
+	@Override
+	public void deleteCloseFriend(String username) {
+		System.out.println(username);
+		System.out.println("U SERVISU SAM");
+		Authentication currentUser = SecurityContextHolder.getContext().getAuthentication();
+		Person person = (Person) currentUser.getPrincipal();
+		Profile logedUser = findById(person.getId());
+		System.out.println(logedUser.getName());
+		
+		Profile closeFriend=findByUsername(username.substring(0, username.length()-1));
+		System.out.println(closeFriend.getName());
+		
+		List<Profile> closedFriends=logedUser.getCloseFriends();
+		closedFriends.remove(closeFriend);
+		profileRepository.save(logedUser);
+		
+	}
+
+	@Override
+	public void blockUser(String username) {
+		// TODO Auto-generated method stub
+				System.out.println(username);
+				System.out.println("U SERVISU SAM");
+				Authentication currentUser = SecurityContextHolder.getContext().getAuthentication();
+				Person person = (Person) currentUser.getPrincipal();
+				Profile logedUser = findById(person.getId());
+				System.out.println(logedUser.getName());
+				
+				Profile blockFriend=findByUsername(username.substring(0, username.length()-1));
+				System.out.println(blockFriend.getName());
+				
+				List<Profile> blockedFriends=logedUser.getBlockedUsers();
+				
+				blockedFriends.add(blockFriend);
+				
+				System.out.println("BRISE BLOKIRANOG IZ PRATIOCA");
+				logedUser.getFollowing().remove(blockFriend);
+				logedUser.getFollowers().remove(blockFriend);
+
+				System.out.println("BRISE BLOKIRANOG IZ PRATIOCA");
+				blockFriend.getFollowing().remove(logedUser);
+				blockFriend.getFollowers().remove(logedUser);
+				
+				profileRepository.save(logedUser);
+				profileRepository.save(blockFriend);
+	}
+	
+	@Override
 	public Boolean updateUsername(EditProfileDTO editProfileDTO) {
 		Authentication currentUser = SecurityContextHolder.getContext().getAuthentication();
 		Person person = (Person) currentUser.getPrincipal();
@@ -321,6 +428,12 @@ public class ProfileService implements IProfileService {
 		
 	}
 
+	@Override
+	public void unblockUser(String username) {
+		// TODO Auto-generated method stub
+		
+	}
+	
 	@Override
 	public List<FollowingDTO> getFollowers() {
 		Authentication currentUser = SecurityContextHolder.getContext().getAuthentication();

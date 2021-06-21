@@ -20,7 +20,7 @@
         </div>
        <form>
             <h4 style="left: 10px;">Choose image </h4>
-            <input type="file" name="image" accept="image/png, image/jpeg,video/mp4,video/x-m4v,video/*" id="file" ref="file" v-on:change="handleFileUpload()">
+            <input type="file" multiple name="image" accept="image/png, image/jpeg, video/mp4,video/x-m4v,video/*" id="file" ref="file" v-on:change="handleFileUpload()">
             <h4 for="textarea-large" 
             class="text-left" 
             style="margin-bottom:2%; 
@@ -66,6 +66,11 @@
                     <input type="checkbox" id="checkbox" v-model="highlight" value="true" >
                     <label for="checkbox"> {{highlight}} </label>      
                  </section>
+                  <section>
+                    <h3> Close friends </h3>
+                    <input type="checkbox" id="checkbox" v-model="closeFriends" value="true" >
+                    <label for="checkbox"> {{closeFriends}} </label>      
+                 </section>
                 <b-button 
                 variant="outline-secondary"  
                
@@ -96,7 +101,7 @@ export default {
     name: 'AddingStories',
     data() {
     return {
-        file: '',
+        file: [],
         user:'',
         locations: [],
         selectedLocation:[''],
@@ -105,6 +110,7 @@ export default {
         fileName:'',
         medias:[],
         highlight:'',
+        closeFriends:'',
         }
     },
     mounted() {
@@ -151,9 +157,12 @@ export default {
         saveMedia : function() {
             let token = localStorage.getItem('token').substring(1, localStorage.getItem('token').length-1);
             let formData = new FormData();
-            formData.append('file', this.file);
-
             
+            for( var i = 0; i < this.$refs.file.files.length; i++ ){
+                let file = this.$refs.file.files[i];
+                formData.append('file', file);
+            }
+            console.log("FORM DATA"+formData);
             this.axios.post('http://localhost:8083/mediaMicroservice/story/saveImage',formData,{
                 headers: {
                     'Content-Type': 'multipart/form-data',
@@ -181,8 +190,9 @@ export default {
                 tags : this.tags,
                 username: this.user.username,
                 userId: this.user.id,
-                fileName : this.fileName,
+                fileNames : this.fileName,
                 highlighted: this.highlight,
+                closeFriends: this.closeFriends,
                  }
           
 
@@ -192,13 +202,17 @@ export default {
 
                     console.log(response);                
                 }).catch(res => {
-                    alert(res.response.data.message);
+                    console.log(storyInfo.fileNames);
+                    alert("Error"+res.response.data.message);
 
                 });
         },
-        handleFileUpload(){
-            this.file = this.$refs.file.files[0];
-        },
+         handleFileUpload(){
+            for(let i=0; i< this.$refs.file.files.length; i++){
+                let fileOne = this.$refs.file.files[i];
+                this.file.push(fileOne);
+            }
+         },
 
     }
 }

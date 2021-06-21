@@ -189,12 +189,12 @@
                         <h4 align="left"><b-icon icon="chat-square" aria-hidden="true"  @click="getComments($event,post)"></b-icon> {{post.numberOfComments}}  comments</h4>
                     </b-card>
                 </b-tab>
-
+                
                 <b-tab>
                 <template #title>
                    <b-icon icon="emoji-heart-eyes" aria-hidden="true"></b-icon><strong>   favourites</strong>
                 </template>
-
+                
 
                 <b-tabs card>
                     <!-- ovaj tab je za sve favourites postove-->
@@ -225,6 +225,7 @@
                     </b-card>
                     
                 </b-tab>
+                
                  <!-- ovo su dodatni tabovi-->
                 <b-tab v-for="collection in collections" :key="collection.name" :title="collection.name">
                     <b-card class="post_look" v-for="post in collection.posts" v-bind:key="post.fileName">
@@ -252,6 +253,38 @@
                 </b-tab>
                 </b-tabs>
                 </b-tab>
+                 <!-- Za istoriju lajkovanja -->
+                    <b-tab>
+                    <template #title>
+                        <b-icon icon="hand-thumbs-up" aria-hidden="true"></b-icon><b-icon icon="hand-thumbs-down" aria-hidden="true"></b-icon>
+                        <strong> like/dislike history</strong>
+                    </template>
+                     <div class="row">
+                    <div class=" form-group col">
+                        <h4 >Likes</h4>
+                    </div>
+                    <div class=" form-group col">
+                        <h4 >Dislikes</h4>
+                    </div>
+                    <div class=" form-group col">
+                        <h4 ></h4>
+                    </div>
+                   
+               </div>
+               <div v-for="h in history" :key="h.id">
+                    <div class="row" >
+                            <div class=" form-group col" style="margin-top:15px;">
+                                <label >{{h.usernemeLike}}</label>
+                            </div>
+                             <div class=" form-group col" style="margin-top:15px;">
+                                <label >{{h.usernameDislike}}</label>
+                            </div>
+                            <div class=" form-group col">
+                                <b-button style="margin-top:7px;" pill variant="outline-danger" class = "btn btn-lg space_style" @click="seePost($event,h)">See post</b-button>
+                            </div>
+                    </div>
+               </div>
+            </b-tab>
             </b-tabs>
             
         </b-card>
@@ -348,6 +381,33 @@
                 </div>
           </b-modal>
        </div>
+        <div> 
+          <b-modal ref="modal6" hide-footer scrollable title="Post" size="lg" modal-class="b-modal">
+               <div modal-class="modal-dialog" role="document">
+                    <div class="modal-content" style="background-color:#d4bcce; ">
+                         <div class="modal-body">
+                           <b-card class="post_look" v-for="post in historyPosts" v-bind:key="post.fileName">
+                        <b-row >
+                        <h4 align="left"><b-icon icon="person-circle" aria-hidden="true"></b-icon>  {{post.username}}</h4>
+                        </b-row>
+                        <h6 align="left">{{post.locationDTO.city}},{{post.locationDTO.street}},{{post.locationDTO.objectName}},{{post.locationDTO.country}}</h6>
+                        <div v-for="(image, index) in post.images" v-bind:key="image.imageBytes">
+                            <b-img v-if="!post.fileNames[index].includes(videoText)" thumbnail  v-bind:src="image.imageBytes" alt="Image 1"></b-img>
+                            <video v-if="post.fileNames[index].includes(videoText)" autoplay controls v-bind:src="image.imageBytes" width="400" height="400" style="display:block; margin-left:auto; margin-right:auto"></video>
+                        </div>
+                       <h4 align="left">{{post.description}}</h4>
+                        <h5 align="left"><span v-for="(tag,t) in post.tags" :key="t">
+                                        #{{tag.name}}
+                                    </span>
+                        </h5>
+                        <h5 align="left"><b-icon icon="hand-thumbs-up" aria-hidden="true" @click="getLikes($event,post)"></b-icon > {{post.numberOfLikes}} likes <b-icon icon="hand-thumbs-down" aria-hidden="true"  @click="getDislikes($event,post)"></b-icon> {{post.numberOfDislikes}} dislikes<span style="margin-left:330px;"></span><b-icon icon="bookmark" aria-hidden="true" align="right" @click="saveAsFavourite($event,post)"></b-icon></h5>
+                        <h4 align="left"><b-icon icon="chat-square" aria-hidden="true"  @click="getComments($event,post)"></b-icon> {{post.numberOfComments}}  comments</h4>
+                    </b-card>
+                         </div>     
+                    </div>                
+                </div>
+          </b-modal>
+       </div>
     </div>
 </template>
 
@@ -375,6 +435,8 @@ export default {
         videoText: "mp4",
         numberOfLikes:0,
         numberOfDislikes:0,
+        fileNames:[],
+        fileName:'',
         usersWhoLiked:[],
         usersWhoDisliked:[],
         tags:[],
@@ -382,13 +444,13 @@ export default {
         answer:'',
         commentId:'',
         favouritePosts:[],
-        fileName:'',
         selectedCollection:'',
         collections:[],
         collectionName:'',
         postId:'',
         selectedCollectionID: '',
-        fileNames:[],
+        history:[],
+        historyPosts:[],
         following: [],
         followingNumber: 0,
         followers: [],
@@ -409,6 +471,7 @@ export default {
                this.getHighlightedStories(response.data);
                this.getMyFavouritePosts(response.data);
                this.getMyCollections(response.data);
+               this.getMyHistory(response.data)
          }).catch(res => {
                        alert("Error");
                         console.log(res);
@@ -545,7 +608,7 @@ export default {
             .then(response => {
                 this.stories = response.data;
                 let video = "mp4"
-                for(let i=0; i< response.data.length; i++){
+                  for(let i=0; i< response.data.length; i++){
                         if(!this.stories[i].fileName.includes(video)){
                         console.log("slika jeee");
                         this.stories[i].imageBytes = 'data:image/jpeg;base64,' + this.stories[i].imageBytes; 
@@ -744,6 +807,54 @@ export default {
         },addSelected: function(event,collectionID){
             this.selectedCollection = collectionID;
             alert(this.collectionID)
+        },
+         getMyHistory: function(person) {
+            this.axios.get('http://localhost:8083/mediaMicroservice/post/getLikeDislikeHistory/'+ person.username,)
+            .then(response => {
+                this.history = response.data;
+            }).catch(res => {
+                        //alert("Error");
+                            console.log(res);
+                    });
+                    
+        },
+        seePost : function(event,h){
+            this.postId = h.postId;
+            if(h.usernemeLike != 'undefine')
+            {
+            this.username = h.usernemeLike;
+            }else{
+            this.username = h.usernemeDislike;
+            }
+            this.findPost()
+        },
+        findPost : function(){
+             const postInfo = {
+                id : this.postId,
+                username : this.username,
+            }
+            this.axios.post('http://localhost:8083/mediaMicroservice/post/findPostPictureById',postInfo,{ 
+                }).then(response => {
+                    this.historyPosts = response.data
+                     let video = "mp4";
+
+                for(let i=0; i< this.historyPosts.length; i++){
+                    for(let j=0; j< this.historyPosts[i].fileNames.length; j++){
+                        if(!this.historyPosts[i].fileNames[j].includes(video)){
+                            console.log("usao je u if");
+                            this.historyPosts[i].images[j].imageBytes = 'data:image/jpeg;base64,' + this.historyPosts[i].images[j].imageBytes;
+                        }else{
+                            this.historyPosts[i].images[j].imageBytes = 'data:video/mp4;base64,' + this.historyPosts[i].images[j].imageBytes;     
+                        }      
+                    }      
+                }  
+                    this.$refs['modal6'].show();
+                    console.log(response);                
+                }).catch(res => {
+                    //alert("Error,please try later");
+                    console.log(res.response.data.message);
+
+                });
         }
 
         

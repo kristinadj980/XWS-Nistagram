@@ -1,6 +1,7 @@
 package com.example.mediamicroservice.service.implService;
 
 import com.example.mediamicroservice.connections.ProfileConnection;
+import com.example.mediamicroservice.dto.ImageDTO;
 import com.example.mediamicroservice.dto.LocationDTO;
 import com.example.mediamicroservice.dto.PostDTO;
 import com.example.mediamicroservice.dto.StoryDTO;
@@ -44,17 +45,9 @@ public class StoryService implements IStoryService {
 	}
 
 	@Override
-	public Story addNewStory(StoryDTO storyDTO) {
-			Story story = new Story();
-	        String locationFront= storyDTO.getLocation();
-	        String parts[] = locationFront.split(",");
-	        String country = parts[0];
-	        String city = parts[1];
-	        String objectName = parts[2];
-	        String street = parts[3];
-	        
-	        Location location = new Location(city,street , country,objectName);
-	        story.setLocation(location);
+	public List<Story> addNewStory(StoryDTO storyDTO) {
+		
+			
 	       /* List<TagDTO> tagsDTO = postDTO.getTags();
 	        List<Tag> tags = new ArrayList<Tag>();
 	        for (TagDTO t : tagsDTO) {
@@ -62,10 +55,26 @@ public class StoryService implements IStoryService {
 				tags.add(tag);
 			}
 	        post.setTags(tags);*/
-	        Media media = new Media();
-	        media.setFileName(storyDTO.getFileName());
-	        List<Media> medias = new ArrayList<Media>();
-	        medias.add(media);
+	       
+	       List<Story> stories=new ArrayList<>();
+	        for(String s:storyDTO.getFileNames()) {
+	        	System.out.println(s);
+	        	Story story = new Story();
+		        String locationFront= storyDTO.getLocation();
+		        String parts[] = locationFront.split(",");
+		        String country = parts[0];
+		        String city = parts[1];
+		        String objectName = parts[2];
+		        String street = parts[3];
+		        
+		        Location location = new Location(city,street , country,objectName);
+		        story.setLocation(location);
+		        Media media = new Media();
+		        media.setFileName(s);
+		        List<Media> medias = new ArrayList<Media>();
+		        medias.add(media);
+	        
+	        
 	        story.setDescription(storyDTO.getDescription());
 	        story.setMedia(medias);
 	        
@@ -75,13 +84,15 @@ public class StoryService implements IStoryService {
 	        story.setStartTime(LocalDateTime.now());
 	        story.setEndTime(story.getStartTime().plusMinutes(2));//izmijeniti na 24h
 	        story.setHighlighted(storyDTO.isHighlighted());
+	        story.setCloseFriends(storyDTO.isCloseFriends());
 	        
 	        profileMediaService.addStoryToProfile(storyDTO, story);
 	        
-	        Story s = storyRepository.save(story);
-	        profileConnection.storyNotify(storyDTO.getUsername());
-	        
-			return s;
+	        Story s1 = storyRepository.save(story);
+	        stories.add(story);
+	     }
+	     profileConnection.storyNotify(storyDTO.getUsername());
+	     return stories;
 	}
 
 	@Override
@@ -93,19 +104,19 @@ public class StoryService implements IStoryService {
 		}
 		List<Story> stories = existingProfile.getStories();
 		for (Story story : stories) {
-			if(LocalDateTime.now().isBefore(story.getEndTime())) {
-			List<Media> medias = story.getMedia();
-			for (Media m : medias) {
-				LocationDTO locationDTO = new LocationDTO(story.getLocation().getCity(), story.getLocation().getStreet(),story.getLocation().getCountry(),
-						story.getLocation().getObjectName());
 			
-				myStories.add(new StoryDTO(story.getDescription(),username,m.getFileName(),locationDTO,story.isHighlighted()));
-			}
+			if(LocalDateTime.now().isBefore(story.getEndTime())) {
+				List<Media> medias = story.getMedia();
+				for (Media m : medias) {
+					LocationDTO locationDTO = new LocationDTO(story.getLocation().getCity(), story.getLocation().getStreet(),story.getLocation().getCountry(),
+							story.getLocation().getObjectName());
+				
+					myStories.add(new StoryDTO(story.getDescription(),username,m.getFileName(),locationDTO,story.isHighlighted(),story.isCloseFriends()));
 		}
 	}
 		
 		
-		
+		}
 		return getImagesFiles(myStories);
 	}
 	
@@ -154,10 +165,10 @@ public class StoryService implements IStoryService {
 					LocationDTO locationDTO = new LocationDTO(story.getLocation().getCity(), story.getLocation().getStreet(),story.getLocation().getCountry(),
 							story.getLocation().getObjectName());
 				
-					myStories.add(new StoryDTO(story.getDescription(),username,m.getFileName(),locationDTO,story.isHighlighted()));
-			}
+					myStories.add(new StoryDTO(story.getDescription(),username,m.getFileName(),locationDTO,story.isHighlighted(),story.isCloseFriends()));
 			}
 			
+			}
 			
 			
 			return getImagesFiles(myStories);
@@ -174,14 +185,14 @@ public class StoryService implements IStoryService {
 			List<Story> stories = existingProfile.getStories();
 			for (Story story : stories) {
 				if(story.isHighlighted()) {
-				List<Media> medias = story.getMedia();
-				for (Media m : medias) {
-					LocationDTO locationDTO = new LocationDTO(story.getLocation().getCity(), story.getLocation().getStreet(),story.getLocation().getCountry(),
-							story.getLocation().getObjectName());
-				
-					myStories.add(new StoryDTO(story.getDescription(),username,m.getFileName(),locationDTO,story.isHighlighted()));
-			}
+					List<Media> medias = story.getMedia();
+					for (Media m : medias) {
+						LocationDTO locationDTO = new LocationDTO(story.getLocation().getCity(), story.getLocation().getStreet(),story.getLocation().getCountry(),
+								story.getLocation().getObjectName());
+					
+						myStories.add(new StoryDTO(story.getDescription(),username,m.getFileName(),locationDTO,story.isHighlighted(),story.isCloseFriends()));
 				}
+			}
 			}
 			return getImagesFiles(myStories);
 		}
