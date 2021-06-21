@@ -16,6 +16,8 @@ import SearchPostUnregistered from '../views/SearchPostUnregistered.vue'
 import HomePageAdmin from '../views/HomePageAdmin.vue'
 import VerificationRequests from '../views/VerificationRequests.vue'
 import Notifications from '../views/Notifications.vue'
+import PublicHomepage from '../views/PublicHomepage.vue'
+import PublicSearch from '../views/PublicSearch.vue'
 
 Vue.use(VueRouter)
 
@@ -107,6 +109,16 @@ const routes = [
     path: '/notifications',
     name: 'Notifications',
     component: Notifications
+  },
+  {
+    path: '/publicHomepage',
+    name: 'PublicHomepage',
+    component: PublicHomepage
+  },
+  {
+    path: '/publicSearch',
+    name: 'PublicSearch',
+    component: PublicSearch
   },
 ]
 

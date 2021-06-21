@@ -24,5 +24,8 @@ public interface ProfileConnection {
 
 	@RequestMapping(method=RequestMethod.GET,value="/api/profile/getCloseFriends",consumes="application/json")
 	List<String> getCloseFriends(String username);
+	
+	@RequestMapping(method=RequestMethod.GET,value="/api/profile/getPublicProfiles",consumes="application/json")
+	List<String> getPublicProfiles();
 
 }

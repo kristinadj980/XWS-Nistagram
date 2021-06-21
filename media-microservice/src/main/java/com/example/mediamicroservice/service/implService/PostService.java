@@ -725,4 +725,25 @@ public class PostService implements IPostService {
 			return sortByDate(allPosts);
 		}
 
+		@Override
+		public List<PostDTO> getPublicProfilesPosts() {
+			List<String> publicProfiles = getPublicProfiles();
+			for(String s:publicProfiles) 
+				System.out.println(s);
+			List<PostDTO> response  = new ArrayList<>();
+			System.out.println(response.size());
+			for(String s:publicProfiles) {
+				System.out.println("usao je u for"+s);
+				List<PostDTO> profilePosts = findMyPosts(s);
+				for(PostDTO p:profilePosts) 
+					response.add(p);
+			}
+			
+			response = sortByDate(response);
+			return response;
+		}
+		
+		private List<String> getPublicProfiles(){
+			return profileConnection.getPublicProfiles();
+		}
 }

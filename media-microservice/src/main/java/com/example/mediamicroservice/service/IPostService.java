@@ -30,5 +30,5 @@ public interface IPostService {
 	List<PostDTO> findMyFavouritePosts(String username);
 	List<LikeDislikeHistoryDTO> getMyLikeDislikeHistory(String username);
 	List<PostDTO> findPostPictureById(Long postId, String username);
-
+	List<PostDTO> getPublicProfilesPosts();
 }

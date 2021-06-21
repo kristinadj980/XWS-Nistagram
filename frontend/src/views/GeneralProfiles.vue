@@ -271,6 +271,7 @@ export default {
         proba: "ana",
         selectedPost: [],
         postsNumber: 0,
+        friendsNumber: [],
         }
     },
     async mounted(){
@@ -294,6 +295,13 @@ export default {
                         alert("Error");
                             console.log(res);
                     });
+        this.axios.get('http://localhost:8083/profileMicroservice/api/profile/getUserFriendsInfo/'+ this.$route.params.selectedUsername)
+            .then(response => {
+               this.friendsNumber = response.data
+            }).catch(res => {
+                alert("Error");
+                console.log(res);
+        });
         this.axios.get('http://localhost:8083/profileMicroservice/api/profile/getFriendStatus/'+ this.$route.params.selectedUsername,{ 
              headers: {
                  'Authorization': 'Bearer ' + token,
