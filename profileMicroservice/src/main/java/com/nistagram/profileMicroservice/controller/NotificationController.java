@@ -42,7 +42,13 @@ public class NotificationController {
 	@PostMapping("/storyNotify")
 	public ResponseEntity<?> storyNotify(@RequestBody String username)
 	{
-		return ResponseEntity.ok(username);
+		try {
+			System.out.println("**********KONTROLER*************");
+			notificationService.storyNotify(username);
+			return new ResponseEntity<>( HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
 	}
 
 	

@@ -1,5 +1,6 @@
 package com.example.mediamicroservice.service.implService;
 
+import com.example.mediamicroservice.connections.ProfileConnection;
 import com.example.mediamicroservice.dto.LocationDTO;
 import com.example.mediamicroservice.dto.PostDTO;
 import com.example.mediamicroservice.dto.StoryDTO;
@@ -32,7 +33,9 @@ public class StoryService implements IStoryService {
 	private final StoryRepository storyRepository;
 	private final ProfileMediaService profileMediaService;
 	private final String uploadDir="user-photos";
-
+	@Autowired
+	private ProfileConnection profileConnection;
+	
 	@Autowired
 	public StoryService(StoryRepository storyRepository, ProfileMediaService profileMediaService) {
 		super();
@@ -76,6 +79,9 @@ public class StoryService implements IStoryService {
 	        profileMediaService.addStoryToProfile(storyDTO, story);
 	        
 	        Story s = storyRepository.save(story);
+	        System.out.println(storyDTO.getUsername());
+	        profileConnection.storyNotify(storyDTO.getUsername());
+	        
 			return s;
 	}
 
@@ -98,7 +104,7 @@ public class StoryService implements IStoryService {
 				myStories.add(new StoryDTO(story.getDescription(),username,m.getFileName(),locationDTO,story.isHighlighted()));
 			}
 		}
-		}
+	}
 		
 		
 		
