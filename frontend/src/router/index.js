@@ -12,6 +12,7 @@ import GeneralProfiles from '../views/GeneralProfiles.vue'
 import FriendRequests from '../views/FriendRequests.vue'
 import HomePageAdmin from '../views/HomePageAdmin.vue'
 import VerificationRequests from '../views/VerificationRequests.vue'
+import Notifications from '../views/Notifications.vue'
 
 Vue.use(VueRouter)
 
@@ -83,6 +84,11 @@ const routes = [
     path: '/verificationRequests',
     name: 'VerificationRequests',
     component: VerificationRequests
+  },
+  {
+    path: '/notifications',
+    name: 'Notifications',
+    component: Notifications
   },
 ]
 

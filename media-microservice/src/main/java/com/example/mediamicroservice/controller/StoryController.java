@@ -82,12 +82,4 @@ public class StoryController {
 		
 	}
 	
-	@GetMapping("/proba")
-	public ResponseEntity<String> Proba() {
-		 System.out.println("AAAAAAA");
-        String proba=profileConnection.proba();
-        System.out.println("AAAAAAA");
-		return ResponseEntity.ok(proba);
-		
-	}
 }

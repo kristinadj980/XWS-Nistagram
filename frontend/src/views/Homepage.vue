@@ -32,10 +32,22 @@
                     </b-input-group-append>
                 </b-input-group>
             </span>
-                <span  style="float:right;margin:15px">
-                    <b-button pill variant="outline-danger" class = "btn btn-lg space_style" v-on:click = "friendRequests">
-                    <b-icon icon="person-plus"></b-icon> Friend requests</b-button>
-                    <b-button pill variant="outline-danger" class = "btn btn-lg btn-light" style="margin-right:20px;" v-on:click = "logOut">Log Out</b-button>
+                <span style="float:right;margin:15px">
+                    <b-icon icon="person-plus" variant="danger"
+                    aria-hidden="true"
+                    font-scale="2.5" 
+                    v-on:click = "friendRequests"
+                    style="margin-right:4%; margin-left: -35%; margin-top: 5%;"
+                    ></b-icon>
+                    <b-icon 
+                    icon="heart"
+                    variant="danger"
+                    aria-hidden="true"
+                    font-scale="2.3"
+                    v-on:click="notifications"
+                    style="margin-right:8%;margin-left: 5%;  margin-top: 5%;"
+                    ></b-icon>
+                    <b-button pill variant="outline-danger" class = "btn btn-lg btn-light" style="margin-right:20px; margin-top: -10%;" v-on:click = "logOut">Log Out</b-button>
                 </span>
         </div>
         <b-card class="content_surface">
@@ -182,6 +194,8 @@ export default {
         },
         friendRequests: function() {
             window.location.href = "/friendRequests";
+        },notifications: function() {
+            window.location.href = "/notifications";
         },
         getFriednsPosts: function(usernames) {
 

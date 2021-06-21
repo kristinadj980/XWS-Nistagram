@@ -46,7 +46,7 @@ public class PostService implements IPostService {
 	private static String uploadDir = "user-photos";
 	private final InappropriateContentRepository inappropriateContentRepository;
 	@Autowired
-	private ProfileConnection postConnection;
+	private ProfileConnection profileConnection;
 
 	@Autowired
 	public PostService(PostRepository postRepository,ProfileMediaService profileMediaService,InappropriateContentRepository inappropriateContentRepository) {
@@ -78,7 +78,6 @@ public class PostService implements IPostService {
         post.setTags(tags);
         List<Media> medias = new ArrayList<Media>();
         for(String s:postDTO.getFileNames()) {
-        	System.out.println(s);
         	Media media = new Media();
         	media.setFileName(s);
         	medias.add(media);
@@ -88,8 +87,7 @@ public class PostService implements IPostService {
         profileMediaService.addPostToProfile(postDTO, post);
         
         Post p = postRepository.save(post);
-        System.out.println(postDTO.getUsername() +"*******************************************");
-        postConnection.postNotify(postDTO.getUsername());
+        profileConnection.postNotify(postDTO.getUsername());
 		return p;
 	}
 
@@ -97,7 +95,6 @@ public class PostService implements IPostService {
 	public List<PostDTO> findMyPosts(String username){
 		List<PostDTO> myPosts = new ArrayList<PostDTO>();
 		ProfileMedia existingProfile = profileMediaService.findByUsername(username);
-		System.out.println(existingProfile.getUsername());
 		if(existingProfile == null) 
 			throw new IllegalArgumentException("Profile doesn't exist!");
 		List<Post> posts = existingProfile.getPosts();

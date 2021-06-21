@@ -1,7 +1,9 @@
 package com.nistagram.profileMicroservice.service.implService;
+import com.nistagram.profileMicroservice.dto.NotificationDTO;
 import com.nistagram.profileMicroservice.model.FriendNotifications;
 import com.nistagram.profileMicroservice.model.Notification;
 import com.nistagram.profileMicroservice.model.NotificationDescription;
+import com.nistagram.profileMicroservice.model.Person;
 import com.nistagram.profileMicroservice.model.Profile;
 import com.nistagram.profileMicroservice.repository.NotificationRepository;
 import com.nistagram.profileMicroservice.repository.ProfileRepository;
@@ -12,6 +14,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -39,7 +43,6 @@ public class NotificationService implements INotificationService {
 		notification.setNotificationDescription(NotificationDescription.POST);
 		notification.setProfile(profile);
 		notificationRepository.save(notification);
-
 		for(Profile f:followers) {
 			Profile p = profileService.findByUsername(f.getUsername());
 			List<FriendNotifications> friendNotifications = p.getFriendNotifications();
@@ -61,4 +64,22 @@ public class NotificationService implements INotificationService {
 		}
 		
 	}
+
+	@Override
+	public List<NotificationDTO> getNotifications() {
+		Authentication currentUser = SecurityContextHolder.getContext().getAuthentication();
+		Person person = (Person) currentUser.getPrincipal();
+		Profile profile =  profileService.findById(person.getId());
+		List<Notification> notifications = profile.getNotifications();
+		List<NotificationDTO> notificationDTOs = new ArrayList<>();
+		
+		for(Notification n:notifications) {
+			notificationDTOs.add(new NotificationDTO(n.getId(), n.getNotificationDescription(), 
+					n.getNotificationDescription().getNotificationDescription(), n.getDate(), n.getProfile().getUsername()));
+		}
+		
+		return notificationDTOs;
+	}
+	
+	
 }
