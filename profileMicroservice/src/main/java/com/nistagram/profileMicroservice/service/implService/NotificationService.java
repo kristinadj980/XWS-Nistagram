@@ -1,4 +1,5 @@
 package com.nistagram.profileMicroservice.service.implService;
+import com.nistagram.profileMicroservice.dto.CommentNotifyDTO;
 import com.nistagram.profileMicroservice.dto.NotificationDTO;
 import com.nistagram.profileMicroservice.model.FriendNotifications;
 import com.nistagram.profileMicroservice.model.Notification;
@@ -43,20 +44,20 @@ public class NotificationService implements INotificationService {
 		notification.setNotificationDescription(NotificationDescription.POST);
 		notification.setProfile(profile);
 		notificationRepository.save(notification);
-		for(Profile f:followers) {
-			Profile p = profileService.findByUsername(f.getUsername());
-			List<FriendNotifications> friendNotifications = p.getFriendNotifications();
+		for(int i = 0; i<followers.size(); i++) {
+			Profile f = followers.get(i);
+			List<FriendNotifications> friendNotifications = f.getFriendNotifications();
 			for(FriendNotifications fn:friendNotifications) {
 				if(fn.getProfile().getUsername().equals(username)) {
 					if(fn.getPost() == true) {
-						if(p.getNotifications().isEmpty()) {
+						if(f.getNotifications().isEmpty()) {
 							List<Notification> notifications = new ArrayList<>();
 							notifications.add(notification);
-							p.setNotifications(notifications);
-							profileRepository.save(p);
+							f.setNotifications(notifications);
+							profileRepository.save(f);
 						}else {
-							p.getNotifications().add(notification);
-							profileRepository.save(p);
+							f.getNotifications().add(notification);
+							profileRepository.save(f);
 						}
 					}
 				}
@@ -83,7 +84,6 @@ public class NotificationService implements INotificationService {
 
 	@Override
 	public void storyNotify(String username) {
-		System.out.println("**********SERVIS*************");
 		Profile profile = profileService.findByUsername(username);
 		List<Profile> followers = profile.getFollowers();
 		Notification notification = new Notification();
@@ -91,26 +91,59 @@ public class NotificationService implements INotificationService {
 		notification.setNotificationDescription(NotificationDescription.STORY);
 		notification.setProfile(profile);
 		notificationRepository.save(notification);
-		for(Profile f:followers) {
-			Profile p = profileService.findByUsername(f.getUsername());
-			List<FriendNotifications> friendNotifications = p.getFriendNotifications();
+		for(int i = 0; i<followers.size(); i++) {
+			Profile f = followers.get(i);
+			List<FriendNotifications> friendNotifications = f.getFriendNotifications();
 			for(FriendNotifications fn:friendNotifications) {
 				if(fn.getProfile().getUsername().equals(username)) {
 					if(fn.getStory() == true) {
-						if(p.getNotifications().isEmpty()) {
+						if(f.getNotifications().isEmpty()) {
 							List<Notification> notifications = new ArrayList<>();
 							notifications.add(notification);
-							p.setNotifications(notifications);
-							profileRepository.save(p);
+							f.setNotifications(notifications);
+							profileRepository.save(f);
 						}else {
-							p.getNotifications().add(notification);
-							profileRepository.save(p);
+							f.getNotifications().add(notification);
+							profileRepository.save(f);
 						}
 					}
 				}
 			}
 		}
 		
+	}
+
+	@Override
+	public void commentNotify(CommentNotifyDTO commentNotifyDTO) {
+		Profile profile = profileService.findByUsername(commentNotifyDTO.getCommentFrom());
+		List<Profile> followers = profile.getFollowers();
+		Notification notification = new Notification();
+		notification.setDate(LocalDate.now());
+		notification.setNotificationDescription(NotificationDescription.COMMENT);
+		notification.setProfile(profile);
+		notificationRepository.save(notification);
+		for(Profile f:followers) {
+			if(f.getUsername().equals(commentNotifyDTO.getCommentTo())) {
+				Profile p = profileService.findByUsername(f.getUsername());
+				List<FriendNotifications> friendNotifications = p.getFriendNotifications();
+				for(FriendNotifications fn:friendNotifications) {
+					if(fn.getProfile().getUsername().equals(commentNotifyDTO.getCommentFrom())) {
+						if(fn.getComment() == true) {
+							if(p.getNotifications().isEmpty()) {
+								List<Notification> notifications = new ArrayList<>();
+								notifications.add(notification);
+								p.setNotifications(notifications);
+								profileRepository.save(p);
+							}else {
+								p.getNotifications().add(notification);
+								profileRepository.save(p);
+							}
+						}
+					}
+				}
+			}
+		}
+				
 	}
 	
 	

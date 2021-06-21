@@ -2,6 +2,7 @@ package com.example.mediamicroservice.service.implService;
 
 import com.example.mediamicroservice.connections.ProfileConnection;
 import com.example.mediamicroservice.dto.CommentDTO;
+import com.example.mediamicroservice.dto.CommentNotifyDTO;
 import com.example.mediamicroservice.dto.ImageDTO;
 import com.example.mediamicroservice.dto.ImagesFrontDTO;
 import com.example.mediamicroservice.dto.InapropriateContentDTO;
@@ -363,6 +364,12 @@ public class PostService implements IPostService {
 						 post.setComments(comments);
 						 post.setNumberOfComments(updatedNumberOfComments);
 						 postRepository.save(post);
+						 CommentNotifyDTO c = new CommentNotifyDTO(dto.getUsernameTo(), dto.getUsernameFrom());
+						 try {
+						 profileConnection.commentNotify(c);
+						 }catch(Exception e) {
+							 System.out.println(e.getMessage());
+						 }
 						 
 					 }
 				 }

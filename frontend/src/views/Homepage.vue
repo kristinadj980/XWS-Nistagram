@@ -72,26 +72,26 @@
                         <h5 align="left"><b-icon icon="hand-thumbs-up" aria-hidden="true" @click="likePost($event,post)"></b-icon>{{post.numberOfLikes}}  likes 
                         <b-icon icon="hand-thumbs-down" aria-hidden="true" @click="dislikePost($event,post)"></b-icon>{{post.numberOfDislikes}} dislikes <span style="margin-left:330px;"></span>
                         <b-icon icon="bookmark" aria-hidden="true" align="right"></b-icon></h5>
-                        <h4 align="left"><b-icon icon="chat-square" aria-hidden="true"  @click="getComments($event,post)"></b-icon> {{post.numberOfComments}}  comments
-                        <input style="width: 90%; margin-top:10px;" type="text" v-model="comment"><span style="margin-left:10px;" ></span>
-                        <b-icon icon="check-circle" aria-hidden="true" @click="commentPost($event,post)"></b-icon></h4>
+                        <h4 align="left"><b-icon icon="chat-square" aria-hidden="true"  @click="getComments($event,post); selectedPost = post;"></b-icon> {{post.numberOfComments}}  comments </h4>
+                        
                     </b-card>
         </b-card>
          <div> 
           <b-modal ref="modal3" hide-footer scrollable title="Profiles who commented photo" size="lg" modal-class="b-modal">
                <div modal-class="modal-dialog" role="document">
                     <div class="modal-content" style="background-color:#e4e4e4; ">
-                         <div v-for="user in usersWhoCommented" v-bind:key="user.username" class="modal-body">
+                        <div v-for="user in usersWhoCommented" v-bind:key="user.username" class="modal-body">
                              
                             <div class="row">
                                 <div class=" form-group col">
-                                     <label>Profile: {{user.usernameFrom}} </label><span style="margin-left:30px;" ></span>
-                                     <label > Comment : {{user.comment}}</label><span style="margin-left:30px;" ></span>
-                                     <label > Answer : {{user.answer}}</label>
+                                     <label><b>{{user.usernameFrom}} </b></label><span style="margin-left:30px;" ></span>
+                                     <label> {{user.comment}}</label><span style="margin-left:70px;" ></span>
+                                     <label> Answer : {{user.answer}}</label>
                                 </div>
                              </div><span style="margin-left:610px;" ></span>
-                             </div>
-                                            
+                        </div>
+                    <input style="width: 60%; margin-top:10px; margin-left:10px;" type="text" id="post.fileName" v-model="comment"><span style="margin-left:10px;" ></span>
+                    <b-icon icon="check-circle" aria-hidden="true" @click="commentPost($event,selectedPost)"></b-icon>      
                     </div>                
                 </div>
           </b-modal>
@@ -137,7 +137,8 @@ export default {
         usernameTo:'',
         usernameFrom:'',
         postId:'',
-        description:''
+        description:'',
+        selectedPost: [],
         }
     },
     async mounted(){

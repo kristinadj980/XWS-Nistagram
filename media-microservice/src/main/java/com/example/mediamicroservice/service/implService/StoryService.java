@@ -79,7 +79,6 @@ public class StoryService implements IStoryService {
 	        profileMediaService.addStoryToProfile(storyDTO, story);
 	        
 	        Story s = storyRepository.save(story);
-	        System.out.println(storyDTO.getUsername());
 	        profileConnection.storyNotify(storyDTO.getUsername());
 	        
 			return s;
@@ -89,7 +88,6 @@ public class StoryService implements IStoryService {
 	public List<StoryDTO> findMyStories(String username) {
 		List<StoryDTO> myStories = new ArrayList<StoryDTO>();
 		ProfileMedia existingProfile = profileMediaService.findByUsername(username);
-		System.out.println(existingProfile.getUsername());
 		if(existingProfile == null) {
 			throw new IllegalArgumentException("Profile doesn't exist!");
 		}

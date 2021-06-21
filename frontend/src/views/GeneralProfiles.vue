@@ -94,7 +94,7 @@
                         {{user.username}}
                         </b>
                         </h3>
-                        <h4 align="left">  <strong>123</strong> posts <strong>123</strong> followers <strong>123</strong> following </h4>
+                        <h4 align="left">  <strong>{{postsNumber}}</strong> posts <strong>123</strong> followers <strong>123</strong> following </h4>
                         <h4 align="left">{{user.biography}}</h4>
                     </b-col>
             </div>
@@ -157,10 +157,8 @@
                         <h5 align="left"><b-icon icon="hand-thumbs-up" aria-hidden="true" @click="likePost($event,post)"></b-icon>{{post.numberOfLikes}}  likes
                         <b-icon icon="hand-thumbs-down" aria-hidden="true" @click="dislikePost($event,post)"></b-icon>{{post.numberOfDislikes}} dislikes <span style="margin-left:330px;"></span> 
                         <b-icon icon="bookmark" aria-hidden="true" align="right"></b-icon></h5>
-                        <h4 align="left"><b-icon icon="chat-square" aria-hidden="true"  @click="getComments($event,post)"></b-icon> {{post.numberOfComments}}  comments
-                        <input style="width: 93%; margin-top:10px;" type="text" v-model="comment"><span style="margin-left:10px;" ></span>
-                        <b-icon icon="check-circle" aria-hidden="true" @click="commentPost($event,post)"></b-icon></h4>
-                    </b-card>
+                        <h4 align="left"><b-icon icon="chat-square" aria-hidden="true"  @click="getComments($event,post); selectedPost = post;"></b-icon> {{post.numberOfComments}}  comments </h4>
+                        </b-card>
                 </b-tab>
             </b-tabs>
         </b-card>
@@ -177,8 +175,10 @@
                                      <label > Answer : {{user.answer}}</label>
                                 </div>
                              </div><span style="margin-left:610px;" ></span>
-                             </div>
-                                            
+                        </div>
+                        <input style="width: 60%; margin-top:10px; margin-left:10px;" type="text" id="post.fileName" v-model="comment"><span style="margin-left:10px;" ></span>
+                        <b-icon icon="check-circle" aria-hidden="true" @click="commentPost($event,selectedPost)"></b-icon>      
+                                 
                     </div>                
                 </div>
           </b-modal>
@@ -236,7 +236,9 @@ export default {
         usernameFrom:'',
         description:'',
         friendNotifications: [],
-        proba: "ana"
+        proba: "ana",
+        selectedPost: [],
+        postsNumber: 0,
         }
     },
     async mounted(){
@@ -274,6 +276,8 @@ export default {
          this.axios.get('http://localhost:8083/mediaMicroservice/post/getMyPosts/'+ this.$route.params.selectedUsername)
             .then(response => {
                 this.posts = response.data;
+                this.postsNumber = response.data.length;
+
                 let video = "mp4";
                 for(let i=0; i< this.posts.length; i++){
                     for(let j=0; j< this.posts[i].fileNames.length; j++){

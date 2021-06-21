@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.nistagram.profileMicroservice.dto.CommentNotifyDTO;
 import com.nistagram.profileMicroservice.dto.NotificationDTO;
 import com.nistagram.profileMicroservice.service.implService.NotificationService;
 
@@ -43,14 +44,23 @@ public class NotificationController {
 	public ResponseEntity<?> storyNotify(@RequestBody String username)
 	{
 		try {
-			System.out.println("**********KONTROLER*************");
 			notificationService.storyNotify(username);
 			return new ResponseEntity<>( HttpStatus.OK);
 		} catch (Exception e) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
 	}
-
+	
+	@PostMapping("/commentNotify")
+	public ResponseEntity<?> commentNotify(@RequestBody CommentNotifyDTO commentNotifyDTO)
+	{
+		try {
+			notificationService.commentNotify(commentNotifyDTO);
+			return new ResponseEntity<>( HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+	}
 	
 	@GetMapping("/getNotifications")
 	@PreAuthorize("hasRole('REGISTRED_USER')")

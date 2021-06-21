@@ -23,10 +23,9 @@
         <h1 align="center" style="margin-top: 5%; "><b>Notifications</b></h1>
         <hr>
         <b-row text-align-center class="request_look" v-for="notification in notifications" v-bind:key="notification.id" >
-            <b-col sm="15">
+            <b-col sm="25">
                 <h4
                 text-align-center
-                v-bind:style="{ align: 'center', justify: 'center' }"
                 >
                 <b>{{notification.username }}</b> {{notification.description}}
                 </h4>                
@@ -115,8 +114,8 @@ export default {
 
     }
     .request_look{
-        margin-left: 40%;
+        margin-left: 35%;
         padding: 5px;
-        width: 20%;
+        width: 30%;
     }
 </style>
