@@ -8,7 +8,7 @@
                     <b-icon icon="house" aria-hidden="true"></b-icon>Home</b-button>
                 <b-button  pill variant="outline-danger" class = "btn btn-lg space_style" v-on:click = "showProfile">
                     <b-icon icon="person" aria-hidden="true"></b-icon>Profile</b-button>
-                <b-button pill variant="outline-danger" class = "btn btn-lg space_style" v-on:click = "addPosts">
+                <b-button pill variant="outline-danger" class = "btn btn-lg space_style" v-on:click = "probala">
                     <b-icon icon="image" aria-hidden="true"></b-icon> Add post</b-button>
                 
             </span>
@@ -236,6 +236,7 @@ export default {
         usernameFrom:'',
         description:'',
         friendNotifications: [],
+        proba: "ana"
         }
     },
     async mounted(){
@@ -398,6 +399,21 @@ export default {
                     alert("Please, try later.")
                     console.log(response);
                 })
+        },probala: function(){
+            
+            const postInfo = {
+                username : this.proba,
+            }
+            this.axios.post('http://localhost:8083/profileMicroservice/api/notifications/postNotify', postInfo,{ 
+                }).then(response => {
+                    alert("Picture is reported!");
+                    this.$refs['modal4'].hide();
+                    console.log(response);                
+                }).catch(res => {
+                    alert(res.response.data.message);
+                    console.log(res.response.data.message);
+
+                });
         },
         likePost: async function(event,post){
             const postInfo = {

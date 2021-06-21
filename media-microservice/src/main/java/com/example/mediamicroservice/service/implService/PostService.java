@@ -1,5 +1,6 @@
 package com.example.mediamicroservice.service.implService;
 
+import com.example.mediamicroservice.connections.ProfileConnection;
 import com.example.mediamicroservice.dto.CommentDTO;
 import com.example.mediamicroservice.dto.ImageDTO;
 import com.example.mediamicroservice.dto.ImagesFrontDTO;
@@ -44,6 +45,8 @@ public class PostService implements IPostService {
 	private final ProfileMediaService profileMediaService;
 	private static String uploadDir = "user-photos";
 	private final InappropriateContentRepository inappropriateContentRepository;
+	@Autowired
+	private ProfileConnection postConnection;
 
 	@Autowired
 	public PostService(PostRepository postRepository,ProfileMediaService profileMediaService,InappropriateContentRepository inappropriateContentRepository) {
@@ -85,6 +88,8 @@ public class PostService implements IPostService {
         profileMediaService.addPostToProfile(postDTO, post);
         
         Post p = postRepository.save(post);
+        System.out.println(postDTO.getUsername() +"*******************************************");
+        postConnection.postNotify(postDTO.getUsername());
 		return p;
 	}
 
