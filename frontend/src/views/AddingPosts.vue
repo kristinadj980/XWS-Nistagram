@@ -43,7 +43,7 @@
                 style="margin-top: 1% !important; width:500px;">
                     <datalist id="my-list-id">
                         <option v-for="location in locations" v-bind:key="location.id">
-                            {{ location.country }}, {{location.city}},  {{location.street}}, {{location.objectName}} 
+                            {{location.country}},{{location.city}},{{location.street}},{{location.objectName}} 
                         </option>
                     </datalist>
                 <h4 

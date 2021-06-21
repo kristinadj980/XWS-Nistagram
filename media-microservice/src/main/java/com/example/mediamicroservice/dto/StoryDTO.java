@@ -99,6 +99,11 @@ public class StoryDTO {
 		this.closeFriends=closeFriends;
 	}
 
+	public StoryDTO(String following) {
+		super();
+		this.following = following;
+	}
+
 	public boolean isCloseFriends() {
 		return closeFriends;
 	}

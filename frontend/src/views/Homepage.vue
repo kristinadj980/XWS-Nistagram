@@ -24,7 +24,7 @@
                         style="margin-top: 3% !important; width:400px; height:35px;">
                         <datalist id="my-list-id1">
                         <option v-for="location in locations" v-bind:key="location.id">
-                            {{ location.country }}, {{location.city}},  {{location.street}}, {{location.objectName}} 
+                            {{location.country}},{{location.city}},{{location.street}},{{location.objectName}} 
                         </option>
                     </datalist>
                     <router-link :to="{ name: 'SearchPostByLocation', params: {selectedLocation: this.selectedLocation}}" class="search-btn">
@@ -343,6 +343,7 @@ export default {
         },
         getFriendsStories: function(usernames) {
 
+            console.log("TREBA BIT ANA"+usernames);
             this.axios.post('http://localhost:8083/mediaMicroservice/story/getFriendsStories',usernames)
             .then(response => {
                 this.stories = response.data;
@@ -355,7 +356,7 @@ export default {
                     }            
                 } 
             }).catch(res => {
-                        alert("Profile is private");
+                        alert("ERROR GET FRIENDS STORIES");
                             console.log(res);
                     });
         },
