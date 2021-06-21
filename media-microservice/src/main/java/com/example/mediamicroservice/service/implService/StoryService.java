@@ -4,6 +4,7 @@ import com.example.mediamicroservice.connections.ProfileConnection;
 import com.example.mediamicroservice.dto.ImageDTO;
 import com.example.mediamicroservice.dto.LocationDTO;
 import com.example.mediamicroservice.dto.PostDTO;
+import com.example.mediamicroservice.dto.ProfileDTO;
 import com.example.mediamicroservice.dto.StoryDTO;
 import com.example.mediamicroservice.model.Location;
 import com.example.mediamicroservice.model.Media;
@@ -69,6 +70,15 @@ public class StoryService implements IStoryService {
 		        
 		        Location location = new Location(city,street , country,objectName);
 		        story.setLocation(location);
+		        
+		        if( storyDTO.getTaggedUsers() != null) {
+		            List<ProfileDTO> taggedUsers = storyDTO.getTaggedUsers();
+		            List<ProfileMedia> profiles = new ArrayList<ProfileMedia>();
+		            for (ProfileDTO profileDTO : taggedUsers) {
+		            	 profiles.add(new ProfileMedia(profileDTO.getUsername()));
+		    		}
+		            story.setProfileTags(profiles);
+		            }
 		        Media media = new Media();
 		        media.setFileName(s);
 		        List<Media> medias = new ArrayList<Media>();
@@ -104,14 +114,20 @@ public class StoryService implements IStoryService {
 		}
 		List<Story> stories = existingProfile.getStories();
 		for (Story story : stories) {
-			
+			List<ProfileMedia> taggedProfiles = story.getProfileTags();
+			List<ProfileDTO> taggedProfilesDTO = new ArrayList<ProfileDTO>();
+			if(story.getProfileTags() != null) {
+			for (ProfileMedia p : taggedProfiles) {
+				taggedProfilesDTO.add(new ProfileDTO(p.getUsername()));
+			}
+			}
 			if(LocalDateTime.now().isBefore(story.getEndTime())) {
 				List<Media> medias = story.getMedia();
 				for (Media m : medias) {
 					LocationDTO locationDTO = new LocationDTO(story.getLocation().getCity(), story.getLocation().getStreet(),story.getLocation().getCountry(),
 							story.getLocation().getObjectName());
 				
-					myStories.add(new StoryDTO(story.getDescription(),username,m.getFileName(),locationDTO,story.isHighlighted(),story.isCloseFriends()));
+					myStories.add(new StoryDTO(story.getDescription(),username,m.getFileName(),locationDTO,story.isHighlighted(),story.isCloseFriends(),taggedProfilesDTO));
 		}
 	}
 		
@@ -159,13 +175,19 @@ public class StoryService implements IStoryService {
 			}
 			List<Story> stories = existingProfile.getStories();
 			for (Story story : stories) {
-				
+				List<ProfileMedia> taggedProfiles = story.getProfileTags();
+				List<ProfileDTO> taggedProfilesDTO = new ArrayList<ProfileDTO>();
+				if(story.getProfileTags() != null) {
+				for (ProfileMedia p : taggedProfiles) {
+					taggedProfilesDTO.add(new ProfileDTO(p.getUsername()));
+				}
+				}
 				List<Media> medias = story.getMedia();
 				for (Media m : medias) {
 					LocationDTO locationDTO = new LocationDTO(story.getLocation().getCity(), story.getLocation().getStreet(),story.getLocation().getCountry(),
 							story.getLocation().getObjectName());
 				
-					myStories.add(new StoryDTO(story.getDescription(),username,m.getFileName(),locationDTO,story.isHighlighted(),story.isCloseFriends()));
+					myStories.add(new StoryDTO(story.getDescription(),username,m.getFileName(),locationDTO,story.isHighlighted(),story.isCloseFriends(),taggedProfilesDTO));
 			}
 			
 			}
@@ -184,13 +206,20 @@ public class StoryService implements IStoryService {
 			}
 			List<Story> stories = existingProfile.getStories();
 			for (Story story : stories) {
+				List<ProfileMedia> taggedProfiles = story.getProfileTags();
+				List<ProfileDTO> taggedProfilesDTO = new ArrayList<ProfileDTO>();
+				if(story.getProfileTags() != null) {
+				for (ProfileMedia p : taggedProfiles) {
+					taggedProfilesDTO.add(new ProfileDTO(p.getUsername()));
+				}
+				}
 				if(story.isHighlighted()) {
 					List<Media> medias = story.getMedia();
 					for (Media m : medias) {
 						LocationDTO locationDTO = new LocationDTO(story.getLocation().getCity(), story.getLocation().getStreet(),story.getLocation().getCountry(),
 								story.getLocation().getObjectName());
 					
-						myStories.add(new StoryDTO(story.getDescription(),username,m.getFileName(),locationDTO,story.isHighlighted(),story.isCloseFriends()));
+						myStories.add(new StoryDTO(story.getDescription(),username,m.getFileName(),locationDTO,story.isHighlighted(),story.isCloseFriends(),taggedProfilesDTO));
 				}
 			}
 			}

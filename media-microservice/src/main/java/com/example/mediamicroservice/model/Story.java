@@ -53,15 +53,21 @@ public class Story {
 
 	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	public Location location;
+	
+	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@JoinTable(name = "post_profile_tags",
+	joinColumns = @JoinColumn(name = "post_id", referencedColumnName = "id"),
+	inverseJoinColumns = @JoinColumn(name = "profile_tags_id", referencedColumnName = "id"))
+	private List<ProfileMedia> profileTags;
 	   
 
 	public Story() {
 
 	}
-	   
-	public Story(Long id, String description, LocalDateTime startTime,LocalDateTime endTime, boolean visible, LocalDate date,
-			boolean highlighted, int numberOfInappropriateContent, List<Media> medias, List<Tag> tags,
-			Location location,boolean closeFriends) {
+
+	public Story(Long id, String description, LocalDateTime startTime, LocalDateTime endTime, boolean visible,
+			LocalDate date, boolean highlighted, boolean closeFriends, int numberOfInappropriateContent,
+			List<Media> medias, List<Tag> tags, Location location, List<ProfileMedia> profileTags) {
 		super();
 		this.id = id;
 		this.description = description;
@@ -70,15 +76,13 @@ public class Story {
 		this.visible = visible;
 		this.date = date;
 		this.highlighted = highlighted;
+		this.closeFriends = closeFriends;
 		this.numberOfInappropriateContent = numberOfInappropriateContent;
 		this.medias = medias;
 		this.tags = tags;
 		this.location = location;
-		this.closeFriends=closeFriends;
+		this.profileTags = profileTags;
 	}
-
-
-
 
 	public boolean isCloseFriends() {
 		return closeFriends;
@@ -213,6 +217,28 @@ public class Story {
 	public void setLocation(Location location) {
 		this.location = location;
 	}
-	   
-	   
+
+	public List<Media> getMedias() {
+		return medias;
+	}
+
+	public void setMedias(List<Media> medias) {
+		this.medias = medias;
+	}
+
+	public List<Tag> getTags() {
+		return tags;
+	}
+
+	public void setTags(List<Tag> tags) {
+		this.tags = tags;
+	}
+
+	public List<ProfileMedia> getProfileTags() {
+		return profileTags;
+	}
+
+	public void setProfileTags(List<ProfileMedia> profileTags) {
+		this.profileTags = profileTags;
+	}  
 }

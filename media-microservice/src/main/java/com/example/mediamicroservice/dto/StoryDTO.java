@@ -18,6 +18,7 @@ public class StoryDTO {
     private List<byte[]> imageBytes;
     private boolean closeFriends;
     private List<ImageDTO> images;
+    private List<ProfileDTO> taggedUsers;
 	
 
 	public StoryDTO() {
@@ -130,13 +131,14 @@ public class StoryDTO {
 	
 
 	public StoryDTO(String description, String username, String fileName, LocationDTO locationDTO,
-			boolean highlighted, boolean closeFriends) {
+			boolean highlighted, boolean closeFriends, List<ProfileDTO> taggedUsers) {
 		this.description = description;
 		this.username = username;
 		this.fileName = fileName;
 		this.locationDTO = locationDTO;
 		this.highlighted=highlighted;
 		this.closeFriends=closeFriends;
+		this.taggedUsers = taggedUsers;
 	}
 
 	public String getLocation() {
@@ -195,6 +197,13 @@ public class StoryDTO {
 	public void setFollowing(String following) {
 		this.following = following;
 	}
+
+	public List<ProfileDTO> getTaggedUsers() {
+		return taggedUsers;
+	}
+
+	public void setTaggedUsers(List<ProfileDTO> taggedUsers) {
+		this.taggedUsers = taggedUsers;
+	}
 	
-    
 }
