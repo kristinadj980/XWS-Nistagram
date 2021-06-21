@@ -8,7 +8,7 @@
                     <b-icon icon="house" aria-hidden="true"></b-icon>Home</b-button>
                 <b-button  pill variant="outline-danger" class = "btn btn-lg space_style" v-on:click = "showProfile">
                     <b-icon icon="person" aria-hidden="true"></b-icon>Profile</b-button>
-                <b-button pill variant="outline-danger" class = "btn btn-lg space_style" v-on:click = "addPosts">
+                <b-button pill variant="outline-danger" class = "btn btn-lg space_style" v-on:click = "probala">
                     <b-icon icon="image" aria-hidden="true"></b-icon> Add post</b-button>
                 
             </span>
@@ -53,13 +53,67 @@
             class="m-2" 
             menu-class="w-100" 
             v-if="friendStatus == 'approved' || friendStatus == 'friends'"
-            style="left:46%;">
+            style="left:87%;">
                 <template #button-content>
                    <b-icon icon="three-dots" aria-hidden="true" ></b-icon>
                 </template>
                 <b-dropdown-item >Mute</b-dropdown-item>
                 <b-dropdown-item>Block</b-dropdown-item>
             </b-dropdown>
+            <b-icon 
+            v-if="friendStatus == 'approved' || friendStatus == 'friends'" 
+            icon="bell" 
+            variant="danger"
+            style="margin-left:75%;" 
+            aria-hidden="true"
+            font-scale="2"
+            v-on:click="getFriendNotifications"
+            v-b-modal.modal5>
+            </b-icon>
+            <div> 
+                <b-modal ref="modal5" id="modal5" hide-footer scrollable title="Notifications" size="lg" modal-class="b-modal">
+                    <b-row>
+                        <b-col sm="5"><h5 class ="text-justify top-buffer" align="left" style="margin-left:100px;"> Messages </h5></b-col>
+                        <b-col sm="1">
+                            <b-button  variant="outline-danger" size="lg" class = " mb-2 btn btn-lg space_style" v-on:click = "messageNotificaiton" >
+                                <b-icon v-if="friendNotifications.message == true" icon="toggle-on" aria-hidden="true" tooltip="click to disable tags"></b-icon> 
+                                <b-icon v-if="friendNotifications.message == false" icon="toggle-off" aria-hidden="true"  tooltip="click to allow tags"></b-icon> 
+                            </b-button>
+                        </b-col>
+                    </b-row>
+
+                    <b-row>
+                        <b-col sm="5"><h5 class ="text-justify top-buffer" align="left" style="margin-left:100px;"> Posts </h5></b-col>
+                        <b-col sm="1">
+                            <b-button  variant="outline-danger" size="lg" class = " mb-2 btn btn-lg space_style" v-on:click = "postNotificaiton" >
+                                <b-icon v-if="friendNotifications.post == true" icon="toggle-on" aria-hidden="true" tooltip="click to disable tags"></b-icon> 
+                                <b-icon v-if="friendNotifications.post == false" icon="toggle-off" aria-hidden="true"  tooltip="click to allow tags"></b-icon> 
+                            </b-button>
+                        </b-col>
+                    </b-row>
+
+                    <b-row>
+                        <b-col sm="5"><h5 class ="text-justify top-buffer" style="margin-left:100px;" align="left"> Stories </h5></b-col>
+                        <b-col sm="1">
+                            <b-button variant="outline-danger" size="lg" class=" mb-2 btn btn-lg space_style " v-on:click = "storyNotificaiton">
+                                <b-icon v-if="friendNotifications.story == true" value="true" icon="toggle-on" aria-hidden="true" tooltip="click to disable messages"></b-icon>
+                                <b-icon v-if="friendNotifications.story == false" value="false" icon="toggle-off" aria-hidden="true"  tooltip="click to allow messages"></b-icon> 
+                            </b-button>
+                        </b-col>
+                    </b-row>
+
+                    <b-row>
+                        <b-col sm="5"><h5 class ="text-justify top-buffer" style="margin-left:100px;" align="left"> Comments </h5></b-col>
+                        <b-col sm="1">
+                            <b-button variant="outline-danger" size="lg" class=" mb-2 btn btn-lg space_style " v-on:click = "commentNotificaiton">
+                                <b-icon v-if="friendNotifications.comment == true" value="true" icon="toggle-on" aria-hidden="true" tooltip="click to disable messages"></b-icon>
+                                <b-icon v-if="friendNotifications.comment == false" value="false" icon="toggle-off" aria-hidden="true"  tooltip="click to allow messages"></b-icon> 
+                            </b-button>
+                        </b-col>
+                    </b-row>
+
+                </b-modal>
+            </div>
             <div class="card header_surface" style="margin-top:10px; border-color: #d4bcce; margin-left:50px;"  >
                   <img class="img-circle img-responsive rounded-circle"  src="https://images.vexels.com/media/users/3/147101/isolated/preview/b4a49d4b864c74bb73de63f080ad7930-instagram-profile-button-by-vexels.png" style=" width:120px; height:120px;"  /> 
                     
@@ -71,7 +125,7 @@
                         {{user.username}}
                         </b>
                         </h3>
-                        <h4 align="left">  <strong>123</strong> posts <strong>123</strong> followers <strong>123</strong> following </h4>
+                        <h4 align="left">  <strong>{{postsNumber}}</strong> posts <strong>123</strong> followers <strong>123</strong> following </h4>
                         <h4 align="left">{{user.biography}}</h4>
                     </b-col>
             </div>
@@ -134,10 +188,8 @@
                         <h5 align="left"><b-icon icon="hand-thumbs-up" aria-hidden="true" @click="likePost($event,post)"></b-icon>{{post.numberOfLikes}}  likes
                         <b-icon icon="hand-thumbs-down" aria-hidden="true" @click="dislikePost($event,post)"></b-icon>{{post.numberOfDislikes}} dislikes <span style="margin-left:330px;"></span> 
                         <b-icon icon="bookmark" aria-hidden="true" align="right"></b-icon></h5>
-                        <h4 align="left"><b-icon icon="chat-square" aria-hidden="true"  @click="getComments($event,post)"></b-icon> {{post.numberOfComments}}  comments
-                        <input style="width: 93%; margin-top:10px;" type="text" v-model="comment"><span style="margin-left:10px;" ></span>
-                        <b-icon icon="check-circle" aria-hidden="true" @click="commentPost($event,post)"></b-icon></h4>
-                    </b-card>
+                        <h4 align="left"><b-icon icon="chat-square" aria-hidden="true"  @click="getComments($event,post); selectedPost = post;"></b-icon> {{post.numberOfComments}}  comments </h4>
+                        </b-card>
                 </b-tab>
             </b-tabs>
         </b-card>
@@ -154,8 +206,10 @@
                                      <label > Answer : {{user.answer}}</label>
                                 </div>
                              </div><span style="margin-left:610px;" ></span>
-                             </div>
-                                            
+                        </div>
+                        <input style="width: 60%; margin-top:10px; margin-left:10px;" type="text" id="post.fileName" v-model="comment"><span style="margin-left:10px;" ></span>
+                        <b-icon icon="check-circle" aria-hidden="true" @click="commentPost($event,selectedPost)"></b-icon>      
+                                 
                     </div>                
                 </div>
           </b-modal>
@@ -212,7 +266,11 @@ export default {
         postId:'',
         usernameTo:'',
         usernameFrom:'',
-        description:''
+        description:'',
+        friendNotifications: [],
+        proba: "ana",
+        selectedPost: [],
+        postsNumber: 0,
         }
     },
     async mounted(){
@@ -250,6 +308,8 @@ export default {
          this.axios.get('http://localhost:8083/mediaMicroservice/post/getMyPosts/'+ this.$route.params.selectedUsername)
             .then(response => {
                 this.posts = response.data;
+                this.postsNumber = response.data.length;
+
                 let video = "mp4";
                 for(let i=0; i< this.posts.length; i++){
                     for(let j=0; j< this.posts[i].fileNames.length; j++){
@@ -300,6 +360,113 @@ export default {
         },
         editProfile: function(){
             window.location.href="/profileInfo";
+        },
+        messageNotificaiton: async function() {
+            const messageN = {
+                id: this.friendNotifications.id,
+                message : this.friendNotifications.message,
+                post: null,
+                story: null,
+                comment: null
+            }
+
+            let token = localStorage.getItem('token').substring(1, localStorage.getItem('token').length-1);
+            this.axios.post('http://localhost:8083/profileMicroservice/api/friendNotificationsController/changeStatus',messageN, { 
+                headers: {
+                    'Authorization': 'Bearer ' + token,
+                }})
+                .then(response => {
+                    this.friendNotifications = response.data;
+                    console.log(response);
+                })
+                .catch(response => {
+                    alert("Please, try later.")
+                    console.log(response);
+                })
+        },
+        postNotificaiton: async function() {
+            const messageN = {
+                id: this.friendNotifications.id,
+                message : null,
+                post: this.friendNotifications.post,
+                story: null,
+                comment: null
+            }
+
+            let token = localStorage.getItem('token').substring(1, localStorage.getItem('token').length-1);
+            this.axios.post('http://localhost:8083/profileMicroservice/api/friendNotificationsController/changeStatus',messageN, { 
+                headers: {
+                    'Authorization': 'Bearer ' + token,
+                }})
+                .then(response => {
+                    this.friendNotifications = response.data;
+                    console.log(response);
+                })
+                .catch(response => {
+                    alert("Please, try later.")
+                    console.log(response);
+                })
+        },
+        storyNotificaiton: async function() {
+            const messageN = {
+                id: this.friendNotifications.id,
+                message : null,
+                post: null,
+                story: this.friendNotifications.story,
+                comment: null
+            }
+
+            let token = localStorage.getItem('token').substring(1, localStorage.getItem('token').length-1);
+            this.axios.post('http://localhost:8083/profileMicroservice/api/friendNotificationsController/changeStatus',messageN, { 
+                headers: {
+                    'Authorization': 'Bearer ' + token,
+                }})
+                .then(response => {
+                    this.friendNotifications = response.data;
+                    console.log(response);
+                })
+                .catch(response => {
+                    alert("Please, try later.")
+                    console.log(response);
+                })
+        },
+        commentNotificaiton: async function() {
+            const messageN = {
+                id: this.friendNotifications.id,
+                message : null,
+                post: null,
+                story: null,
+                comment: this.friendNotifications.comment
+            }
+
+            let token = localStorage.getItem('token').substring(1, localStorage.getItem('token').length-1);
+            this.axios.post('http://localhost:8083/profileMicroservice/api/friendNotificationsController/changeStatus',messageN, { 
+                headers: {
+                    'Authorization': 'Bearer ' + token,
+                }})
+                .then(response => {
+                    this.friendNotifications = response.data;
+                    console.log(response);
+                })
+                .catch(response => {
+                    alert("Please, try later.")
+                    console.log(response);
+                })
+        },probala: function(){
+            
+            const postInfo = {
+                username : this.proba,
+            }
+            this.axios.post('http://localhost:8083/profileMicroservice/api/notifications/postNotify', postInfo,{ 
+                }).then(response => {
+                    alert("Picture is reported!");
+                    this.$refs['modal4'].hide();
+                    console.log(response);                
+                }).catch(res => {
+                    alert(res.response.data.message);
+                    console.log(res.response.data.message);
+
+                });
         },
         likePost: async function(event,post){
             const postInfo = {
@@ -455,6 +622,18 @@ export default {
                     console.log(res.response.data.message);
 
                 });
+        },getFriendNotifications: function(){
+            let token = localStorage.getItem('token').substring(1, localStorage.getItem('token').length-1);
+            this.axios.get('http://localhost:8083/profileMicroservice/api/friendNotificationsController/friendNotifications/'+ this.$route.params.selectedUsername, { 
+                headers: {
+                    'Authorization': 'Bearer ' + token,
+                }})
+            .then(response => {
+               this.friendNotifications = response.data
+            }).catch(res => {
+                        alert("Error");
+                            console.log(res);
+                    });
         },
         refreshPage: function(selectedUser){
             this.axios.get('http://localhost:8083/profileMicroservice/api/profile/getUserProfile/'+ this.$route.params.selectedUsername)

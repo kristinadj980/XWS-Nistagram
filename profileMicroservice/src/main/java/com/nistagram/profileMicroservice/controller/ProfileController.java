@@ -57,17 +57,6 @@ public class ProfileController {
 		this.profileRepository = profileRepository;
 		this.verificationRequestService = verificationRequestService;
 	}
-
-	@PostMapping("/proba")
-	public ResponseEntity<?> proba()
-	{
-		System.out.println("Probaaaaaaaaaaaaaa");
-		Profile pr=profileService.findById(102L);
-		String username=pr.getUsername();
-		
-		System.out.println("Probaaaaaaaaaaaaaa"+username);
-		return ResponseEntity.ok(username);
-	}
 	
 	@GetMapping("/account")
 	@PreAuthorize("hasRole('REGISTRED_USER')")
@@ -141,7 +130,6 @@ public class ProfileController {
 		Profile user = profileService.findById(person.getId());
 		try {
 			ResponseEntity<List<PostDTO>> postDTOs = mediaConnection.getMyPosts(user.getUsername());
-			System.out.println(postDTOs.getStatusCode());
 			return postDTOs ;
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
@@ -188,7 +176,6 @@ public class ProfileController {
 	
 	@GetMapping("/getFriendStatus/{username}")
 	public ResponseEntity getFriendStatus(@PathVariable String username) {
-		System.out.print("U kontroleru jeeeeeeeeeeeeeeeeeeeeee");
 		return new ResponseEntity(profileService.getFriendStatus(username), HttpStatus.OK); 
 	}
 	

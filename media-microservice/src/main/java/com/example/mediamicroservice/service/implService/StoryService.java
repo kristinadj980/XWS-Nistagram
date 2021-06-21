@@ -1,5 +1,6 @@
 package com.example.mediamicroservice.service.implService;
 
+import com.example.mediamicroservice.connections.ProfileConnection;
 import com.example.mediamicroservice.dto.ImageDTO;
 import com.example.mediamicroservice.dto.LocationDTO;
 import com.example.mediamicroservice.dto.PostDTO;
@@ -33,7 +34,9 @@ public class StoryService implements IStoryService {
 	private final StoryRepository storyRepository;
 	private final ProfileMediaService profileMediaService;
 	private final String uploadDir="user-photos";
-
+	@Autowired
+	private ProfileConnection profileConnection;
+	
 	@Autowired
 	public StoryService(StoryRepository storyRepository, ProfileMediaService profileMediaService) {
 		super();
@@ -87,15 +90,15 @@ public class StoryService implements IStoryService {
 	        
 	        Story s1 = storyRepository.save(story);
 	        stories.add(story);
-	        }
-			return stories;
+	     }
+	     profileConnection.storyNotify(storyDTO.getUsername());
+	     return stories;
 	}
 
 	@Override
 	public List<StoryDTO> findMyStories(String username) {
 		List<StoryDTO> myStories = new ArrayList<StoryDTO>();
 		ProfileMedia existingProfile = profileMediaService.findByUsername(username);
-		System.out.println(existingProfile.getUsername());
 		if(existingProfile == null) {
 			throw new IllegalArgumentException("Profile doesn't exist!");
 		}
@@ -110,7 +113,7 @@ public class StoryService implements IStoryService {
 				
 					myStories.add(new StoryDTO(story.getDescription(),username,m.getFileName(),locationDTO,story.isHighlighted(),story.isCloseFriends()));
 		}
-		}
+	}
 		
 		
 		}

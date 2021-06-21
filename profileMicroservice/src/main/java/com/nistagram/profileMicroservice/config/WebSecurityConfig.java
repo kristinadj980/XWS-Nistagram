@@ -89,12 +89,19 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 			// TokenAuthenticationFilter ce ignorisati sve ispod navedene putanje
 			web.ignoring().antMatchers(HttpMethod.POST, "/api/auth/login");
 			web.ignoring().antMatchers(HttpMethod.POST, "/api/auth/register"); 
-			web.ignoring().antMatchers(HttpMethod.GET, "/api/profile/getUserProfile/{username}");
+			web.ignoring().antMatchers(HttpMethod.GET, "/api/profile/getAllUsers", "/api/profile/getUserProfile/{username}");
+			web.ignoring().antMatchers(HttpMethod.POST, "/api/profile/proba"); 
+			web.ignoring().antMatchers(HttpMethod.POST, "/api/notifications/postNotify");
+			web.ignoring().antMatchers(HttpMethod.POST, "/api/notifications/storyNotify"); 
+			web.ignoring().antMatchers(HttpMethod.POST, "/api/notifications/commentNotify"); 
+			web.ignoring().antMatchers(HttpMethod.GET, "/api/profile/proba"); 
+			web.ignoring().antMatchers(HttpMethod.GET, "/api/profile/getAllUsers");
 			//web.ignoring().antMatchers(HttpMethod.POST, "/api/profile/getCloseFriends"); 
 			//web.ignoring().antMatchers(HttpMethod.GET, "/api/profile/getCloseFriends"); 
 			//web.ignoring().antMatchers(HttpMethod.GET, "/api/profile/getAllUsers");
 			web.ignoring().antMatchers(HttpMethod.GET, "/api/profile/getPublicProfiles");
 			web.ignoring().antMatchers(HttpMethod.GET, "/api/profile/getPrivateProfiles");
+			
 			web.ignoring().antMatchers(HttpMethod.GET, "/", "/webjars/**", "/*.html", "/favicon.ico", "/**/*.html",
 					"/**/*.css", "/**/*.js");
 		}

@@ -100,13 +100,6 @@ public class PostController {
 		
 	}
 	
-	@GetMapping("/proba")
-	public String getProba() {
-		System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@");
-		return "uspesno";
-	}
-	
-	
 	@PostMapping("/getFriendsPosts")
 	public ResponseEntity<List<PostDTO>> getFriendsPosts(@RequestBody List<PostDTO> postDTOs) {
 		try {
