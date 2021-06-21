@@ -13,6 +13,8 @@ import SearchPost from '../views/SearchPost.vue'
 import SearchPostByLocation from '../views/SearchPostByLocation.vue'
 import FriendRequests from '../views/FriendRequests.vue'
 import SearchPostUnregistered from '../views/SearchPostUnregistered.vue'
+import HomePageAdmin from '../views/HomePageAdmin.vue'
+import VerificationRequests from '../views/VerificationRequests.vue'
 
 Vue.use(VueRouter)
 
@@ -89,6 +91,16 @@ const routes = [
     path: '/friendRequests',
     name: 'FriendRequests',
     component: FriendRequests
+  },
+  {
+    path: '/homePageAdmin',
+    name: 'HomePageAdmin',
+    component: HomePageAdmin
+  },
+  {
+    path: '/verificationRequests',
+    name: 'VerificationRequests',
+    component: VerificationRequests
   },
 ]
 

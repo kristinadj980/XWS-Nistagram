@@ -13,7 +13,7 @@ public class InappropriateContent {
 	   @Column(name = "description", nullable = false)
 	   private String description;
 
-	   @Column(name = "status", nullable = false)
+	   @Column(name = "status")
 	   private RequestStatus status;
 
 	   @OneToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
@@ -23,18 +23,27 @@ public class InappropriateContent {
 	   @OneToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
 	   @JoinColumn(name = "story_id", referencedColumnName = "id")
 	   public Story story;
+	   
+	   @Column(name = "profileToId")
+	   private Long profileToId;
+	   
+	   @Column(name = "profileFromId")
+	   private Long profileFromId;
 
 	public InappropriateContent() {
 		super();
 	}
-
-	public InappropriateContent(Long id, String description, RequestStatus status, Post post, Story story) {
+	
+	public InappropriateContent(Long id, String description, RequestStatus status, Post post, Story story,
+			Long profileToId, Long profileFromId) {
 		super();
 		this.id = id;
 		this.description = description;
 		this.status = status;
 		this.post = post;
 		this.story = story;
+		this.profileToId = profileToId;
+		this.profileFromId = profileFromId;
 	}
 
 	public Long getId() {
@@ -76,5 +85,20 @@ public class InappropriateContent {
 	public void setStory(Story story) {
 		this.story = story;
 	}
-	   
+
+	public Long getProfileToId() {
+		return profileToId;
+	}
+
+	public void setProfileToId(Long profileToId) {
+		this.profileToId = profileToId;
+	}
+
+	public Long getProfileFromId() {
+		return profileFromId;
+	}
+
+	public void setProfileFromId(Long profileFromId) {
+		this.profileFromId = profileFromId;
+	}
 }

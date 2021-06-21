@@ -31,17 +31,26 @@ public class ProfileMedia {
 	joinColumns = @JoinColumn(name = "profileMedia_id", referencedColumnName = "id"),
 	inverseJoinColumns = @JoinColumn(name = "posts_id", referencedColumnName = "id"))
 	public List<Post> posts;
+	
+	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@JoinTable(name = "profileMedia_favouritesCollections",
+	joinColumns = @JoinColumn(name = "profileMedia_id", referencedColumnName = "id"),
+	inverseJoinColumns = @JoinColumn(name = "favourites_collections_id", referencedColumnName = "id"))
+	private List<FavouritesCollection> favouritesCollections;
 	   
 	public ProfileMedia() {
 
 	}
 
-	public ProfileMedia(String username, List<Post> favourites, List<Story> stories, List<Post> posts) {
+	public ProfileMedia(Long id, String username, List<Post> favourites, List<Story> stories, List<Post> posts,
+			List<FavouritesCollection> favouritesCollections) {
 		super();
+		this.id = id;
 		this.username = username;
 		this.favourites = favourites;
 		this.stories = stories;
 		this.posts = posts;
+		this.favouritesCollections = favouritesCollections;
 	}
 
 	public ProfileMedia(String username, List<Post> posts) {
@@ -80,6 +89,23 @@ public class ProfileMedia {
 
 	public void setPosts(List<Post> posts) {
 		this.posts = posts;
-	}	
+	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public List<FavouritesCollection> getFavouritesCollections() {
+		return favouritesCollections;
+	}
+
+	public void setFavouritesCollections(List<FavouritesCollection> favouritesCollections) {
+		this.favouritesCollections = favouritesCollections;
+	}
+
 
 }

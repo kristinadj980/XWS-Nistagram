@@ -22,4 +22,5 @@ public class ImageDTO {
 	public void setImageBytes(List<byte[]> imageBytes) {
 		this.imageBytes = imageBytes;
 	}
+
 }

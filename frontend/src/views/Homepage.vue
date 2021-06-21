@@ -12,8 +12,7 @@
                     <b-icon icon="image" aria-hidden="true"></b-icon> Add post</b-button>
                 <b-button pill variant="outline-danger" class = "btn btn-lg space_style" v-on:click = "addStories">
                     <b-icon icon="image" aria-hidden="true"></b-icon> Add story</b-button>
-                    <b-button pill variant="outline-danger" class = "btn btn-lg space_style" v-on:click = "proba">
-                    <b-icon icon="image" aria-hidden="true"></b-icon> PROBA </b-button>
+    
                 <!--LOKACIJE-->
                 <b-input-group class=" serach_look1">
                     <b-input-group-append>
@@ -51,7 +50,25 @@
                     <router-link :to="{ name: 'SearchPost', params: {selectedTag: this.selectedTag}}" class="search-btn">
                        <b-button style="margin-top: -15% !important;  margin-left: 100% !important;" variant="outline-danger"><b-icon icon="search" aria-hidden="true"></b-icon></b-button>
                     </router-link>
+
                      </b-input-group-append>
+                     <b-input-group-append>
+                         <input
+                        v-model="selectedUser" 
+                        class="input_style" 
+                        placeholder="enter username..."
+                        style="margin-top: 3% !important; width:300px; height:35px;">
+                        <datalist id="my-list-id">
+                            <option v-for="user in users" v-bind:key="user.id">
+                                {{ user.username }} 
+                            </option>
+                        </datalist>
+                    <router-link :to="{ name: 'GeneralProfiles', params: {selectedUsername: this.selectedUser}}" class="search-btn">
+                       <b-button style="margin-top: -20% !important;  margin-left: 100% !important;" variant="outline-danger"><b-icon icon="search" aria-hidden="true"></b-icon></b-button>
+                    </router-link>
+                
+                    </b-input-group-append>
+                
                 </b-input-group>
 
             </span>
@@ -119,13 +136,62 @@
                         <h4 align="left"><b-icon icon="person-circle" aria-hidden="true"></b-icon>  {{post.username}}</h4>
                         </b-row>
                         <h6 align="left">{{post.locationDTO.city}},{{post.locationDTO.street}},{{post.locationDTO.objectName}},{{post.locationDTO.country}}</h6>
-                        <b-img v-if="!post.fileName.includes(videoText)" thumbnail width="500px" height="500px" v-bind:src="post.imageBytes" alt="Image 1"></b-img>
-                        <video class="video" v-if="post.fileName.includes(videoText)" autoplay controls v-bind:src="post.imageBytes" width="500px" height="500px" ></video>
-                        <h4 align="left">{{post.description}}</h4>
-                        <h5 align="left"><b-icon icon="hand-thumbs-up" aria-hidden="true" @click="likePost($event,post)"></b-icon>{{post.numberOfLikes}}  likes <b-icon icon="hand-thumbs-down" aria-hidden="true" @click="dislikePost($event,post)"></b-icon>{{post.numberOfDislikes}} dislikes <span style="margin-left:430px;"></span> <b-icon icon="bookmark" aria-hidden="true" align="right"></b-icon></h5>
-                        <h4 align="left"><b-icon icon="chat-square" aria-hidden="true"></b-icon>  comments</h4>
+                        <div v-for="(image, index) in post.images" v-bind:key="image.imageBytes">
+                            <b-img v-if="!post.fileNames[index].includes(videoText)" thumbnail  v-bind:src="image.imageBytes" alt="Image 1"></b-img>
+                             <video v-if="post.fileNames[index].includes(videoText)" autoplay controls v-bind:src="image.imageBytes" width="400" height="400" style="display:block; margin-left:auto; margin-right:auto"></video>
+
+                        </div>
+                         <h4 style="margin-left:500px; margin-top:10px"><b-icon icon="exclamation-circle" aria-hidden="true" align="right" @click="showModalReportPost($event,post)"></b-icon></h4>
+                         
+                        <h4 align="left" style="margin-top:-35px;">{{post.description}}</h4>
+                         <h5 align="left"><span v-for="(tag,t) in post.tags" :key="t">
+                                        #{{tag.name}}
+                                    </span>
+                        </h5>
+                        
+                        <h5 align="left"><b-icon icon="hand-thumbs-up" aria-hidden="true" @click="likePost($event,post)"></b-icon>{{post.numberOfLikes}}  likes 
+                        <b-icon icon="hand-thumbs-down" aria-hidden="true" @click="dislikePost($event,post)"></b-icon>{{post.numberOfDislikes}} dislikes <span style="margin-left:330px;"></span>
+                        <b-icon icon="bookmark" aria-hidden="true" align="right"></b-icon></h5>
+                        <h4 align="left"><b-icon icon="chat-square" aria-hidden="true"  @click="getComments($event,post)"></b-icon> {{post.numberOfComments}}  comments
+                        <input style="width: 90%; margin-top:10px;" type="text" v-model="comment"><span style="margin-left:10px;" ></span>
+                        <b-icon icon="check-circle" aria-hidden="true" @click="commentPost($event,post)"></b-icon></h4>
                     </b-card>
         </b-card>
+         <div> 
+          <b-modal ref="modal3" hide-footer scrollable title="Profiles who commented photo" size="lg" modal-class="b-modal">
+               <div modal-class="modal-dialog" role="document">
+                    <div class="modal-content" style="background-color:#e4e4e4; ">
+                         <div v-for="user in usersWhoCommented" v-bind:key="user.username" class="modal-body">
+                             
+                            <div class="row">
+                                <div class=" form-group col">
+                                     <label>Profile: {{user.usernameFrom}} </label><span style="margin-left:30px;" ></span>
+                                     <label > Comment : {{user.comment}}</label><span style="margin-left:30px;" ></span>
+                                     <label > Answer : {{user.answer}}</label>
+                                </div>
+                             </div><span style="margin-left:610px;" ></span>
+                             </div>
+                                            
+                    </div>                
+                </div>
+          </b-modal>
+       </div>
+        <div> 
+          <b-modal ref="modal4" hide-footer scrollable title="Report inappropriate content" size="lg" modal-class="b-modal">
+               <div modal-class="modal-dialog" role="document">
+                    <div class="modal-content" style="background-color:#e4e4e4; ">
+                            <div class="row">
+                                <div class=" form-group col">
+                                     <span style="margin-left:30px;" ></span>
+                                     <input style="margin-left: 10px;" type="text" class="form-control" v-model="description" placeholder="Enter description...">
+                                     <span style="margin-left:30px;" ></span>
+                                </div>
+                                 <b-button style="margin-top: 18px; width:100px ;height:50px;" pill variant="outline-danger" class = "btn btn-lg space_style" @click="reportPost">Report</b-button> 
+                             </div><span style="margin-top:30px;" ></span>               
+                    </div>                
+                </div>
+          </b-modal>
+       </div>
     </div>
 </template>
 
@@ -136,6 +202,7 @@ export default {
     return {
         selectedUser:[''],
         users: [],
+        friendsNotMuted: [],
         username: "",
         posts: [],
         stories: [],
@@ -149,6 +216,15 @@ export default {
         selectedLocation:[''],
         tags:[],
         locations:[],
+         comments:[],
+        comment:'',
+        usersWhoCommented:[],
+        answer:'',
+        commentId:'',
+        usernameTo:'',
+        usernameFrom:'',
+        postId:'',
+        description:''
         }
     },
     async mounted(){
@@ -160,6 +236,16 @@ export default {
              }
          }).then(response => {
                this.users = response.data
+         }).catch(res => {
+                       alert("Error");
+                        console.log(res);
+                 });
+       this.axios.get('http://localhost:8083/profileMicroservice/api/profile/getNotMuted',{ 
+             headers: {
+                 'Authorization': 'Bearer ' + token,
+             }
+         }).then(response => {
+               this.friendsNotMuted = response.data
                this.getFriednsPosts(response.data);
                this.getFriendsStories(response.data);
          }).catch(res => {
@@ -240,12 +326,15 @@ export default {
             .then(response => {
                 this.posts = response.data;
                 let video = "mp4";
-                for(let i=0; i< response.data.length; i++){
-                     if(!this.posts[i].fileName.includes(video)){
-                        this.posts[i].imageBytes = 'data:image/jpeg;base64,' + this.posts[i].imageBytes; 
-                    }else{
-                        this.posts[i].imageBytes = 'data:video/mp4;base64,' + this.posts[i].imageBytes;     
-                    }            
+               for(let i=0; i< this.posts.length; i++){
+                    for(let j=0; j< this.posts[i].fileNames.length; j++){
+                        if(!this.posts[i].fileNames[j].includes(video)){
+                            console.log("usao je u if");
+                            this.posts[i].images[j].imageBytes = 'data:image/jpeg;base64,' + this.posts[i].images[j].imageBytes;
+                        }else{
+                            this.posts[i].images[j].imageBytes = 'data:video/mp4;base64,' + this.posts[i].images[j].imageBytes;     
+                        }      
+                    }      
                 } 
             }).catch(res => {
                         alert("Profile is private");
@@ -293,6 +382,8 @@ export default {
                 usernameTo : post.username,
                 usernameFrom : this.loggeduser.username,
                 fileName : post.fileName,
+                fileNames : post.fileNames,
+                postId: post.id,
             }
             this.axios.post('http://localhost:8083/mediaMicroservice/post/likePost',postInfo,{ 
                 }).then(response => {
@@ -312,7 +403,8 @@ export default {
             const postInfo = {
                 usernameTo : post.username,
                 usernameFrom : this.loggeduser.username,
-                fileName : post.fileName,
+                fileNames : post.fileNames,
+                postId: post.id,
             }
             this.axios.post('http://localhost:8083/mediaMicroservice/post/dislikePost',postInfo,{ 
                 }).then(response => {
@@ -329,6 +421,65 @@ export default {
                 });
         },
         
+        commentPost: async function(event,post){
+            const postInfo = {
+                usernameTo : post.username,
+                usernameFrom : this.loggeduser.username,
+                fileNames : post.fileNames,
+                postId: post.id,
+                comment : this.comment,
+            }
+            this.axios.post('http://localhost:8083/mediaMicroservice/post/commentPost',postInfo,{ 
+                }).then(response => {
+                    alert("Picture is commented!");
+                    console.log(response);                
+                }).catch(res => {
+                    alert("Error, please try later!");
+                    console.log(res.response.data.message);
+
+                });
+        },
+         getComments: async function(event,post){
+            const postInfo = {
+                usernameTo : post.username,
+                fileName : post.fileName,
+                comment : this.comment,
+            }
+            this.axios.post('http://localhost:8083/mediaMicroservice/post/getMyCommentsInfo',postInfo,{ 
+                }).then(response => {
+                    this.usersWhoCommented = response.data
+                    this.$refs['modal3'].show();
+                    console.log(response);                
+                }).catch(res => {
+                    alert("Error,please try later");
+                    console.log(res.response.data.message);
+
+                });
+        },
+        showModalReportPost : function(event,post){
+               this.$refs['modal4'].show();
+               this.usernameTo = post.username,
+                this.usernameFrom = this.loggeduser.username,
+                this.postId= post.id;
+        },
+        reportPost: function(){
+            const postInfo = {
+                usernameTo : this.usernameTo,
+                usernameFrom : this.usernameFrom,
+                postId: this.postId,
+                description : this.description
+            }
+            this.axios.post('http://localhost:8083/mediaMicroservice/post/reportPost',postInfo,{ 
+                }).then(response => {
+                    alert("Picture is reported!");
+                    this.$refs['modal4'].hide();
+                    console.log(response);                
+                }).catch(res => {
+                    alert(res.response.data.message);
+                    console.log(res.response.data.message);
+
+                });
+        },
     }
 }
 
@@ -367,11 +518,16 @@ export default {
 
     }
     .serach_look{
+
         margin-left: 170%;
         margin-top: -8%;
     }
     .serach_look1{
-        margin-left: 115%;
+        
+
+        margin-left: 138%;
+        width: 20%;
+
         margin-top: -8%;
     }
     .post_look {

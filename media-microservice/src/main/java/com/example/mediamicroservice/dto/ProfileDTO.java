@@ -5,10 +5,26 @@ public class ProfileDTO {
 	private String name;
 	private String surname;
 	private String email;
+	private String currentUsername;
+	private String newUsername;
+	
+	
 	public ProfileDTO() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
+	
+	public ProfileDTO(String username, String name, String surname, String email, String currentUsername,
+			String newUsername) {
+		super();
+		this.username = username;
+		this.name = name;
+		this.surname = surname;
+		this.email = email;
+		this.currentUsername = currentUsername;
+		this.newUsername = newUsername;
+	}
+
 	public ProfileDTO(String username, String name, String surname, String email) {
 		super();
 		this.username = username;
@@ -39,6 +55,22 @@ public class ProfileDTO {
 	}
 	public void setEmail(String email) {
 		this.email = email;
+	}
+
+	public String getCurrentUsername() {
+		return currentUsername;
+	}
+
+	public void setCurrentUsername(String currentUsername) {
+		this.currentUsername = currentUsername;
+	}
+
+	public String getNewUsername() {
+		return newUsername;
+	}
+
+	public void setNewUsername(String newUsername) {
+		this.newUsername = newUsername;
 	}
 	
 }

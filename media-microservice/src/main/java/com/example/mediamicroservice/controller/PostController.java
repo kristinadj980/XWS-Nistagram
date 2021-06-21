@@ -20,6 +20,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.example.mediamicroservice.dto.MediaDTO;
 import com.example.mediamicroservice.dto.PostDTO;
+import com.example.mediamicroservice.dto.CommentDTO;
+import com.example.mediamicroservice.dto.InapropriateContentDTO;
+import com.example.mediamicroservice.dto.LikeDislikeInfoDTO;
 import com.example.mediamicroservice.dto.LikePostDTO;
 
 import com.example.mediamicroservice.model.Post;
@@ -42,13 +45,26 @@ public class PostController {
 	}
 	
 	private static String uploadDir = "user-photos";
+	private static String uploadDir2 = "verification-photos";
 
 	@PostMapping("/saveImage")
-    public String saveImage(@RequestParam("file") MultipartFile multipartFile ) throws IOException {
+    public List<String> saveImage(@RequestParam("file") List<MultipartFile> multipartFiles ) throws IOException {
+		List<String> fileNames = new ArrayList<String>();
+		for(MultipartFile multipartFile:multipartFiles) {
+	        String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename().replaceAll("\\s", "")); 
+	        fileNames.add(fileName);
+	        uploadDir = "user-photos";
+	        MediaUpload.saveFile(uploadDir, fileName, multipartFile);
+		}
+        return fileNames;
+    }
+	
+	@PostMapping("/saveImageForRequest")
+    public String saveImageForRequest(@RequestParam("file") MultipartFile multipartFile ) throws IOException {
 		
         String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename().replaceAll("\\s", "")); 
-        uploadDir = "user-photos";
-        MediaUpload.saveFile(uploadDir, fileName, multipartFile);
+        uploadDir2 = "verification-photos";
+        MediaUpload.saveFile(uploadDir2, fileName, multipartFile);
         return fileName;
     }
 	
@@ -63,10 +79,8 @@ public class PostController {
 
 	@GetMapping("/getMyPosts/{username}")
 	public ResponseEntity getMyPosts(@PathVariable String username) {
-		System.out.println("POGODIOOOOOOOOOOOOOOOOOOOO");
-		return new ResponseEntity(postService.findMyPosts(username), HttpStatus.OK); 
 		
-		//return (ResponseEntity<List<PostDTO>>) (myPosts == null ? new ResponseEntity<>(HttpStatus.NOT_FOUND) : ResponseEntity.ok(myPosts));
+		return new ResponseEntity(postService.findMyPosts(username), HttpStatus.OK); 
 
 	}
 	
@@ -95,31 +109,77 @@ public class PostController {
 	
 	@PostMapping("/getFriendsPosts")
 	public ResponseEntity<List<PostDTO>> getFriendsPosts(@RequestBody List<PostDTO> postDTOs) {
-		System.out.println("USPELOOOOOOOOOOOOOOOO");
 		try {
 			List<PostDTO> posts = new ArrayList<PostDTO>();
-			System.out.println("USPELOOOOOOOOOOOOOOOO");
 			for(PostDTO p:postDTOs) {
-				System.out.println("USPELOOOOOOOOOOOOOOOO");
 				List<PostDTO> friendPosts = new ArrayList<PostDTO>();
-				
-				System.out.println("USPELOOOOOOOOOOOOOOOO"+p.getFollowing());
+
 				friendPosts = postService.findMyPosts(p.getFollowing());
-				System.out.println("USPELOOOOOOOOOOOOOOOO");
-				for(PostDTO pf:friendPosts) {
-					System.out.println("USPELOOOOOOOOOOOOOOOO");
+				for(PostDTO pf:friendPosts)
 					posts.add(pf);
-				}
-				
 			}
-			System.out.println("USPELOOOOOOOOOOOOOOOO");
 			posts = postService.sortByDate(posts);
 			return new ResponseEntity(posts, HttpStatus.OK); 
 		}catch(Exception e) {
-			System.out.println("USPELOOOOOOOOOOOOOOOO" + e.getMessage());
 			e.printStackTrace();
 			return new ResponseEntity(HttpStatus.BAD_REQUEST);
 		}
 		
 	}
+	
+	@PostMapping("/getMyLikesInfo")
+    public ResponseEntity getMyLikesInfo(@RequestBody LikeDislikeInfoDTO infoDTO) {
+		
+		return new ResponseEntity(postService.findMyLikes(infoDTO), HttpStatus.OK); 
+
+	}
+	
+	@PostMapping("/getMyDislikesInfo")
+    public ResponseEntity getMyDislikesInfo(@RequestBody LikeDislikeInfoDTO infoDTO) {
+		
+		return new ResponseEntity(postService.findMyDislikes(infoDTO), HttpStatus.OK); 
+
+	}
+	
+	@PostMapping("/commentPost")
+	public ResponseEntity commentPost(@RequestBody LikePostDTO likePostDTO) {
+		postService.commentPost(likePostDTO);
+		
+		return new ResponseEntity(likePostDTO, HttpStatus.OK);
+	}
+	
+	@PostMapping("/getMyCommentsInfo")
+    public ResponseEntity getMyCommentsInfo(@RequestBody LikePostDTO infoDTO) {
+		
+		return new ResponseEntity(postService.findMyComments(infoDTO), HttpStatus.OK); 
+
+	}
+	
+	@GetMapping("/getMyFavouritePosts/{username}")
+	public ResponseEntity getMyFavouritePosts(@PathVariable String username) {
+		
+		return new ResponseEntity(postService.findMyFavouritePosts(username), HttpStatus.OK); 
+
+	}
+	
+	@PostMapping("/reportPost")
+	public ResponseEntity reportPost(@RequestBody InapropriateContentDTO dto) {
+		
+		return new ResponseEntity(postService.reportPost(dto), HttpStatus.OK); 
+	}
+	
+	@GetMapping("/getLikeDislikeHistory/{username}")
+	public ResponseEntity getMyLikeDislikeHistory(@PathVariable String username) {
+		
+		return new ResponseEntity(postService.getMyLikeDislikeHistory(username), HttpStatus.OK); 
+
+	}
+	
+	@PostMapping("/findPostPictureById")
+	public ResponseEntity findPostPictureById(@RequestBody PostDTO dto) {
+		
+		return new ResponseEntity(postService.findPostPictureById(dto.getId(),dto.getUsername()), HttpStatus.OK); 
+	}
+	
+
 }

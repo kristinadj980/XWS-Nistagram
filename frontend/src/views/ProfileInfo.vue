@@ -12,7 +12,6 @@
                     <b-icon icon="image" aria-hidden="true"></b-icon> Add post</b-button>
                 <b-button pill variant="outline-danger" class = "btn btn-lg space_style" v-on:click = "editProfile">
                     <b-icon icon="gear" aria-hidden="true"></b-icon> Edit profile</b-button>
-                
             </span>
                 <span  style="float:right;margin:15px">
                     <b-button pill variant="outline-danger" class = "btn btn-lg btn-light" style="margin-right:20px;" v-on:click = "logOut">Log Out</b-button>
@@ -21,7 +20,7 @@
         <b-card class="content_surface">
             <b-button  class="btn btn-info btn-lg space_style"  style="background-color:#f08080;margin-left:-1300px;" v-b-modal.modal-3>Archive stories</b-button>
                             <b-modal ref="modal-ref3" id="modal-3" title="Archive stories" hide-footer>
-                                <b-tabs 
+            <b-tabs 
             style="margin-top:70px;" 
             align="center" 
             active-nav-item-class="font-weight-bold text-uppercase text-danger"
@@ -90,13 +89,17 @@
             </b-tabs>
          </b-modal>       
                 <!-- INFO-->
+        <b-card no-body>
+            <b-tabs pills card>
+                <b-tab title="Profile info" active>
+      
                 <div class="card"  >
                 <div class="profile-img">
                    <!--   <img class="img-responsive" src="@/assets/user.png" style=" height:150px;" width="100%" /> -->
                   <img class="img-circle img-responsive rounded-circle"  src="@/assets/user.png" style="width:120px; height:120px;"  />  
                 </div>
                 <div class="custom-control custom-switch">
-                <b-button style="margin-left:905px; margin-top:-190px;" variant="outline-danger" size="lg" class = " mb-2 btn btn-lg space_style" v-on:click = "editPrivacy()">
+                <b-button style="margin-left:850px; margin-top:-190px;" variant="outline-danger" size="lg" class = " mb-2 btn btn-lg space_style" v-on:click = "editPrivacy()">
                     <b-icon v-if="profile.profileStatus == 'privateProfile'" icon="lock-fill" aria-hidden="true" tooltip="click to go public"></b-icon> 
                     <b-icon v-if="profile.profileStatus == 'publicProfile'" icon="unlock-fill" aria-hidden="true"  tooltip="click to go public"></b-icon> 
                 </b-button>
@@ -134,12 +137,10 @@
                         <!-- Modal --> 
                         <div class="mt-5 text-center top-buffer">
                             <b-button  class="btn btn-info btn-lg space_style" style="background-color:#f08080;" v-b-modal.modal-2>Edit password</b-button>
+                            <b-button  class="btn btn-info btn-lg space_style" style="background-color:#f08080;" v-b-modal.modal-4>Edit username</b-button>
                             <b-button  class="btn btn-info btn-lg space_style"  style="background-color:#f08080;" v-b-modal.modal-1>Edit profile info</b-button>
                             <b-modal ref="modal-ref" id="modal-1" title="Edit profile info" hide-footer>
                                 <div>
-                                    <h5 class ="text-justify top-buffer"> Username:
-                                        <b-form-input v-model="profile.username" label="Username" filled placeholder="Enter your username"></b-form-input>
-                                    </h5>
                                     <h5 class ="text-justify top-buffer"> Name:
                                         <b-form-input v-model="profile.name" label="First Name" filled placeholder="Enter your name"></b-form-input>
                                     </h5>
@@ -186,7 +187,7 @@
                                         <label for="password">New Password:</label>
                                         <VuePassword
                                             v-model="profile.newPassword"
-                                            id="password1"
+                                            id="password2"
                                             placeholder="Enter your current password"
                                            
                                         />
@@ -197,7 +198,7 @@
                                         <label for="password">Repeat New Password:</label>
                                         <VuePassword
                                             v-model="profile.repeatNewPassword"
-                                            id="password1"
+                                            id="password3"
                                             placeholder="Enter your current password"
                                         />
                                         </div>
@@ -208,11 +209,109 @@
                                     </b-row>
                                 </div>
                             </b-modal>
-                            </div>
-                            </div>
-                            </div>
-                            </div>
+                            <b-modal ref="modal-ref4" id="modal-4" title="Edit username" hide-footer>
+                                <div>
+                                    <b-row>
+                                        <b-col sm="6"> <h5 class ="text-justify top-buffer">Current username: </h5></b-col>
+                                    </b-row>
+                                    <b-row style="margin-top:10px;">
+                                        <b-col>
+                                            <b-form-input v-model="currentUsername"> </b-form-input>
+                                        </b-col>
+                                    </b-row>
+                                    <b-row style="margin-top:10px;">
+                                        <b-col sm="6"><h5 class ="text-justify top-buffer">New username: </h5></b-col>
+                                    </b-row>
+                                    <b-row style="margin-top:10px;">
+                                        <b-col>
+                                            <b-form-input v-model="newUsername" > </b-form-input>
+                                        </b-col>
+                                    </b-row>
+                                    <b-row style="margin-top:10px;" class="border border-danger"> 
+                                        <b-col sm="14"  style="background:#FFE6E6;"><h6 class ="text-justify top-buffer"><b-icon icon="info-circle" variant="danger" aria-hidden="true" ></b-icon>  After successfully edited username you will need to relog!</h6></b-col>
+                                        <b-col sm="14"  style="background:#FFE6E6;"><h6 class ="text-justify top-buffer">The system will automatically log you out!</h6></b-col>
+                                    </b-row>
+                                    <b-row style="float: left; margin: 30px;">
+                                        <b-button class="btn btn-info btn-lg space_style" style="background-color:#f08080; width:5cm;" v-on:click = "cancelUsername">Cancel</b-button>
+                                        <b-button class="btn btn-info btn-lg space_style" style="background-color:#f08080; width:5cm;" v-on:click = "updateUsername">Update</b-button>
+                                    </b-row>
+                                </div>
+                            </b-modal>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </b-tab>
+        <b-tab title="Profile Privacy">
+            <b-row>
+                <b-col sm="5"><h5 class ="text-justify top-buffer" align="left" style="margin-left:100px;"> Profile privacy: </h5></b-col>
+                <b-col sm="1">
+                    <b-button variant="outline-danger" size="lg" class = " mb-2 btn btn-lg space_style" v-on:click = "editPrivacy()">
+                        <b-icon v-if="profile.profileStatus == 'privateProfile'" icon="lock-fill" aria-hidden="true" tooltip="click to go public"></b-icon> 
+                        <b-icon v-if="profile.profileStatus == 'publicProfile'" icon="unlock-fill" aria-hidden="true"  tooltip="click to go private"></b-icon> 
+                    </b-button>
+                </b-col>
+            </b-row>
+
+            <b-row>
+                <b-col sm="5"><h5 class ="text-justify top-buffer" align="left" style="margin-left:100px;"> Tag allowance: </h5></b-col>
+                <b-col sm="1">
+                    <b-button  variant="outline-danger" size="lg" class = " mb-2 btn btn-lg space_style" v-on:click = "editTagAllowance()">
+                        <b-icon v-if="profile.allowedTags == true" icon="toggle-on" aria-hidden="true" tooltip="click to disable tags"></b-icon> 
+                        <b-icon v-if="profile.allowedTags == false" icon="toggle-off" aria-hidden="true"  tooltip="click to allow tags"></b-icon> 
+                    </b-button>
+                </b-col>
+            </b-row>
+
+            <b-row>
+                <b-col sm="5"><h5 class ="text-justify top-buffer" style="margin-left:100px;" align="left"> Message allowance: </h5></b-col>
+                <b-col sm="1">
+                    <b-button variant="outline-danger" size="lg" class=" mb-2 btn btn-lg space_style " v-on:click = "editMessageAllowance">
+                        <b-icon v-if="profile.allowedMessages == true" value="true" icon="toggle-on" aria-hidden="true" tooltip="click to disable messages"></b-icon>
+                        <b-icon v-if="profile.allowedMessages == false" value="false" icon="toggle-off" aria-hidden="true"  tooltip="click to allow messages"></b-icon> 
+                    </b-button>
+                </b-col>
+            </b-row>
+            
+        </b-tab>
+        <b-tab title="Mute friends" @click="showResult()">
+            <b-row v-for="(muted, index) in mutedFriends" v-bind:key="index" style="background: #f5f1f4;" >
+                <b-col sm="6" align-self="center"><strong><h3 class ="text-justify top-buffer" align="left" style="margin-left:350px;">{{muted}} </h3></strong></b-col>
+                <b-col sm="1" align-self="center">
+                    <b-button variant="outline-danger"  size="lg" class = " mb-2 btn btn-lg  space_style" v-on:click = "unmuteFriend(muted)"> Unmute</b-button>
+                </b-col>
+                <hr>
+            </b-row>
+            <b-row v-for="follow,index in following" v-bind:key="index" style="background: #f5f1f4;" >
+                <b-col sm="6" align-self="center"><strong><h3 class ="text-justify top-buffer" align="left" style="margin-left:350px;">{{follow}} </h3></strong></b-col>
+                <b-col sm="1" align-self="center">
+                    <b-button variant="outline-danger"  size="lg" class = " mb-2 btn btn-lg  space_style" v-on:click = "muteFriend(follow)"> Mute</b-button>
+                </b-col>
+                <hr>
+            </b-row>
+
+        </b-tab>
+       
+            <b-tab title="Verification request" >
+            <div id="verificationRequest">  
+            <form>
+            <h4 style="left: 10px;">Name: {{name}} </h4>
+            <h4 style="left: 10px;">Surname: {{surname}}</h4>
+            <select style="width:250px;" v-model="selectedCategory">
+                <option v-for="item in this.categories"  v-on:click ="addCategoryTolist($event, item)" v-bind:key="item.id" >
+                {{item}}</option> 
+            </select>
+            <h4 style="left: 10px; margin-top: 50px;" >Choose document image</h4>
+             <input type="file" name="image" accept="image/png, image/jpeg, video/mp4,video/x-m4v,video/*" id="file" ref="file" v-on:change="handleFileUpload()">
+            <b-button style="margin-left: 240px; margin-top: 40px;" pill variant="outline-danger" class = "btn btn-lg space_style" v-on:click = "sendVerificationRequest">
+                <b-icon icon="check-circle" aria-hidden="true"></b-icon> Send</b-button>
+            </form>
+            </div>   
+            </b-tab>  
+        </b-tabs>
         </b-card>
+        </b-card>
+
     </div>
 </template>
 
@@ -247,9 +346,18 @@ export default {
          fileNames:[],
         fileName:'',
         blocked:[],
+        currentUsername: "",
+        newUsername: "",
+        following: [],
+        mutedFriends: [],
+        categories:["influencer","sports","media","business","brand","organization"],
+        user:'',
+        file:'',
+        selectedCategory:'',
+        formData:''
         }
     },
-     mounted(){
+    mounted(){
      let token = localStorage.getItem('token').substring(1, localStorage.getItem('token').length-1);
         this.axios.get('http://localhost:8083/profileMicroservice/api/profile/account',{ 
              headers: {
@@ -262,8 +370,19 @@ export default {
          }).catch(res => {
                        alert("Error");
                         console.log(res);
-                 });
-        
+        });
+         this.axios.get('http://localhost:8083/profileMicroservice/api/profile/account',{ 
+             headers: {
+                 'Authorization': 'Bearer ' + token,
+             }
+         }).then(response => {
+              this.user = response.data;
+              this.name = this.user.name;
+              this.surname = this.user.surname;
+         }).catch(res => {
+               alert(Error)
+                console.log(res);
+            });
    },
     methods:{
         toggle () {
@@ -288,10 +407,15 @@ export default {
         cancel() {
             this.$refs['modal-ref'].hide();
         },
-         cancelPassword() {
+        cancelPassword() {
             this.$refs['modal-ref2'].hide();
         },
-       
+        cancelUsername() {
+            this.$refs['modal-ref4'].hide();
+        },
+        verificationRequest(){
+            window.location.href="/verificationRequest";
+        },
          update : function(){
             let token = localStorage.getItem('token').substring(1, localStorage.getItem('token').length-1);
            
@@ -344,6 +468,30 @@ export default {
                     console.log(response);
                 })
         },
+        updateUsername : function () {
+            const changeUsername ={
+                currentUsername : this.currentUsername,
+                newUsername : this.newUsername,
+            } 
+            let token = localStorage.getItem('token').substring(1, localStorage.getItem('token').length-1);
+            this.axios.post('http://localhost:8083/profileMicroservice/api/profile/updateUsername',changeUsername, { 
+                headers: {
+                    'Authorization': 'Bearer ' + token,
+                }})
+                .then(response => {
+                    console.log(response.data)
+                    if(response.data){
+                        this.logOut();
+                    }else{
+                        alert("The chosen username already exists!");
+                        this.newUsername = "";
+                    }
+                })
+                .catch(response => {
+                    alert("Please, try later.")
+                    console.log(response);
+                })
+        },
         editPrivacy:  function () {
             let token = localStorage.getItem('token').substring(1, localStorage.getItem('token').length-1);
             const userUsername ={
@@ -372,7 +520,80 @@ export default {
                     console.log(response);
                 })
         },
+        editTagAllowance: function(){
+            let token = localStorage.getItem('token').substring(1, localStorage.getItem('token').length-1);
+            const editAllowance ={
+                allowedTags : this.profile.allowedTags,
+            }
+            this.axios.post('http://localhost:8083/profileMicroservice/api/profile/editTagAllowance',editAllowance, { 
+                headers: {
+                    'Authorization': 'Bearer ' + token,
+                }})
+                .then(response => {
+                    console.log(response);
+                    this.profile.allowedTags = response.data;
+                })
+                .catch(response => {
+                    alert("Please, try later.")
+                    console.log(response);
+                })
+        },
+        editMessageAllowance: async function(){
+            let token = localStorage.getItem('token').substring(1, localStorage.getItem('token').length-1);
+            const editAllowance ={
+                allowedMessages : this.profile.allowedMessages,
+            } 
+            this.axios.post('http://localhost:8083/profileMicroservice/api/profile/editMessageAllowance',editAllowance, { 
+                headers: {
+                    'Authorization': 'Bearer ' + token,
+                }})
+                .then(response => {
+                    console.log(response);
+                    this.profile.allowedMessages = response.data;
+                })
+                .catch(response => {
+                    alert("Please, try later.")
+                    console.log(response);
+                })
+        },
+        muteFriend :function(friendForMute){
+            let token = localStorage.getItem('token').substring(1, localStorage.getItem('token').length-1);
+            const friendForMuteInfo ={
+                username : friendForMute,
+            } 
+            this.axios.post('http://localhost:8083/profileMicroservice/api/profile/mute',friendForMuteInfo, { 
+                headers: {
+                    'Authorization': 'Bearer ' + token,
+                }})
+                .then(response => {
+                    console.log(response.data);
+                    this.showResult();
+                })
+                .catch(response => {
+                    alert("Please, try later.")
+                    console.log(response);
+                })
+        },
+        unmuteFriend :function(friendForMute){
+            let token = localStorage.getItem('token').substring(1, localStorage.getItem('token').length-1);
+            const friendForMuteInfo ={
+                username : friendForMute,
+            } 
+            this.axios.post('http://localhost:8083/profileMicroservice/api/profile/unmute',friendForMuteInfo, { 
+                headers: {
+                    'Authorization': 'Bearer ' + token,
+                }})
+                .then(response => {
+                    console.log(response.data);
+                    this.showResult();
+                })
+                .catch(response => {
+                    alert("Please, try later.")
+                    console.log(response);
+                })
+        },
         getMyStories: function(person) {
+            console.log(person);
             this.axios.get('http://localhost:8083/mediaMicroservice/story/getArchiveStories/'+ person.username,)
             .then(response => {
                 this.stories = response.data;
@@ -543,6 +764,84 @@ let token = localStorage.getItem('token').substring(1, localStorage.getItem('tok
 
                 });
         },
+        showResult: async function(){
+            let token = localStorage.getItem('token').substring(1, localStorage.getItem('token').length-1);
+            this.axios.get('http://localhost:8083/profileMicroservice/api/profile/getNotMuted',{ 
+             headers: {
+                 'Authorization': 'Bearer ' + token,
+             }
+            }).then(response => {
+                this.following = response.data;
+            }).catch(res => {
+                        alert("Error");
+                            console.log(res);
+            });
+
+            this.axios.get('http://localhost:8083/profileMicroservice/api/profile/getMuted',{ 
+                headers: {
+                    'Authorization': 'Bearer ' + token,
+                }
+            }).then(response => {
+                this.mutedFriends = response.data;
+            }).catch(res => {
+                        alert("Error");
+                            console.log(res);
+            });
+
+        },
+         handleFileUpload:function(){
+            this.file = this.$refs.file.files[0];
+        },
+        addCategoryTolist : function(event, item) {
+            this.selectedCategory = item;
+            alert(this.selectedCategory)
+        },
+        sendRequest :function(){  
+        let token = localStorage.getItem('token').substring(1, localStorage.getItem('token').length-1);
+            const info= {
+                name : this.name,
+                surname : this.surname,
+                verificationCategory : this.selectedCategory,
+                fileName : this.fileName,
+                username : this.user.username,
+                 }
+          
+          this.axios.post('http://localhost:8083/profileMicroservice/api/profile/verificationRequest',info,{ 
+               headers: {
+                 'Authorization': 'Bearer ' + token,
+             }
+                }).then(response => {
+                    alert("Request is sent!");
+                    console.log(response);                
+                }).catch(res => {
+                    alert(res.response.data.message);
+                });
+        },
+        sendVerificationRequest: function(){
+            let token = localStorage.getItem('token').substring(1, localStorage.getItem('token').length-1);
+            let formData = new FormData();
+            formData.append('file', this.file);
+            
+            this.axios.post('http://localhost:8083/mediaMicroservice/post/saveImageForRequest',formData,{
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                    'Authorization': 'Bearer ' + token
+                }
+                }).then(response => {
+                        this.fileName = response.data
+                       //alert(this.fileName)
+                       //alert("Success")
+                       console.log(response.data)
+                       this.sendRequest();
+                       
+                  
+                    })
+                    .catch(response => {
+                    console.log(response.data)
+                    alert("Eror")
+                    
+                    });  
+        },
     }
 }
 </script>
@@ -562,7 +861,7 @@ let token = localStorage.getItem('token').substring(1, localStorage.getItem('tok
         height: 90px;
     }
     .space_style{
-        margin-right:15px;
+        margin-right:1px;
         margin-left:10px;
     }
     .block_style{
@@ -587,4 +886,21 @@ let token = localStorage.getItem('token').substring(1, localStorage.getItem('tok
         width: 50%;
         margin-top: -8%;
     }
+     form{
+        margin-left: 60px;
+        width: 500px;
+    }
+    #verificationRequest {
+        font-family: Avenir, Helvetica, Arial, sans-serif;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        text-align: left;
+        color: #692d5a;
+        margin: auto;
+        margin-top: 40px;
+        margin-bottom: 40px;
+        width: 50%;
+        border: 4px solid #692d5a;
+        padding: 40px;
+        }
 </style>

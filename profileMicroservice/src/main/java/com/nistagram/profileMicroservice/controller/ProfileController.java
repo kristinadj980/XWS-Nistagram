@@ -23,12 +23,16 @@ import com.nistagram.profileMicroservice.dto.EditProfileDTO;
 import com.nistagram.profileMicroservice.dto.FollowingDTO;
 import com.nistagram.profileMicroservice.dto.PostDTO;
 import com.nistagram.profileMicroservice.dto.RegistredUserDTO;
+import com.nistagram.profileMicroservice.dto.VerificationRequestDTO;
 import com.nistagram.profileMicroservice.model.Person;
 import com.nistagram.profileMicroservice.model.Profile;
 import com.nistagram.profileMicroservice.model.ProfileStatus;
 import com.nistagram.profileMicroservice.repository.PersonRepository;
 import com.nistagram.profileMicroservice.repository.ProfileRepository;
+import com.nistagram.profileMicroservice.model.RequestStatus;
+import com.nistagram.profileMicroservice.model.VerificationRequest;
 import com.nistagram.profileMicroservice.service.implService.ProfileService;
+import com.nistagram.profileMicroservice.service.implService.VerificationRequestService;
 
 
 @RestController
@@ -40,18 +44,19 @@ public class ProfileController {
 	private final MediaConnection mediaConnection;
 	private final PersonRepository personRepository;
 	private final ProfileRepository profileRepository;
+	private final VerificationRequestService verificationRequestService;
 	
 	@Autowired
 	public ProfileController(ProfileService profileService, MediaConnection mediaConnection,
-			PersonRepository personRepository, ProfileRepository profileRepository) {
+			PersonRepository personRepository, ProfileRepository profileRepository,
+			VerificationRequestService verificationRequestService) {
 		super();
 		this.profileService = profileService;
 		this.mediaConnection = mediaConnection;
 		this.personRepository = personRepository;
-		this.profileRepository=profileRepository;
+		this.profileRepository = profileRepository;
+		this.verificationRequestService = verificationRequestService;
 	}
-
-	
 
 	@PostMapping("/proba")
 	public ResponseEntity<?> proba()
@@ -70,9 +75,14 @@ public class ProfileController {
 		Authentication currentUser = SecurityContextHolder.getContext().getAuthentication();
 		Person person = (Person) currentUser.getPrincipal();
 		Profile profile = profileService.findById(person.getId());
-		EditProfileDTO editProfileDTO = new EditProfileDTO(profile.getUsername(), profile.getName(), profile.getSurname(), profile.getEmail(), profile.getPhoneNumber(),
-				profile.getBirthDate(), profile.getGender(), profile.getWebsite(), profile.getBiography(), profile.getProfileStatus());
-		
+		EditProfileDTO editProfileDTO = new EditProfileDTO();
+		if(profile.getVerificationRequest() != null && profile.getVerificationRequest().getRequestStatus().equals(RequestStatus.accepted)) {
+		editProfileDTO = new EditProfileDTO(profile.getUsername(), profile.getName(), profile.getSurname(), profile.getEmail(), profile.getPhoneNumber(),
+				profile.getBirthDate(), profile.getGender(), profile.getWebsite(), profile.getBiography(), profile.getProfileStatus(), profile.getAllowedTags(), profile.getAllowedMessages(),true, profile.getVerificationRequest().getCategory());
+		}else {
+		editProfileDTO = new EditProfileDTO(profile.getUsername(), profile.getName(), profile.getSurname(), profile.getEmail(), profile.getPhoneNumber(),
+					profile.getBirthDate(), profile.getGender(), profile.getWebsite(), profile.getBiography(), profile.getProfileStatus(), profile.getAllowedTags(), profile.getAllowedMessages(),false,null);
+		}
 		return (ResponseEntity<EditProfileDTO>) (profile == null ? new ResponseEntity<>(HttpStatus.NOT_FOUND) : ResponseEntity.ok(editProfileDTO));
 
 	}
@@ -96,6 +106,16 @@ public class ProfileController {
 			return new ResponseEntity<>("Password successfully updated!", HttpStatus.OK);
 		} catch (Exception e) {
 			return new ResponseEntity<>("Something went wrong!", HttpStatus.BAD_REQUEST);
+		}
+	}
+	
+	@PostMapping("/updateUsername")
+	@PreAuthorize("hasRole('REGISTRED_USER')")
+	public ResponseEntity<Boolean> updateUsername(@RequestBody EditProfileDTO editProfileDTO) {
+		try {
+			return new ResponseEntity<>(profileService.updateUsername(editProfileDTO), HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
 	}
 	
@@ -193,13 +213,24 @@ public class ProfileController {
 		
 	}
 	
+
 	@GetMapping("/getFollowers/{username}")
 	@PreAuthorize("hasRole('REGISTRED_USER')")  
 	public ResponseEntity<List<FollowingDTO>> getFollowers(@PathVariable String username) {
 		System.out.println("AAAAAAAAAAAAAAAAAAAAAAA");
 		try {
 			return new ResponseEntity<>(profileService.getFollowers(username), HttpStatus.OK);
-			
+		} catch (Exception e) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+	}
+
+	@GetMapping("/getFollowers")
+	@PreAuthorize("hasRole('REGISTRED_USER')")  
+	public ResponseEntity<List<FollowingDTO>> getFollowers() {
+		try {
+			return new ResponseEntity<>(profileService.getFollowers(), HttpStatus.OK);
+
 		} catch (Exception e) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
@@ -381,4 +412,87 @@ public class ProfileController {
 		return (ResponseEntity<List<String>>) (privateProfiles == null
 				? new ResponseEntity<>(HttpStatus.NOT_FOUND) : ResponseEntity.ok(privateProfiles));
 	}
+	@PostMapping("/editTagAllowance")
+	@PreAuthorize("hasRole('REGISTRED_USER')")
+	public ResponseEntity<Boolean> updateTagAllowance(@RequestBody EditProfileDTO editProfileDTO) {
+		try {
+			
+			return new ResponseEntity<>(profileService.updateTagAllowance(editProfileDTO.getAllowedTags()),HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+	}
+	@PostMapping("/editMessageAllowance")
+	@PreAuthorize("hasRole('REGISTRED_USER')")
+	public ResponseEntity<Boolean> updateMessageAllowance(@RequestBody EditProfileDTO editProfileDTO) {
+		try {
+			return new ResponseEntity<>(profileService.updateMessageAllowance(editProfileDTO.getAllowedMessages()),HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+	}
+	
+	@GetMapping("/getMuted")
+	@PreAuthorize("hasRole('REGISTRED_USER')")
+	public ResponseEntity<List<String>> getMuted() {
+		try {
+			return new ResponseEntity<>(profileService.getMuted(),HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+	}
+
+	@PostMapping("/verificationRequest")
+	@PreAuthorize("hasRole('REGISTRED_USER')")
+	public ResponseEntity sendRequest(@RequestBody VerificationRequestDTO verificationRequestDTO){
+		try {
+			return new ResponseEntity<>(profileService.sendRequest(verificationRequestDTO), HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+	}
+
+	@GetMapping("/getNotMuted")
+	@PreAuthorize("hasRole('REGISTRED_USER')")
+	public ResponseEntity<List<String>> getNotMuted() {
+		try {
+			return new ResponseEntity<>(profileService.getNotMuted(),HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+	}
+	
+	@PostMapping("/mute")
+	@PreAuthorize("hasRole('REGISTRED_USER')")
+	public ResponseEntity<List<String>> muteFriend(@RequestBody EditProfileDTO editProfileDTO) {
+		try {
+			return new ResponseEntity<>(profileService.muteFriend(editProfileDTO),HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+	}
+	
+	@PostMapping("/unmute")
+	@PreAuthorize("hasRole('REGISTRED_USER')")
+	public ResponseEntity unmuteFriend(@RequestBody EditProfileDTO editProfileDTO) {
+		try {
+			profileService.unmuteFriend(editProfileDTO);
+			return new ResponseEntity<>(HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+	}
+	
+	@GetMapping("/getAllRequests")
+	@PreAuthorize("hasRole('ADMINISTRATOR')")  
+	public ResponseEntity<List<VerificationRequestDTO>> getVerificationRequests() {
+		try {
+			return new ResponseEntity<>(verificationRequestService.getVerificationRequests(), HttpStatus.OK);
+			
+		} catch (Exception e) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+		
+	}
+	
 }
