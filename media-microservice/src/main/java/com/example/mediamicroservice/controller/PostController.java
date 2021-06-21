@@ -113,6 +113,7 @@ public class PostController {
 			List<PostDTO> posts = new ArrayList<PostDTO>();
 			for(PostDTO p:postDTOs) {
 				List<PostDTO> friendPosts = new ArrayList<PostDTO>();
+
 				friendPosts = postService.findMyPosts(p.getFollowing());
 				for(PostDTO pf:friendPosts)
 					posts.add(pf);

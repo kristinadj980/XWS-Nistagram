@@ -2,6 +2,8 @@ package com.example.mediamicroservice.service;
 
 import java.util.List;
 
+
+import com.example.mediamicroservice.dto.LocationDTO;
 import com.example.mediamicroservice.dto.LikeDislikeHistoryDTO;
 import com.example.mediamicroservice.dto.LikeDislikeInfoDTO;
 import com.example.mediamicroservice.dto.LikePostDTO;
@@ -13,7 +15,10 @@ public interface IPostService {
 	
 	Post addNewPost(PostDTO postDTO);
 	List<PostDTO> findMyPosts(String username);
+	List<PostDTO> findAllPosts();
 	List<PostDTO> sortByDate(List<PostDTO> allPosts);
+	List<PostDTO> findPostsByTag(String tag);
+	List<PostDTO> findPostsByLocation(LocationDTO location);
 	Integer likeThisPost(LikePostDTO likePostDTO);
 	Integer dislikeThisPost(LikePostDTO likePostDTO);
 	List<LikeDislikeInfoDTO> findMyLikes(LikeDislikeInfoDTO dtoInfo);
@@ -25,4 +30,5 @@ public interface IPostService {
 	List<PostDTO> findMyFavouritePosts(String username);
 	List<LikeDislikeHistoryDTO> getMyLikeDislikeHistory(String username);
 	List<PostDTO> findPostPictureById(Long postId, String username);
+
 }

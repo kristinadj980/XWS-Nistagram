@@ -27,6 +27,8 @@ import com.nistagram.profileMicroservice.dto.VerificationRequestDTO;
 import com.nistagram.profileMicroservice.model.Person;
 import com.nistagram.profileMicroservice.model.Profile;
 import com.nistagram.profileMicroservice.model.ProfileStatus;
+import com.nistagram.profileMicroservice.repository.PersonRepository;
+import com.nistagram.profileMicroservice.repository.ProfileRepository;
 import com.nistagram.profileMicroservice.model.RequestStatus;
 import com.nistagram.profileMicroservice.model.VerificationRequest;
 import com.nistagram.profileMicroservice.service.implService.ProfileService;
@@ -40,12 +42,19 @@ public class ProfileController {
 	
 	private final ProfileService profileService;
 	private final MediaConnection mediaConnection;
+	private final PersonRepository personRepository;
+	private final ProfileRepository profileRepository;
 	private final VerificationRequestService verificationRequestService;
 	
 	@Autowired
-	public ProfileController(ProfileService profileServie,MediaConnection mediaConnection,VerificationRequestService verificationRequestService) {
-		this.profileService = profileServie;
+	public ProfileController(ProfileService profileService, MediaConnection mediaConnection,
+			PersonRepository personRepository, ProfileRepository profileRepository,
+			VerificationRequestService verificationRequestService) {
+		super();
+		this.profileService = profileService;
 		this.mediaConnection = mediaConnection;
+		this.personRepository = personRepository;
+		this.profileRepository = profileRepository;
 		this.verificationRequestService = verificationRequestService;
 	}
 
@@ -141,8 +150,20 @@ public class ProfileController {
 		
 	}
 	@GetMapping("/getAllUsers")
+	@PreAuthorize("hasRole('REGISTRED_USER')")
 	public ResponseEntity<List<Profile>> getAllUsers() {	
 		List<Profile> usersProfiles = profileService.findAll();
+		
+		Authentication currentUser = SecurityContextHolder.getContext().getAuthentication();
+		Person person = (Person) currentUser.getPrincipal();
+		Profile user = profileService.findById(person.getId());
+		List<Profile> blockedUsers=user.getBlockedUsers();
+		for(Profile p:blockedUsers) {
+			
+				usersProfiles.remove(p);
+				System.out.println("UKLANJA PRETRAGA");
+			}
+		
 		
 		return (ResponseEntity<List<Profile>>) (usersProfiles == null
 				? new ResponseEntity<>(HttpStatus.NOT_FOUND) : ResponseEntity.ok(usersProfiles));
@@ -171,9 +192,18 @@ public class ProfileController {
 		return new ResponseEntity(profileService.getFriendStatus(username), HttpStatus.OK); 
 	}
 	
+	@GetMapping("/getCloseFriendsStatus/{username}")
+	public ResponseEntity getCloseFriendsStatus(@PathVariable List<Profile> profile) {
+		System.out.print("U kontroleru jeeeeeeeeeeeeeeeeeeeeee");
+		
+		return new ResponseEntity(profileService.closeFriends(profile), HttpStatus.OK); 
+	}
+	
 	@GetMapping("/getFollowingUsers")
 	@PreAuthorize("hasRole('REGISTRED_USER')")  
 	public ResponseEntity<List<FollowingDTO>> getFollowingUsers() {
+		
+		
 		try {
 			return new ResponseEntity<>(profileService.getFollowingUsers(), HttpStatus.OK);
 			
@@ -183,18 +213,205 @@ public class ProfileController {
 		
 	}
 	
+
+	@GetMapping("/getFollowers/{username}")
+	@PreAuthorize("hasRole('REGISTRED_USER')")  
+	public ResponseEntity<List<FollowingDTO>> getFollowers(@PathVariable String username) {
+		System.out.println("AAAAAAAAAAAAAAAAAAAAAAA");
+		try {
+			return new ResponseEntity<>(profileService.getFollowers(username), HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+	}
+
 	@GetMapping("/getFollowers")
 	@PreAuthorize("hasRole('REGISTRED_USER')")  
 	public ResponseEntity<List<FollowingDTO>> getFollowers() {
 		try {
 			return new ResponseEntity<>(profileService.getFollowers(), HttpStatus.OK);
-			
+
 		} catch (Exception e) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
 		
 	}
 	
+	@PostMapping("/addCloseFriend")
+	@PreAuthorize("hasRole('REGISTRED_USER')")
+	public ResponseEntity<String> addCloseFriend(@RequestBody String username) {
+		System.out.println("KONTROLER"+username);
+		  
+		Authentication currentUser = SecurityContextHolder.getContext().getAuthentication();
+		Person person = (Person) currentUser.getPrincipal();
+		Profile logedUser = profileService.findById(person.getId());
+		System.out.println(logedUser.getUsername());
+		
+		List<Profile> closedFriends=logedUser.getCloseFriends();
+		Boolean ima=false;
+		for(Profile p:closedFriends) {
+			if(p.getUsername().equals(username.substring(0, username.length()-1))) {
+				//throw new IllegalArgumentException("Already close friend!");
+				//return new ResponseEntity<>("Already close friend!!", HttpStatus.BAD_REQUEST);
+				System.out.println("U ifu jeeeee");
+				ima=true;
+				break;
+		}else {
+			ima=false;
+		}
+	    }
+		
+		if(ima) {
+			return new ResponseEntity<>("Already close friend!!", HttpStatus.BAD_REQUEST);
+			 //throw new IllegalArgumentException("Already close friendwd");
+		}else {
+			profileService.addCloseFriend(username);
+			return new ResponseEntity<>("Close friend successfully added!", HttpStatus.CREATED);
+		}	
+	}
+	@PostMapping("/deleteCloseFriend")
+	@PreAuthorize("hasRole('REGISTRED_USER')")
+	public ResponseEntity<String> deleteCloseFriend(@RequestBody String username) {
+		System.out.println("KONTROLER"+username);
+		  
+		Authentication currentUser = SecurityContextHolder.getContext().getAuthentication();
+		Person person = (Person) currentUser.getPrincipal();
+		Profile logedUser = profileService.findById(person.getId());
+		System.out.println(logedUser.getUsername());
+		
+		List<Profile> closedFriends=logedUser.getCloseFriends();
+		Boolean ima=false;
+		for(Profile p:closedFriends) {
+			if(p.getUsername().equals(username.substring(0, username.length()-1))) {
+				//throw new IllegalArgumentException("Already close friend!");
+				//return new ResponseEntity<>("Already close friend!!", HttpStatus.BAD_REQUEST);
+				System.out.println("U ifu jeeeee");
+				ima=true;
+				break;
+		}else {
+			ima=false;
+		}
+	    }
+		
+		if(!ima) {
+			return new ResponseEntity<>("Not close friend!!", HttpStatus.BAD_REQUEST);
+			 //throw new IllegalArgumentException("Already close friendwd");
+		}else {
+			profileService.deleteCloseFriend(username);
+			return new ResponseEntity<>("Close friend successfully deleted!", HttpStatus.CREATED);
+		}	
+	}
+	@GetMapping("/getCloseFriends")
+	@PreAuthorize("hasRole('REGISTRED_USER')")
+	public ResponseEntity<List<FollowingDTO>> getCloseFriends(){
+		
+		System.out.println("U KONTROLERU SAM");
+		Authentication currentUser = SecurityContextHolder.getContext().getAuthentication();
+		Person person = (Person) currentUser.getPrincipal();
+		Profile logedUser = profileService.findByUsername(person.getUsername());
+		
+		System.out.println("KONTROLER"+logedUser.getUsername());
+		
+		List<Profile> following=new ArrayList<>();
+		List<Profile> usernames=logedUser.getFollowing();
+		
+		for(Profile u:usernames) {
+			Profile p=profileService.findByUsername(u.getUsername());
+			following.add(p);
+		}
+		
+		List<FollowingDTO> profiles=new ArrayList<>();
+		for(Profile p:following) {
+			if(p.getCloseFriends().contains(logedUser)) {
+				profiles.add(new FollowingDTO(p.getUsername()));
+			}
+		}
+		/*
+		for(String s:profiles) {
+			System.out.println(s);
+		}*/
+		//Vracam listu prpfila kod koga je ulogovani u bliskim
+		return new ResponseEntity<>(profiles,HttpStatus.OK);
+	}
+	@GetMapping("/getBlockedUsers")
+	@PreAuthorize("hasRole('REGISTRED_USER')")
+	public ResponseEntity<List<FollowingDTO>> getBlockedUsers(){
+		
+		System.out.println("KONTROLER ZA BLOKIRANE USERE");
+		Authentication currentUser = SecurityContextHolder.getContext().getAuthentication();
+		Person person = (Person) currentUser.getPrincipal();
+		Profile logedUser = profileService.findByUsername(person.getUsername());
+		
+		System.out.println("KONTROLER"+logedUser.getUsername());
+		
+		List<Profile> usernames=logedUser.getBlockedUsers();
+		
+		List<FollowingDTO> profiles=new ArrayList<>();
+	
+		for(Profile u:usernames) {
+			profiles.add(new FollowingDTO(u.getUsername()));
+		}
+		//Vracam listu prpfila kod koga je ulogovani u bliskim
+		return new ResponseEntity<>(profiles,HttpStatus.OK);
+	}
+	
+	@PostMapping("/blockUser")
+	@PreAuthorize("hasRole('REGISTRED_USER')")
+	public ResponseEntity<String> blockUser(@RequestBody String username) {
+		System.out.println("KONTROLER za blokiranje"+username);
+		  
+		Authentication currentUser = SecurityContextHolder.getContext().getAuthentication();
+		Person person = (Person) currentUser.getPrincipal();
+		Profile logedUser = profileService.findById(person.getId());
+		System.out.println(logedUser.getUsername());
+		
+		//List<Profile> blockedFriends=logedUser.getBlockedUsers();
+		
+		
+			profileService.blockUser(username);
+			return new ResponseEntity<>("User successufully blocked!", HttpStatus.CREATED);
+		}	
+	
+
+	@PostMapping("/unblockUser")
+	@PreAuthorize("hasRole('REGISTRED_USER')")
+	public ResponseEntity<String> unblockUser(@RequestBody String username) {
+		System.out.println("KONTROLER UNBLOCK "+username);
+		  
+		Authentication currentUser = SecurityContextHolder.getContext().getAuthentication();
+		Person person = (Person) currentUser.getPrincipal();
+		Profile logedUser = profileService.findById(person.getId());
+		System.out.println(logedUser.getUsername());
+		
+		Profile p=profileService.findByUsername(username.substring(0, username.length()-1));
+		logedUser.getBlockedUsers().remove(p);
+		logedUser.getFollowing().add(p);
+		logedUser.getFollowers().add(p);
+		profileRepository.save(logedUser);
+		
+		p.getFollowing().add(logedUser);
+		p.getFollowers().add(logedUser);
+		profileRepository.save(p);
+		
+			return new ResponseEntity<>("User successufully unblocked!", HttpStatus.CREATED);
+		}	
+	
+	
+	@GetMapping("/getPublicProfiles")
+	public ResponseEntity<List<String>> getPublicProfiles() {	
+		List<String> publicProfiles = personRepository.getPublicProfiles();
+		
+		return (ResponseEntity<List<String>>) (publicProfiles == null
+				? new ResponseEntity<>(HttpStatus.NOT_FOUND) : ResponseEntity.ok(publicProfiles));
+	}
+	
+	@GetMapping("/getPrivateProfiles")
+	public ResponseEntity<List<String>> getPrivateProfiles(Long id) {	
+		List<String> privateProfiles = personRepository.getPrivateProfiles(id);
+		
+		return (ResponseEntity<List<String>>) (privateProfiles == null
+				? new ResponseEntity<>(HttpStatus.NOT_FOUND) : ResponseEntity.ok(privateProfiles));
+	}
 	@PostMapping("/editTagAllowance")
 	@PreAuthorize("hasRole('REGISTRED_USER')")
 	public ResponseEntity<Boolean> updateTagAllowance(@RequestBody EditProfileDTO editProfileDTO) {

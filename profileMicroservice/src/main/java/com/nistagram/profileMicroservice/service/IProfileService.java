@@ -22,7 +22,13 @@ public interface IProfileService {
 	List<Profile> findAll();
 	void updateProfileStatus(String username);
 	List<FollowingDTO> getFollowingUsers();
+	List<FollowingDTO> getFollowers(String username);
 	FriendRequestStatus getFriendStatus(String username);
+	void addCloseFriend(String username);
+	void deleteCloseFriend(String username);
+	Boolean closeFriends(List<Profile> profiles);
+	void blockUser(String username);
+	void unblockUser(String username);
 	Boolean updateMessageAllowance(Boolean messageAllowance);
 	Boolean updateTagAllowance(Boolean tagAllowance);
 	List<String> getMuted();

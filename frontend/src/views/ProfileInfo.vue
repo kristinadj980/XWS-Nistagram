@@ -35,12 +35,60 @@
                         <h4 align="left"><b-icon icon="person-circle" aria-hidden="true"></b-icon>  {{story.username}}</h4>
                         </b-row>
                         <h6 align="left">{{story.locationDTO.city}},{{story.locationDTO.street}},{{story.locationDTO.objectName}},{{story.locationDTO.country}}</h6>
-                        <b-img thumbnail  v-bind:src="story.imageBytes" alt="Image 1"></b-img>
+                        <b-img v-if="!story.fileName.includes(videoText)" thumbnail  v-bind:src="story.imageBytes" alt="Image 1"></b-img>
+                        <video v-if="story.fileName.includes(videoText)" autoplay controls v-bind:src="story.imageBytes" width="400" height="400" style="display:block; margin-left:auto; margin-right:auto"></video>
                         <h4 align="left">{{story.description}}</h4>
                     </b-card>
                 </b-tab>
             </b-tabs>
          </b-modal>
+
+        <!--BLISKI PRIJATELJI-->
+         <b-button  class="btn btn-info btn-lg space_style"  style="background-color:#f08080;margin-left:-1000px;" v-on:click = "getFollowers"  v-b-modal.modal-4>Close friends</b-button>
+                  <b-modal ref="modal-ref4" id="modal-4" title="Close friends" hide-footer>
+                                <b-tabs 
+            style="margin-top:70px;" 
+            align="center" 
+            active-nav-item-class="font-weight-bold text-uppercase text-danger"
+            active-tab-class="font-weight-bold"
+            content-class="mt-4">
+                <b-tab active>
+                <template #title>
+                   <b-icon icon="grid3x3-gap" aria-hidden="true"></b-icon><strong> Close friends</strong>
+                </template>
+                    <b-card class="post_look" v-for="friend in friends" v-bind:key="friend.following">
+                        <b-row >
+                        <h4 align="left"><b-icon icon="person-circle" aria-hidden="true"></b-icon>  {{friend.following}}</h4>
+                        <b-button  variant="danger" align="right" class="btn btn-info btn-lg space_style" size="sm" style="background-color:#f08080;"  @click="addCloseFriend($event,friend)"  >Add</b-button>
+                        <b-button  align="right" class="btn btn-info btn-lg space_style" size="sm" style="background-color:#f08080;" @click="deleteCloseFriend($event,friend)"  >Delete</b-button>
+                        </b-row>
+                    </b-card>
+                </b-tab>
+            </b-tabs>
+         </b-modal>       
+         <!--   BLOKIRANI  -->
+          <b-button  class="btn btn-info btn-lg space_style"  style="background-color:#f08080;margin-top:150px" v-on:click = "getBlockedUsers"  v-b-modal.modal-6>Blocked users</b-button>
+                  <b-modal ref="modal-ref6" id="modal-6" title="Blocked users" hide-footer>
+                                <b-tabs 
+            style="margin-top:70px;" 
+            align="center" 
+            active-nav-item-class="font-weight-bold text-uppercase text-danger"
+            active-tab-class="font-weight-bold"
+            content-class="mt-4">
+                <b-tab active>
+                <template #title>
+                   <b-icon icon="grid3x3-gap" aria-hidden="true"></b-icon><strong>Blocked users </strong>
+                </template>
+                    <b-card class="post_look" v-for="friend in blocked" v-bind:key="friend.following">
+                        <b-row >
+                        <h4 align="left"><b-icon icon="person-circle" aria-hidden="true"></b-icon>  {{friend.following}}</h4>
+                        <b-button  variant="danger" align="right" class="btn btn-info btn-lg space_style" size="sm" style="background-color:#f08080;"  @click="unblockUser($event,friend)"  >Unblock</b-button>
+                        </b-row>
+                    </b-card>
+                </b-tab>
+            </b-tabs>
+         </b-modal>       
+                <!-- INFO-->
         <b-card no-body>
             <b-tabs pills card>
                 <b-tab title="Profile info" active>
@@ -294,6 +342,10 @@ export default {
         selectedUser:[''],
         profileStatus: "",
         stories: [],
+        friends: [],
+         fileNames:[],
+        fileName:'',
+        blocked:[],
         currentUsername: "",
         newUsername: "",
         following: [],
@@ -301,7 +353,6 @@ export default {
         categories:["influencer","sports","media","business","brand","organization"],
         user:'',
         file:'',
-        fileName:'',
         selectedCategory:'',
         formData:''
         }
@@ -315,6 +366,7 @@ export default {
          }).then(response => {
                this.profile = response.data;
                this.getMyStories(response.data);
+               //this.getFollowers(response.data);
          }).catch(res => {
                        alert("Error");
                         console.log(res);
@@ -545,14 +597,172 @@ export default {
             this.axios.get('http://localhost:8083/mediaMicroservice/story/getArchiveStories/'+ person.username,)
             .then(response => {
                 this.stories = response.data;
+                 let video = "mp4"
                 for(let i=0; i< response.data.length; i++){
-                        this.stories[i].imageBytes = 'data:image/jpeg;base64,' + this.stories[i].imageBytes;                
+                        if(!this.stories[i].fileName.includes(video)){
+                        console.log("slika jeee");
+                        this.stories[i].imageBytes = 'data:image/jpeg;base64,' + this.stories[i].imageBytes; 
+                    }else{
+                        console.log("video jeee");
+                        this.stories[i].imageBytes = 'data:video/mp4;base64,' + this.stories[i].imageBytes;     
+                    }                            
                 } 
             }).catch(res => {
                         alert("Error");
                             console.log(res);
                     });
                     
+        },
+        getFollowers: function() {
+            let token = localStorage.getItem('token').substring(1, localStorage.getItem('token').length-1);
+            this.axios.get('http://localhost:8083/profileMicroservice/api/profile/account',{ 
+             headers: {
+                 'Authorization': 'Bearer ' + token,
+             }
+         }).then(response => {
+               this.profile = response.data;
+               console.log(this.profile.username);
+               //this.getMyStories(response.data);
+              // this.getFollowers(response.data);
+         }).catch(res => {
+                       alert("Error");
+                        console.log(res);
+                 });
+            console.log(this.profile.username);
+            this.axios.get('http://localhost:8083/profileMicroservice/api/profile/getFollowers/'+this.profile.username,{ 
+                headers: {
+                    'Authorization': 'Bearer ' + token,
+                }})
+            .then(response => {
+                console.log(this.profile.username)
+                this.friends= response.data;
+            }).catch(res => {
+                        alert("Error"+this.profile.username);
+                            console.log(res);
+                    });
+                    
+        },
+        getBlockedUsers: function(){
+let token = localStorage.getItem('token').substring(1, localStorage.getItem('token').length-1);
+            this.axios.get('http://localhost:8083/profileMicroservice/api/profile/account',{ 
+             headers: {
+                 'Authorization': 'Bearer ' + token,
+             }
+         }).then(response => {
+               this.profile = response.data;
+               console.log(this.profile.username);
+               //this.getMyStories(response.data);
+              // this.getFollowers(response.data);
+         }).catch(res => {
+                       alert("Error");
+                        console.log(res);
+                 });
+            console.log(this.profile.username);
+            this.axios.get('http://localhost:8083/profileMicroservice/api/profile/getBlockedUsers',{ 
+                headers: {
+                    'Authorization': 'Bearer ' + token,
+                }})
+            .then(response => {
+                console.log(this.profile.username)
+                this.blocked= response.data;
+            }).catch(res => {
+                        alert("Error"+this.profile.username);
+                            console.log(res);
+                    });
+                    
+        },
+         unblockUser: async function(event,friend){
+            console.log(friend.following);  
+             let token = localStorage.getItem('token').substring(1, localStorage.getItem('token').length-1);
+            this.axios.get('http://localhost:8083/profileMicroservice/api/profile/account',{ 
+             headers: {
+                 'Authorization': 'Bearer ' + token,
+             }
+         }).then(response => {
+               this.profile = response.data;
+               console.log(this.profile.username);
+               //this.getMyStories(response.data);
+              // this.getFollowers(response.data);
+         }).catch(res => {
+                       alert("Error");
+                        console.log(res);
+                 });
+        
+            this.axios.post('http://localhost:8083/profileMicroservice/api/profile/unblockUser',friend.following,{ 
+                headers: {
+                    'Authorization': 'Bearer ' + token,
+                }
+                }).then(response => {
+                    
+                    alert("User unblocked");
+                    console.log(response);                
+                }).catch(res => {
+                    alert("Error");
+                    console.log(res.response.data.message);
+
+                });
+        },
+        addCloseFriend: async function(event,friend){
+            console.log(friend.following);  
+             let token = localStorage.getItem('token').substring(1, localStorage.getItem('token').length-1);
+            this.axios.get('http://localhost:8083/profileMicroservice/api/profile/account',{ 
+             headers: {
+                 'Authorization': 'Bearer ' + token,
+             }
+         }).then(response => {
+               this.profile = response.data;
+               console.log(this.profile.username);
+               //this.getMyStories(response.data);
+              // this.getFollowers(response.data);
+         }).catch(res => {
+                       alert("Error");
+                        console.log(res);
+                 });
+        
+            this.axios.post('http://localhost:8083/profileMicroservice/api/profile/addCloseFriend',friend.following,{ 
+                headers: {
+                    'Authorization': 'Bearer ' + token,
+                }
+                }).then(response => {
+                    
+                    alert("Close friend successfully added ");
+                    console.log(response);                
+                }).catch(res => {
+                    alert("Already close friend");
+                    console.log(res.response.data.message);
+
+                });
+        },
+        deleteCloseFriend: async function(event,friend){
+            console.log(friend.following);  
+             let token = localStorage.getItem('token').substring(1, localStorage.getItem('token').length-1);
+            this.axios.get('http://localhost:8083/profileMicroservice/api/profile/account',{ 
+             headers: {
+                 'Authorization': 'Bearer ' + token,
+             }
+         }).then(response => {
+               this.profile = response.data;
+               console.log(this.profile.username);
+               //this.getMyStories(response.data);
+              // this.getFollowers(response.data);
+         }).catch(res => {
+                       alert("Error");
+                        console.log(res);
+                 });
+        
+            this.axios.post('http://localhost:8083/profileMicroservice/api/profile/deleteCloseFriend',friend.following,{ 
+                headers: {
+                    'Authorization': 'Bearer ' + token,
+                }
+                }).then(response => {
+                    
+                    alert("Close friend successfully deleted ");
+                    console.log(response);                
+                }).catch(res => {
+                    alert("Not close friend");
+                    console.log(res.response.data.message);
+
+                });
         },
         showResult: async function(){
             let token = localStorage.getItem('token').substring(1, localStorage.getItem('token').length-1);
@@ -579,7 +789,7 @@ export default {
             });
 
         },
-         handleFileUpload(){
+         handleFileUpload:function(){
             this.file = this.$refs.file.files[0];
         },
         addCategoryTolist : function(event, item) {
@@ -652,6 +862,10 @@ export default {
     }
     .space_style{
         margin-right:1px;
+        margin-left:10px;
+    }
+    .block_style{
+        margin-right:15px;
         margin-left:10px;
     }
     .object_space {

@@ -1,11 +1,15 @@
 package com.example.mediamicroservice.controller;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,36 +29,43 @@ import com.example.mediamicroservice.service.implService.ProfileMediaService;
 import com.example.mediamicroservice.service.implService.StoryService;
 import com.example.mediamicroservice.utils.MediaUpload;
 
+
 @RestController
 @RequestMapping(value = "/story", produces = MediaType.APPLICATION_JSON_VALUE)
 public class StoryController {
 	
 	private final ProfileMediaService profileMediaService;
 	private final StoryService storyService;
-	private final ProfileConnection profileConnection;
+	@Autowired
+	private  ProfileConnection profileConnection;
+
 	
 	@Autowired
-	public StoryController(ProfileMediaService profileMediaService, StoryService storyService,ProfileConnection profileConnection) {
+	public StoryController(ProfileMediaService profileMediaService, StoryService storyService) {
 		super();
 		this.profileMediaService = profileMediaService;
 		this.storyService = storyService;
-		this.profileConnection=profileConnection;
+		
 	}
 	
 	private static String uploadDir = "user-photos";
 	
 	@PostMapping("/saveImage")
-    public String saveImage(@RequestParam("file") MultipartFile multipartFile ) throws IOException {
+    public List<String> saveImage(@RequestParam("file") List<MultipartFile> multipartFiles ) throws IOException {
 		
-        String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename().replaceAll("\\s", "")); 
-        uploadDir = "user-photos";
-        MediaUpload.saveFile(uploadDir, fileName, multipartFile);
-        return fileName;
+		List<String> fileNames = new ArrayList<String>();
+		for(MultipartFile multipartFile:multipartFiles) {
+	        String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename().replaceAll("\\s", "")); 
+	        fileNames.add(fileName);
+	        uploadDir = "user-photos";
+	        MediaUpload.saveFile(uploadDir, fileName, multipartFile);
+		}
+        return fileNames;
     }
 	
 	@PostMapping("/addNewStory")
 	public ResponseEntity<Story> addNewStory(@RequestBody StoryDTO storyDTO) {
-        Story response = storyService.addNewStory(storyDTO);
+        List<Story> response = storyService.addNewStory(storyDTO);
         
 		return (ResponseEntity<Story>) (response == null ? new ResponseEntity<>(HttpStatus.NOT_FOUND) : ResponseEntity.ok(response));
 		
@@ -82,12 +93,74 @@ public class StoryController {
 		
 	}
 	
-	@GetMapping("/proba")
-	public ResponseEntity<String> Proba() {
-		 System.out.println("AAAAAAA");
-        String proba=profileConnection.proba();
-        System.out.println("AAAAAAA");
-		return ResponseEntity.ok(proba);
+	@PostMapping("/getFriendsStories")
+	public ResponseEntity<List<StoryDTO>> getFriendsStories(@RequestBody List<StoryDTO> storyDTOs) {
+		System.out.println("U KONTROLERU SAM SVEGA MI");
+		/*List<String> lista=profileConnection.getCloseFriends(username);
+		
+		for(String l:lista) {
+			System.out.println(l);
+		}*/
+		
+		System.out.println("USPELOOOOOOOOOOOOOOOO");
+		try {
+			List<StoryDTO> stories = new ArrayList<StoryDTO>();
+			System.out.println("USPELOOOOOOOOOOOOOOO1111111111111111111O");
+			for(StoryDTO p:storyDTOs) {
+				System.out.println("USPELOOOOOOOOOOOOOOOO1111111111111111111");
+				List<StoryDTO> friendStories = new ArrayList<StoryDTO>();
+				System.out.println("USPELOOOOOOOOOOOOOOOO11111111111111111"+p.getFollowing());
+				friendStories = storyService.findMyStories(p.getFollowing());
+				System.out.println("USPELOOOOOOOOOOOOOOOO1111111111111111111");
+				for(StoryDTO pf:friendStories) {
+					System.out.println("USPELOOOOOOOOOOOOOOOO111111111111111111111111");
+					if(!pf.isCloseFriends()) {
+						stories.add(pf);
+					}
+				
+			}
+				}
+			System.out.println("USPELOOOOOOOOOOOOOOOO");
+			//stories = storyService.sortByDate(stories);
+			return new ResponseEntity(stories, HttpStatus.OK); 
+		}catch(Exception e) {
+			System.out.println("USPELOOOOOOOOOOOOOOOO" + e.getMessage());
+			e.printStackTrace();
+			return new ResponseEntity(HttpStatus.BAD_REQUEST);
+		}
+		
+	}
+	@PostMapping("/getCloseFriendsStories")
+	public ResponseEntity<List<StoryDTO>> getCloseFriendsStories(@RequestBody List<StoryDTO> storyDTOs) {
+		System.out.println("CLOSE FRIENDS");
+		
+		try {
+			List<StoryDTO> stories = new ArrayList<StoryDTO>();
+			System.out.println("CLOSE FRIENDS222222222222222222");
+			
+			for(StoryDTO p:storyDTOs) {
+				System.out.println("CLOSE FRIENDS1111111111111111111");
+				List<StoryDTO> friendStories = new ArrayList<StoryDTO>();
+				System.out.println("Close friend"+p.getFollowing());
+				friendStories = storyService.findMyStories(p.getFollowing());
+				
+				for(StoryDTO pf:friendStories) {
+					System.out.println("storijiiiiiiiiii");
+					if(pf.isCloseFriends()) {
+						stories.add(pf);
+					}
+					
+				}
+				
+			}
+			System.out.println("USPELOOOOOOOOOOOOOOOO");
+			//stories = storyService.sortByDate(stories);
+			return new ResponseEntity(stories, HttpStatus.OK); 
+		}catch(Exception e) {
+			System.out.println("USPELOOOOOOOOOOOOOOOO" + e.getMessage());
+			e.printStackTrace();
+			return new ResponseEntity(HttpStatus.BAD_REQUEST);
+		}
 		
 	}
 }

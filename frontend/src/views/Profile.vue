@@ -435,6 +435,8 @@ export default {
         videoText: "mp4",
         numberOfLikes:0,
         numberOfDislikes:0,
+        fileNames:[],
+        fileName:'',
         usersWhoLiked:[],
         usersWhoDisliked:[],
         tags:[],
@@ -442,13 +444,11 @@ export default {
         answer:'',
         commentId:'',
         favouritePosts:[],
-        fileName:'',
         selectedCollection:'',
         collections:[],
         collectionName:'',
         postId:'',
         selectedCollectionID: '',
-        fileNames:[],
         history:[],
         historyPosts:[],
         following: [],
@@ -608,7 +608,7 @@ export default {
             .then(response => {
                 this.stories = response.data;
                 let video = "mp4"
-                for(let i=0; i< response.data.length; i++){
+                  for(let i=0; i< response.data.length; i++){
                         if(!this.stories[i].fileName.includes(video)){
                         console.log("slika jeee");
                         this.stories[i].imageBytes = 'data:image/jpeg;base64,' + this.stories[i].imageBytes; 

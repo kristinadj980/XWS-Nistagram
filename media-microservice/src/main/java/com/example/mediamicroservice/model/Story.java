@@ -33,6 +33,9 @@ public class Story {
 	@Column(name = "highlighted", nullable = true)
 	private boolean highlighted;
 
+	@Column(name = "closeFriends", nullable = true)
+	private boolean closeFriends;
+	
 	@Column(name = "numberOfInappContent", nullable = true)
 	private int numberOfInappropriateContent;
 
@@ -58,7 +61,7 @@ public class Story {
 	   
 	public Story(Long id, String description, LocalDateTime startTime,LocalDateTime endTime, boolean visible, LocalDate date,
 			boolean highlighted, int numberOfInappropriateContent, List<Media> medias, List<Tag> tags,
-			Location location) {
+			Location location,boolean closeFriends) {
 		super();
 		this.id = id;
 		this.description = description;
@@ -71,10 +74,19 @@ public class Story {
 		this.medias = medias;
 		this.tags = tags;
 		this.location = location;
+		this.closeFriends=closeFriends;
 	}
 
 
 
+
+	public boolean isCloseFriends() {
+		return closeFriends;
+	}
+
+	public void setCloseFriends(boolean closeFriends) {
+		this.closeFriends = closeFriends;
+	}
 
 	public Long getId() {
 		return id;

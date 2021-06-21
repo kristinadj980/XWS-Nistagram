@@ -3,6 +3,7 @@ package com.example.mediamicroservice.dto;
 import java.util.List;
 
 public class ImageDTO {
+
 	private List<byte[]> imageBytes;
 
 	public ImageDTO() {
@@ -21,6 +22,5 @@ public class ImageDTO {
 	public void setImageBytes(List<byte[]> imageBytes) {
 		this.imageBytes = imageBytes;
 	}
-	
-	
+
 }
