@@ -17,78 +17,8 @@
                     <b-button pill variant="outline-danger" class = "btn btn-lg btn-light" style="margin-right:20px;" v-on:click = "logOut">Log Out</b-button>
                 </span>
         </div>
-        <b-card class="content_surface">
-            <b-button  class="btn btn-info btn-lg space_style"  style="background-color:#f08080;margin-left:-1300px;" v-b-modal.modal-3>Archive stories</b-button>
-                            <b-modal ref="modal-ref3" id="modal-3" title="Archive stories" hide-footer>
-            <b-tabs 
-            style="margin-top:70px;" 
-            align="center" 
-            active-nav-item-class="font-weight-bold text-uppercase text-danger"
-            active-tab-class="font-weight-bold"
-            content-class="mt-3">
-                <b-tab active>
-                <template #title>
-                   <b-icon icon="grid3x3-gap" aria-hidden="true"></b-icon><strong> Stories </strong>
-                </template>
-                    <b-card class="post_look" v-for="story in stories" v-bind:key="story.fileName">
-                        <b-row >
-                        <h4 align="left"><b-icon icon="person-circle" aria-hidden="true"></b-icon>  {{story.username}}</h4>
-                        </b-row>
-                        <h6 align="left">{{story.locationDTO.city}},{{story.locationDTO.street}},{{story.locationDTO.objectName}},{{story.locationDTO.country}}</h6>
-                        <b-img v-if="!story.fileName.includes(videoText)" thumbnail  v-bind:src="story.imageBytes" alt="Image 1"></b-img>
-                        <video v-if="story.fileName.includes(videoText)" autoplay controls v-bind:src="story.imageBytes" width="400" height="400" style="display:block; margin-left:auto; margin-right:auto"></video>
-                        <h4 align="left">{{story.description}}</h4>
-                    </b-card>
-                </b-tab>
-            </b-tabs>
-         </b-modal>
-
-        <!--BLISKI PRIJATELJI-->
-         <b-button  class="btn btn-info btn-lg space_style"  style="background-color:#f08080;margin-left:-1000px;" v-on:click = "getFollowers"  v-b-modal.modal-4>Close friends</b-button>
-                  <b-modal ref="modal-ref4" id="modal-4" title="Close friends" hide-footer>
-                                <b-tabs 
-            style="margin-top:70px;" 
-            align="center" 
-            active-nav-item-class="font-weight-bold text-uppercase text-danger"
-            active-tab-class="font-weight-bold"
-            content-class="mt-4">
-                <b-tab active>
-                <template #title>
-                   <b-icon icon="grid3x3-gap" aria-hidden="true"></b-icon><strong> Close friends</strong>
-                </template>
-                    <b-card class="post_look" v-for="friend in friends" v-bind:key="friend.following">
-                        <b-row >
-                        <h4 align="left"><b-icon icon="person-circle" aria-hidden="true"></b-icon>  {{friend.following}}</h4>
-                        <b-button  variant="danger" align="right" class="btn btn-info btn-lg space_style" size="sm" style="background-color:#f08080;"  @click="addCloseFriend($event,friend)"  >Add</b-button>
-                        <b-button  align="right" class="btn btn-info btn-lg space_style" size="sm" style="background-color:#f08080;" @click="deleteCloseFriend($event,friend)"  >Delete</b-button>
-                        </b-row>
-                    </b-card>
-                </b-tab>
-            </b-tabs>
-         </b-modal>       
-         <!--   BLOKIRANI  -->
-          <b-button  class="btn btn-info btn-lg space_style"  style="background-color:#f08080;margin-top:150px" v-on:click = "getBlockedUsers"  v-b-modal.modal-6>Blocked users</b-button>
-                  <b-modal ref="modal-ref6" id="modal-6" title="Blocked users" hide-footer>
-                                <b-tabs 
-            style="margin-top:70px;" 
-            align="center" 
-            active-nav-item-class="font-weight-bold text-uppercase text-danger"
-            active-tab-class="font-weight-bold"
-            content-class="mt-4">
-                <b-tab active>
-                <template #title>
-                   <b-icon icon="grid3x3-gap" aria-hidden="true"></b-icon><strong>Blocked users </strong>
-                </template>
-                    <b-card class="post_look" v-for="friend in blocked" v-bind:key="friend.following">
-                        <b-row >
-                        <h4 align="left"><b-icon icon="person-circle" aria-hidden="true"></b-icon>  {{friend.following}}</h4>
-                        <b-button  variant="danger" align="right" class="btn btn-info btn-lg space_style" size="sm" style="background-color:#f08080;"  @click="unblockUser($event,friend)"  >Unblock</b-button>
-                        </b-row>
-                    </b-card>
-                </b-tab>
-            </b-tabs>
-         </b-modal>       
-                <!-- INFO-->
+        <b-card class="content_surface">   
+        <!-- INFO-->
         <b-card no-body>
             <b-tabs pills card>
                 <b-tab title="Profile info" active>
@@ -291,7 +221,40 @@
             </b-row>
 
         </b-tab>
-       
+        <b-tab title="Blocked users" @click="getBlockedUsers()">
+            <b-row v-for="(block, index) in blocked" v-bind:key="index" style="background: #f5f1f4;" >
+                <b-col sm="6" align-self="center"><strong><h3 class ="text-justify top-buffer" align="left" style="margin-left:350px;">{{block.following}} </h3></strong></b-col>
+                <b-col sm="1" align-self="center">
+                    <b-button variant="outline-danger"  size="lg" class = " mb-2 btn btn-lg  space_style" @click="unblockUser($event,friend)"> Unblock</b-button>
+                </b-col>
+                <hr>
+            </b-row>
+        </b-tab>
+        <b-tab title="Close friends" @click="getFollowers()">
+            <b-row v-for="(friend, index) in friends" v-bind:key="index" style="background: #f5f1f4;" >
+                <b-col sm="6" align-self="center"><strong><h3 class ="text-justify top-buffer" align="left" style="margin-left:350px;">{{friend.following}} </h3></strong></b-col>
+                <b-col sm="1" align-self="center">
+                     <b-button variant="outline-danger"  size="lg" class = " mb-2 btn btn-lg  space_style"  @click="addCloseFriend($event,friend)"  >Add</b-button>
+                </b-col>
+                <b-col sm="1" align-self="center">
+                   <b-button variant="outline-danger"  size="lg" class = " mb-2 btn btn-lg  space_style" @click="deleteCloseFriend($event,friend)"  >Delete</b-button>
+                </b-col>
+                <hr>
+            </b-row>
+                
+        </b-tab>
+        <b-tab title="Archived stories" @click="getFollowers()">
+            <b-card class="post_look" v-for="story in stories" v-bind:key="story.fileName">
+                <b-row >
+                    <h4 align="left"><b-icon icon="person-circle" aria-hidden="true"></b-icon>  {{story.username}}</h4>
+                </b-row>
+                <h6 align="left">{{story.locationDTO.city}},{{story.locationDTO.street}},{{story.locationDTO.objectName}},{{story.locationDTO.country}}</h6>
+                    <b-img v-if="!story.fileName.includes(videoText)" thumbnail  v-bind:src="story.imageBytes" alt="Image 1"></b-img>
+                    <video v-if="story.fileName.includes(videoText)" autoplay controls v-bind:src="story.imageBytes" width="400" height="400" style="display:block; margin-left:auto; margin-right:auto"></video>
+                <h4 align="left">{{story.description}}</h4>
+            </b-card>
+                
+        </b-tab>
             <b-tab title="Verification request" >
             <div id="verificationRequest">  
             <form>
@@ -643,21 +606,8 @@ export default {
                     
         },
         getBlockedUsers: function(){
-let token = localStorage.getItem('token').substring(1, localStorage.getItem('token').length-1);
-            this.axios.get('http://localhost:8083/profileMicroservice/api/profile/account',{ 
-             headers: {
-                 'Authorization': 'Bearer ' + token,
-             }
-         }).then(response => {
-               this.profile = response.data;
-               console.log(this.profile.username);
-               //this.getMyStories(response.data);
-              // this.getFollowers(response.data);
-         }).catch(res => {
-                       alert("Error");
-                        console.log(res);
-                 });
-            console.log(this.profile.username);
+        let token = localStorage.getItem('token').substring(1, localStorage.getItem('token').length-1);
+            
             this.axios.get('http://localhost:8083/profileMicroservice/api/profile/getBlockedUsers',{ 
                 headers: {
                     'Authorization': 'Bearer ' + token,
