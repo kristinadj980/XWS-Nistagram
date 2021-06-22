@@ -1,7 +1,7 @@
 <template>
     <div id="homepage">
         <div class="homepage_style ">
-           <span style="float: left; margin: 15px;">
+           <span style="float: left; margin: 15px;  margin-top:-20px;">
                 <img class="image_style space_style" title="Nistagram" style="width: 50px; height: 50px; margin-right:10px;"
                 src="http://assets.stickpng.com/thumbs/580b57fcd9996e24bc43c521.png">
                 <b-button  pill variant="outline-danger" class = "btn btn-lg space_style" v-on:click = "showHomepage">
@@ -38,22 +38,6 @@
                     <b-input-group-append>
                         <input 
                         list="my-list-id" 
-                        v-model="selectedTag" 
-                        class="input_style" 
-                        placeholder="enter tag..."
-                        style="margin-top: 3% !important; width:300px; height:35px;">
-                       <datalist id="my-list-id">
-                            <option v-for="user in tags" v-bind:key="user.id">
-                                {{ user.name}} 
-                            </option>
-                        </datalist> 
-                    <router-link :to="{ name: 'SearchPost', params: {selectedTag: this.selectedTag}}" class="search-btn">
-                       <b-button style="margin-top: -15% !important;  margin-left: 100% !important;" variant="outline-danger"><b-icon icon="search" aria-hidden="true"></b-icon></b-button>
-                    </router-link>
-
-                     </b-input-group-append>
-                     <b-input-group-append>
-                         <input
                         v-model="selectedUser" 
                         class="input_style" 
                         placeholder="enter username..."
@@ -66,7 +50,7 @@
                     <router-link :to="{ name: 'GeneralProfiles', params: {selectedUsername: this.selectedUser}}" class="search-btn">
                        <b-button style="margin-top: -20% !important;  margin-left: 100% !important;" variant="outline-danger"><b-icon icon="search" aria-hidden="true"></b-icon></b-button>
                     </router-link>
-                
+    
                     </b-input-group-append>
                 
                 </b-input-group>-->
@@ -91,58 +75,6 @@
                 </span>
         </div>
         <b-card class="content_surface">
-
-            <!--***************FRIEND'S STORIES************-->
-             <b-button  class="btn btn-info btn-lg space_style"  style="background-color:#f08080;margin-left:-1300px;" v-b-modal.modal-1>Show stories</b-button>
-                            <b-modal ref="modal-ref" id="modal-1" title="Stories" hide-footer>
-                                <b-tabs 
-            style="margin-top:70px;" 
-            align="center"
-            active-nav-item-class="font-weight-bold text-uppercase text-danger"
-            active-tab-class="font-weight-bold"
-            content-class="mt-3">
-                <b-tab active>
-                <template #title>
-                   <b-icon icon="grid3x3-gap" aria-hidden="true"></b-icon><strong> Stories </strong>
-                </template>
-                    <b-card class="post_look" v-for="story in stories" v-bind:key="story.fileName">
-                        <b-row >
-                        <h4 align="left"><b-icon icon="person-circle" aria-hidden="true"></b-icon>  {{story.username}}</h4>
-                        </b-row>
-                        <h6 align="left">{{story.locationDTO.city}},{{story.locationDTO.street}},{{story.locationDTO.objectName}},{{story.locationDTO.country}}</h6>
-                        <b-img v-if="!story.fileName.includes(videoText)" thumbnail  v-bind:src="story.imageBytes" alt="Image 1"></b-img>
-                        <video v-if="story.fileName.includes(videoText)" autoplay controls v-bind:src="story.imageBytes" width="400" height="400" style="display:block; margin-left:auto; margin-right:auto"></video>
-                        <h4 align="left">{{story.description}}</h4>
-                    </b-card>
-                </b-tab>
-            </b-tabs>
-         </b-modal>
-         <!--stories for close friends-->
-         <b-button  class="btn btn-info btn-lg space_style"  style="background-color:#f08080;margin-left:-1300px;" v-b-modal.modal-5>Show close friend stories</b-button>
-                            <b-modal ref="modal-ref" id="modal-5" title="Close friend stories" hide-footer>
-                                <b-tabs 
-            style="margin-top:70px;" 
-            align="center"
-            active-nav-item-class="font-weight-bold text-uppercase text-danger"
-            active-tab-class="font-weight-bold"
-            content-class="mt-3">
-                <b-tab active>
-                <template #title>
-                   <b-icon icon="grid3x3-gap" aria-hidden="true"></b-icon><strong> Close friend stories </strong>
-                </template>
-                    <b-card class="post_look" v-for="story in stories1" v-bind:key="story.fileName">
-                        <b-row >
-                        <h4 align="left"><b-icon icon="person-circle" aria-hidden="true"></b-icon>  {{story.username}}</h4>
-                        </b-row>
-                        <h6 align="left">{{story.locationDTO.city}},{{story.locationDTO.street}},{{story.locationDTO.objectName}},{{story.locationDTO.country}}</h6>
-                        <b-img v-if="!story.fileName.includes(videoText)" thumbnail  v-bind:src="story.imageBytes" alt="Image 1"></b-img>
-                        <video v-if="story.fileName.includes(videoText)" autoplay controls v-bind:src="story.imageBytes" width="400" height="400" style="display:block; margin-left:auto; margin-right:auto"></video>
-                        <h4 align="left">{{story.description}}</h4>
-                    </b-card>
-                </b-tab>
-            </b-tabs>
-         </b-modal>
-         <!--FRIEND'S POSTS-->
              <b-card class="post_look" v-for="post in posts" v-bind:key="post.fileName">
                         <b-row >
                         <h4 align="left"><b-icon icon="person-circle" aria-hidden="true"></b-icon>  {{post.username}}</h4>
@@ -179,6 +111,7 @@
                          <div v-for="user in usersWhoCommented" v-bind:key="user.username" class="modal-body">
                              
                             <div class="row">
+
                                 <div class=" form-group col" style="margin-left:0px;">
                                      <label>Profile: {{user.usernameFrom}} </label><span style="margin-left:50px;" ></span>
                                      <label > Comment : {{user.comment}}</label><span style="margin-left:50px;" ></span>
@@ -231,17 +164,10 @@ export default {
         friendsNotMuted: [],
         username: "",
         posts: [],
-        stories: [],
-        stories1: [],
         videoText: "mp4",
         numberOfLikes:0,
         numberOfDislikes:0,
         loggeduser: "",
-        closeFriends: [],
-        selectedTag:[''],
-        selectedLocation:[''],
-        tags:[],
-        locations:[],
          comments:[],
         comment:'',
         usersWhoCommented:[],
@@ -291,14 +217,12 @@ export default {
                        //alert("Error");
                         console.log(res);
                  });
-        
         this.axios.get('http://localhost:8083/profileMicroservice/api/profile/loggedUserInfo',{ 
              headers: {
                  'Authorization': 'Bearer ' + token,
              }
          }).then(response => {
               this.loggeduser = response.data;
-              console.log(response.data.name);
          }).catch(res => {
                //alert(Error)
                 console.log(res);
@@ -370,42 +294,6 @@ export default {
                             console.log(res);
                     });
         },
-        getFriendsStories: function(usernames) {
-
-            this.axios.post('http://localhost:8083/mediaMicroservice/story/getFriendsStories',usernames)
-            .then(response => {
-                this.stories = response.data;
-                let video = "mp4";
-                for(let i=0; i< response.data.length; i++){
-                     if(!this.stories[i].fileName.includes(video)){
-                        this.stories[i].imageBytes = 'data:image/jpeg;base64,' + this.stories[i].imageBytes; 
-                    }else{
-                        this.stories[i].imageBytes = 'data:video/mp4;base64,' + this.stories[i].imageBytes;     
-                    }            
-                } 
-            }).catch(res => {
-                        alert("Profile is private");
-                            console.log(res);
-                    });
-        },
-        getCloseFriendsStories: function(usernames) {
-
-            this.axios.post('http://localhost:8083/mediaMicroservice/story/getCloseFriendsStories',usernames)
-            .then(response => {
-                this.stories1 = response.data;
-                let video = "mp4";
-                for(let i=0; i< response.data.length; i++){
-                     if(!this.stories1[i].fileName.includes(video)){
-                        this.stories1[i].imageBytes = 'data:image/jpeg;base64,' + this.stories1[i].imageBytes; 
-                    }else{
-                        this.stories1[i].imageBytes = 'data:video/mp4;base64,' + this.stories1[i].imageBytes;     
-                    }            
-                } 
-            }).catch(res => {
-                        alert("No stories");
-                            console.log(res);
-                    });
-        },
         likePost: async function(event,post){
             const postInfo = {
                 usernameTo : post.username,
@@ -449,7 +337,6 @@ export default {
 
                 });
         },
-        
         commentPost: async function(event,post){
             const postInfo = {
                 usernameTo : post.username,
@@ -547,17 +434,9 @@ export default {
 
     }
     .serach_look{
-
-        margin-left: 170%;
-        margin-top: -8%;
-    }
-    .serach_look1{
-        
-
-        margin-left: 138%;
+        margin-left: 152%;
         width: 20%;
-
-        margin-top: -8%;
+        margin-top: -10%;
     }
     .post_look {
         background: #e4e4e4; 

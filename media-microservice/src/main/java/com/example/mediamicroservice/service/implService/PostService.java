@@ -777,4 +777,27 @@ public class PostService implements IPostService {
 			return sortByDate(allPosts);
 		}
 
+		@Override
+		public List<PostDTO> getPublicProfilesPosts() {
+			List<String> publicProfiles = getPublicProfiles();
+			List<PostDTO> response  = new ArrayList<>();
+				
+			for(String s:publicProfiles) {
+				ProfileMedia existingProfile = profileMediaService.findByUsername(s);
+				if(existingProfile == null)
+					continue;
+				else {
+					List<PostDTO> profilePosts = findMyPosts(s);
+					for(PostDTO p:profilePosts) 
+						response.add(p);
+				}
+			}
+			
+			response = sortByDate(response);
+			return response;
+		}
+		
+		private List<String> getPublicProfiles(){
+			return profileConnection.getPublicProfiles();
+		}
 }

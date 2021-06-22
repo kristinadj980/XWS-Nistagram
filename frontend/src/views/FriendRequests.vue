@@ -1,7 +1,7 @@
 <template >
     <div id="friendRequests" >
         <div class="homepage_style">
-           <span style="float: left; margin: 15px;">
+           <span style="float: left; margin: 15px;margin-top:-18px;">
                 <img class="image_style space_style" title="Nistagram" style="width: 50px; height: 50px; margin-right:10px;"
                 src="http://assets.stickpng.com/thumbs/580b57fcd9996e24bc43c521.png">
                 <b-button  pill variant="outline-danger" class = "btn btn-lg space_style" v-on:click = "showHomepage">

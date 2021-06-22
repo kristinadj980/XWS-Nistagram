@@ -1,14 +1,14 @@
 <template>
     <div id="addingPosts">
         <div class="homepage_style ">
-           <span style="float: left; margin: 15px;">
+           <span style="float: left; margin: 15px;  margin-top:-14px;">
                 <img class="image_style space_style" title="Nistagram" style="width: 50px; height: 50px; margin-right:10px;"
                 src="http://assets.stickpng.com/thumbs/580b57fcd9996e24bc43c521.png">
                 <b-button  pill variant="outline-danger" class = "btn btn-lg space_style" v-on:click = "showHomepage">
                     <b-icon icon="house" aria-hidden="true"></b-icon>Home</b-button>
                 <b-button  pill variant="outline-danger" class = "btn btn-lg space_style" v-on:click = "showProfile">
                     <b-icon icon="person" aria-hidden="true"></b-icon>Profile</b-button>
-                <b-button pill variant="outline-danger" class = "btn btn-lg space_style" v-on:click = "addPosts">
+                <b-button pill variant="outline-danger" class = "btn btn-lg space_style" v-on:click = "logOut">
                     <b-icon icon="image" aria-hidden="true"></b-icon> Add post</b-button>
                 
             </span>
@@ -217,21 +217,6 @@ export default {
                 let fileOne = this.$refs.file.files[i];
                 this.file.push(fileOne);
             }
-        },
-        findPosts:function(){
-             let token = localStorage.getItem('token').substring(1, localStorage.getItem('token').length-1);
-             this.axios.get('http://localhost:8083/profileMicroservice/api/profile/find',{ 
-             headers: {
-                 'Authorization': 'Bearer ' + token,
-             }
-         }).then(response => {
-             alert("OK")
-             console.log(response.data)
-              //this.posts = response.data;
-         }).catch(res => {
-               alert(Error)
-                console.log(res);
-            });
         }
 
     }

@@ -16,6 +16,12 @@ VALUES ('Profile',103,'1998-12-12','milka@milic.com',1,0,'milka','$2a$10$p04fhHB
 INSERT INTO PERSON(dtype,id,birth_date,email,enabled,gender,name,password,phone_number,surname,username, profile_status, allowed_messages, allowed_tags)
 VALUES ('Administrator',104,'1998-12-12','admin@admin.com',1,0,'marko','$2a$10$p04fhHBotVfnA/7Mh78lReGRZQPO8wXlROplUX5eNjPtlbgBZ4Dte','0605666777','milic','admin', 0, false, false);
 
+INSERT INTO PERSON(dtype,id,birth_date,email,enabled,gender,name,password,phone_number,surname,username, profile_status, allowed_messages, allowed_tags)
+VALUES ('Profile',105,'1998-12-12','anabela@gmail.com',1,0,'anabela','$2a$10$p04fhHBotVfnA/7Mh78lReGRZQPO8wXlROplUX5eNjPtlbgBZ4Dte','0605666777','anic','anabela', 1, false, false);
+
+INSERT INTO PERSON(dtype,id,birth_date,email,enabled,gender,name,password,phone_number,surname,username, profile_status, allowed_messages, allowed_tags)
+VALUES ('Profile',106,'1998-12-12','anastasija@gmail.com',1,0,'anastasija','$2a$10$p04fhHBotVfnA/7Mh78lReGRZQPO8wXlROplUX5eNjPtlbgBZ4Dte','0605666777','anic','anastasija', 1, false, false);
+
 
 INSERT INTO USER_AUTHORITY (user_id,authority_id)
 VALUES (100,1);
@@ -27,3 +33,8 @@ INSERT INTO USER_AUTHORITY (user_id,authority_id)
 VALUES (103,1);
 INSERT INTO USER_AUTHORITY (user_id,authority_id)
 VALUES (104,2);
+INSERT INTO USER_AUTHORITY (user_id,authority_id)
+VALUES (105,1);
+INSERT INTO USER_AUTHORITY (user_id,authority_id)
+VALUES (106,1);
+
