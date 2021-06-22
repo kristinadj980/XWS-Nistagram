@@ -8,7 +8,7 @@
                     <b-icon icon="house" aria-hidden="true"></b-icon>Home</b-button>
                 <b-button  pill variant="outline-danger" class = "btn btn-lg space_style" v-on:click = "showProfile">
                     <b-icon icon="person" aria-hidden="true"></b-icon>Profile</b-button>
-                <b-button pill variant="outline-danger" class = "btn btn-lg space_style" v-on:click = "showProfile">
+                <b-button pill variant="outline-danger" class = "btn btn-lg space_style" v-on:click = "addPosts">
                     <b-icon icon="image" aria-hidden="true"></b-icon> Add post</b-button>
                 <b-button pill variant="outline-danger" class = "btn btn-lg space_style" v-on:click = "editProfile">
                     <b-icon icon="gear" aria-hidden="true"></b-icon> Edit profile</b-button>
@@ -317,7 +317,8 @@ export default {
         user:'',
         file:'',
         selectedCategory:'',
-        formData:''
+        formData:'',
+        
         }
     },
     mounted(){
@@ -350,6 +351,9 @@ export default {
     methods:{
         toggle () {
         this.show = !this.show
+        },
+        addPosts : function() {
+            window.location.href = "/addingPosts";
         },
         cancelStories() {
             this.$refs['modal-ref3'].hide();

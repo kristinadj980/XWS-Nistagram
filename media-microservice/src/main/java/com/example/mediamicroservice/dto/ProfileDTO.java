@@ -32,6 +32,13 @@ public class ProfileDTO {
 		this.surname = surname;
 		this.email = email;
 	}
+	
+	
+	public ProfileDTO(String username) {
+		super();
+		this.username = username;
+	}
+
 	public String getUsername() {
 		return username;
 	}

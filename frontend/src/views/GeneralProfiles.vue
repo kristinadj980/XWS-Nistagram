@@ -193,6 +193,10 @@
                         <h4 style="margin-left:500px; margin-top:10px"><b-icon icon="exclamation-circle" aria-hidden="true" align="right" @click="showModalReportPost($event,post)"></b-icon></h4>
                          
                         <h4 align="left" style="margin-top:-35px;">{{post.description}}</h4>
+                        <h5 align="left"> <span v-for="(user,t) in post.taggedUsers" :key="t">
+                                        @{{user.username}}
+                                    </span>
+                        </h5>
                          <h5 align="left"><span v-for="(tag,t) in post.tags" :key="t">
                                         #{{tag.name}}
                                     </span>
@@ -206,22 +210,31 @@
             </b-tabs>
         </b-card>
         <div> 
-          <b-modal ref="modal3" hide-footer scrollable title="Profiles who commented photo" size="lg" modal-class="b-modal">
+         <b-modal ref="modal3" hide-footer scrollable title="Profiles who commented photo" size="lg" modal-class="b-modal">
                <div modal-class="modal-dialog" role="document">
                     <div class="modal-content" style="background-color:#e4e4e4; ">
                          <div v-for="user in usersWhoCommented" v-bind:key="user.username" class="modal-body">
                              
                             <div class="row">
-                                <div class=" form-group col">
-                                     <label>Profile: {{user.usernameFrom}} </label><span style="margin-left:30px;" ></span>
-                                     <label > Comment : {{user.comment}}</label><span style="margin-left:30px;" ></span>
+                                <div class=" form-group col" style="margin-left:0px;">
+                                     <label>Profile: {{user.usernameFrom}} </label><span style="margin-left:50px;" ></span>
+                                     <label > Comment : {{user.comment}}</label><span style="margin-left:50px;" ></span>
                                      <label > Answer : {{user.answer}}</label>
+                                     <h5 align="left"> <span v-for="(u,t) in user.taggedUsers" :key="t">
+                                        @{{u.username}}
+                                    </span>
+                                    </h5>
                                 </div>
                              </div><span style="margin-left:610px;" ></span>
                         </div>
-                        <input style="width: 60%; margin-top:10px; margin-left:10px;" type="text" id="post.fileName" v-model="comment"><span style="margin-left:10px;" ></span>
-                        <b-icon icon="check-circle" aria-hidden="true" @click="commentPost($event,selectedPost)"></b-icon>      
-                                 
+                        <!--<input style="width: 60%; margin-top:10px; margin-left:10px;" type="text" id="post.fileName" v-model="comment"><span style="margin-top:-30px; " ></span>-->
+                        <input style="width: 63%; margin-top:10px; margin-left:10px;" type="text" id="post.fileName" v-model="comment">
+                       <h4> <b-icon style="margin-left:470px;margin-top:10px;" icon="check-circle" aria-hidden="true" @click="commentPost($event,selectedPost)"></b-icon> </h4>     
+                         <h4 style="margin-top:20px; margin-left:10px">Choose profile to tag</h4>
+                <select multiple="true" style="width:482px; margin-top:5pxl; margin-left:10px; margin-bottom:20px;" v-model="multipleSelections">
+                <option v-for="item in this.usersForTags"   v-bind:key="item.id" >
+                {{item.username}}</option> 
+                </select>    
                     </div>                
                 </div>
           </b-modal>
@@ -283,6 +296,8 @@ export default {
         proba: "ana",
         selectedPost: [],
         postsNumber: 0,
+        usersForTags:[],
+        multipleSelections:[]
         }
     },
     async mounted(){
@@ -355,6 +370,18 @@ export default {
                         alert("Error");
                             console.log(res);
                     });
+
+         this.axios.get('http://localhost:8083/profileMicroservice/api/profile/getUsersForTags',{ 
+             headers: {
+                 'Authorization': 'Bearer ' + token,
+             }
+         }).then(response => {
+              this.usersForTags = response.data;
+         }).catch(res => {
+               //alert(Error)
+                console.log(res);
+            });
+        
    },
     methods:{
         showHomepage: function(){
@@ -529,6 +556,7 @@ export default {
                 fileNames : post.fileNames,
                 comment : this.comment,
                 postId: post.id,
+                taggedUsers:this.multipleSelections
             }
             this.axios.post('http://localhost:8083/mediaMicroservice/post/commentPost',postInfo,{ 
                 }).then(response => {

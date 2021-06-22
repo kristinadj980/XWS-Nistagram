@@ -46,9 +46,16 @@
                             {{ location.country }}, {{location.city}},  {{location.street}}, {{location.objectName}} 
                         </option>
                     </datalist>
+
+                <h4 style="margin-top:20px">Choose profile to tag</h4>
+                <select multiple="true" style="width:500px; margin-top:5px" v-model="multipleSelections">
+                <option v-for="item in this.usersForTags"  v-on:click ="addCategoryTolist($event, item)" v-bind:key="item.id" >
+                {{item.username}}</option> 
+                </select>
+
                 <h4 
                 style="margin-bottom:2%; 
-                margin-top: 5% !important;">
+                margin-top: 10% !important;">
                     Add tags
                 </h4>
                 <b-form-tags
@@ -61,7 +68,6 @@
                 ></b-form-tags>
                 <b-button 
                 variant="outline-secondary"  
-               
                 style="margin-top: 8% !important;
                 color: #692d5a;
                 width: 240px;"
@@ -99,7 +105,7 @@ export default {
         medias:[],
         posts:[],
         selectedUser:[''],
-       
+        usersForTags:[],
         }
     },
     mounted() {
@@ -123,6 +129,17 @@ export default {
               this.locations = response.data;
          }).catch(res => {
                alert(Error)
+                console.log(res);
+            });
+        
+         this.axios.get('http://localhost:8083/profileMicroservice/api/profile/getUsersForTags',{ 
+             headers: {
+                 'Authorization': 'Bearer ' + token,
+             }
+         }).then(response => {
+              this.usersForTags = response.data;
+         }).catch(res => {
+               //alert(Error)
                 console.log(res);
             });
     },
@@ -181,6 +198,7 @@ export default {
                 username: this.user.username,
                 userId: this.user.id,
                 fileNames : this.fileName,
+                taggedUsers:this.multipleSelections
                  }
           
 

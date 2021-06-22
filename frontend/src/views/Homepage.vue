@@ -12,6 +12,28 @@
                     <b-icon icon="image" aria-hidden="true"></b-icon> Add post</b-button>
                 <b-button pill variant="outline-danger" class = "btn btn-lg space_style" v-on:click = "addStories">
                     <b-icon icon="image" aria-hidden="true"></b-icon> Add story</b-button>
+    
+                <!--LOKACIJE-->
+               <!--  <b-input-group class=" serach_look1">
+                    <b-input-group-append>
+                        <input 
+                        list="my-list-id1" 
+                        v-model="selectedLocation" 
+                        class="input_style" 
+                        placeholder="enter location..."
+                        style="margin-top: 3% !important; width:400px; height:35px;">
+                        <datalist id="my-list-id1">
+                        <option v-for="location in locations" v-bind:key="location.id">
+                            {{ location.country }}, {{location.city}},  {{location.street}}, {{location.objectName}} 
+                        </option>
+                    </datalist>
+                    <router-link :to="{ name: 'SearchPostByLocation', params: {selectedLocation: this.selectedLocation}}" class="search-btn">
+                       <b-button style="margin-top: -15% !important;  margin-left: 100% !important;" variant="outline-danger"><b-icon icon="search" aria-hidden="true"></b-icon></b-button>
+                    </router-link>
+                     </b-input-group-append>
+
+                   
+               </b-input-group>    
                 <b-input-group class=" serach_look">
                     <b-input-group-append>
                         <input 
@@ -30,7 +52,9 @@
                     </router-link>
     
                     </b-input-group-append>
-                </b-input-group>
+                
+                </b-input-group>-->
+
             </span>
                 <span style="float:right;margin:15px">
                     <b-icon icon="person-plus" variant="danger"
@@ -64,6 +88,10 @@
                          <h4 style="margin-left:500px; margin-top:10px"><b-icon icon="exclamation-circle" aria-hidden="true" align="right" @click="showModalReportPost($event,post)"></b-icon></h4>
                          
                         <h4 align="left" style="margin-top:-35px;">{{post.description}}</h4>
+                         <h5 align="left"> <span v-for="(user,t) in post.taggedUsers" :key="t">
+                                        @{{user.username}}
+                                    </span>
+                       </h5>
                          <h5 align="left"><span v-for="(tag,t) in post.tags" :key="t">
                                         #{{tag.name}}
                                     </span>
@@ -80,18 +108,29 @@
           <b-modal ref="modal3" hide-footer scrollable title="Profiles who commented photo" size="lg" modal-class="b-modal">
                <div modal-class="modal-dialog" role="document">
                     <div class="modal-content" style="background-color:#e4e4e4; ">
-                        <div v-for="user in usersWhoCommented" v-bind:key="user.username" class="modal-body">
+                         <div v-for="user in usersWhoCommented" v-bind:key="user.username" class="modal-body">
                              
                             <div class="row">
-                                <div class=" form-group col">
-                                     <label><b></b>{{user.usernameFrom}} </label><span style="margin-left:30px;" ></span>
-                                     <label> {{user.comment}}</label><span style="margin-left:30px;" ></span>
-                                     <label> Answer : {{user.answer}}</label>
+
+                                <div class=" form-group col" style="margin-left:0px;">
+                                     <label>Profile: {{user.usernameFrom}} </label><span style="margin-left:50px;" ></span>
+                                     <label > Comment : {{user.comment}}</label><span style="margin-left:50px;" ></span>
+                                     <label > Answer : {{user.answer}}</label>
+                                     <h5 align="left"> <span v-for="(u,t) in user.taggedUsers" :key="t">
+                                        @{{u.username}}
+                                    </span>
+                                    </h5>
                                 </div>
                              </div><span style="margin-left:610px;" ></span>
                         </div>
-                    <input style="width: 80%; margin-top:10px; margin-left:10px;" type="text" id="post.fileName" v-model="comment"><span style="margin-left:10px;" ></span>
-                    <b-icon icon="check-circle" aria-hidden="true" @click="commentPost($event,selectedPost)"></b-icon>      
+                        <!--<input style="width: 60%; margin-top:10px; margin-left:10px;" type="text" id="post.fileName" v-model="comment"><span style="margin-top:-30px; " ></span>-->
+                        <input style="width: 63%; margin-top:10px; margin-left:10px;" type="text" id="post.fileName" v-model="comment">
+                       <h4> <b-icon style="margin-left:470px;margin-top:10px;" icon="check-circle" aria-hidden="true" @click="commentPost($event,selectedPost)"></b-icon> </h4>     
+                         <h4 style="margin-top:20px; margin-left:10px">Choose profile to tag</h4>
+                <select multiple="true" style="width:482px; margin-top:5pxl; margin-left:10px; margin-bottom:20px;" v-model="multipleSelections">
+                <option v-for="item in this.usersForTags"   v-bind:key="item.id" >
+                {{item.username}}</option> 
+                </select>    
                     </div>                
                 </div>
           </b-modal>
@@ -151,7 +190,7 @@ export default {
          }).then(response => {
                this.users = response.data
          }).catch(res => {
-                       alert("Error");
+                       //alert("Error");
                         console.log(res);
                  });
        this.axios.get('http://localhost:8083/profileMicroservice/api/profile/getNotMuted',{ 
@@ -161,8 +200,21 @@ export default {
          }).then(response => {
                this.friendsNotMuted = response.data
                this.getFriednsPosts(response.data);
+               this.getFriendsStories(response.data);
          }).catch(res => {
-                       alert("Error");
+                      // alert("Error");
+                        console.log(res);
+                 });
+        this.axios.get('http://localhost:8083/profileMicroservice/api/profile/getCloseFriends',{ 
+             headers: {
+                 'Authorization': 'Bearer ' + token,
+             }
+         }).then(response => {
+                this.closeFriends=response.data
+                this.getCloseFriendsStories(response.data);
+                console.log(this.closeFriends);
+         }).catch(res => {
+                       //alert("Error");
                         console.log(res);
                  });
         this.axios.get('http://localhost:8083/profileMicroservice/api/profile/loggedUserInfo',{ 
@@ -172,9 +224,32 @@ export default {
          }).then(response => {
               this.loggeduser = response.data;
          }).catch(res => {
-               alert(Error)
+               //alert(Error)
                 console.log(res);
             });
+           
+            this.axios.get('http://localhost:8083/searchMicroservice/tag/getAllTags',{ 
+             headers: {
+                 'Authorization': 'Bearer ' + token,
+             }
+         }).then(response => {
+               this.tags = response.data
+                console.log(this.tags);
+         }).catch(res => {
+                       //alert("Error");
+                        console.log(res);
+                 });
+                 this.axios.get('http://localhost:8083/mediaMicroservice/location/getLocations',{ 
+             headers: {
+                 'Authorization': 'Bearer ' + token,
+             }
+         }).then(response => {
+               this.locations = response.data
+                console.log(this.locations);
+         }).catch(res => {
+                       //alert("Error");
+                        console.log(res);
+                 });
    },
     methods:{
         showHomepage: function(){
