@@ -389,6 +389,13 @@ public class PostService implements IPostService {
 				
 				List<Media> medias = post.getMedias();
 				List<String> mediasFileName = new ArrayList<String>();
+				List<ProfileMedia> taggedProfiles = post.getProfileTags();
+				List<ProfileDTO> taggedProfilesDTO = new ArrayList<ProfileDTO>();
+				if(post.getProfileTags() != null) {
+				for (ProfileMedia p : taggedProfiles) {
+					taggedProfilesDTO.add(new ProfileDTO(p.getUsername()));
+				}
+				}
 				for (Media m : medias) {
 					mediasFileName.add(m.getFileName());
 				}
@@ -402,45 +409,45 @@ public class PostService implements IPostService {
 					}
 					if( post.getNumberOfLikes() == null && post.getNumberOfDisikes() != null && post.getNumberOfComments() == null) {
 						numberOfDislikes = post.getNumberOfDisikes();
-						postsDTO.add(new PostDTO(post.getDescription(),profileMediaRepository.findByPostId(post.getId()) ,mediasFileName,locationDTO, post.getDate(),0,numberOfDislikes,0,tagsDTO,post.getId()));
+						postsDTO.add(new PostDTO(post.getDescription(),profileMediaRepository.findByPostId(post.getId()) ,mediasFileName,locationDTO, post.getDate(),0,numberOfDislikes,0,tagsDTO,post.getId(),taggedProfilesDTO));
 					}else if( post.getNumberOfLikes() == null && post.getNumberOfDisikes() != null && post.getNumberOfComments() != null) {
 							numberOfDislikes = post.getNumberOfDisikes();
 							numberOfComments = post.getNumberOfComments();
-							postsDTO.add(new PostDTO(post.getDescription(),profileMediaRepository.findByPostId(post.getId()),mediasFileName,locationDTO, post.getDate(),0,numberOfDislikes,numberOfComments,tagsDTO,post.getId()));
+							postsDTO.add(new PostDTO(post.getDescription(),profileMediaRepository.findByPostId(post.getId()),mediasFileName,locationDTO, post.getDate(),0,numberOfDislikes,numberOfComments,tagsDTO,post.getId(),taggedProfilesDTO));
 					
 					}else if (post.getNumberOfDisikes() == null && post.getNumberOfLikes() != null && post.getNumberOfComments() == null ) {
 						numberOfLikes = post.getNumberOfLikes();
-						postsDTO.add(new PostDTO(post.getDescription(),profileMediaRepository.findByPostId(post.getId()),mediasFileName,locationDTO, post.getDate(),numberOfLikes,0,0,tagsDTO,post.getId()));
+						postsDTO.add(new PostDTO(post.getDescription(),profileMediaRepository.findByPostId(post.getId()),mediasFileName,locationDTO, post.getDate(),numberOfLikes,0,0,tagsDTO,post.getId(),taggedProfilesDTO));
 					
 				    }else if (post.getNumberOfDisikes() == null && post.getNumberOfLikes() != null && post.getNumberOfComments() != null ) {
 					numberOfLikes = post.getNumberOfLikes();
 					numberOfComments = post.getNumberOfComments();
-					postsDTO.add(new PostDTO(post.getDescription(),profileMediaRepository.findByPostId(post.getId()),mediasFileName,locationDTO, post.getDate(),numberOfLikes,0,numberOfComments,tagsDTO,post.getId()));
+					postsDTO.add(new PostDTO(post.getDescription(),profileMediaRepository.findByPostId(post.getId()),mediasFileName,locationDTO, post.getDate(),numberOfLikes,0,numberOfComments,tagsDTO,post.getId(),taggedProfilesDTO));
 				    }
 				    else if (post.getNumberOfDisikes() != null && post.getNumberOfLikes() == null && post.getNumberOfComments() == null ) {
 				    	numberOfDislikes = post.getNumberOfDisikes();
-				    	postsDTO.add(new PostDTO(post.getDescription(),profileMediaRepository.findByPostId(post.getId()),mediasFileName,locationDTO, post.getDate(),0,numberOfDislikes,0,tagsDTO,post.getId()));
+				    	postsDTO.add(new PostDTO(post.getDescription(),profileMediaRepository.findByPostId(post.getId()),mediasFileName,locationDTO, post.getDate(),0,numberOfDislikes,0,tagsDTO,post.getId(),taggedProfilesDTO));
 				    }
 				    else if (post.getNumberOfDisikes() != null && post.getNumberOfLikes() != null && post.getNumberOfComments() == null ) {
 						numberOfLikes = post.getNumberOfLikes();
 						numberOfDislikes = post.getNumberOfDisikes();
-						postsDTO.add(new PostDTO(post.getDescription(),profileMediaRepository.findByPostId(post.getId()),mediasFileName,locationDTO, post.getDate(),numberOfLikes,numberOfDislikes,0,tagsDTO,post.getId()));
+						postsDTO.add(new PostDTO(post.getDescription(),profileMediaRepository.findByPostId(post.getId()),mediasFileName,locationDTO, post.getDate(),numberOfLikes,numberOfDislikes,0,tagsDTO,post.getId(),taggedProfilesDTO));
 					    }
 					else if(post.getNumberOfLikes() == null && post.getNumberOfDisikes() == null && post.getNumberOfComments() == null) 
 					{
-						postsDTO.add(new PostDTO(post.getDescription(),profileMediaRepository.findByPostId(post.getId()),mediasFileName,locationDTO, post.getDate(),0,0,0,tagsDTO,post.getId()));
+						postsDTO.add(new PostDTO(post.getDescription(),profileMediaRepository.findByPostId(post.getId()),mediasFileName,locationDTO, post.getDate(),0,0,0,tagsDTO,post.getId(),taggedProfilesDTO));
 					}
 					else if(post.getNumberOfLikes() == null && post.getNumberOfDisikes() == null && post.getNumberOfComments() != null) 
 					{
 						numberOfComments = post.getNumberOfComments();
-						postsDTO.add(new PostDTO(post.getDescription(),profileMediaRepository.findByPostId(post.getId()),mediasFileName,locationDTO, post.getDate(),0,0,numberOfComments,tagsDTO,post.getId()));
+						postsDTO.add(new PostDTO(post.getDescription(),profileMediaRepository.findByPostId(post.getId()),mediasFileName,locationDTO, post.getDate(),0,0,numberOfComments,tagsDTO,post.getId(),taggedProfilesDTO));
 					}
 					else 
 					{
 					numberOfLikes = post.getNumberOfLikes();
 					numberOfDislikes = post.getNumberOfDisikes();
 					numberOfComments = post.getNumberOfComments();
-					postsDTO.add(new PostDTO(post.getDescription(),profileMediaRepository.findByPostId(post.getId()),mediasFileName,locationDTO, post.getDate(),numberOfLikes,numberOfDislikes,numberOfComments,tagsDTO,post.getId()));
+					postsDTO.add(new PostDTO(post.getDescription(),profileMediaRepository.findByPostId(post.getId()),mediasFileName,locationDTO, post.getDate(),numberOfLikes,numberOfDislikes,numberOfComments,tagsDTO,post.getId(),taggedProfilesDTO));
 					}
 				}
 			

@@ -26,8 +26,10 @@
                 <template #button-content>
                    <b-icon icon="three-dots" aria-hidden="true" ></b-icon>
                 </template>
-                <b-dropdown-item v-on:click = "muteFriend">Mute</b-dropdown-item>
-                <b-dropdown-item v-on:click = "blockUser">Block</b-dropdown-item>
+                <b-dropdown-item v-on:click = "muteFriend" v-if="isMuted == false">Mute</b-dropdown-item>
+                <b-dropdown-item v-on:click = "unmuteFriend" v-if="isMuted">Unmute</b-dropdown-item>
+                <b-dropdown-item v-on:click = "blockUser" v-if="isBlocked == false">Block</b-dropdown-item>
+                <b-dropdown-item v-on:click = "unblockUser" v-if="isBlocked">Unblock</b-dropdown-item>
             </b-dropdown>
             <b-dropdown
             variant="outline-danger" 
@@ -109,6 +111,18 @@
                         <h4 align="left">{{user.biography}}</h4>
                     </b-col>
             </div>
+            <b-button v-if="isBlocked"       
+            variant="danger"
+            class = "btn btn-lg space_style"
+            v-on:click = "unblockUser"
+            style="margin-top:25px;
+            width:62%;
+            margin-left:100px;">
+            Unblock
+            </b-button>
+
+
+            <div v-if="isBlocked== false">
             <b-button v-if="friendStatus == 'notFriends' || friendStatus == 'rejected'"       
             variant="danger"
             class = "btn btn-lg space_style"
@@ -146,6 +160,7 @@
             v-if="user.profileStatus == 'publicProfile' || friendStatus == 'friends'"
             v-b-modal.modal-5
             >Show highlights</b-button>
+            </div>
             <b-modal ref="modal-ref" id="modal-5" title="Highlights" hide-footer>
                 <b-tabs 
                 style="margin-top:70px;" 
@@ -175,7 +190,7 @@
             active-nav-item-class="font-weight-bold text-uppercase text-danger"
             active-tab-class="font-weight-bold"
             content-class="mt-3">
-                <b-tab active>
+                <b-tab active v-if="isBlocked == false">
                 <template #title>
                    <b-icon icon="grid3x3-gap" aria-hidden="true"></b-icon><strong>   posts</strong>
                 </template>
@@ -240,6 +255,7 @@
           </b-modal>
        </div>
        <div> 
+           
           <b-modal ref="modal4" hide-footer scrollable title="Report inappropriate content" size="lg" modal-class="b-modal">
                <div modal-class="modal-dialog" role="document">
                     <div class="modal-content" style="background-color:#e4e4e4; ">
@@ -297,7 +313,9 @@ export default {
         selectedPost: [],
         postsNumber: 0,
         usersForTags:[],
-        multipleSelections:[]
+        multipleSelections:[],
+        isBlocked: false,
+        isMuted: false,
         }
     },
     async mounted(){
@@ -320,7 +338,29 @@ export default {
             }).catch(res => {
                         alert("Error");
                             console.log(res);
-                    });
+        });
+
+        this.axios.get('http://localhost:8083/profileMicroservice/api/profile/isBlocked/'+ this.$route.params.selectedUsername,{ 
+             headers: {
+                 'Authorization': 'Bearer ' + token,
+             }
+         }).then(response => {
+               this.isBlocked = response.data;
+            }).catch(res => {
+                        alert("Error");
+                            console.log(res);
+        });
+
+        this.axios.get('http://localhost:8083/profileMicroservice/api/profile/isMuted/'+ this.$route.params.selectedUsername,{ 
+             headers: {
+                 'Authorization': 'Bearer ' + token,
+             }
+         }).then(response => {
+               this.isMuted = response.data;
+            }).catch(res => {
+                        alert("Error");
+                            console.log(res);
+        });
         
         this.axios.get('http://localhost:8083/profileMicroservice/api/profile/getFriendStatus/'+ this.$route.params.selectedUsername,{ 
              headers: {
@@ -332,8 +372,9 @@ export default {
          }).catch(res => {
                alert(Error)
                 console.log(res);
-            });
-         this.axios.get('http://localhost:8083/mediaMicroservice/post/getMyPosts/'+ this.$route.params.selectedUsername)
+        });
+
+        this.axios.get('http://localhost:8083/mediaMicroservice/post/getMyPosts/'+ this.$route.params.selectedUsername)
             .then(response => {
                 this.posts = response.data;
                 this.postsNumber = response.data.length;
@@ -728,7 +769,41 @@ export default {
                     alert("Please, try later.")
                     console.log(response);
                 });
-        }
+        }, 
+        unblockUser: async function(){
+            let token = localStorage.getItem('token').substring(1, localStorage.getItem('token').length-1);
+            
+            this.axios.post('http://localhost:8083/profileMicroservice/api/profile/unblockUser',this.user.username,{ 
+                headers: {
+                    'Authorization': 'Bearer ' + token,
+                }
+                }).then(response => {
+                    alert("User unblocked");
+                    console.log(response);                
+                }).catch(res => {
+                    alert("Error");
+                    console.log(res.response.data.message);
+
+                });
+        },
+        unmuteFriend :function(){
+            let token = localStorage.getItem('token').substring(1, localStorage.getItem('token').length-1);
+            const friendForMuteInfo ={
+                username : this.user.username,
+            } 
+            this.axios.post('http://localhost:8083/profileMicroservice/api/profile/unmute',friendForMuteInfo, { 
+                headers: {
+                    'Authorization': 'Bearer ' + token,
+                }})
+                .then(response => {
+                    console.log(response.data);
+                    alert("Friend unmuted!")
+                })
+                .catch(response => {
+                    alert("Please, try later.")
+                    console.log(response);
+                })
+        },
     }
 }
 </script>

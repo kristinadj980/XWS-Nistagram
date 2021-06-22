@@ -39,4 +39,7 @@ public interface IProfileService {
 	List<FollowingDTO> getFollowers();
 	Profile sendRequest(VerificationRequestDTO verificationRequestDTO );
 	List<ProfileDTO> getUsersForTags();
+	Boolean isBlocked(String username);
+	Boolean isMuted(String username);
+	
 }
