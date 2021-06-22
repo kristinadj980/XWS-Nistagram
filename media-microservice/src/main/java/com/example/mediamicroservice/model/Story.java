@@ -55,8 +55,8 @@ public class Story {
 	public Location location;
 	
 	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-	@JoinTable(name = "post_profile_tags",
-	joinColumns = @JoinColumn(name = "post_id", referencedColumnName = "id"),
+	@JoinTable(name = "story_profile_tags",
+	joinColumns = @JoinColumn(name = "story_id", referencedColumnName = "id"),
 	inverseJoinColumns = @JoinColumn(name = "profile_tags_id", referencedColumnName = "id"))
 	private List<ProfileMedia> profileTags;
 	   

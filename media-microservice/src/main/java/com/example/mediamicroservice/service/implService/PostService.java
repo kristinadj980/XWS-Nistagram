@@ -471,6 +471,7 @@ public class PostService implements IPostService {
 			 List<Post> myPosts = profileMediaTo.getPosts();
 			 List<Media> medias = new ArrayList<Media>();
 			 int updatedNumberOfComments = 0;
+			
 			 for (Post post : myPosts) {
 				 if(dto.getPostId() == post.getId()) {
 						 List<Comment> currentComments = post.getComments();
@@ -481,11 +482,29 @@ public class PostService implements IPostService {
 							 i++;
 							 comments.add(comment);
 							 if(i<2) {
-							    comments.add(new Comment(dto.getComment(), profileMediaFrom, LocalDateTime.now()));
+								 if(dto.getTaggedUsers() != null) {
+								        List<ProfileDTO> taggedUsers = dto.getTaggedUsers();
+								        List<ProfileMedia> profiles = new ArrayList<ProfileMedia>();
+								        for (ProfileDTO profileDTO : taggedUsers) {
+								        	 profiles.add(new ProfileMedia(profileDTO.getUsername()));
+										}
+								        comment.setProfileTags(profiles);
+								  }
+							    comments.add(new Comment(dto.getComment(), profileMediaFrom, LocalDateTime.now(),comment.getProfileTags()));
 							}
 						  }
 						 }else {
-							 comments.add(new Comment(dto.getComment(), profileMediaFrom,LocalDateTime.now()));
+							 Comment c = new Comment();
+							 if(dto.getTaggedUsers() != null) {
+							        List<ProfileDTO> taggedUsers = dto.getTaggedUsers();
+							        List<ProfileMedia> profiles = new ArrayList<ProfileMedia>();
+							        for (ProfileDTO profileDTO : taggedUsers) {
+							        	 profiles.add(new ProfileMedia(profileDTO.getUsername()));
+									}
+							        c.setProfileTags(profiles);
+							  }
+							
+							 comments.add(new Comment(dto.getComment(), profileMediaFrom,LocalDateTime.now(),c.getProfileTags()));
 						 }
 						 int numberOfComments = comments.size();
 						 int currentNumberOfComments = 0;
@@ -520,8 +539,15 @@ public class PostService implements IPostService {
 	    		comments = post.getComments();
 	    		allComments = sortCommentsByDate(comments);
 	    		for (Comment c : comments) {
+	    			List<ProfileMedia> taggedProfiles = c.getProfileTags();
+	    			List<ProfileDTO> taggedProfilesDTO = new ArrayList<ProfileDTO>();
+	    			if(c.getProfileTags() != null) {
+	    			for (ProfileMedia p : taggedProfiles) {
+	    				taggedProfilesDTO.add(new ProfileDTO(p.getUsername()));
+	    			}
+	    			}
 	    			ProfileMedia user =  c.getRegistredUserProfile();
-					profilesWhoCommented.add(new LikePostDTO(user.getUsername(), c.getDescription(),c.getAnswer(), comments.size(), c.getId()));
+					profilesWhoCommented.add(new LikePostDTO(user.getUsername(), c.getDescription(),c.getAnswer(), comments.size(), c.getId(),taggedProfilesDTO));
 				}
 			}
 	   
