@@ -466,7 +466,6 @@ public class PostService implements IPostService {
 			 List<Post> myPosts = profileMediaTo.getPosts();
 			 List<Media> medias = new ArrayList<Media>();
 			 int updatedNumberOfComments = 0;
-			
 			 for (Post post : myPosts) {
 				 if(dto.getPostId() == post.getId()) {
 						 List<Comment> currentComments = post.getComments();
@@ -495,7 +494,8 @@ public class PostService implements IPostService {
 							        List<ProfileDTO> taggedUsers = dto.getTaggedUsers();
 							        List<ProfileMedia> profiles = new ArrayList<ProfileMedia>();
 							        for (ProfileDTO profileDTO : taggedUsers) {
-							        	 profiles.add(new ProfileMedia(profileDTO.getUsername()));
+							        	 ProfileMedia profile = profileMediaService.findByUsername(profileDTO.getUsername());
+							        	 profiles.add(profile);
 									}
 							        c.setProfileTags(profiles);
 							  }

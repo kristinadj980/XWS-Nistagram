@@ -355,6 +355,10 @@
                                      <label>Profile: {{user.usernameFrom}} </label><span style="margin-left:30px;" ></span>
                                      <label > Comment : {{user.comment}}</label><span style="margin-left:30px;" ></span>
                                      <label > Answer : {{user.answer}}</label>
+                                      <h5 align="left"> <span v-for="(u,t) in user.taggedUsers" :key="t">
+                                        @{{u.username}}
+                                    </span>
+                                    </h5>
                                 </div>
                              </div><span style="margin-left:610px;" ></span>
                              <b-button style="margin-left: 30px;" pill variant="outline-danger" class = "btn btn-lg space_style" @click="sendAnswer($event,user)">Replay</b-button> 
