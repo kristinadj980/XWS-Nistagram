@@ -12,51 +12,84 @@
                     <b-icon icon="image" aria-hidden="true"></b-icon> Add post</b-button>
                 <b-button pill variant="outline-danger" class = "btn btn-lg space_style" v-on:click = "addStories">
                     <b-icon icon="image" aria-hidden="true"></b-icon> Add story</b-button>
-    
-                <!--LOKACIJE-->
-               <!--  <b-input-group class=" serach_look1">
-                    <b-input-group-append>
-                        <input 
-                        list="my-list-id1" 
-                        v-model="selectedLocation" 
-                        class="input_style" 
-                        placeholder="enter location..."
-                        style="margin-top: 3% !important; width:400px; height:35px;">
-                        <datalist id="my-list-id1">
-                        <option v-for="location in locations" v-bind:key="location.id">
-                            {{location.country}},{{location.city}},{{location.street}},{{location.objectName}} 
-                        </option>
-                    </datalist>
-                    <router-link :to="{ name: 'SearchPostByLocation', params: {selectedLocation: this.selectedLocation}}" class="search-btn">
-                       <b-button style="margin-top: -15% !important;  margin-left: 100% !important;" variant="outline-danger"><b-icon icon="search" aria-hidden="true"></b-icon></b-button>
-                    </router-link>
-                     </b-input-group-append>
-
-                   
-               </b-input-group>    
-                <b-input-group class=" serach_look">
-                    <b-input-group-append>
-                        <input 
-                        list="my-list-id" 
-                        v-model="selectedUser" 
-                        class="input_style" 
-                        placeholder="enter username..."
-                        style="margin-top: 3% !important; width:300px; height:35px;">
-                        <datalist id="my-list-id">
-                            <option v-for="user in users" v-bind:key="user.id">
-                                {{ user.username }} 
-                            </option>
-                        </datalist>
-                    <router-link :to="{ name: 'GeneralProfiles', params: {selectedUsername: this.selectedUser}}" class="search-btn">
-                       <b-button style="margin-top: -20% !important;  margin-left: 100% !important;" variant="outline-danger"><b-icon icon="search" aria-hidden="true"></b-icon></b-button>
-                    </router-link>
-    
-                    </b-input-group-append>
-                
-                </b-input-group>-->
-
+                    
             </span>
-                <span style="float:right;margin:15px">
+            <span style="float: left; margin-left: 180px;  margin-top:-2px;">
+            <!-- PRETRAGA -->
+                    <b-tabs content-class="mt-3" fill style="margin-left:40%; width:500px;">
+                        <b-tab title="profiles" active>
+                            <b-input-group-append>
+                                <input
+                                list="my-list-id" 
+                                v-model="profileForSearch" 
+                                class="input_style" 
+                                placeholder="enter profile for search..."
+                                style="width:300px; height:35px;">
+                                <datalist id="my-list-id" >
+                                    <option v-for="profile in publicProfiles"  v-bind:key="profile" >
+                                        {{ profile }} 
+                                    </option>
+                                </datalist>
+                                <b-button style="margin-top: -14% !important;  margin-left: 82.2% !important;" variant="outline-danger" v-on:click="searchProfiles" v-b-modal.modal-11><b-icon icon="search" aria-hidden="true"></b-icon></b-button>
+                            </b-input-group-append>
+                        </b-tab>
+                        <b-tab title="locations">
+                            <b-input-group-append>
+                                <input 
+                                list="my-list-id1" 
+                                v-model="selectedLocation" 
+                                class="input_style" 
+                                placeholder="enter location..."
+                                style="width:300px; height:35px;">
+                                <datalist id="my-list-id1">
+                                <option v-for="location in locations" v-bind:key="location.id">
+                                    {{ location.country }}, {{location.city}},  {{location.street}}, {{location.objectName}} 
+                                </option>
+                            </datalist>
+                            <router-link :to="{ name: 'SearchPostByLocation', params: {selectedLocation: this.selectedLocation}}" class="search-btn">
+                                <b-button style="margin-top: -14% !important;  margin-left: 82.2% !important;" variant="outline-danger"><b-icon icon="search" aria-hidden="true"></b-icon></b-button>
+                            </router-link>
+                            </b-input-group-append>
+                        </b-tab>
+                        <b-tab title="tags">
+                            <b-input-group-append>
+                                <input 
+                                list="my-list-tags-id" 
+                                v-model="selectedTag" 
+                                class="input_style" 
+                                placeholder="enter tag..."
+                                style=" width:300px; height:35px;">
+                            <datalist id="my-list-tags-id">
+                                    <option v-for="tag in tags" v-bind:key="tag.id">
+                                        {{ tag.name}} 
+                                    </option>
+                                </datalist> 
+                            <router-link :to="{ name: 'SearchPost', params: {selectedTag: this.selectedTag}}" class="search-btn">
+                            <b-button style="margin-top: -14% !important;  margin-left: 82.2% !important;" variant="outline-danger"><b-icon icon="search" aria-hidden="true"></b-icon></b-button>
+                            </router-link>
+                            </b-input-group-append>
+                        </b-tab>
+                    </b-tabs>
+                    <b-modal ref="modal-ref11" id="modal-11"  hide-footer>
+                        <b-row text-align-center class="request_look" v-for="result in searchResult" v-bind:key="result" >
+                                <b-col sm="2" >
+                                    <h4
+                                    text-align-center
+                                    v-bind:style="{ align: 'center', justify: 'center' }"
+                                    ><b-icon icon="person-circle" aria-hidden="true"></b-icon>
+                                    <b>{{result }}</b></h4>
+                                </b-col>
+                                <b-col sm="8"> 
+                                    <router-link :to="{ name: 'GeneralProfiles', params: {selectedUsername: result}}" class="search-btn">
+                                        <b-button pill variant="danger" class = "btn btn-lg space_style" style="margin-left:50px;" >view</b-button>
+                                    </router-link>
+                                </b-col>
+                            <hr>
+                        </b-row>                            
+                    </b-modal>
+                    <!-- PRETRAGA -->
+                </span>
+                <span style="float:right;margin:15px">                    
                     <b-icon icon="person-plus" variant="danger"
                     aria-hidden="true"
                     font-scale="2.5" 
@@ -75,7 +108,8 @@
                 </span>
         </div>
         <b-card class="content_surface">
-             <b-card class="post_look" v-for="post in posts" v-bind:key="post.fileName">
+            
+            <b-card class="post_look" v-for="post in posts" v-bind:key="post.fileName">
                         <b-row >
                         <h4 align="left"><b-icon icon="person-circle" aria-hidden="true"></b-icon>  {{post.username}}</h4>
                         </b-row>
@@ -155,10 +189,12 @@
 </template>
 
 <script>
+import RegisteredUserSearch from './RegisteredUserSearch.vue';
 export default {
     name: 'Homepage',
     data() {
     return {
+        RegisteredUserSearch,
         selectedUser:[''],
         users: [],
         friendsNotMuted: [],
@@ -168,7 +204,7 @@ export default {
         numberOfLikes:0,
         numberOfDislikes:0,
         loggeduser: "",
-         comments:[],
+        comments:[],
         comment:'',
         usersWhoCommented:[],
         answer:'',
@@ -178,6 +214,16 @@ export default {
         postId:'',
         description:'',
         selectedPost: [],
+        publicProfiles:[''],
+        profileForSearch: "",
+        searchResult: [],
+        choosenUser: "",
+        usersForTags: [],
+        selectedTag:[''],
+        selectedLocation:[''],
+        multipleSelections: [],
+        tags: [],
+        locations: [],
         }
     },
     async mounted(){
@@ -227,6 +273,14 @@ export default {
                //alert(Error)
                 console.log(res);
             });
+
+        this.axios.get('http://localhost:8083/profileMicroservice/api/profile/getPublicProfiles'
+        ).then(response => {
+                    this.publicProfiles = response.data;
+                    
+            }).catch(res => {
+                console.log(res);
+        });
            
             this.axios.get('http://localhost:8083/searchMicroservice/tag/getAllTags',{ 
              headers: {
@@ -239,7 +293,7 @@ export default {
                        //alert("Error");
                         console.log(res);
                  });
-                 this.axios.get('http://localhost:8083/mediaMicroservice/location/getLocations',{ 
+        this.axios.get('http://localhost:8083/mediaMicroservice/location/getLocations',{ 
              headers: {
                  'Authorization': 'Bearer ' + token,
              }
@@ -293,6 +347,17 @@ export default {
                         alert("Profile is private");
                             console.log(res);
                     });
+        },
+        searchProfiles: function(){
+            this.axios.get('http://localhost:8083/searchMicroservice/profile/searchProfile/'+ this.profileForSearch,{ 
+                }).then(response => {
+                    this.searchResult = response.data
+                    console.log(response);                
+                }).catch(res => {
+                    alert("Error,please try later");
+                    console.log(res.response.data.message);
+
+            });
         },
         getFriendsStories: function(usernames) {
 

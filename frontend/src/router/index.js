@@ -12,7 +12,7 @@ import GeneralProfiles from '../views/GeneralProfiles.vue'
 import SearchPost from '../views/SearchPost.vue'
 import SearchPostByLocation from '../views/SearchPostByLocation.vue'
 import FriendRequests from '../views/FriendRequests.vue'
-import SearchPostUnregistered from '../views/SearchPostUnregistered.vue'
+import RegisteredUserSearch from '../views/RegisteredUserSearch.vue'
 import HomePageAdmin from '../views/HomePageAdmin.vue'
 import VerificationRequests from '../views/VerificationRequests.vue'
 import Notifications from '../views/Notifications.vue'
@@ -87,9 +87,9 @@ const routes = [
     component: SearchPostByLocation
   },
   {
-    path: '/searchPostUnregistered/:selectedTag',
-    name: 'SearchPostUnregistered',
-    component: SearchPostUnregistered
+    path: '/registeredUserSearch',
+    name: 'RegisteredUserSearch',
+    component: RegisteredUserSearch
   },
   {
     path: '/friendRequests',

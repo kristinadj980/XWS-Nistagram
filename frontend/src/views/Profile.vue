@@ -12,28 +12,98 @@
                     <b-icon icon="image" aria-hidden="true"></b-icon> Add post</b-button>
                 <b-button pill variant="outline-danger" class = "btn btn-lg space_style" v-on:click = "addStories">
                     <b-icon icon="image" aria-hidden="true"></b-icon> Add story</b-button>
-                <b-input-group class=" serach_look">
-                    <b-input-group-append>
-                        <input 
-                        list="my-list-id" 
-                        v-model="selectedUser" 
-                        class="input_style" 
-                        placeholder="enter username..."
-                        style="margin-top: 3% !important; width:400px; height:35px;">
-                        <datalist id="my-list-id">
-                            <option v-for="user in users" v-bind:key="user.id">
-                                {{ user.username }} 
-                            </option>
-                        </datalist>
-                    <router-link :to="{ name: 'GeneralProfiles', params: {selectedUsername: this.selectedUser}}" class="search-btn">
-                       <b-button style="margin-top: -15% !important;  margin-left: 100% !important;" variant="outline-danger"><b-icon icon="search" aria-hidden="true"></b-icon></b-button>
-                    </router-link>
-    
-                    </b-input-group-append>
-                </b-input-group>
             </span>
-                <span  style="float:right;margin:15px">
-                    <b-button pill variant="outline-danger" class = "btn btn-lg btn-light" style="margin-right:20px;" v-on:click = "logOut">Log Out</b-button>
+            <span style="float: left; margin-left: 180px;  margin-top:-2px;">
+            <!-- PRETRAGA -->
+                    <b-tabs content-class="mt-3" fill style="margin-left:40%; width:500px;">
+                        <b-tab title="profiles" active>
+                            <b-input-group-append>
+                                <input
+                                list="my-list-id" 
+                                v-model="profileForSearch" 
+                                class="input_style" 
+                                placeholder="enter profile for search..."
+                                style="width:300px; height:35px;">
+                                <datalist id="my-list-id" >
+                                    <option v-for="profile in publicProfiles"  v-bind:key="profile" >
+                                        {{ profile }} 
+                                    </option>
+                                </datalist>
+                                <b-button style="margin-top: -14% !important;  margin-left: 82.2% !important;" variant="outline-danger" v-on:click="searchProfiles" v-b-modal.modal-11><b-icon icon="search" aria-hidden="true"></b-icon></b-button>
+                            </b-input-group-append>
+                        </b-tab>
+                        <b-tab title="locations">
+                            <b-input-group-append>
+                                <input 
+                                list="my-list-id1" 
+                                v-model="selectedLocation" 
+                                class="input_style" 
+                                placeholder="enter location..."
+                                style="width:300px; height:35px;">
+                                <datalist id="my-list-id1">
+                                <option v-for="location in locations" v-bind:key="location.id">
+                                    {{ location.country }}, {{location.city}},  {{location.street}}, {{location.objectName}} 
+                                </option>
+                            </datalist>
+                            <router-link :to="{ name: 'SearchPostByLocation', params: {selectedLocation: this.selectedLocation}}" class="search-btn">
+                                <b-button style="margin-top: -14% !important;  margin-left: 82.2% !important;" variant="outline-danger"><b-icon icon="search" aria-hidden="true"></b-icon></b-button>
+                            </router-link>
+                            </b-input-group-append>
+                        </b-tab>
+                        <b-tab title="tags">
+                            <b-input-group-append>
+                                <input 
+                                list="my-list-tags-id" 
+                                v-model="selectedTag" 
+                                class="input_style" 
+                                placeholder="enter tag..."
+                                style=" width:300px; height:35px;">
+                            <datalist id="my-list-tags-id">
+                                    <option v-for="tag in tagsForSearch" v-bind:key="tag.id">
+                                        {{ tag.name}} 
+                                    </option>
+                                </datalist> 
+                            <router-link :to="{ name: 'SearchPost', params: {selectedTag: this.selectedTag}}" class="search-btn">
+                            <b-button style="margin-top: -14% !important;  margin-left: 82.2% !important;" variant="outline-danger"><b-icon icon="search" aria-hidden="true"></b-icon></b-button>
+                            </router-link>
+                            </b-input-group-append>
+                        </b-tab>
+                    </b-tabs>
+                    <b-modal ref="modal-ref11" id="modal-11"  hide-footer>
+                        <b-row text-align-center class="request_look" v-for="result in searchResult" v-bind:key="result" >
+                                <b-col sm="2" >
+                                    <h4
+                                    text-align-center
+                                    v-bind:style="{ align: 'center', justify: 'center' }"
+                                    ><b-icon icon="person-circle" aria-hidden="true"></b-icon>
+                                    <b>{{result }}</b></h4>
+                                </b-col>
+                                <b-col sm="8"> 
+                                    <router-link :to="{ name: 'GeneralProfiles', params: {selectedUsername: result}}" class="search-btn">
+                                        <b-button pill variant="danger" class = "btn btn-lg space_style" style="margin-left:50px;" >view</b-button>
+                                    </router-link>
+                                </b-col>
+                            <hr>
+                        </b-row>                            
+                    </b-modal>
+                    <!-- PRETRAGA -->
+                </span>
+                <span style="float:right;margin:15px">                    
+                    <b-icon icon="person-plus" variant="danger"
+                    aria-hidden="true"
+                    font-scale="2.5" 
+                    v-on:click = "friendRequests"
+                    style="margin-right:4%; margin-left: -35%; margin-top: 5%;"
+                    ></b-icon>
+                    <b-icon 
+                    icon="heart"
+                    variant="danger"
+                    aria-hidden="true"
+                    font-scale="2.3"
+                    v-on:click="notifications"
+                    style="margin-right:8%;margin-left: 5%;  margin-top: 5%;"
+                    ></b-icon>
+                    <b-button pill variant="outline-danger" class = "btn btn-lg btn-light" style="margin-right:20px; margin-top: -10%;" v-on:click = "logOut">Log Out</b-button>
                 </span>
         </div>
         <b-card class="content_surface" align="left">
@@ -481,6 +551,15 @@ export default {
         followers: [],
         followersNumber: 0,
         postsNumber: 0,
+        selectedTag:[''],
+        selectedLocation:[''],
+        multipleSelections: [],
+        tagsForSearch: [],
+        locations: [],
+        publicProfiles: [],
+        profileForSearch: "",
+        searchResult: [],
+        choosenUser: "",
         }
     },
     mounted(){
@@ -497,16 +576,6 @@ export default {
                this.getMyFavouritePosts(response.data);
                this.getMyCollections(response.data);
                this.getMyHistory(response.data)
-         }).catch(res => {
-                       //alert("Error");
-                        console.log(res);
-                 });
-        this.axios.get('http://localhost:8083/profileMicroservice/api/profile/getAllUsers',{ 
-             headers: {
-                 'Authorization': 'Bearer ' + token,
-             }
-         }).then(response => {
-               this.users = response.data
          }).catch(res => {
                        //alert("Error");
                         console.log(res);
@@ -539,7 +608,36 @@ export default {
                        //alert("Error");
                         console.log(res);
                  });
-        
+        this.axios.get('http://localhost:8083/searchMicroservice/tag/getAllTags',{ 
+             headers: {
+                 'Authorization': 'Bearer ' + token,
+             }
+         }).then(response => {
+               this.tagsForSearch = response.data
+                console.log(this.tagsForSearch);
+         }).catch(res => {
+                       //alert("Error");
+                        console.log(res);
+                 });
+        this.axios.get('http://localhost:8083/mediaMicroservice/location/getLocations',{ 
+             headers: {
+                 'Authorization': 'Bearer ' + token,
+             }
+         }).then(response => {
+               this.locations = response.data
+                console.log(this.locations);
+         }).catch(res => {
+                       //alert("Error");
+                        console.log(res);
+                 });
+        this.axios.get('http://localhost:8083/profileMicroservice/api/profile/getPublicProfiles'
+        ).then(response => {
+                    this.publicProfiles = response.data;
+                    
+            }).catch(res => {
+                console.log(res);
+        });
+           
    },
     methods:{
          toggle () {
@@ -569,6 +667,11 @@ export default {
         },
         closeFriendsInfo: function() {
             this.$refs['modal6'].hide();
+        },
+        friendRequests: function() {
+            window.location.href = "/friendRequests";
+        },notifications: function() {
+            window.location.href = "/notifications";
         },
         getMyPosts: function(person) {
             this.axios.get('http://localhost:8083/mediaMicroservice/post/getMyPosts/'+ person.username,)
@@ -647,6 +750,17 @@ export default {
                             console.log(res);
                     });
                     
+        },
+        searchProfiles: function(){
+            this.axios.get('http://localhost:8083/searchMicroservice/profile/searchProfile/'+ this.profileForSearch,{ 
+                }).then(response => {
+                    this.searchResult = response.data
+                    console.log(response);                
+                }).catch(res => {
+                    alert("Error,please try later");
+                    console.log(res.response.data.message);
+
+            });
         },
         getHighlightedStories: function(person) {
             this.axios.get('http://localhost:8083/mediaMicroservice/story/getHighlightedStories/'+ person.username,)

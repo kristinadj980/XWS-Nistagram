@@ -17,38 +17,44 @@
                 <b-button style="margin-top: -14% !important;  margin-left: 82.2% !important;" variant="outline-danger" v-on:click="searchProfiles" v-b-modal.modal-1><b-icon icon="search" aria-hidden="true"></b-icon></b-button>
             </b-input-group-append>
         </b-tab>
+
+        
         <b-tab title="locations">
-            <b-input-group-append>
-                <input
-                list="my-list-id" 
-                v-model="profileForSearch" 
-                class="input_style" 
-                placeholder="enter location for search..."
-                style="margin-top: 3% !important; width:300px; height:35px;">
-                <datalist id="my-list-id" >
-                    <option v-for="profile in publicProfiles"  v-bind:key="profile" >
-                        {{ profile }} 
-                    </option>
-                </datalist>
-                <b-button style="margin-top: -14% !important;  margin-left: 82.2% !important;" variant="outline-danger" v-on:click="searchProfiles" v-b-modal.modal-1><b-icon icon="search" aria-hidden="true"></b-icon></b-button>
-            </b-input-group-append>
-        </b-tab>
-        <b-tab title="tags">
-            <b-input-group-append>
-                <input
-                list="my-list-id" 
-                v-model="profileForSearch" 
-                class="input_style" 
-                placeholder="enter tag for search..."
-                style="margin-top: 3% !important; width:300px; height:35px;">
-                <datalist id="my-list-id" >
-                    <option v-for="profile in publicProfiles"  v-bind:key="profile" >
-                        {{ profile }} 
-                    </option>
-                </datalist>
-                <b-button style="margin-top: -14% !important;  margin-left: 82.2% !important;" variant="outline-danger" v-on:click="searchProfiles" v-b-modal.modal-1><b-icon icon="search" aria-hidden="true"></b-icon></b-button>
-            </b-input-group-append>
-        </b-tab>
+                            <b-input-group-append>
+                                <input 
+                                list="my-list-id1" 
+                                v-model="selectedLocation" 
+                                class="input_style" 
+                                placeholder="enter location..."
+                                style="width:300px; height:35px;">
+                                <datalist id="my-list-id1">
+                                <option v-for="location in locations" v-bind:key="location.id">
+                                    {{ location.country }}, {{location.city}},  {{location.street}}, {{location.objectName}} 
+                                </option>
+                            </datalist>
+                            <router-link :to="{ name: 'SearchPostByLocation', params: {selectedLocation: this.selectedLocation}}" class="search-btn">
+                                <b-button style="margin-top: -14% !important;  margin-left: 82.2% !important;" variant="outline-danger"><b-icon icon="search" aria-hidden="true"></b-icon></b-button>
+                            </router-link>
+                            </b-input-group-append>
+                        </b-tab>
+                        <b-tab title="tags">
+                            <b-input-group-append>
+                                <input 
+                                list="my-list-tags-id" 
+                                v-model="selectedTag" 
+                                class="input_style" 
+                                placeholder="enter tag..."
+                                style=" width:300px; height:35px;">
+                            <datalist id="my-list-tags-id">
+                                    <option v-for="tag in tags" v-bind:key="tag.id">
+                                        {{ tag.name}} 
+                                    </option>
+                                </datalist> 
+                            <router-link :to="{ name: 'SearchPost', params: {selectedTag: this.selectedTag}}" class="search-btn">
+                            <b-button style="margin-top: -14% !important;  margin-left: 82.2% !important;" variant="outline-danger"><b-icon icon="search" aria-hidden="true"></b-icon></b-button>
+                            </router-link>
+                            </b-input-group-append>
+                        </b-tab>
     </b-tabs>
     <b-modal ref="modal-ref1" id="modal-1"  hide-footer>
         <b-row text-align-center class="request_look" v-for="result in searchResult" v-bind:key="result" >
@@ -79,20 +85,40 @@ export default {
         profileForSearch: "",
         searchResult: [],
         choosenUser: "",
+        selectedTag:[''],
+        selectedLocation:[''],
+        tags: [],
+        locations: [],
         }
     },
     watch: {
 
     },
     mounted(){
-      this.axios.get('http://localhost:8083/profileMicroservice/api/profile/getPublicProfiles'
-       ).then(response => {
-                this.publicProfiles = response.data;
-                
+
+        this.axios.get('http://localhost:8083/profileMicroservice/api/profile/getPublicProfiles'
+        ).then(response => {
+                    this.publicProfiles = response.data;
+                    
+            }).catch(res => {
+                console.log(res);
+        });
+
+        this.axios.get('http://localhost:8083/searchMicroservice/tag/getAllTags'
+        ).then(response => {
+               this.tags = response.data
+                console.log(this.tags);
+         }).catch(res => {
+            console.log(res);
+        });
+
+        this.axios.get('http://localhost:8083/mediaMicroservice/location/getLocations'
+        ).then(response => {
+               this.locations = response.data
+                console.log(this.locations);
         }).catch(res => {
             console.log(res);
-      });
-       
+        });
    },methods:{
         register: function(){
            window.location.href = "/registration";
