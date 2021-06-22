@@ -11,6 +11,7 @@ import com.example.mediamicroservice.dto.LikeDislikeInfoDTO;
 import com.example.mediamicroservice.dto.LikePostDTO;
 import com.example.mediamicroservice.dto.LocationDTO;
 import com.example.mediamicroservice.dto.PostDTO;
+import com.example.mediamicroservice.dto.ProfileDTO;
 import com.example.mediamicroservice.dto.TagDTO;
 import com.example.mediamicroservice.model.Comment;
 import com.example.mediamicroservice.model.InappropriateContent;
@@ -111,6 +112,15 @@ public class PostService implements IPostService {
 			tags.add(tag);
 		}
         post.setTags(tags);
+        if( postDTO.getTaggedUsers() != null) {
+        List<ProfileDTO> taggedUsers = postDTO.getTaggedUsers();
+        List<ProfileMedia> profiles = new ArrayList<ProfileMedia>();
+        for (ProfileDTO profileDTO : taggedUsers) {
+        	ProfileMedia profile = profileMediaRepository.findByUsername(profileDTO.getUsername());
+        	 profiles.add(profile);
+		}
+        post.setProfileTags(profiles);
+        }
         List<Media> medias = new ArrayList<Media>();
         for(String s:postDTO.getFileNames()) {
         	Media media = new Media();
@@ -139,6 +149,13 @@ public class PostService implements IPostService {
 		for (Post post : posts) {
 			List<Media> medias = post.getMedias();
 			List<String> mediasFileName = new ArrayList<String>();
+			List<ProfileMedia> taggedProfiles = post.getProfileTags();
+			List<ProfileDTO> taggedProfilesDTO = new ArrayList<ProfileDTO>();
+			if(post.getProfileTags() != null) {
+			for (ProfileMedia p : taggedProfiles) {
+				taggedProfilesDTO.add(new ProfileDTO(p.getUsername()));
+			}
+			}
 			for (Media m : medias) {
 				mediasFileName.add(m.getFileName());
 			}
@@ -151,45 +168,45 @@ public class PostService implements IPostService {
 			}
 			if( post.getNumberOfLikes() == null && post.getNumberOfDisikes() != null && post.getNumberOfComments() == null) {
 				numberOfDislikes = post.getNumberOfDisikes();
-				myPosts.add(new PostDTO(post.getDescription(),username,mediasFileName,locationDTO, post.getDate(),0,numberOfDislikes,0,tagsDTO,post.getId()));
+				myPosts.add(new PostDTO(post.getDescription(),username,mediasFileName,locationDTO, post.getDate(),0,numberOfDislikes,0,tagsDTO,post.getId(),taggedProfilesDTO));
 			}else if( post.getNumberOfLikes() == null && post.getNumberOfDisikes() != null && post.getNumberOfComments() != null) {
 					numberOfDislikes = post.getNumberOfDisikes();
 					numberOfComments = post.getNumberOfComments();
-					myPosts.add(new PostDTO(post.getDescription(),username,mediasFileName,locationDTO, post.getDate(),0,numberOfDislikes,numberOfComments,tagsDTO,post.getId()));
+					myPosts.add(new PostDTO(post.getDescription(),username,mediasFileName,locationDTO, post.getDate(),0,numberOfDislikes,numberOfComments,tagsDTO,post.getId(),taggedProfilesDTO));
 			
 			}else if (post.getNumberOfDisikes() == null && post.getNumberOfLikes() != null && post.getNumberOfComments() == null ) {
 				numberOfLikes = post.getNumberOfLikes();
-				myPosts.add(new PostDTO(post.getDescription(),username,mediasFileName,locationDTO, post.getDate(),numberOfLikes,0,0,tagsDTO,post.getId()));
+				myPosts.add(new PostDTO(post.getDescription(),username,mediasFileName,locationDTO, post.getDate(),numberOfLikes,0,0,tagsDTO,post.getId(),taggedProfilesDTO));
 			
 		    }else if (post.getNumberOfDisikes() == null && post.getNumberOfLikes() != null && post.getNumberOfComments() != null ) {
 			numberOfLikes = post.getNumberOfLikes();
 			numberOfComments = post.getNumberOfComments();
-			myPosts.add(new PostDTO(post.getDescription(),username,mediasFileName,locationDTO, post.getDate(),numberOfLikes,0,numberOfComments,tagsDTO,post.getId()));
+			myPosts.add(new PostDTO(post.getDescription(),username,mediasFileName,locationDTO, post.getDate(),numberOfLikes,0,numberOfComments,tagsDTO,post.getId(),taggedProfilesDTO));
 		    }
 		    else if (post.getNumberOfDisikes() != null && post.getNumberOfLikes() == null && post.getNumberOfComments() == null ) {
 		    	numberOfDislikes = post.getNumberOfDisikes();
-				myPosts.add(new PostDTO(post.getDescription(),username,mediasFileName,locationDTO, post.getDate(),0,numberOfDislikes,0,tagsDTO,post.getId()));
+				myPosts.add(new PostDTO(post.getDescription(),username,mediasFileName,locationDTO, post.getDate(),0,numberOfDislikes,0,tagsDTO,post.getId(),taggedProfilesDTO));
 		    }
 		    else if (post.getNumberOfDisikes() != null && post.getNumberOfLikes() != null && post.getNumberOfComments() == null ) {
 				numberOfLikes = post.getNumberOfLikes();
 				numberOfDislikes = post.getNumberOfDisikes();
-				myPosts.add(new PostDTO(post.getDescription(),username,mediasFileName,locationDTO, post.getDate(),numberOfLikes,numberOfDislikes,0,tagsDTO,post.getId()));
+				myPosts.add(new PostDTO(post.getDescription(),username,mediasFileName,locationDTO, post.getDate(),numberOfLikes,numberOfDislikes,0,tagsDTO,post.getId(),taggedProfilesDTO));
 			    }
 			else if(post.getNumberOfLikes() == null && post.getNumberOfDisikes() == null && post.getNumberOfComments() == null) 
 			{
-				myPosts.add(new PostDTO(post.getDescription(),username,mediasFileName,locationDTO, post.getDate(),0,0,0,tagsDTO,post.getId()));
+				myPosts.add(new PostDTO(post.getDescription(),username,mediasFileName,locationDTO, post.getDate(),0,0,0,tagsDTO,post.getId(),taggedProfilesDTO));
 			}
 			else if(post.getNumberOfLikes() == null && post.getNumberOfDisikes() == null && post.getNumberOfComments() != null) 
 			{
 				numberOfComments = post.getNumberOfComments();
-				myPosts.add(new PostDTO(post.getDescription(),username,mediasFileName,locationDTO, post.getDate(),0,0,numberOfComments,tagsDTO,post.getId()));
+				myPosts.add(new PostDTO(post.getDescription(),username,mediasFileName,locationDTO, post.getDate(),0,0,numberOfComments,tagsDTO,post.getId(),taggedProfilesDTO));
 			}
 			else 
 			{
 			numberOfLikes = post.getNumberOfLikes();
 			numberOfDislikes = post.getNumberOfDisikes();
 			numberOfComments = post.getNumberOfComments();
-			myPosts.add(new PostDTO(post.getDescription(),username,mediasFileName,locationDTO, post.getDate(),numberOfLikes,numberOfDislikes,numberOfComments,tagsDTO,post.getId()));
+			myPosts.add(new PostDTO(post.getDescription(),username,mediasFileName,locationDTO, post.getDate(),numberOfLikes,numberOfDislikes,numberOfComments,tagsDTO,post.getId(),taggedProfilesDTO));
 			}
 		}
 		
@@ -485,18 +502,12 @@ public class PostService implements IPostService {
 	    	ProfileMedia myProfile = profileMediaService.findByUsername(dtoInfo.getMyProfile());
 	    	List<ProfileMedia> profiles = new ArrayList<ProfileMedia>();
 	    	List<Post> myPosts = myProfile.getPosts();
-	    	System.out.println("*******************************");
 	    	for (Post post : myPosts) {
-	    		System.out.println("*******************************");
 				profiles = post.getDislikes();
-				System.out.println(profiles.size());
 			}
 	    	for (ProfileMedia p : profiles) {
 	    		profilesWhoDisliked.add(new LikeDislikeInfoDTO(p.getUsername()));
-	    		System.out.println(profilesWhoDisliked.size());
 			}
-	   
-	    	System.out.println("*************OVDE******************");
 	    	return profilesWhoDisliked;
 	    }
 	    
@@ -517,11 +528,31 @@ public class PostService implements IPostService {
 							 i++;
 							 comments.add(comment);
 							 if(i<2) {
-							    comments.add(new Comment(dto.getComment(), profileMediaFrom, LocalDateTime.now()));
+								 if(dto.getTaggedUsers() != null) {
+								        List<ProfileDTO> taggedUsers = dto.getTaggedUsers();
+								        List<ProfileMedia> profiles = new ArrayList<ProfileMedia>();
+								        for (ProfileDTO profileDTO : taggedUsers) {
+								        	 ProfileMedia profile = profileMediaService.findByUsername(profileDTO.getUsername());
+								        	 profiles.add(profile);
+										}
+								        comment.setProfileTags(profiles);
+								  }
+							    comments.add(new Comment(dto.getComment(), profileMediaFrom, LocalDateTime.now(),comment.getProfileTags()));
 							}
 						  }
 						 }else {
-							 comments.add(new Comment(dto.getComment(), profileMediaFrom,LocalDateTime.now()));
+							 Comment c = new Comment();
+							 if(dto.getTaggedUsers() != null) {
+							        List<ProfileDTO> taggedUsers = dto.getTaggedUsers();
+							        List<ProfileMedia> profiles = new ArrayList<ProfileMedia>();
+							        for (ProfileDTO profileDTO : taggedUsers) {
+							        	 ProfileMedia profile = profileMediaService.findByUsername(profileDTO.getUsername());
+							        	 profiles.add(profile);
+									}
+							        c.setProfileTags(profiles);
+							  }
+							
+							 comments.add(new Comment(dto.getComment(), profileMediaFrom,LocalDateTime.now(),c.getProfileTags()));
 						 }
 						 int numberOfComments = comments.size();
 						 int currentNumberOfComments = 0;
@@ -556,8 +587,15 @@ public class PostService implements IPostService {
 	    		comments = post.getComments();
 	    		allComments = sortCommentsByDate(comments);
 	    		for (Comment c : comments) {
+	    			List<ProfileMedia> taggedProfiles = c.getProfileTags();
+	    			List<ProfileDTO> taggedProfilesDTO = new ArrayList<ProfileDTO>();
+	    			if(c.getProfileTags() != null) {
+	    			for (ProfileMedia p : taggedProfiles) {
+	    				taggedProfilesDTO.add(new ProfileDTO(p.getUsername()));
+	    			}
+	    			}
 	    			ProfileMedia user =  c.getRegistredUserProfile();
-					profilesWhoCommented.add(new LikePostDTO(user.getUsername(), c.getDescription(),c.getAnswer(), comments.size(), c.getId()));
+					profilesWhoCommented.add(new LikePostDTO(user.getUsername(), c.getDescription(),c.getAnswer(), comments.size(), c.getId(),taggedProfilesDTO));
 				}
 			}
 	   
@@ -589,6 +627,13 @@ public class PostService implements IPostService {
 			for (Post post : favourites) {
 				List<Media> medias = post.getMedias();
 				List<String> mediasFileName = new ArrayList<String>();
+				List<ProfileMedia> taggedProfiles = post.getProfileTags();
+				List<ProfileDTO> taggedProfilesDTO = new ArrayList<ProfileDTO>();
+				if(post.getProfileTags() != null) {
+				for (ProfileMedia p : taggedProfiles) {
+					taggedProfilesDTO.add(new ProfileDTO(p.getUsername()));
+				}
+				}
 				for (Media m : medias) {
 					mediasFileName.add(m.getFileName());
 				}
@@ -601,46 +646,46 @@ public class PostService implements IPostService {
 				}
 				if( post.getNumberOfLikes() == null && post.getNumberOfDisikes() != null && post.getNumberOfComments() == null) {
 					numberOfDislikes = post.getNumberOfDisikes();
-					myFavouritePosts.add(new PostDTO(post.getDescription(),username,mediasFileName,locationDTO, post.getDate(),0,numberOfDislikes,0,tagsDTO,post.getId()));
+					myFavouritePosts.add(new PostDTO(post.getDescription(),username,mediasFileName,locationDTO, post.getDate(),0,numberOfDislikes,0,tagsDTO,post.getId(),taggedProfilesDTO));
 					
 				}else if( post.getNumberOfLikes() == null && post.getNumberOfDisikes() != null && post.getNumberOfComments() != null) {
 						numberOfDislikes = post.getNumberOfDisikes();
 						numberOfComments = post.getNumberOfComments();
-						myFavouritePosts.add(new PostDTO(post.getDescription(),username,mediasFileName,locationDTO, post.getDate(),0,numberOfDislikes,numberOfComments,tagsDTO,post.getId()));
+						myFavouritePosts.add(new PostDTO(post.getDescription(),username,mediasFileName,locationDTO, post.getDate(),0,numberOfDislikes,numberOfComments,tagsDTO,post.getId(),taggedProfilesDTO));
 				
 				}else if (post.getNumberOfDisikes() == null && post.getNumberOfLikes() != null && post.getNumberOfComments() == null ) {
 					numberOfLikes = post.getNumberOfLikes();
-					myFavouritePosts.add(new PostDTO(post.getDescription(),username,mediasFileName,locationDTO, post.getDate(),numberOfLikes,0,0,tagsDTO,post.getId()));
+					myFavouritePosts.add(new PostDTO(post.getDescription(),username,mediasFileName,locationDTO, post.getDate(),numberOfLikes,0,0,tagsDTO,post.getId(),taggedProfilesDTO));
 				
 			    }else if (post.getNumberOfDisikes() == null && post.getNumberOfLikes() != null && post.getNumberOfComments() != null ) {
 				numberOfLikes = post.getNumberOfLikes();
 				numberOfComments = post.getNumberOfComments();
-				myFavouritePosts.add(new PostDTO(post.getDescription(),username,mediasFileName,locationDTO, post.getDate(),numberOfLikes,0,numberOfComments,tagsDTO,post.getId()));
+				myFavouritePosts.add(new PostDTO(post.getDescription(),username,mediasFileName,locationDTO, post.getDate(),numberOfLikes,0,numberOfComments,tagsDTO,post.getId(),taggedProfilesDTO));
 			    }
 			    else if (post.getNumberOfDisikes() != null && post.getNumberOfLikes() == null && post.getNumberOfComments() == null ) {
 			    	numberOfDislikes = post.getNumberOfDisikes();
-			    	myFavouritePosts.add(new PostDTO(post.getDescription(),username,mediasFileName,locationDTO, post.getDate(),0,numberOfDislikes,0,tagsDTO,post.getId()));
+			    	myFavouritePosts.add(new PostDTO(post.getDescription(),username,mediasFileName,locationDTO, post.getDate(),0,numberOfDislikes,0,tagsDTO,post.getId(),taggedProfilesDTO));
 			    }
 			    else if (post.getNumberOfDisikes() != null && post.getNumberOfLikes() != null && post.getNumberOfComments() == null ) {
 					numberOfLikes = post.getNumberOfLikes();
 					numberOfDislikes = post.getNumberOfDisikes();
-					myFavouritePosts.add(new PostDTO(post.getDescription(),username,mediasFileName,locationDTO, post.getDate(),numberOfLikes,numberOfDislikes,0,tagsDTO,post.getId()));
+					myFavouritePosts.add(new PostDTO(post.getDescription(),username,mediasFileName,locationDTO, post.getDate(),numberOfLikes,numberOfDislikes,0,tagsDTO,post.getId(),taggedProfilesDTO));
 				    }
 				else if(post.getNumberOfLikes() == null && post.getNumberOfDisikes() == null && post.getNumberOfComments() == null) 
 				{
-					myFavouritePosts.add(new PostDTO(post.getDescription(),username,mediasFileName,locationDTO, post.getDate(),0,0,0,tagsDTO,post.getId()));
+					myFavouritePosts.add(new PostDTO(post.getDescription(),username,mediasFileName,locationDTO, post.getDate(),0,0,0,tagsDTO,post.getId(),taggedProfilesDTO));
 				}
 				else if(post.getNumberOfLikes() == null && post.getNumberOfDisikes() == null && post.getNumberOfComments() != null) 
 				{
 					numberOfComments = post.getNumberOfComments();
-					myFavouritePosts.add(new PostDTO(post.getDescription(),username,mediasFileName,locationDTO, post.getDate(),0,0,numberOfComments,tagsDTO,post.getId()));
+					myFavouritePosts.add(new PostDTO(post.getDescription(),username,mediasFileName,locationDTO, post.getDate(),0,0,numberOfComments,tagsDTO,post.getId(),taggedProfilesDTO));
 				}
 				else 
 				{
 				numberOfLikes = post.getNumberOfLikes();
 				numberOfDislikes = post.getNumberOfDisikes();
 				numberOfComments = post.getNumberOfComments();
-				myFavouritePosts.add(new PostDTO(post.getDescription(),username,mediasFileName,locationDTO, post.getDate(),numberOfLikes,numberOfDislikes,numberOfComments,tagsDTO,post.getId()));
+				myFavouritePosts.add(new PostDTO(post.getDescription(),username,mediasFileName,locationDTO, post.getDate(),numberOfLikes,numberOfDislikes,numberOfComments,tagsDTO,post.getId(),taggedProfilesDTO));
 				}
 			}
 			
@@ -719,6 +764,13 @@ public class PostService implements IPostService {
 			int numberOfComments = 0;
 			List<Media> medias = post.getMedias();
 			List<String> mediasFileName = new ArrayList<String>();
+			List<ProfileMedia> taggedProfiles = post.getProfileTags();
+			List<ProfileDTO> taggedProfilesDTO = new ArrayList<ProfileDTO>();
+			if(post.getProfileTags() != null) {
+			for (ProfileMedia p : taggedProfiles) {
+				taggedProfilesDTO.add(new ProfileDTO(p.getUsername()));
+			}
+			}
 			for (Media m : medias) {
 				mediasFileName.add(m.getFileName());
 			}
@@ -731,50 +783,73 @@ public class PostService implements IPostService {
 			}
 			if( post.getNumberOfLikes() == null && post.getNumberOfDisikes() != null && post.getNumberOfComments() == null) {
 				numberOfDislikes = post.getNumberOfDisikes();
-				postDTO = new PostDTO(post.getDescription(),username,mediasFileName,locationDTO, post.getDate(),0,numberOfDislikes,0,tagsDTO,post.getId());
+				postDTO = new PostDTO(post.getDescription(),username,mediasFileName,locationDTO, post.getDate(),0,numberOfDislikes,0,tagsDTO,post.getId(),taggedProfilesDTO);
 				
 			}else if( post.getNumberOfLikes() == null && post.getNumberOfDisikes() != null && post.getNumberOfComments() != null) {
 					numberOfDislikes = post.getNumberOfDisikes();
 					numberOfComments = post.getNumberOfComments();
-					postDTO = new PostDTO(post.getDescription(),username,mediasFileName,locationDTO, post.getDate(),0,numberOfDislikes,numberOfComments,tagsDTO,post.getId());
+					postDTO = new PostDTO(post.getDescription(),username,mediasFileName,locationDTO, post.getDate(),0,numberOfDislikes,numberOfComments,tagsDTO,post.getId(),taggedProfilesDTO);
 			
 			}else if (post.getNumberOfDisikes() == null && post.getNumberOfLikes() != null && post.getNumberOfComments() == null ) {
 				numberOfLikes = post.getNumberOfLikes();
-				postDTO = new PostDTO(post.getDescription(),username,mediasFileName,locationDTO, post.getDate(),numberOfLikes,0,0,tagsDTO,post.getId());
+				postDTO = new PostDTO(post.getDescription(),username,mediasFileName,locationDTO, post.getDate(),numberOfLikes,0,0,tagsDTO,post.getId(),taggedProfilesDTO);
 			
 		    }else if (post.getNumberOfDisikes() == null && post.getNumberOfLikes() != null && post.getNumberOfComments() != null ) {
 			numberOfLikes = post.getNumberOfLikes();
 			numberOfComments = post.getNumberOfComments();
-			postDTO = new PostDTO(post.getDescription(),username,mediasFileName,locationDTO, post.getDate(),numberOfLikes,0,numberOfComments,tagsDTO,post.getId());
+			postDTO = new PostDTO(post.getDescription(),username,mediasFileName,locationDTO, post.getDate(),numberOfLikes,0,numberOfComments,tagsDTO,post.getId(),taggedProfilesDTO);
 		    }
 		    else if (post.getNumberOfDisikes() != null && post.getNumberOfLikes() == null && post.getNumberOfComments() == null ) {
 		    	numberOfDislikes = post.getNumberOfDisikes();
-		    	postDTO = new PostDTO(post.getDescription(),username,mediasFileName,locationDTO, post.getDate(),0,numberOfDislikes,0,tagsDTO,post.getId());
+		    	postDTO = new PostDTO(post.getDescription(),username,mediasFileName,locationDTO, post.getDate(),0,numberOfDislikes,0,tagsDTO,post.getId(),taggedProfilesDTO);
 		    }
 		    else if (post.getNumberOfDisikes() != null && post.getNumberOfLikes() != null && post.getNumberOfComments() == null ) {
 				numberOfLikes = post.getNumberOfLikes();
 				numberOfDislikes = post.getNumberOfDisikes();
-				postDTO = new PostDTO(post.getDescription(),username,mediasFileName,locationDTO, post.getDate(),numberOfLikes,numberOfDislikes,0,tagsDTO,post.getId());
+				postDTO = new PostDTO(post.getDescription(),username,mediasFileName,locationDTO, post.getDate(),numberOfLikes,numberOfDislikes,0,tagsDTO,post.getId(),taggedProfilesDTO);
 			    }
 			else if(post.getNumberOfLikes() == null && post.getNumberOfDisikes() == null && post.getNumberOfComments() == null) 
 			{
-				postDTO = new PostDTO(post.getDescription(),username,mediasFileName,locationDTO, post.getDate(),0,0,0,tagsDTO,post.getId());
+				postDTO = new PostDTO(post.getDescription(),username,mediasFileName,locationDTO, post.getDate(),0,0,0,tagsDTO,post.getId(),taggedProfilesDTO);
 			}
 			else if(post.getNumberOfLikes() == null && post.getNumberOfDisikes() == null && post.getNumberOfComments() != null) 
 			{
 				numberOfComments = post.getNumberOfComments();
-				postDTO = new PostDTO(post.getDescription(),username,mediasFileName,locationDTO, post.getDate(),0,0,numberOfComments,tagsDTO,post.getId());
+				postDTO = new PostDTO(post.getDescription(),username,mediasFileName,locationDTO, post.getDate(),0,0,numberOfComments,tagsDTO,post.getId(),taggedProfilesDTO);
 			}
 			else 
 			{
 			numberOfLikes = post.getNumberOfLikes();
 			numberOfDislikes = post.getNumberOfDisikes();
 			numberOfComments = post.getNumberOfComments();
-			postDTO = new PostDTO(post.getDescription(),username,mediasFileName,locationDTO, post.getDate(),numberOfLikes,numberOfDislikes,numberOfComments,tagsDTO,post.getId());
+			postDTO = new PostDTO(post.getDescription(),username,mediasFileName,locationDTO, post.getDate(),numberOfLikes,numberOfDislikes,numberOfComments,tagsDTO,post.getId(),taggedProfilesDTO);
 			}
 			posts.add(postDTO);
 			List<PostDTO> allPosts = getImagesFiles(posts);
 			return sortByDate(allPosts);
 		}
 
+		@Override
+		public List<PostDTO> getPublicProfilesPosts() {
+			List<String> publicProfiles = getPublicProfiles();
+			List<PostDTO> response  = new ArrayList<>();
+				
+			for(String s:publicProfiles) {
+				ProfileMedia existingProfile = profileMediaService.findByUsername(s);
+				if(existingProfile == null)
+					continue;
+				else {
+					List<PostDTO> profilePosts = findMyPosts(s);
+					for(PostDTO p:profilePosts) 
+						response.add(p);
+				}
+			}
+			
+			response = sortByDate(response);
+			return response;
+		}
+		
+		private List<String> getPublicProfiles(){
+			return profileConnection.getPublicProfiles();
+		}
 }

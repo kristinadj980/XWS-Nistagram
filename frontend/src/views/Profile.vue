@@ -1,7 +1,7 @@
 <template>
     <div id="profile">
         <div class="homepage_style ">
-           <span style="float: left; margin: 15px;">
+           <span style="float: left; margin: 15px;  margin-top:-20px;">
                 <img class="image_style space_style" title="Nistagram" style="width: 50px; height: 50px; margin-right:10px;"
                 src="http://assets.stickpng.com/thumbs/580b57fcd9996e24bc43c521.png">
                 <b-button  pill variant="outline-danger" class = "btn btn-lg space_style" v-on:click = "showHomepage">
@@ -58,6 +58,10 @@
                         <b-img v-if="!story.fileName.includes(videoText)" thumbnail  v-bind:src="story.imageBytes" alt="Image 1"></b-img>
                         <video v-if="story.fileName.includes(videoText)" autoplay controls v-bind:src="story.imageBytes" width="400" height="400" style="display:block; margin-left:auto; margin-right:auto"></video>
                         <h4 align="left">{{story.description}}</h4>
+                        <h5 align="left"> <span v-for="(user,t) in story.taggedUsers" :key="t">
+                                        @{{user.username}}
+                                    </span>
+                       </h5>
                     </b-card>
                 </b-tab>
             </b-tabs>
@@ -92,6 +96,10 @@
                         <b-img v-if="!story.fileName.includes(videoText)" thumbnail  v-bind:src="story.imageBytes" alt="Image 1"></b-img>
                         <video v-if="story.fileName.includes(videoText)" autoplay controls v-bind:src="story.imageBytes" width="400" height="400" style="display:block; margin-left:auto; margin-right:auto"></video>
                         <h4 align="left">{{story.description}}</h4>
+                         <h5 align="left"> <span v-for="(user,t) in story.taggedUsers" :key="t">
+                                        @{{user.username}}
+                                    </span>
+                       </h5>
                     </b-card>
                 </b-tab>
             </b-tabs>
@@ -181,6 +189,11 @@
                             <video v-if="post.fileNames[index].includes(videoText)" autoplay controls v-bind:src="image.imageBytes" width="400" height="400" style="display:block; margin-left:auto; margin-right:auto"></video>
                         </div>
                        <h4 align="left">{{post.description}}</h4>
+                      
+                       <h5 align="left"> <span v-for="(user,t) in post.taggedUsers" :key="t">
+                                        @{{user.username}}
+                                    </span>
+                       </h5>
                         <h5 align="left"><span v-for="(tag,t) in post.tags" :key="t">
                                         #{{tag.name}}
                                     </span>
@@ -215,6 +228,10 @@
                         </div>
                         <!--POKUSAJ NEKI-->
                         <h4 align="left">{{post.description}}</h4>
+                        <h5 align="left"> <span v-for="(user,t) in post.taggedUsers" :key="t">
+                                        @{{user.username}}
+                                    </span>
+                       </h5>
                         <h5 align="left"><span v-for="(tag,t) in post.tags" :key="t">
                                         #{{tag.name}}
                                     </span>
@@ -242,6 +259,10 @@
                         </div>
                         <!--POKUSAJ NEKI-->
                         <h4 align="left">{{post.description}}</h4>
+                        <h5 align="left"> <span v-for="(user,t) in post.taggedUsers" :key="t">
+                                        @{{user.username}}
+                                    </span>
+                       </h5>
                         <h5 align="left"><span v-for="(tag,t) in post.tags" :key="t">
                                         #{{tag.name}}
                                     </span>
@@ -331,9 +352,13 @@
                              
                             <div class="row">
                                 <div class=" form-group col">
-                                     <label>Profile: {{user.usernameFrom}} </label><span style="margin-left:30px;" ></span>
-                                     <label > Comment : {{user.comment}}</label><span style="margin-left:30px;" ></span>
+                                     <label>Profile: {{user.usernameFrom}} </label><span style="margin-left:50px;" ></span>
+                                     <label > Comment : {{user.comment}}</label><span style="margin-left:50px;" ></span>
                                      <label > Answer : {{user.answer}}</label>
+                                      <h5 align="left"> <span v-for="(u,t) in user.taggedUsers" :key="t">
+                                        @{{u.username}}
+                                    </span>
+                                    </h5>
                                 </div>
                              </div><span style="margin-left:610px;" ></span>
                              <b-button style="margin-left: 30px;" pill variant="outline-danger" class = "btn btn-lg space_style" @click="sendAnswer($event,user)">Replay</b-button> 
@@ -473,7 +498,7 @@ export default {
                this.getMyCollections(response.data);
                this.getMyHistory(response.data)
          }).catch(res => {
-                       alert("Error");
+                       //alert("Error");
                         console.log(res);
                  });
         this.axios.get('http://localhost:8083/profileMicroservice/api/profile/getAllUsers',{ 
@@ -483,7 +508,7 @@ export default {
          }).then(response => {
                this.users = response.data
          }).catch(res => {
-                       alert("Error");
+                       //alert("Error");
                         console.log(res);
                  });
         
@@ -497,7 +522,7 @@ export default {
             this.following = response.data;
             this.followingNumber = response.data.length;
          }).catch(res => {
-                       alert("Error");
+                       //alert("Error");
                         console.log(res);
                  });
 
@@ -511,7 +536,7 @@ export default {
             this.followers = response.data;
             this.followersNumber = response.data.length;
          }).catch(res => {
-                       alert("Error");
+                       //alert("Error");
                         console.log(res);
                  });
         
@@ -562,7 +587,7 @@ export default {
                     }      
                 } 
             }).catch(res => {
-                        alert("Error");
+                        //alert("Error");
                             console.log(res);
                     });
                     
@@ -618,7 +643,7 @@ export default {
                     }                            
                 } 
             }).catch(res => {
-                        alert("Error");
+                       // alert("Error");
                             console.log(res);
                     });
                     
@@ -638,7 +663,7 @@ export default {
                     }                            
                 } 
             }).catch(res => {
-                        alert("Error");
+                        //alert("Error");
                             console.log(res);
                     });
                     
@@ -750,7 +775,7 @@ export default {
                 } 
                 
             }).catch(res => {
-                        alert("Error");
+                        //alert("Error");
                             console.log(res);
                     });
                     
@@ -801,7 +826,7 @@ export default {
                 } 
                
             }).catch(res => {
-                        alert("Error");
+                        //alert("Error");
                             console.log(res);
                     });
         },addSelected: function(event,collectionID){

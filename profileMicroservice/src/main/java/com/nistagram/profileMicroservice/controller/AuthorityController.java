@@ -98,6 +98,9 @@ public class AuthorityController {
 	       if (existingUser != null) {
 	    	   throw new IllegalArgumentException("Email already exists!");
 	       }
+	       if (profileService.checkUsername(userRequest.getUsername())==false) {
+	    	   return new ResponseEntity<>("User with that username already exist! Choose another.", HttpStatus.UNPROCESSABLE_ENTITY);
+	       }
 	       Person user = profileService.save(userRequest);
 	    
 	       return new ResponseEntity<>("User is successfully registred!", HttpStatus.CREATED);

@@ -1,7 +1,7 @@
 <template>
     <div id="generalProfileInfo">
         <div class="homepage_style ">
-           <span style="float: left; margin: 15px;">
+           <span style="float: left; margin: 15px; margin-top:-15px;">
                 <img class="image_style space_style" title="Nistagram" style="width: 50px; height: 50px; margin-right:10px;"
                 src="http://assets.stickpng.com/thumbs/580b57fcd9996e24bc43c521.png">
                 <b-button  pill variant="outline-danger" class = "btn btn-lg space_style" v-on:click = "showHomepage">
@@ -17,48 +17,28 @@
                 </span>
         </div>
         <b-card class="content_surface" align="left">
-
-<!--  HIGHLIGHTS -->
-             <b-button  class="btn btn-info btn-lg space_style"  style="background-color:#f08080;margin-left:100px;" v-b-modal.modal-5>Show highlights</b-button>
-                            <b-modal ref="modal-ref" id="modal-5" title="Highlights" hide-footer>
-                                <b-tabs 
-            style="margin-top:70px;" 
-            align="center"
-            active-nav-item-class="font-weight-bold text-uppercase text-danger"
-            active-tab-class="font-weight-bold"
-            content-class="mt-3">
-                <b-tab active>
-                <template #title>
-                   <b-icon icon="grid3x3-gap" aria-hidden="true"></b-icon><strong> Highlights </strong>
-                </template>
-                    <b-card class="post_look" v-for="story in highlighted" v-bind:key="story.fileName">
-                        <b-row >
-                        <h4 align="left"><b-icon icon="person-circle" aria-hidden="true"></b-icon>  {{story.username}}</h4>
-                        </b-row>
-                        <h6 align="left">{{story.locationDTO.city}},{{story.locationDTO.street}},{{story.locationDTO.objectName}},{{story.locationDTO.country}}</h6>
-                        <b-img v-if="!story.fileName.includes(videoText)" thumbnail  v-bind:src="story.imageBytes" alt="Image 1"></b-img>
-                        <video v-if="story.fileName.includes(videoText)" autoplay controls v-bind:src="story.imageBytes" width="400" height="400" style="display:block; margin-left:auto; margin-right:auto"></video>
-                        <h4 align="left">{{story.description}}</h4>
-                    </b-card>
-                </b-tab>
-            </b-tabs>
-         </b-modal>
-
-        <b-button style="margin-left:1000px; margin-top:100px;" variant="outline-danger" size="lg"  v-on:click = "blockUser">
-                    Block 
-                </b-button>
-
             <b-dropdown
             variant="outline-danger" 
             class="m-2" 
             menu-class="w-100" 
-            v-if="friendStatus == 'approved' || friendStatus == 'friends'"
-            style="left:87%;">
+            style="left:87%;"
+            v-if="friendStatus == 'approved' || friendStatus == 'friends'">
                 <template #button-content>
                    <b-icon icon="three-dots" aria-hidden="true" ></b-icon>
                 </template>
-                <b-dropdown-item >Mute</b-dropdown-item>
-                <b-dropdown-item>Block</b-dropdown-item>
+                <b-dropdown-item v-on:click = "muteFriend">Mute</b-dropdown-item>
+                <b-dropdown-item v-on:click = "blockUser">Block</b-dropdown-item>
+            </b-dropdown>
+            <b-dropdown
+            variant="outline-danger" 
+            class="m-2" 
+            menu-class="w-100" 
+            style="left:45%;"
+            v-else>
+                <template #button-content>
+                   <b-icon icon="three-dots" aria-hidden="true" ></b-icon>
+                </template>
+                <b-dropdown-item v-on:click = "blockUser">Block</b-dropdown-item>
             </b-dropdown>
             <b-icon 
             v-if="friendStatus == 'approved' || friendStatus == 'friends'" 
@@ -125,7 +105,7 @@
                         {{user.username}}
                         </b>
                         </h3>
-                        <h4 align="left">  <strong>{{postsNumber}}</strong> posts <strong>123</strong> followers <strong>123</strong> following </h4>
+                        <h4 align="left">  <strong>{{postsNumber}}</strong> posts <strong> {{user.followers.length}} </strong> followers <strong> {{user.following.length}}</strong> following </h4>
                         <h4 align="left">{{user.biography}}</h4>
                     </b-col>
             </div>
@@ -156,7 +136,39 @@
             margin-left:100px;">
             Unfollow
             </b-button>
-             
+            <!--  HIGHLIGHTS -->
+            <b-button  
+            class="btn btn-info btn-lg space_style"  
+            style="margin-top:25px;
+            width:62%;
+            background-color:#f08080;
+            margin-left:100px;"
+            v-if="user.profileStatus == 'publicProfile' || friendStatus == 'friends'"
+            v-b-modal.modal-5
+            >Show highlights</b-button>
+            <b-modal ref="modal-ref" id="modal-5" title="Highlights" hide-footer>
+                <b-tabs 
+                style="margin-top:70px;" 
+                align="center"
+                active-nav-item-class="font-weight-bold text-uppercase text-danger"
+                active-tab-class="font-weight-bold"
+                content-class="mt-3">
+                    <b-tab active>
+                    <template #title>
+                    <b-icon icon="grid3x3-gap" aria-hidden="true"></b-icon><strong> Highlights </strong>
+                    </template>
+                        <b-card class="post_look" v-for="story in highlighted" v-bind:key="story.fileName">
+                            <b-row >
+                            <h4 align="left"><b-icon icon="person-circle" aria-hidden="true"></b-icon>  {{story.username}}</h4>
+                            </b-row>
+                            <h6 align="left">{{story.locationDTO.city}},{{story.locationDTO.street}},{{story.locationDTO.objectName}},{{story.locationDTO.country}}</h6>
+                            <b-img v-if="!story.fileName.includes(videoText)" thumbnail  v-bind:src="story.imageBytes" alt="Image 1"></b-img>
+                            <video v-if="story.fileName.includes(videoText)" autoplay controls v-bind:src="story.imageBytes" width="400" height="400" style="display:block; margin-left:auto; margin-right:auto"></video>
+                            <h4 align="left">{{story.description}}</h4>
+                        </b-card>
+                    </b-tab>
+                </b-tabs>
+            </b-modal>
             <b-tabs v-if="user.profileStatus == 'publicProfile' || friendStatus == 'friends'"
             style="margin-top:70px;" 
             align="center" 
@@ -181,6 +193,10 @@
                         <h4 style="margin-left:500px; margin-top:10px"><b-icon icon="exclamation-circle" aria-hidden="true" align="right" @click="showModalReportPost($event,post)"></b-icon></h4>
                          
                         <h4 align="left" style="margin-top:-35px;">{{post.description}}</h4>
+                        <h5 align="left"> <span v-for="(user,t) in post.taggedUsers" :key="t">
+                                        @{{user.username}}
+                                    </span>
+                        </h5>
                          <h5 align="left"><span v-for="(tag,t) in post.tags" :key="t">
                                         #{{tag.name}}
                                     </span>
@@ -194,22 +210,31 @@
             </b-tabs>
         </b-card>
         <div> 
-          <b-modal ref="modal3" hide-footer scrollable title="Profiles who commented photo" size="lg" modal-class="b-modal">
+         <b-modal ref="modal3" hide-footer scrollable title="Profiles who commented photo" size="lg" modal-class="b-modal">
                <div modal-class="modal-dialog" role="document">
                     <div class="modal-content" style="background-color:#e4e4e4; ">
                          <div v-for="user in usersWhoCommented" v-bind:key="user.username" class="modal-body">
                              
                             <div class="row">
-                                <div class=" form-group col">
-                                     <label>Profile: {{user.usernameFrom}} </label><span style="margin-left:30px;" ></span>
-                                     <label > Comment : {{user.comment}}</label><span style="margin-left:30px;" ></span>
+                                <div class=" form-group col" style="margin-left:0px;">
+                                     <label>Profile: {{user.usernameFrom}} </label><span style="margin-left:50px;" ></span>
+                                     <label > Comment : {{user.comment}}</label><span style="margin-left:50px;" ></span>
                                      <label > Answer : {{user.answer}}</label>
+                                     <h5 align="left"> <span v-for="(u,t) in user.taggedUsers" :key="t">
+                                        @{{u.username}}
+                                    </span>
+                                    </h5>
                                 </div>
                              </div><span style="margin-left:610px;" ></span>
                         </div>
-                        <input style="width: 60%; margin-top:10px; margin-left:10px;" type="text" id="post.fileName" v-model="comment"><span style="margin-left:10px;" ></span>
-                        <b-icon icon="check-circle" aria-hidden="true" @click="commentPost($event,selectedPost)"></b-icon>      
-                                 
+                        <!--<input style="width: 60%; margin-top:10px; margin-left:10px;" type="text" id="post.fileName" v-model="comment"><span style="margin-top:-30px; " ></span>-->
+                        <input style="width: 63%; margin-top:10px; margin-left:10px;" type="text" id="post.fileName" v-model="comment">
+                       <h4> <b-icon style="margin-left:470px;margin-top:10px;" icon="check-circle" aria-hidden="true" @click="commentPost($event,selectedPost)"></b-icon> </h4>     
+                         <h4 style="margin-top:20px; margin-left:10px">Choose profile to tag</h4>
+                <select multiple="true" style="width:482px; margin-top:5pxl; margin-left:10px; margin-bottom:20px;" v-model="multipleSelections">
+                <option v-for="item in this.usersForTags"   v-bind:key="item.id" >
+                {{item.username}}</option> 
+                </select>    
                     </div>                
                 </div>
           </b-modal>
@@ -271,6 +296,8 @@ export default {
         proba: "ana",
         selectedPost: [],
         postsNumber: 0,
+        usersForTags:[],
+        multipleSelections:[]
         }
     },
     async mounted(){
@@ -289,11 +316,12 @@ export default {
             });
         this.axios.get('http://localhost:8083/profileMicroservice/api/profile/getUserProfile/'+ this.$route.params.selectedUsername)
             .then(response => {
-               this.user = response.data
+               this.user = response.data;
             }).catch(res => {
                         alert("Error");
                             console.log(res);
                     });
+        
         this.axios.get('http://localhost:8083/profileMicroservice/api/profile/getFriendStatus/'+ this.$route.params.selectedUsername,{ 
              headers: {
                  'Authorization': 'Bearer ' + token,
@@ -342,6 +370,17 @@ export default {
                         alert("Error");
                             console.log(res);
                     });
+
+         this.axios.get('http://localhost:8083/profileMicroservice/api/profile/getUsersForTags',{ 
+             headers: {
+                 'Authorization': 'Bearer ' + token,
+             }
+         }).then(response => {
+              this.usersForTags = response.data;
+         }).catch(res => {
+               //alert(Error)
+                console.log(res);
+            });
         
    },
     methods:{
@@ -517,6 +556,7 @@ export default {
                 fileNames : post.fileNames,
                 comment : this.comment,
                 postId: post.id,
+                taggedUsers:this.multipleSelections
             }
             this.axios.post('http://localhost:8083/mediaMicroservice/post/commentPost',postInfo,{ 
                 }).then(response => {
@@ -653,22 +693,9 @@ export default {
                         alert("Profile is private");
                             console.log(res);
                     });
-            },
+        },
         blockUser: function(){
-            console.log(this.user.username);  
-             let token = localStorage.getItem('token').substring(1, localStorage.getItem('token').length-1);
-            this.axios.get('http://localhost:8083/profileMicroservice/api/profile/account',{ 
-                headers: {
-                 'Authorization': 'Bearer ' + token,
-                }
-                }).then(response => {
-               this.profile = response.data;
-               console.log(this.profile.username);
-
-                 }).catch(res => {
-                       alert("Error");
-                        console.log(res);
-                 });
+        let token = localStorage.getItem('token').substring(1, localStorage.getItem('token').length-1);
         console.log(this.user.username);
             this.axios.post('http://localhost:8083/profileMicroservice/api/profile/blockUser',this.user.username,{ 
                 headers: {
@@ -684,7 +711,25 @@ export default {
 
                 });
         },
-    }   
+        muteFriend :function(){
+            let token = localStorage.getItem('token').substring(1, localStorage.getItem('token').length-1);
+            const friendForMuteInfo ={
+                username : this.user.username,
+            } 
+            this.axios.post('http://localhost:8083/profileMicroservice/api/profile/mute',friendForMuteInfo, { 
+                headers: {
+                    'Authorization': 'Bearer ' + token,
+                }})
+                .then(response => {
+                    alert("Friend is muted.")
+                    console.log(response.data);
+                })
+                .catch(response => {
+                    alert("Please, try later.")
+                    console.log(response);
+                });
+        }
+    }
 }
 </script>
 <style scoped>

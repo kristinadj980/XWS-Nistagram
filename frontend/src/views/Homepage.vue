@@ -1,7 +1,7 @@
 <template>
     <div id="homepage">
         <div class="homepage_style ">
-           <span style="float: left; margin: 15px;">
+           <span style="float: left; margin: 15px;  margin-top:-20px;">
                 <img class="image_style space_style" title="Nistagram" style="width: 50px; height: 50px; margin-right:10px;"
                 src="http://assets.stickpng.com/thumbs/580b57fcd9996e24bc43c521.png">
                 <b-button  pill variant="outline-danger" class = "btn btn-lg space_style" v-on:click = "showHomepage">
@@ -14,7 +14,7 @@
                     <b-icon icon="image" aria-hidden="true"></b-icon> Add story</b-button>
     
                 <!--LOKACIJE-->
-                <b-input-group class=" serach_look1">
+               <!--  <b-input-group class=" serach_look1">
                     <b-input-group-append>
                         <input 
                         list="my-list-id1" 
@@ -32,28 +32,12 @@
                     </router-link>
                      </b-input-group-append>
 
-                    <!--TAGOVI-->
-                </b-input-group>    
+                   
+               </b-input-group>    
                 <b-input-group class=" serach_look">
                     <b-input-group-append>
                         <input 
                         list="my-list-id" 
-                        v-model="selectedTag" 
-                        class="input_style" 
-                        placeholder="enter tag..."
-                        style="margin-top: 3% !important; width:300px; height:35px;">
-                       <datalist id="my-list-id">
-                            <option v-for="user in tags" v-bind:key="user.id">
-                                {{ user.name}} 
-                            </option>
-                        </datalist> 
-                    <router-link :to="{ name: 'SearchPost', params: {selectedTag: this.selectedTag}}" class="search-btn">
-                       <b-button style="margin-top: -15% !important;  margin-left: 100% !important;" variant="outline-danger"><b-icon icon="search" aria-hidden="true"></b-icon></b-button>
-                    </router-link>
-
-                     </b-input-group-append>
-                     <b-input-group-append>
-                         <input
                         v-model="selectedUser" 
                         class="input_style" 
                         placeholder="enter username..."
@@ -66,10 +50,10 @@
                     <router-link :to="{ name: 'GeneralProfiles', params: {selectedUsername: this.selectedUser}}" class="search-btn">
                        <b-button style="margin-top: -20% !important;  margin-left: 100% !important;" variant="outline-danger"><b-icon icon="search" aria-hidden="true"></b-icon></b-button>
                     </router-link>
-                
+    
                     </b-input-group-append>
                 
-                </b-input-group>
+                </b-input-group>-->
 
             </span>
                 <span style="float:right;margin:15px">
@@ -91,58 +75,6 @@
                 </span>
         </div>
         <b-card class="content_surface">
-
-            <!--***************FRIEND'S STORIES************-->
-             <b-button  class="btn btn-info btn-lg space_style"  style="background-color:#f08080;margin-left:-1300px;" v-b-modal.modal-1>Show stories</b-button>
-                            <b-modal ref="modal-ref" id="modal-1" title="Stories" hide-footer>
-                                <b-tabs 
-            style="margin-top:70px;" 
-            align="center"
-            active-nav-item-class="font-weight-bold text-uppercase text-danger"
-            active-tab-class="font-weight-bold"
-            content-class="mt-3">
-                <b-tab active>
-                <template #title>
-                   <b-icon icon="grid3x3-gap" aria-hidden="true"></b-icon><strong> Stories </strong>
-                </template>
-                    <b-card class="post_look" v-for="story in stories" v-bind:key="story.fileName">
-                        <b-row >
-                        <h4 align="left"><b-icon icon="person-circle" aria-hidden="true"></b-icon>  {{story.username}}</h4>
-                        </b-row>
-                        <h6 align="left">{{story.locationDTO.city}},{{story.locationDTO.street}},{{story.locationDTO.objectName}},{{story.locationDTO.country}}</h6>
-                        <b-img v-if="!story.fileName.includes(videoText)" thumbnail  v-bind:src="story.imageBytes" alt="Image 1"></b-img>
-                        <video v-if="story.fileName.includes(videoText)" autoplay controls v-bind:src="story.imageBytes" width="400" height="400" style="display:block; margin-left:auto; margin-right:auto"></video>
-                        <h4 align="left">{{story.description}}</h4>
-                    </b-card>
-                </b-tab>
-            </b-tabs>
-         </b-modal>
-         <!--stories for close friends-->
-         <b-button  class="btn btn-info btn-lg space_style"  style="background-color:#f08080;margin-left:-1300px;" v-b-modal.modal-5>Show close friend stories</b-button>
-                            <b-modal ref="modal-ref" id="modal-5" title="Close friend stories" hide-footer>
-                                <b-tabs 
-            style="margin-top:70px;" 
-            align="center"
-            active-nav-item-class="font-weight-bold text-uppercase text-danger"
-            active-tab-class="font-weight-bold"
-            content-class="mt-3">
-                <b-tab active>
-                <template #title>
-                   <b-icon icon="grid3x3-gap" aria-hidden="true"></b-icon><strong> Close friend stories </strong>
-                </template>
-                    <b-card class="post_look" v-for="story in stories1" v-bind:key="story.fileName">
-                        <b-row >
-                        <h4 align="left"><b-icon icon="person-circle" aria-hidden="true"></b-icon>  {{story.username}}</h4>
-                        </b-row>
-                        <h6 align="left">{{story.locationDTO.city}},{{story.locationDTO.street}},{{story.locationDTO.objectName}},{{story.locationDTO.country}}</h6>
-                        <b-img v-if="!story.fileName.includes(videoText)" thumbnail  v-bind:src="story.imageBytes" alt="Image 1"></b-img>
-                        <video v-if="story.fileName.includes(videoText)" autoplay controls v-bind:src="story.imageBytes" width="400" height="400" style="display:block; margin-left:auto; margin-right:auto"></video>
-                        <h4 align="left">{{story.description}}</h4>
-                    </b-card>
-                </b-tab>
-            </b-tabs>
-         </b-modal>
-         <!--FRIEND'S POSTS-->
              <b-card class="post_look" v-for="post in posts" v-bind:key="post.fileName">
                         <b-row >
                         <h4 align="left"><b-icon icon="person-circle" aria-hidden="true"></b-icon>  {{post.username}}</h4>
@@ -156,6 +88,10 @@
                          <h4 style="margin-left:500px; margin-top:10px"><b-icon icon="exclamation-circle" aria-hidden="true" align="right" @click="showModalReportPost($event,post)"></b-icon></h4>
                          
                         <h4 align="left" style="margin-top:-35px;">{{post.description}}</h4>
+                         <h5 align="left"> <span v-for="(user,t) in post.taggedUsers" :key="t">
+                                        @{{user.username}}
+                                    </span>
+                       </h5>
                          <h5 align="left"><span v-for="(tag,t) in post.tags" :key="t">
                                         #{{tag.name}}
                                     </span>
@@ -172,18 +108,29 @@
           <b-modal ref="modal3" hide-footer scrollable title="Profiles who commented photo" size="lg" modal-class="b-modal">
                <div modal-class="modal-dialog" role="document">
                     <div class="modal-content" style="background-color:#e4e4e4; ">
-                        <div v-for="user in usersWhoCommented" v-bind:key="user.username" class="modal-body">
+                         <div v-for="user in usersWhoCommented" v-bind:key="user.username" class="modal-body">
                              
                             <div class="row">
-                                <div class=" form-group col">
-                                     <label><b>{{user.usernameFrom}} </b></label><span style="margin-left:30px;" ></span>
-                                     <label> {{user.comment}}</label><span style="margin-left:70px;" ></span>
-                                     <label> Answer : {{user.answer}}</label>
+
+                                <div class=" form-group col" style="margin-left:0px;">
+                                     <label>Profile: {{user.usernameFrom}} </label><span style="margin-left:50px;" ></span>
+                                     <label > Comment : {{user.comment}}</label><span style="margin-left:50px;" ></span>
+                                     <label > Answer : {{user.answer}}</label>
+                                     <h5 align="left"> <span v-for="(u,t) in user.taggedUsers" :key="t">
+                                        @{{u.username}}
+                                    </span>
+                                    </h5>
                                 </div>
                              </div><span style="margin-left:610px;" ></span>
                         </div>
-                    <input style="width: 60%; margin-top:10px; margin-left:10px;" type="text" id="post.fileName" v-model="comment"><span style="margin-left:10px;" ></span>
-                    <b-icon icon="check-circle" aria-hidden="true" @click="commentPost($event,selectedPost)"></b-icon>      
+                        <!--<input style="width: 60%; margin-top:10px; margin-left:10px;" type="text" id="post.fileName" v-model="comment"><span style="margin-top:-30px; " ></span>-->
+                        <input style="width: 63%; margin-top:10px; margin-left:10px;" type="text" id="post.fileName" v-model="comment">
+                       <h4> <b-icon style="margin-left:470px;margin-top:10px;" icon="check-circle" aria-hidden="true" @click="commentPost($event,selectedPost)"></b-icon> </h4>     
+                         <h4 style="margin-top:20px; margin-left:10px">Choose profile to tag</h4>
+                <select multiple="true" style="width:482px; margin-top:5pxl; margin-left:10px; margin-bottom:20px;" v-model="multipleSelections">
+                <option v-for="item in this.usersForTags"   v-bind:key="item.id" >
+                {{item.username}}</option> 
+                </select>    
                     </div>                
                 </div>
           </b-modal>
@@ -217,17 +164,10 @@ export default {
         friendsNotMuted: [],
         username: "",
         posts: [],
-        stories: [],
-        stories1: [],
         videoText: "mp4",
         numberOfLikes:0,
         numberOfDislikes:0,
         loggeduser: "",
-        closeFriends: [],
-        selectedTag:[''],
-        selectedLocation:[''],
-        tags:[],
-        locations:[],
          comments:[],
         comment:'',
         usersWhoCommented:[],
@@ -250,7 +190,7 @@ export default {
          }).then(response => {
                this.users = response.data
          }).catch(res => {
-                       alert("Error");
+                       //alert("Error");
                         console.log(res);
                  });
        this.axios.get('http://localhost:8083/profileMicroservice/api/profile/getNotMuted',{ 
@@ -262,7 +202,7 @@ export default {
                this.getFriednsPosts(response.data);
                this.getFriendsStories(response.data);
          }).catch(res => {
-                       alert("Error");
+                      // alert("Error");
                         console.log(res);
                  });
         this.axios.get('http://localhost:8083/profileMicroservice/api/profile/getCloseFriends',{ 
@@ -274,19 +214,17 @@ export default {
                 this.getCloseFriendsStories(response.data);
                 console.log(this.closeFriends);
          }).catch(res => {
-                       alert("Error");
+                       //alert("Error");
                         console.log(res);
                  });
-        
         this.axios.get('http://localhost:8083/profileMicroservice/api/profile/loggedUserInfo',{ 
              headers: {
                  'Authorization': 'Bearer ' + token,
              }
          }).then(response => {
               this.loggeduser = response.data;
-              console.log(response.data.name);
          }).catch(res => {
-               alert(Error)
+               //alert(Error)
                 console.log(res);
             });
            
@@ -298,7 +236,7 @@ export default {
                this.tags = response.data
                 console.log(this.tags);
          }).catch(res => {
-                       alert("Error");
+                       //alert("Error");
                         console.log(res);
                  });
                  this.axios.get('http://localhost:8083/mediaMicroservice/location/getLocations',{ 
@@ -309,7 +247,7 @@ export default {
                this.locations = response.data
                 console.log(this.locations);
          }).catch(res => {
-                       alert("Error");
+                       //alert("Error");
                         console.log(res);
                  });
    },
@@ -436,7 +374,6 @@ export default {
 
                 });
         },
-        
         commentPost: async function(event,post){
             const postInfo = {
                 usernameTo : post.username,
@@ -534,17 +471,9 @@ export default {
 
     }
     .serach_look{
-
-        margin-left: 170%;
-        margin-top: -8%;
-    }
-    .serach_look1{
-        
-
-        margin-left: 138%;
+        margin-left: 152%;
         width: 20%;
-
-        margin-top: -8%;
+        margin-top: -10%;
     }
     .post_look {
         background: #e4e4e4; 
