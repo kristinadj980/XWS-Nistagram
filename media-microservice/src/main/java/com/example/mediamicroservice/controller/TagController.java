@@ -53,6 +53,8 @@ public class TagController {
 		
 		for(PostDTO p:posts) {
 			System.out.println(p.getUsername());
+			System.out.println(p.getDescription());
+			System.out.println(p.getFileNames().get(0));
 		}
 		
 		System.out.println("proso media-microservice");

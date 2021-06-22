@@ -6,6 +6,7 @@ import com.example.mediamicroservice.dto.LocationDTO;
 import com.example.mediamicroservice.dto.PostDTO;
 import com.example.mediamicroservice.dto.ProfileDTO;
 import com.example.mediamicroservice.dto.StoryDTO;
+import com.example.mediamicroservice.dto.TagDTO;
 import com.example.mediamicroservice.model.Location;
 import com.example.mediamicroservice.model.Media;
 import com.example.mediamicroservice.model.Post;
@@ -68,7 +69,14 @@ public class StoryService implements IStoryService {
 		        String objectName = parts[2];
 		        String street = parts[3];
 		        
-		        Location location = new Location(city,street , country,objectName);
+		        List<TagDTO> tagsDTO = storyDTO.getTags();
+		        List<Tag> tags = new ArrayList<Tag>();
+		        for (TagDTO t : tagsDTO) {
+					Tag tag = new Tag(t.getName());
+					tags.add(tag);
+				}
+		        story.setTags(tags);
+		        Location location = new Location(city,street,country,objectName);
 		        story.setLocation(location);
 		        
 		        if( storyDTO.getTaggedUsers() != null) {
@@ -122,13 +130,18 @@ public class StoryService implements IStoryService {
 				taggedProfilesDTO.add(new ProfileDTO(p.getUsername()));
 			}
 			}
+			List<TagDTO> tagsDTO = new ArrayList<TagDTO>();
+			List<Tag> tags = story.getTags();
+			for (Tag tag : tags) {
+				tagsDTO.add(new TagDTO(tag.getName()));
+			}
 			if(LocalDateTime.now().isBefore(story.getEndTime())) {
 				List<Media> medias = story.getMedia();
 				for (Media m : medias) {
 					LocationDTO locationDTO = new LocationDTO(story.getLocation().getCity(), story.getLocation().getStreet(),story.getLocation().getCountry(),
 							story.getLocation().getObjectName());
 				
-					myStories.add(new StoryDTO(story.getDescription(),username,m.getFileName(),locationDTO,story.isHighlighted(),story.isCloseFriends(),taggedProfilesDTO));
+					myStories.add(new StoryDTO(story.getDescription(),username,m.getFileName(),locationDTO,story.isHighlighted(),story.isCloseFriends(),taggedProfilesDTO,tagsDTO));
 		}
 	}
 		

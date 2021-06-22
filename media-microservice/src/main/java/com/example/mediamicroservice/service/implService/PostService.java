@@ -22,6 +22,7 @@ import com.example.mediamicroservice.model.ProfileMedia;
 import com.example.mediamicroservice.model.RequestStatus;
 import com.example.mediamicroservice.model.Tag;
 import com.example.mediamicroservice.repository.InappropriateContentRepository;
+import com.example.mediamicroservice.repository.LocationRepository;
 import com.example.mediamicroservice.repository.PostRepository;
 import com.example.mediamicroservice.repository.ProfileMediaRepository;
 import com.example.mediamicroservice.repository.TagRepository;
@@ -51,19 +52,23 @@ public class PostService implements IPostService {
 	private final ProfileMediaService profileMediaService;
 	private static String uploadDir = "user-photos";
 	private final TagRepository tagRepository;
+	private final LocationRepository locationRepository;
 	private final InappropriateContentRepository inappropriateContentRepository;
+
 	@Autowired
 	private ProfileConnection profileConnection;
 
+
 	@Autowired
 	public PostService(PostRepository postRepository, ProfileMediaRepository profileMediaRepository,
-			ProfileMediaService profileMediaService, TagRepository tagRepository,
+			ProfileMediaService profileMediaService, TagRepository tagRepository, LocationRepository locationRepository,
 			InappropriateContentRepository inappropriateContentRepository) {
 		super();
 		this.postRepository = postRepository;
 		this.profileMediaRepository = profileMediaRepository;
 		this.profileMediaService = profileMediaService;
 		this.tagRepository = tagRepository;
+		this.locationRepository = locationRepository;
 		this.inappropriateContentRepository = inappropriateContentRepository;
 	}
 
@@ -74,12 +79,32 @@ public class PostService implements IPostService {
         String locationFront= postDTO.getLocation();
         String parts[] = locationFront.split(",");
         String country = parts[0];
-        String city = parts[1];
-        String objectName = parts[2];
-        String street = parts[3];
+        String city="";
+        String street="";
+        String objectName="";
+        if(parts.length==2) {
+        	city = parts[1];
+        }else if(parts.length==3) {
+        	city = parts[1];
+        	street = parts[2];
+        }else if(parts.length==4) {
+        	city = parts[1];
+        	street = parts[2];
+        	objectName = parts[3];
+        }
         
         Location location = new Location(city,street , country,objectName);
-        post.setLocation(location);
+        List<Location> locations=locationRepository.findAll();
+        
+        for(Location l:locations) {
+        	if (l.getCountry().equals(location.getCountry()) && l.getCity().equals(location.getCity()) && l.getStreet().equals(location.getStreet()) && l.getObjectName().equals(location.getObjectName())) {
+        		post.setLocation(l);
+        		break;
+        	}else {
+        		 post.setLocation(location);
+        	}
+        }
+       
         List<TagDTO> tagsDTO = postDTO.getTags();
         List<Tag> tags = new ArrayList<Tag>();
         for (TagDTO t : tagsDTO) {
@@ -299,8 +324,9 @@ public class PostService implements IPostService {
 	    public PostDTO imageFile(PostDTO post, String filePath) {
 			List<ImageDTO> images = new ArrayList<>();
 			PostDTO postsDto = post;
-			
+			System.out.println();
 			for(String fileName:post.getFileNames()) {
+				System.out.println(fileName);
 				ImageDTO imageDTO = new ImageDTO();
 				List<byte[]> bytes = new ArrayList<byte[]>();
 				imageDTO.setImageBytes(bytes);
@@ -337,11 +363,12 @@ public class PostService implements IPostService {
 				for(TagDTO td:p.getTags()) {
 					if(td.getName().equals(t1.getName())) {
 						dto.add(p);
-						System.out.println(p.getUsername());
+						System.out.println(p.getUsername()+p.getFileNames().get(0));
 					}
 				}
 			}
 			System.out.println("Kraaaaaj post servisa");
+
 			return dto;
 			
 		}
@@ -355,38 +382,74 @@ public class PostService implements IPostService {
 			List<Post> posts=new ArrayList<>();
 			posts=postRepository.findAll();
 			List<PostDTO> postsDTO=new ArrayList<>();
-			int numberOfLikes = 0;
+			int numberOfLikes = 0; 
 			int numberOfDislikes = 0;
+			int numberOfComments = 0;
 			for (Post post : posts) {
 				
 				List<Media> medias = post.getMedias();
+				List<String> mediasFileName = new ArrayList<String>();
+				List<ProfileMedia> taggedProfiles = post.getProfileTags();
+				List<ProfileDTO> taggedProfilesDTO = new ArrayList<ProfileDTO>();
+				if(post.getProfileTags() != null) {
+				for (ProfileMedia p : taggedProfiles) {
+					taggedProfilesDTO.add(new ProfileDTO(p.getUsername()));
+				}
+				}
 				for (Media m : medias) {
+					mediasFileName.add(m.getFileName());
+				}
+			
 					LocationDTO locationDTO = new LocationDTO(post.getLocation().getCity(), post.getLocation().getStreet(),post.getLocation().getCountry(),
 							post.getLocation().getObjectName());
-					List<TagDTO> tagsDTO=new ArrayList<>();
-					for(Tag t:post.getTags()) {
-						tagsDTO.add(new TagDTO(t.getName()));
-					
+					List<TagDTO> tagsDTO = new ArrayList<TagDTO>();
+					List<Tag> tags = post.getTags();
+					for (Tag tag : tags) {
+						tagsDTO.add(new TagDTO(tag.getName()));
 					}
-					if( post.getNumberOfLikes() == null && post.getNumberOfDisikes() != null) {
+					if( post.getNumberOfLikes() == null && post.getNumberOfDisikes() != null && post.getNumberOfComments() == null) {
 						numberOfDislikes = post.getNumberOfDisikes();
-						postsDTO.add(new PostDTO(post.getDescription(),tagsDTO,profileMediaRepository.findByPostId(post.getId()),m.getFileName(),locationDTO, post.getDate(),0,numberOfDislikes));
-					}else if (post.getNumberOfDisikes() == null && post.getNumberOfLikes() != null ) {
+						postsDTO.add(new PostDTO(post.getDescription(),profileMediaRepository.findByPostId(post.getId()) ,mediasFileName,locationDTO, post.getDate(),0,numberOfDislikes,0,tagsDTO,post.getId(),taggedProfilesDTO));
+					}else if( post.getNumberOfLikes() == null && post.getNumberOfDisikes() != null && post.getNumberOfComments() != null) {
+							numberOfDislikes = post.getNumberOfDisikes();
+							numberOfComments = post.getNumberOfComments();
+							postsDTO.add(new PostDTO(post.getDescription(),profileMediaRepository.findByPostId(post.getId()),mediasFileName,locationDTO, post.getDate(),0,numberOfDislikes,numberOfComments,tagsDTO,post.getId(),taggedProfilesDTO));
+					
+					}else if (post.getNumberOfDisikes() == null && post.getNumberOfLikes() != null && post.getNumberOfComments() == null ) {
 						numberOfLikes = post.getNumberOfLikes();
-						postsDTO.add(new PostDTO(post.getDescription(),tagsDTO,profileMediaRepository.findByPostId(post.getId()),m.getFileName(),locationDTO, post.getDate(),numberOfLikes,0));
-					}
-					else if(post.getNumberOfLikes() == null && post.getNumberOfDisikes() == null) 
+						postsDTO.add(new PostDTO(post.getDescription(),profileMediaRepository.findByPostId(post.getId()),mediasFileName,locationDTO, post.getDate(),numberOfLikes,0,0,tagsDTO,post.getId(),taggedProfilesDTO));
+					
+				    }else if (post.getNumberOfDisikes() == null && post.getNumberOfLikes() != null && post.getNumberOfComments() != null ) {
+					numberOfLikes = post.getNumberOfLikes();
+					numberOfComments = post.getNumberOfComments();
+					postsDTO.add(new PostDTO(post.getDescription(),profileMediaRepository.findByPostId(post.getId()),mediasFileName,locationDTO, post.getDate(),numberOfLikes,0,numberOfComments,tagsDTO,post.getId(),taggedProfilesDTO));
+				    }
+				    else if (post.getNumberOfDisikes() != null && post.getNumberOfLikes() == null && post.getNumberOfComments() == null ) {
+				    	numberOfDislikes = post.getNumberOfDisikes();
+				    	postsDTO.add(new PostDTO(post.getDescription(),profileMediaRepository.findByPostId(post.getId()),mediasFileName,locationDTO, post.getDate(),0,numberOfDislikes,0,tagsDTO,post.getId(),taggedProfilesDTO));
+				    }
+				    else if (post.getNumberOfDisikes() != null && post.getNumberOfLikes() != null && post.getNumberOfComments() == null ) {
+						numberOfLikes = post.getNumberOfLikes();
+						numberOfDislikes = post.getNumberOfDisikes();
+						postsDTO.add(new PostDTO(post.getDescription(),profileMediaRepository.findByPostId(post.getId()),mediasFileName,locationDTO, post.getDate(),numberOfLikes,numberOfDislikes,0,tagsDTO,post.getId(),taggedProfilesDTO));
+					    }
+					else if(post.getNumberOfLikes() == null && post.getNumberOfDisikes() == null && post.getNumberOfComments() == null) 
 					{
-						postsDTO.add(new PostDTO(post.getDescription(),tagsDTO,profileMediaRepository.findByPostId(post.getId()),m.getFileName(),locationDTO, post.getDate(),0,0));
+						postsDTO.add(new PostDTO(post.getDescription(),profileMediaRepository.findByPostId(post.getId()),mediasFileName,locationDTO, post.getDate(),0,0,0,tagsDTO,post.getId(),taggedProfilesDTO));
+					}
+					else if(post.getNumberOfLikes() == null && post.getNumberOfDisikes() == null && post.getNumberOfComments() != null) 
+					{
+						numberOfComments = post.getNumberOfComments();
+						postsDTO.add(new PostDTO(post.getDescription(),profileMediaRepository.findByPostId(post.getId()),mediasFileName,locationDTO, post.getDate(),0,0,numberOfComments,tagsDTO,post.getId(),taggedProfilesDTO));
 					}
 					else 
 					{
 					numberOfLikes = post.getNumberOfLikes();
 					numberOfDislikes = post.getNumberOfDisikes();
-					postsDTO.add(new PostDTO(post.getDescription(),tagsDTO,profileMediaRepository.findByPostId(post.getId()),m.getFileName(),locationDTO, post.getDate(),numberOfLikes,numberOfDislikes));
+					numberOfComments = post.getNumberOfComments();
+					postsDTO.add(new PostDTO(post.getDescription(),profileMediaRepository.findByPostId(post.getId()),mediasFileName,locationDTO, post.getDate(),numberOfLikes,numberOfDislikes,numberOfComments,tagsDTO,post.getId(),taggedProfilesDTO));
 					}
-			}
-			}
+				}
 			
 			List<PostDTO> allPosts = getImagesFiles(postsDTO);
 			return allPosts;
@@ -397,21 +460,42 @@ public class PostService implements IPostService {
 
 
 		@Override
-		public List<PostDTO> findPostsByLocation(LocationDTO location) {
+		public List<PostDTO> findPostsByLocation(String loc) {
 			System.out.println("U Post SERVISU FIND BY LOK=CATION");
-			System.out.println(location.getCity());
+			System.out.println(loc);
 			List<PostDTO> dto=new ArrayList<>();
 			List<PostDTO> posts=findAllPosts();
+			/*
+			String[] s=loc.split(",");
+			LocationDTO location=new LocationDTO(s[1],s[3],s[0],s[2]);			*/
+			String ss="Serbia,Beograd";
+			String[] s=loc.split(",");
+			System.out.println(s[0]);
+			Boolean sadrzi=false;
+			for(PostDTO p:posts) {
+				List<String>  lokacija=new ArrayList<String>();
+				lokacija.add(p.getLocationDTO().getCountry());
+				System.out.println("DRZAVA"+p.getLocationDTO().getCountry());
+				lokacija.add(p.getLocationDTO().getCity());
+				lokacija.add(p.getLocationDTO().getObjectName());
+				lokacija.add(p.getLocationDTO().getStreet());
+				for(String s1:s) {
+					if(lokacija.contains(s1)) {
+						System.out.println("LOKACIJE-USAO U IF");
+						sadrzi=true;
+					}else {
+						System.out.println("lokacije else");
+						sadrzi=false;
+						break;
+					}
+				}
+				if(sadrzi) {
+				 dto.add(p);
+				}
+			}
+			System.out.println(dto.get(0).getDescription());
 			
 			/*
-			String[] s=location.split(",");
-			
-			LocationDTO loc=new LocationDTO();
-			loc.setCountry(s[0]);
-			loc.setCity(s[1]);
-			loc.setStreet(s[2]);
-			loc.setObjectName(s[3]);
-			*/
 			for(PostDTO p:posts) {
 				 if(p.getLocationDTO().getCountry().equals(location.getCountry()) && p.getLocationDTO().getCity().equals(location.getCity()) &&
 						 p.getLocationDTO().getStreet().equals(location.getStreet()) && p.getLocationDTO().getObjectName().equals(location.getObjectName())) {
@@ -420,6 +504,7 @@ public class PostService implements IPostService {
 					}
 				}
 			
+			*/
 			System.out.println("Kraj post servisa za lokacije");
 			return dto;
 

@@ -2,6 +2,7 @@ package com.example.mediamicroservice.dto;
 
 import java.util.List;
 
+import com.example.mediamicroservice.model.Tag;
 import com.netflix.client.ssl.ClientSslSocketFactoryException;
 
 public class StoryDTO {
@@ -100,6 +101,11 @@ public class StoryDTO {
 		this.closeFriends=closeFriends;
 	}
 
+	public StoryDTO(String following) {
+		super();
+		this.following = following;
+	}
+
 	public boolean isCloseFriends() {
 		return closeFriends;
 	}
@@ -140,6 +146,18 @@ public class StoryDTO {
 		this.closeFriends=closeFriends;
 		this.taggedUsers = taggedUsers;
 	}
+
+	public StoryDTO(String description, String username, String fileName, LocationDTO locationDTO,
+			boolean highlighted, boolean closeFriends, List<ProfileDTO> taggedProfilesDTO, List<TagDTO> tags) {
+		this.description = description;
+		this.username = username;
+		this.fileName = fileName;
+		this.locationDTO = locationDTO;
+		this.highlighted=highlighted;
+		this.closeFriends=closeFriends;
+		this.taggedUsers = taggedProfilesDTO;
+		this.tags=tags;
+}
 
 	public String getLocation() {
 		return location;

@@ -365,25 +365,16 @@ public class ProfileController {
 	@PostMapping("/unblockUser")
 	@PreAuthorize("hasRole('REGISTRED_USER')")
 	public ResponseEntity<String> unblockUser(@RequestBody String username) {
-		System.out.println("KONTROLER UNBLOCK "+username);
-		  
 		Authentication currentUser = SecurityContextHolder.getContext().getAuthentication();
 		Person person = (Person) currentUser.getPrincipal();
 		Profile logedUser = profileService.findById(person.getId());
-		System.out.println(logedUser.getUsername());
 		
 		Profile p=profileService.findByUsername(username.substring(0, username.length()-1));
 		logedUser.getBlockedUsers().remove(p);
-		logedUser.getFollowing().add(p);
-		logedUser.getFollowers().add(p);
 		profileRepository.save(logedUser);
 		
-		p.getFollowing().add(logedUser);
-		p.getFollowers().add(logedUser);
-		profileRepository.save(p);
-		
-			return new ResponseEntity<>("User successufully unblocked!", HttpStatus.CREATED);
-		}	
+		return new ResponseEntity<>("User successufully unblocked!", HttpStatus.CREATED);
+	}	
 	
 	
 	@GetMapping("/getPublicProfiles")
@@ -494,4 +485,15 @@ public class ProfileController {
 		}
 	}
 	
+	@GetMapping("/isBlocked/{username}")
+	public ResponseEntity isBlocked(@PathVariable String username) {
+		
+		return new ResponseEntity(profileService.isBlocked(username), HttpStatus.OK); 
+	}
+	
+	@GetMapping("/isMuted/{username}")
+	public ResponseEntity isMuted(@PathVariable String username) {
+		
+		return new ResponseEntity(profileService.isMuted(username), HttpStatus.OK); 
+	}
 }

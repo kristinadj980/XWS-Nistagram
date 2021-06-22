@@ -18,7 +18,7 @@ public interface IPostService {
 	List<PostDTO> findAllPosts();
 	List<PostDTO> sortByDate(List<PostDTO> allPosts);
 	List<PostDTO> findPostsByTag(String tag);
-	List<PostDTO> findPostsByLocation(LocationDTO location);
+	List<PostDTO> findPostsByLocation(String location);
 	Integer likeThisPost(LikePostDTO likePostDTO);
 	Integer dislikeThisPost(LikePostDTO likePostDTO);
 	List<LikeDislikeInfoDTO> findMyLikes(LikeDislikeInfoDTO dtoInfo);

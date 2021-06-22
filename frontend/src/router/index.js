@@ -12,13 +12,15 @@ import GeneralProfiles from '../views/GeneralProfiles.vue'
 import SearchPost from '../views/SearchPost.vue'
 import SearchPostByLocation from '../views/SearchPostByLocation.vue'
 import FriendRequests from '../views/FriendRequests.vue'
-import SearchPostUnregistered from '../views/SearchPostUnregistered.vue'
+import RegisteredUserSearch from '../views/RegisteredUserSearch.vue'
 import HomePageAdmin from '../views/HomePageAdmin.vue'
 import VerificationRequests from '../views/VerificationRequests.vue'
 import Notifications from '../views/Notifications.vue'
 import PublicHomepage from '../views/PublicHomepage.vue'
 import PublicSearch from '../views/PublicSearch.vue'
 import PublicProfiles from '../views/PublicProfiles.vue'
+import PublicSearchByTags from '../views/PublicSearchByTags.vue'
+import PublicSearchByLocation from '../views/PublicSearchByLocation.vue'
 
 Vue.use(VueRouter)
 
@@ -62,6 +64,16 @@ const routes = [
     component: AddingPosts
   },
   {
+    path: '/publicSearchByTags/:selectedTag',
+    name: 'PublicSearchByTags',
+    component: PublicSearchByTags
+  },
+  {
+    path: '/publicSearchByLocation/:selectedLocation',
+    name: 'PublicSearchByLocation',
+    component: PublicSearchByLocation
+  },
+  {
     path: '/addingStories',
     name: 'AddingStories',
     component: AddingStories
@@ -87,9 +99,9 @@ const routes = [
     component: SearchPostByLocation
   },
   {
-    path: '/searchPostUnregistered/:selectedTag',
-    name: 'SearchPostUnregistered',
-    component: SearchPostUnregistered
+    path: '/registeredUserSearch',
+    name: 'RegisteredUserSearch',
+    component: RegisteredUserSearch
   },
   {
     path: '/friendRequests',

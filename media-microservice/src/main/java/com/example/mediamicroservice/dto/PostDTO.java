@@ -159,7 +159,7 @@ public class PostDTO {
 	}
 
 
-
+ 
 	public PostDTO(String description, List<TagDTO> tagsDTO, String username, String fileName,
 			LocationDTO locationDTO, LocalDateTime date, int numberOfLikes, int numberOfDislikes) {
 		
@@ -173,6 +173,19 @@ public class PostDTO {
 		this.tags=tagsDTO;
 	}
 
+
+
+	public PostDTO(String description, List<TagDTO> tagsDTO, String username, List<String> mediasFileName,
+			LocationDTO locationDTO, LocalDateTime date, int numberOfLikes, int numberOfDislikes) {
+		this.description=description;
+		this.fileNames=mediasFileName;
+		this.username=username;
+		this.locationDTO=locationDTO;
+		this.date=date;
+		this.numberOfLikes=numberOfLikes;
+		this.numberOfDislikes=numberOfDislikes;
+		this.tags=tagsDTO;
+	}
 
 
 	public String getDescription() {

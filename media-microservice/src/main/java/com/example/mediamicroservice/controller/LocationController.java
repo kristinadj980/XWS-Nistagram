@@ -47,9 +47,9 @@ public class LocationController {
 	@GetMapping("/findPostsByLocation/{location}")
 	public ResponseEntity findPostsByLocation(@PathVariable String location) {	
 		System.out.println("pogodio media-microservice LOKACIJE");
-		String[] s=location.split(",");
-		LocationDTO loc=new LocationDTO(s[1],s[3],s[0],s[2]);
-		List<PostDTO> posts =postService.findPostsByLocation(loc);
+		//String[] s=location.split(",");
+		//LocationDTO loc=new LocationDTO(s[1],s[3],s[0],s[2]);
+		List<PostDTO> posts =postService.findPostsByLocation(location);
 		
 		for(PostDTO p:posts) {
 			System.out.println(p.getUsername());
