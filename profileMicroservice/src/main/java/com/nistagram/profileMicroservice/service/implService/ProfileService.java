@@ -4,6 +4,7 @@ import com.nistagram.profileMicroservice.dto.EditProfileDTO;
 import com.nistagram.profileMicroservice.dto.EditUsernameDTO;
 import com.nistagram.profileMicroservice.dto.FollowingDTO;
 import com.nistagram.profileMicroservice.dto.PersonRequestDTO;
+import com.nistagram.profileMicroservice.dto.ProfileDTO;
 import com.nistagram.profileMicroservice.dto.VerificationRequestDTO;
 import com.nistagram.profileMicroservice.model.Authority;
 import com.nistagram.profileMicroservice.model.FriendRequest;
@@ -93,7 +94,7 @@ public class ProfileService implements IProfileService {
         return profile;
 	}
 
-	private Boolean checkUsername(String username) {
+	public Boolean checkUsername(String username) {
 		List<String> allUsernames = profileRepository.findAllUsernames();
 		
 		for(String u:allUsernames)
@@ -447,6 +448,30 @@ public class ProfileService implements IProfileService {
 		
 		
 		return followingDTO;
+	}
+	
+	@Override
+	public List<ProfileDTO> getUsersForTags(){
+		Authentication currentUser = SecurityContextHolder.getContext().getAuthentication();
+		Person person = (Person) currentUser.getPrincipal();
+		Profile myProfile =  findById(person.getId());
+		List<ProfileDTO> profiles = new ArrayList<ProfileDTO>();
+		List<Profile> allProfiles = findAll();
+		List<Profile> friends = myProfile.getFollowing();
+		for (Profile profile : allProfiles) {
+			if(profile.getProfileStatus().equals(ProfileStatus.publicProfile) && profile.getAllowedTags() == true) {
+				if(profile.getId() != myProfile.getId()) {
+				   profiles.add(new ProfileDTO(profile.getUsername()));
+				}
+			}
+			
+		}
+		for (Profile p : friends) {
+			if(p.getProfileStatus().equals(ProfileStatus.privateProfile) && p.getAllowedTags() == true) {
+				profiles.add(new ProfileDTO(p.getUsername()));
+			}
+		}
+		return profiles;
 	}
 	
 }

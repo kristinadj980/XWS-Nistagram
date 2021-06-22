@@ -1,14 +1,14 @@
 <template>
     <div id="addingPosts">
         <div class="homepage_style ">
-           <span style="float: left; margin: 15px;">
+           <span style="float: left; margin: 15px;  margin-top:-14px;">
                 <img class="image_style space_style" title="Nistagram" style="width: 50px; height: 50px; margin-right:10px;"
                 src="http://assets.stickpng.com/thumbs/580b57fcd9996e24bc43c521.png">
                 <b-button  pill variant="outline-danger" class = "btn btn-lg space_style" v-on:click = "showHomepage">
                     <b-icon icon="house" aria-hidden="true"></b-icon>Home</b-button>
                 <b-button  pill variant="outline-danger" class = "btn btn-lg space_style" v-on:click = "showProfile">
                     <b-icon icon="person" aria-hidden="true"></b-icon>Profile</b-button>
-                <b-button pill variant="outline-danger" class = "btn btn-lg space_style" v-on:click = "addPosts">
+                <b-button pill variant="outline-danger" class = "btn btn-lg space_style" v-on:click = "logOut">
                     <b-icon icon="image" aria-hidden="true"></b-icon> Add post</b-button>
                 
             </span>
@@ -46,9 +46,16 @@
                             {{location.country}},{{location.city}},{{location.street}},{{location.objectName}} 
                         </option>
                     </datalist>
+
+                <h4 style="margin-top:20px">Choose profile to tag</h4>
+                <select multiple="true" style="width:500px; margin-top:5px" v-model="multipleSelections">
+                <option v-for="item in this.usersForTags"  v-on:click ="addCategoryTolist($event, item)" v-bind:key="item.id" >
+                {{item.username}}</option> 
+                </select>
+
                 <h4 
                 style="margin-bottom:2%; 
-                margin-top: 5% !important;">
+                margin-top: 10% !important;">
                     Add tags
                 </h4>
                 <b-form-tags
@@ -61,7 +68,6 @@
                 ></b-form-tags>
                 <b-button 
                 variant="outline-secondary"  
-               
                 style="margin-top: 8% !important;
                 color: #692d5a;
                 width: 240px;"
@@ -99,7 +105,7 @@ export default {
         medias:[],
         posts:[],
         selectedUser:[''],
-       
+        usersForTags:[],
         }
     },
     mounted() {
@@ -123,6 +129,17 @@ export default {
               this.locations = response.data;
          }).catch(res => {
                alert(Error)
+                console.log(res);
+            });
+        
+         this.axios.get('http://localhost:8083/profileMicroservice/api/profile/getUsersForTags',{ 
+             headers: {
+                 'Authorization': 'Bearer ' + token,
+             }
+         }).then(response => {
+              this.usersForTags = response.data;
+         }).catch(res => {
+               //alert(Error)
                 console.log(res);
             });
     },
@@ -181,6 +198,7 @@ export default {
                 username: this.user.username,
                 userId: this.user.id,
                 fileNames : this.fileName,
+                taggedUsers:this.multipleSelections
                  }
           
 
@@ -199,21 +217,6 @@ export default {
                 let fileOne = this.$refs.file.files[i];
                 this.file.push(fileOne);
             }
-        },
-        findPosts:function(){
-             let token = localStorage.getItem('token').substring(1, localStorage.getItem('token').length-1);
-             this.axios.get('http://localhost:8083/profileMicroservice/api/profile/find',{ 
-             headers: {
-                 'Authorization': 'Bearer ' + token,
-             }
-         }).then(response => {
-             alert("OK")
-             console.log(response.data)
-              //this.posts = response.data;
-         }).catch(res => {
-               alert(Error)
-                console.log(res);
-            });
         }
 
     }

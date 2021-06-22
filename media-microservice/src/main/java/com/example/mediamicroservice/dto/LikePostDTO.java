@@ -1,5 +1,7 @@
 package com.example.mediamicroservice.dto;
 
+import java.util.List;
+
 public class LikePostDTO {
 	private String usernameTo;  //kome lajkujem
 	private String fileName;
@@ -10,7 +12,7 @@ public class LikePostDTO {
 	private Long commentId;
 	private String answer;
 	private Long postId;
-	
+	private List<ProfileDTO> taggedUsers;
 	
 	public LikePostDTO() {
 		super();
@@ -30,13 +32,14 @@ public class LikePostDTO {
 		this.postId = postId;
 	}
 
-	public LikePostDTO(String usernameFrom, String comment,String answer, int numberOfComments,Long commentId) {
+	public LikePostDTO(String usernameFrom, String comment,String answer, int numberOfComments,Long commentId, List<ProfileDTO> taggedUsers) {
 		super();
 		this.usernameFrom = usernameFrom;
 		this.comment = comment;
 		this.answer = answer;
 		this.numberOfComments = numberOfComments;
 		this.commentId = commentId;
+		this.taggedUsers = taggedUsers;
 	}
 
 	public String getUsernameTo() {
@@ -109,5 +112,13 @@ public class LikePostDTO {
 
 	public void setPostId(Long postId) {
 		this.postId = postId;
+	}
+
+	public List<ProfileDTO> getTaggedUsers() {
+		return taggedUsers;
+	}
+
+	public void setTaggedUsers(List<ProfileDTO> taggedUsers) {
+		this.taggedUsers = taggedUsers;
 	}
 }

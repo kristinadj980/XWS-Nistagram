@@ -174,5 +174,12 @@ public class PostController {
 		return new ResponseEntity(postService.findPostPictureById(dto.getId(),dto.getUsername()), HttpStatus.OK); 
 	}
 	
+	
+	@GetMapping("/getPublicProfilesPosts")
+	public ResponseEntity getPublicProfilesPosts() {
+		
+		return new ResponseEntity(postService.getPublicProfilesPosts(), HttpStatus.OK); 
+
+	}
 
 }
