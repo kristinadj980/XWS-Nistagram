@@ -91,7 +91,8 @@ public class PostService implements IPostService {
         List<ProfileDTO> taggedUsers = postDTO.getTaggedUsers();
         List<ProfileMedia> profiles = new ArrayList<ProfileMedia>();
         for (ProfileDTO profileDTO : taggedUsers) {
-        	 profiles.add(new ProfileMedia(profileDTO.getUsername()));
+        	ProfileMedia profile = profileMediaRepository.findByUsername(profileDTO.getUsername());
+        	 profiles.add(profile);
 		}
         post.setProfileTags(profiles);
         }
@@ -449,18 +450,12 @@ public class PostService implements IPostService {
 	    	ProfileMedia myProfile = profileMediaService.findByUsername(dtoInfo.getMyProfile());
 	    	List<ProfileMedia> profiles = new ArrayList<ProfileMedia>();
 	    	List<Post> myPosts = myProfile.getPosts();
-	    	System.out.println("*******************************");
 	    	for (Post post : myPosts) {
-	    		System.out.println("*******************************");
 				profiles = post.getDislikes();
-				System.out.println(profiles.size());
 			}
 	    	for (ProfileMedia p : profiles) {
 	    		profilesWhoDisliked.add(new LikeDislikeInfoDTO(p.getUsername()));
-	    		System.out.println(profilesWhoDisliked.size());
 			}
-	   
-	    	System.out.println("*************OVDE******************");
 	    	return profilesWhoDisliked;
 	    }
 	    
@@ -486,7 +481,8 @@ public class PostService implements IPostService {
 								        List<ProfileDTO> taggedUsers = dto.getTaggedUsers();
 								        List<ProfileMedia> profiles = new ArrayList<ProfileMedia>();
 								        for (ProfileDTO profileDTO : taggedUsers) {
-								        	 profiles.add(new ProfileMedia(profileDTO.getUsername()));
+								        	 ProfileMedia profile = profileMediaService.findByUsername(profileDTO.getUsername());
+								        	 profiles.add(profile);
 										}
 								        comment.setProfileTags(profiles);
 								  }

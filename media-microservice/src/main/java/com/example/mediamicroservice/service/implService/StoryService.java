@@ -75,7 +75,8 @@ public class StoryService implements IStoryService {
 		            List<ProfileDTO> taggedUsers = storyDTO.getTaggedUsers();
 		            List<ProfileMedia> profiles = new ArrayList<ProfileMedia>();
 		            for (ProfileDTO profileDTO : taggedUsers) {
-		            	 profiles.add(new ProfileMedia(profileDTO.getUsername()));
+		            	ProfileMedia profile = profileMediaService.findByUsername(profileDTO.getUsername());
+		            	 profiles.add(profile);
 		    		}
 		            story.setProfileTags(profiles);
 		            }

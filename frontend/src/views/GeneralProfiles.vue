@@ -215,11 +215,12 @@
                                 </div>
                              </div><span style="margin-left:610px;" ></span>
                         </div>
-                        <input style="width: 60%; margin-top:10px; margin-left:10px;" type="text" id="post.fileName" v-model="comment"><span style="margin-top:-30px; " ></span>
+                        <!--<input style="width: 60%; margin-top:10px; margin-left:10px;" type="text" id="post.fileName" v-model="comment"><span style="margin-top:-30px; " ></span>-->
+                        <input style="width: 60%; margin-top:10px; margin-left:10px;" type="text" id="post.fileName" v-model="comment"><span style="margin-left:10px;" ></span>
                        <h4> <b-icon style="margin-left:500px;" icon="check-circle" aria-hidden="true" @click="commentPost($event,selectedPost)"></b-icon> </h4>     
                          <h4 style="margin-top:20px; margin-left:10px">Choose profile to tag</h4>
                 <select multiple="true" style="width:500px; margin-top:5pxl; margin-left:10px" v-model="multipleSelections">
-                <option v-for="item in this.usersForTags"  v-on:click ="addCategoryTolist($event, item)" v-bind:key="item.id" >
+                <option v-for="item in this.usersForTags"   v-bind:key="item.id" >
                 {{item.username}}</option> 
                 </select>    
                     </div>                
@@ -283,7 +284,8 @@ export default {
         proba: "ana",
         selectedPost: [],
         postsNumber: 0,
-        usersForTags:[]
+        usersForTags:[],
+        multipleSelections:[]
         }
     },
     async mounted(){
