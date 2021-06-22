@@ -38,6 +38,10 @@
                         <b-img v-if="!story.fileName.includes(videoText)" thumbnail  v-bind:src="story.imageBytes" alt="Image 1"></b-img>
                         <video v-if="story.fileName.includes(videoText)" autoplay controls v-bind:src="story.imageBytes" width="400" height="400" style="display:block; margin-left:auto; margin-right:auto"></video>
                         <h4 align="left">{{story.description}}</h4>
+                         <h5 align="left"> <span v-for="(user,t) in story.taggedUsers" :key="t">
+                                        @{{user.username}}
+                                    </span>
+                       </h5>
                     </b-card>
                 </b-tab>
             </b-tabs>
@@ -354,7 +358,8 @@ export default {
         user:'',
         file:'',
         selectedCategory:'',
-        formData:''
+        formData:'',
+        
         }
     },
     mounted(){

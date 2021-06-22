@@ -48,6 +48,12 @@
                             {{ location.country }}, {{location.city}},  {{location.street}}, {{location.objectName}} 
                         </option>
                     </datalist>
+                    <h4 style="margin-top:20px">Choose profile to tag</h4>
+                <select multiple="true" style="width:500px; margin-top:5px" v-model="multipleSelections">
+                <option v-for="item in this.usersForTags"  v-on:click ="addCategoryTolist($event, item)" v-bind:key="item.id" >
+                {{item.username}}</option> 
+                </select>
+
                 <h4 
                 style="margin-bottom:2%; 
                 margin-top: 5% !important;">
@@ -111,6 +117,7 @@ export default {
         medias:[],
         highlight:'',
         closeFriends:'',
+        usersForTags:[],
         }
     },
     mounted() {
@@ -133,6 +140,17 @@ export default {
               this.locations = response.data;
          }).catch(res => {
                alert(Error)
+                console.log(res);
+            });
+
+         this.axios.get('http://localhost:8083/profileMicroservice/api/profile/getUsersForTags',{ 
+             headers: {
+                 'Authorization': 'Bearer ' + token,
+             }
+         }).then(response => {
+              this.usersForTags = response.data;
+         }).catch(res => {
+               //alert(Error)
                 console.log(res);
             });
         
@@ -193,6 +211,7 @@ export default {
                 fileNames : this.fileName,
                 highlighted: this.highlight,
                 closeFriends: this.closeFriends,
+                taggedUsers:this.multipleSelections
                  }
           
 

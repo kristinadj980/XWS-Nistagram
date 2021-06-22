@@ -59,6 +59,11 @@ public class ProfileMedia {
 		this.posts = posts;
 	}
 
+	public ProfileMedia(String username) {
+		super();
+		this.username = username;
+	}
+
 	public String getUsername() {
 		return username;
 	}

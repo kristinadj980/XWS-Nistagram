@@ -14,7 +14,7 @@
                     <b-icon icon="image" aria-hidden="true"></b-icon> Add story</b-button>
     
                 <!--LOKACIJE-->
-                <b-input-group class=" serach_look1">
+               <!--  <b-input-group class=" serach_look1">
                     <b-input-group-append>
                         <input 
                         list="my-list-id1" 
@@ -32,8 +32,8 @@
                     </router-link>
                      </b-input-group-append>
 
-                    <!--TAGOVI-->
-                </b-input-group>    
+                   
+               </b-input-group>    
                 <b-input-group class=" serach_look">
                     <b-input-group-append>
                         <input 
@@ -69,7 +69,7 @@
                 
                     </b-input-group-append>
                 
-                </b-input-group>
+                </b-input-group>-->
 
             </span>
                 <span style="float:right;margin:15px">
@@ -156,6 +156,10 @@
                          <h4 style="margin-left:500px; margin-top:10px"><b-icon icon="exclamation-circle" aria-hidden="true" align="right" @click="showModalReportPost($event,post)"></b-icon></h4>
                          
                         <h4 align="left" style="margin-top:-35px;">{{post.description}}</h4>
+                         <h5 align="left"> <span v-for="(user,t) in post.taggedUsers" :key="t">
+                                        @{{user.username}}
+                                    </span>
+                       </h5>
                          <h5 align="left"><span v-for="(tag,t) in post.tags" :key="t">
                                         #{{tag.name}}
                                     </span>
@@ -250,7 +254,7 @@ export default {
          }).then(response => {
                this.users = response.data
          }).catch(res => {
-                       alert("Error");
+                       //alert("Error");
                         console.log(res);
                  });
        this.axios.get('http://localhost:8083/profileMicroservice/api/profile/getNotMuted',{ 
@@ -262,7 +266,7 @@ export default {
                this.getFriednsPosts(response.data);
                this.getFriendsStories(response.data);
          }).catch(res => {
-                       alert("Error");
+                      // alert("Error");
                         console.log(res);
                  });
         this.axios.get('http://localhost:8083/profileMicroservice/api/profile/getCloseFriends',{ 
@@ -274,7 +278,7 @@ export default {
                 this.getCloseFriendsStories(response.data);
                 console.log(this.closeFriends);
          }).catch(res => {
-                       alert("Error");
+                       //alert("Error");
                         console.log(res);
                  });
         
@@ -286,7 +290,7 @@ export default {
               this.loggeduser = response.data;
               console.log(response.data.name);
          }).catch(res => {
-               alert(Error)
+               //alert(Error)
                 console.log(res);
             });
            
@@ -298,7 +302,7 @@ export default {
                this.tags = response.data
                 console.log(this.tags);
          }).catch(res => {
-                       alert("Error");
+                       //alert("Error");
                         console.log(res);
                  });
                  this.axios.get('http://localhost:8083/mediaMicroservice/location/getLocations',{ 
@@ -309,7 +313,7 @@ export default {
                this.locations = response.data
                 console.log(this.locations);
          }).catch(res => {
-                       alert("Error");
+                       //alert("Error");
                         console.log(res);
                  });
    },
