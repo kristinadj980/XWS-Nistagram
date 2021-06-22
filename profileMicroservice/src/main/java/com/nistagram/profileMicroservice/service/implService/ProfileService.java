@@ -271,29 +271,20 @@ public class ProfileService implements IProfileService {
 
 	@Override
 	public void blockUser(String username) {
-		// TODO Auto-generated method stub
-				System.out.println(username);
-				System.out.println("U SERVISU SAM");
 				Authentication currentUser = SecurityContextHolder.getContext().getAuthentication();
 				Person person = (Person) currentUser.getPrincipal();
 				Profile logedUser = findById(person.getId());
-				System.out.println(logedUser.getName());
 				
 				Profile blockFriend=findByUsername(username.substring(0, username.length()-1));
-				System.out.println(blockFriend.getName());
-				
 				List<Profile> blockedFriends=logedUser.getBlockedUsers();
 				
 				blockedFriends.add(blockFriend);
 				
-				System.out.println("BRISE BLOKIRANOG IZ PRATIOCA");
 				logedUser.getFollowing().remove(blockFriend);
 				logedUser.getFollowers().remove(blockFriend);
 
-				System.out.println("BRISE BLOKIRANOG IZ PRATIOCA");
 				blockFriend.getFollowing().remove(logedUser);
 				blockFriend.getFollowers().remove(logedUser);
-				
 				profileRepository.save(logedUser);
 				profileRepository.save(blockFriend);
 	}
@@ -472,6 +463,46 @@ public class ProfileService implements IProfileService {
 			}
 		}
 		return profiles;
+	}
+
+	@Override
+	public Boolean isBlocked(String username) {
+		Authentication currentUser = SecurityContextHolder.getContext().getAuthentication();
+		Person person = (Person) currentUser.getPrincipal();
+		Profile profile =  findById(person.getId());
+		List<Profile> blockedProfiles = new ArrayList<>();
+		
+		if(profile.getBlockedUsers() == null)
+			return false;
+		else
+			blockedProfiles = profile.getBlockedUsers();
+		
+		for(Profile p:blockedProfiles)
+			if(p.getUsername().equals(username))
+				return true;
+		
+		
+		return false;
+	}
+
+	@Override
+	public Boolean isMuted(String username) {
+		Authentication currentUser = SecurityContextHolder.getContext().getAuthentication();
+		Person person = (Person) currentUser.getPrincipal();
+		Profile profile =  findById(person.getId());
+		List<Profile> mutedProfiles = new ArrayList<>();
+		
+		if(profile.getBlockedUsers() == null)
+			return false;
+		else
+			mutedProfiles = profile.getMutedFriends();
+		
+		for(Profile m:mutedProfiles)
+			if(m.getUsername().equals(username))
+				return true;
+		
+		
+		return false;
 	}
 	
 }

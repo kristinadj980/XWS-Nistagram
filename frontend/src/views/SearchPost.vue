@@ -16,24 +16,24 @@
                     <b-button pill variant="outline-danger" class = "btn btn-lg btn-light" style="margin-right:20px;" v-on:click = "logOut">Log Out</b-button>
                 </span>
         </div>
-        <b-card class="content_surface" align="left">
-                <template #title>
-                   <b-icon icon="grid3x3-gap" aria-hidden="true"></b-icon><strong>   posts</strong>
-                </template>
-                    <b-card class="post_look" v-for="post in posts" v-bind:key="post.fileName">
-                        <b-row >
-                        <h4 align="left"><b-icon icon="person-circle" aria-hidden="true"></b-icon>  {{post.username}}</h4>
-                        </b-row>
-                        <h6 align="left">{{post.locationDTO.city}} {{post.locationDTO.street}} {{post.locationDTO.objectName}} {{post.locationDTO.country}}</h6>
-                        <div v-for="(image, index) in post.images" v-bind:key="image.imageBytes">
-                            <b-img v-if="!post.fileNames[index].includes(videoText)" thumbnail  v-bind:src="image.imageBytes" alt="Image 1"></b-img>
-                             <video v-if="post.fileNames[index].includes(videoText)" autoplay controls v-bind:src="image.imageBytes" width="400" height="400" style="display:block; margin-left:auto; margin-right:auto"></video>
-
-                        </div>
-                        <h4 align="left">{{post.description}}</h4>
-                        <h5 align="left"><b-icon icon="hand-thumbs-up" aria-hidden="true" @click="likePost($event,post)"></b-icon>{{post.numberOfLikes}}  likes <b-icon icon="hand-thumbs-down" aria-hidden="true" @click="dislikePost($event,post)"></b-icon>{{post.numberOfDislikes}} dislikes <span style="margin-left:430px;"></span> <b-icon icon="bookmark" aria-hidden="true" align="right"></b-icon></h5>
-                        <h4 align="left"><b-icon icon="chat-square" aria-hidden="true"></b-icon>  comments</h4>
-                    </b-card>
+        <b-card class="post_look" v-for="post in posts" colu v-bind:key="post.fileName">
+            <b-row >
+                <h4 align="left"  v-b-modal.modal-4><b-icon icon="person-circle" aria-hidden="true"></b-icon>  {{post.username}}</h4>
+            </b-row>
+            <h6 align="left"  v-b-modal.modal-4>{{post.locationDTO.city}},{{post.locationDTO.street}},{{post.locationDTO.objectName}},{{post.locationDTO.country}}</h6>
+            <div v-for="(image, index) in post.images" v-bind:key="image.imageBytes"  v-b-modal.modal-4>
+                <b-img v-if="!post.fileNames[index].includes(videoText)" thumbnail  v-bind:src="image.imageBytes" width="400" height="400"  alt="Image 1"></b-img>
+                <video v-if="post.fileNames[index].includes(videoText)" controls v-bind:src="image.imageBytes" width="400" height="400" style="display:block; margin-left:auto; margin-right:auto"></video>
+            </div>
+            <h4 align="left" style="margin-top:5px;"  v-b-modal.modal-4>{{post.description}}</h4>
+            <h5 align="left"  v-b-modal.modal-4>
+                <span v-for="(tag,t) in post.tags" :key="t">
+                #{{tag.name}}
+                </span>
+            </h5>
+            <h5 align="left"><b-icon icon="hand-thumbs-up" aria-hidden="true"  v-b-modal.modal-4></b-icon>{{post.numberOfLikes}}  likes
+            <b-icon icon="hand-thumbs-down" aria-hidden="true"  v-b-modal.modal-4></b-icon>{{post.numberOfDislikes}} dislikes  </h5>
+            <h4 align="left"  v-b-modal.modal-4><b-icon icon="chat-square" aria-hidden="true"  v-b-modal.modal-4></b-icon> {{post.numberOfComments}}  comments </h4>              
         </b-card>
     </div>
 </template>
@@ -116,22 +116,7 @@ export default {
                         alert("No posts for this tag!");
                             console.log(res);
                     });
-       /*
-         this.axios.get('http://localhost:8083/mediaMicroservice/post/getMyPosts/'+ this.$route.params.selectedUsername)
-            .then(response => {
-                this.posts = response.data;
-                let video = "mp4";
-                for(let i=0; i< response.data.length; i++){
-                     if(!this.posts[i].fileName.includes(video)){
-                        this.posts[i].imageBytes = 'data:image/jpeg;base64,' + this.posts[i].imageBytes; 
-                    }else{
-                        this.posts[i].imageBytes = 'data:video/mp4;base64,' + this.posts[i].imageBytes;     
-                    }            
-                } 
-            }).catch(res => {
-                        alert("Profile is private");
-                            console.log(res);
-                    });    */
+       
         
    },
     methods:{

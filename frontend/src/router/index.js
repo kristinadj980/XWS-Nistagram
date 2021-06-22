@@ -19,6 +19,8 @@ import Notifications from '../views/Notifications.vue'
 import PublicHomepage from '../views/PublicHomepage.vue'
 import PublicSearch from '../views/PublicSearch.vue'
 import PublicProfiles from '../views/PublicProfiles.vue'
+import PublicSearchByTags from '../views/PublicSearchByTags.vue'
+import PublicSearchByLocation from '../views/PublicSearchByLocation.vue'
 
 Vue.use(VueRouter)
 
@@ -60,6 +62,16 @@ const routes = [
     path: '/addingPosts',
     name: 'AddingPosts',
     component: AddingPosts
+  },
+  {
+    path: '/publicSearchByTags/:selectedTag',
+    name: 'PublicSearchByTags',
+    component: PublicSearchByTags
+  },
+  {
+    path: '/publicSearchByLocation/:selectedLocation',
+    name: 'PublicSearchByLocation',
+    component: PublicSearchByLocation
   },
   {
     path: '/addingStories',

@@ -32,7 +32,7 @@
                                     {{ location.country }}, {{location.city}},  {{location.street}}, {{location.objectName}} 
                                 </option>
                             </datalist>
-                            <router-link :to="{ name: 'SearchPostByLocation', params: {selectedLocation: this.selectedLocation}}" class="search-btn">
+                            <router-link :to="{ name: 'PublicSearchByLocation', params: {selectedLocation: this.selectedLocation}}" class="search-btn">
                                 <b-button style="margin-top: -14% !important;  margin-left: 82.2% !important;" variant="outline-danger"><b-icon icon="search" aria-hidden="true"></b-icon></b-button>
                             </router-link>
                             </b-input-group-append>
@@ -50,7 +50,7 @@
                                         {{ tag.name}} 
                                     </option>
                                 </datalist> 
-                            <router-link :to="{ name: 'SearchPost', params: {selectedTag: this.selectedTag}}" class="search-btn">
+                            <router-link :to="{ name: 'PublicSearchByTags', params: {selectedTag: this.selectedTag}}" class="search-btn">
                             <b-button style="margin-top: -14% !important;  margin-left: 82.2% !important;" variant="outline-danger"><b-icon icon="search" aria-hidden="true"></b-icon></b-button>
                             </router-link>
                             </b-input-group-append>
