@@ -1,76 +1,73 @@
-package com.nistagram.profileMicroservice.model;
+package com.nistagram.profileMicroservice.dto;
 
 import java.time.LocalDate;
 
-import javax.persistence.*;
+import com.nistagram.profileMicroservice.model.NotificationDescription;
 
-@Entity
-public class Notification {
+public class NotificationDTO {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	
-	@Enumerated(EnumType.ORDINAL)
 	private NotificationDescription notificationDescription;
-	
-	@Column(name = "date", nullable = false)
+	private String description;
 	private LocalDate date;
-
-	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-	private Profile profile;
+	private String username;
 	
-	
-	public Notification() {
+	public NotificationDTO() {
 		super();
 	}
 
+	
 
-	public Notification(Long id, NotificationDescription notificationDescription, LocalDate date, Profile profile) {
+	public NotificationDTO(Long id, NotificationDescription notificationDescription, String description, LocalDate date,
+			String username) {
 		super();
 		this.id = id;
 		this.notificationDescription = notificationDescription;
+		this.description = description;
 		this.date = date;
-		this.profile = profile;
+		this.username = username;
 	}
+
 
 
 	public Long getId() {
 		return id;
 	}
 
-
 	public void setId(Long id) {
 		this.id = id;
 	}
-
 
 	public NotificationDescription getNotificationDescription() {
 		return notificationDescription;
 	}
 
-
 	public void setNotificationDescription(NotificationDescription notificationDescription) {
 		this.notificationDescription = notificationDescription;
 	}
-
 
 	public LocalDate getDate() {
 		return date;
 	}
 
-
 	public void setDate(LocalDate date) {
 		this.date = date;
 	}
 
-
-	public Profile getProfile() {
-		return profile;
+	public String getUsername() {
+		return username;
 	}
 
-	public void setProfile(Profile profile) {
-		this.profile = profile;
+	public void setUsername(String username) {
+		this.username = username;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
 	}
 	
 	

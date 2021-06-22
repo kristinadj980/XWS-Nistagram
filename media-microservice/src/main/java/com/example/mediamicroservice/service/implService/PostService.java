@@ -1,6 +1,8 @@
 package com.example.mediamicroservice.service.implService;
 
+import com.example.mediamicroservice.connections.ProfileConnection;
 import com.example.mediamicroservice.dto.CommentDTO;
+import com.example.mediamicroservice.dto.CommentNotifyDTO;
 import com.example.mediamicroservice.dto.ImageDTO;
 import com.example.mediamicroservice.dto.ImagesFrontDTO;
 import com.example.mediamicroservice.dto.InapropriateContentDTO;
@@ -38,8 +40,6 @@ import java.util.List;
 
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.orm.jpa.support.PersistenceAnnotationBeanPostProcessor;
-import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -53,9 +53,11 @@ public class PostService implements IPostService {
 	private final TagRepository tagRepository;
 	private final LocationRepository locationRepository;
 	private final InappropriateContentRepository inappropriateContentRepository;
-	
-	
-	
+
+	@Autowired
+	private ProfileConnection profileConnection;
+
+
 	@Autowired
 	public PostService(PostRepository postRepository, ProfileMediaRepository profileMediaRepository,
 			ProfileMediaService profileMediaService, TagRepository tagRepository, LocationRepository locationRepository,
@@ -82,8 +84,11 @@ public class PostService implements IPostService {
         if(parts.length==2) {
         	city = parts[1];
         }else if(parts.length==3) {
+        	city = parts[1];
         	street = parts[2];
         }else if(parts.length==4) {
+        	city = parts[1];
+        	street = parts[2];
         	objectName = parts[3];
         }
         
@@ -108,7 +113,6 @@ public class PostService implements IPostService {
         post.setTags(tags);
         List<Media> medias = new ArrayList<Media>();
         for(String s:postDTO.getFileNames()) {
-        	System.out.println(s);
         	Media media = new Media();
         	media.setFileName(s);
         	medias.add(media);
@@ -118,6 +122,7 @@ public class PostService implements IPostService {
         profileMediaService.addPostToProfile(postDTO, post);
         
         Post p = postRepository.save(post);
+        profileConnection.postNotify(postDTO.getUsername());
 		return p;
 	}
 
@@ -125,7 +130,6 @@ public class PostService implements IPostService {
 	public List<PostDTO> findMyPosts(String username){
 		List<PostDTO> myPosts = new ArrayList<PostDTO>();
 		ProfileMedia existingProfile = profileMediaService.findByUsername(username);
-		System.out.println(existingProfile.getUsername());
 		if(existingProfile == null) 
 			throw new IllegalArgumentException("Profile doesn't exist!");
 		List<Post> posts = existingProfile.getPosts();
@@ -530,6 +534,12 @@ public class PostService implements IPostService {
 						 post.setComments(comments);
 						 post.setNumberOfComments(updatedNumberOfComments);
 						 postRepository.save(post);
+						 CommentNotifyDTO c = new CommentNotifyDTO(dto.getUsernameTo(), dto.getUsernameFrom());
+						 try {
+						 profileConnection.commentNotify(c);
+						 }catch(Exception e) {
+							 System.out.println(e.getMessage());
+						 }
 						 
 					 }
 				 }
