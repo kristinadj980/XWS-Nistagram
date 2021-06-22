@@ -1,5 +1,7 @@
 package com.example.searchmicroservice.service;
 
-public interface IProfileService {
+import java.util.List;
 
+public interface IProfileService {
+	List<String> searchForProfile(String data);
 }

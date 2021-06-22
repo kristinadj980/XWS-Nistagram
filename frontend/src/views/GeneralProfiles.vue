@@ -1,7 +1,7 @@
 <template>
     <div id="generalProfileInfo">
         <div class="homepage_style ">
-           <span style="float: left; margin: 15px;">
+           <span style="float: left; margin: 15px; margin-top:-15px;">
                 <img class="image_style space_style" title="Nistagram" style="width: 50px; height: 50px; margin-right:10px;"
                 src="http://assets.stickpng.com/thumbs/580b57fcd9996e24bc43c521.png">
                 <b-button  pill variant="outline-danger" class = "btn btn-lg space_style" v-on:click = "showHomepage">
@@ -19,9 +19,14 @@
         <b-card class="content_surface" align="left">
 
 <!--  HIGHLIGHTS -->
-             <b-button  class="btn btn-info btn-lg space_style"  style="background-color:#f08080;margin-left:100px;" v-b-modal.modal-5>Show highlights</b-button>
-                            <b-modal ref="modal-ref" id="modal-5" title="Highlights" hide-footer>
-                                <b-tabs 
+            <b-button  
+            class="btn btn-info btn-lg space_style"  
+            style="background-color:#f08080;margin-left:100px;"
+            v-if="user.profileStatus == 'publicProfile' || friendStatus == 'friends'"
+            v-b-modal.modal-5
+            >Show highlights</b-button>
+            <b-modal ref="modal-ref" id="modal-5" title="Highlights" hide-footer>
+            <b-tabs 
             style="margin-top:70px;" 
             align="center"
             active-nav-item-class="font-weight-bold text-uppercase text-danger"
@@ -43,22 +48,16 @@
                 </b-tab>
             </b-tabs>
          </b-modal>
-
-        <b-button style="margin-left:1000px; margin-top:100px;" variant="outline-danger" size="lg"  v-on:click = "blockUser">
-                    Block 
-                </b-button>
-
             <b-dropdown
             variant="outline-danger" 
             class="m-2" 
             menu-class="w-100" 
-            v-if="friendStatus == 'approved' || friendStatus == 'friends'"
-            style="left:87%;">
+            style="left:45%;">
                 <template #button-content>
                    <b-icon icon="three-dots" aria-hidden="true" ></b-icon>
                 </template>
-                <b-dropdown-item >Mute</b-dropdown-item>
-                <b-dropdown-item>Block</b-dropdown-item>
+                <b-dropdown-item  v-if="friendStatus == 'approved' || friendStatus == 'friends'" >Mute</b-dropdown-item>
+                <b-dropdown-item v-on:click = "blockUser">Block</b-dropdown-item>
             </b-dropdown>
             <b-icon 
             v-if="friendStatus == 'approved' || friendStatus == 'friends'" 
@@ -661,22 +660,9 @@ export default {
                         alert("Profile is private");
                             console.log(res);
                     });
-            },
+        },
         blockUser: function(){
-            console.log(this.user.username);  
-             let token = localStorage.getItem('token').substring(1, localStorage.getItem('token').length-1);
-            this.axios.get('http://localhost:8083/profileMicroservice/api/profile/account',{ 
-                headers: {
-                 'Authorization': 'Bearer ' + token,
-                }
-                }).then(response => {
-               this.profile = response.data;
-               console.log(this.profile.username);
-
-                 }).catch(res => {
-                       alert("Error");
-                        console.log(res);
-                 });
+        let token = localStorage.getItem('token').substring(1, localStorage.getItem('token').length-1);
         console.log(this.user.username);
             this.axios.post('http://localhost:8083/profileMicroservice/api/profile/blockUser',this.user.username,{ 
                 headers: {

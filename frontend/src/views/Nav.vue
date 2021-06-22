@@ -6,8 +6,8 @@
         <div id="navbar" class="navbar-menu">
           <div class="navbar-end">
             <div class="navbar-item">
-              <img class="image_style space_style" title="Nistagram" style="width: 50px; height: 50px; left:10px; margin-top:-5px;"
-                  src="http://assets.stickpng.com/thumbs/580b57fcd9996e24bc43c521.png">
+              <img class="image_style space_style" title="Nistagram" style="width: 50px; height: 50px; left:10px;"
+                src="http://assets.stickpng.com/thumbs/580b57fcd9996e24bc43c521.png">
               <a class="button is-dark"  href="http://localhost:8081/">
                 <strong>Home</strong>
               </a>    
@@ -23,7 +23,7 @@
       </div>
     </nav>
     <public-search v-if="isMainPage"  style="margin-left:38%; height: 50px; width:25%;left:10px; margin-bottom:2%;"></public-search>
-    <hr v-if="isMainPage">
+
     <public-homepage v-if="isMainPage" style="post_look"></public-homepage>
   </div>
 </template>

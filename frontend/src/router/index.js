@@ -18,6 +18,7 @@ import VerificationRequests from '../views/VerificationRequests.vue'
 import Notifications from '../views/Notifications.vue'
 import PublicHomepage from '../views/PublicHomepage.vue'
 import PublicSearch from '../views/PublicSearch.vue'
+import PublicProfiles from '../views/PublicProfiles.vue'
 
 Vue.use(VueRouter)
 
@@ -120,6 +121,12 @@ const routes = [
     name: 'PublicSearch',
     component: PublicSearch
   },
+  {
+    path: '/publicProfiles/:selectedUsername',
+    name: 'PublicProfiles',
+    component: PublicProfiles
+  },
+  
 ]
 
 const router = new VueRouter({
