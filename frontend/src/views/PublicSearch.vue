@@ -18,10 +18,36 @@
             </b-input-group-append>
         </b-tab>
         <b-tab title="locations">
-            
+            <b-input-group-append>
+                <input
+                list="my-list-id" 
+                v-model="profileForSearch" 
+                class="input_style" 
+                placeholder="enter location for search..."
+                style="margin-top: 3% !important; width:300px; height:35px;">
+                <datalist id="my-list-id" >
+                    <option v-for="profile in publicProfiles"  v-bind:key="profile" >
+                        {{ profile }} 
+                    </option>
+                </datalist>
+                <b-button style="margin-top: -14% !important;  margin-left: 82.2% !important;" variant="outline-danger" v-on:click="searchProfiles" v-b-modal.modal-1><b-icon icon="search" aria-hidden="true"></b-icon></b-button>
+            </b-input-group-append>
         </b-tab>
         <b-tab title="tags">
-            
+            <b-input-group-append>
+                <input
+                list="my-list-id" 
+                v-model="profileForSearch" 
+                class="input_style" 
+                placeholder="enter tag for search..."
+                style="margin-top: 3% !important; width:300px; height:35px;">
+                <datalist id="my-list-id" >
+                    <option v-for="profile in publicProfiles"  v-bind:key="profile" >
+                        {{ profile }} 
+                    </option>
+                </datalist>
+                <b-button style="margin-top: -14% !important;  margin-left: 82.2% !important;" variant="outline-danger" v-on:click="searchProfiles" v-b-modal.modal-1><b-icon icon="search" aria-hidden="true"></b-icon></b-button>
+            </b-input-group-append>
         </b-tab>
     </b-tabs>
     <b-modal ref="modal-ref1" id="modal-1"  hide-footer>

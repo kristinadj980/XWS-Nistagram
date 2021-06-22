@@ -355,7 +355,6 @@ export default {
                         alert("Error");
                             console.log(res);
                     });
-        
    },
     methods:{
         showHomepage: function(){
@@ -701,7 +700,7 @@ export default {
                     alert("Please, try later.")
                     console.log(response);
                 });
-        },
+        }
     }
 }
 </script>

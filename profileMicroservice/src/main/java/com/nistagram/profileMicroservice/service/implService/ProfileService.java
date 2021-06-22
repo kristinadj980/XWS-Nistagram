@@ -93,7 +93,7 @@ public class ProfileService implements IProfileService {
         return profile;
 	}
 
-	private Boolean checkUsername(String username) {
+	public Boolean checkUsername(String username) {
 		List<String> allUsernames = profileRepository.findAllUsernames();
 		
 		for(String u:allUsernames)

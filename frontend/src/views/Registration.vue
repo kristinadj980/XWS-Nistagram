@@ -91,13 +91,12 @@ export default {
             }
             this.axios.post('http://localhost:8083/profileMicroservice/api/auth/register',userInfo)
                 .then(response => {
-                       alert("Please check your email for validation link, so you could login!");
                         this.$router.push('/login') 
                         console.log(response.data);
                 })
                 .catch(response => {
                     console.log(response.data)
-                    alert("Eror")
+                    alert("User with that username already exist! Choose another.")
                    // alert(response.response.data.message);
                  });    
       
