@@ -352,8 +352,8 @@
                              
                             <div class="row">
                                 <div class=" form-group col">
-                                     <label>Profile: {{user.usernameFrom}} </label><span style="margin-left:30px;" ></span>
-                                     <label > Comment : {{user.comment}}</label><span style="margin-left:30px;" ></span>
+                                     <label>Profile: {{user.usernameFrom}} </label><span style="margin-left:50px;" ></span>
+                                     <label > Comment : {{user.comment}}</label><span style="margin-left:50px;" ></span>
                                      <label > Answer : {{user.answer}}</label>
                                       <h5 align="left"> <span v-for="(u,t) in user.taggedUsers" :key="t">
                                         @{{u.username}}
