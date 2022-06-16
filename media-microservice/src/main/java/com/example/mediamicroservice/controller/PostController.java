@@ -62,10 +62,10 @@ public class PostController {
 	@PostMapping("/saveImageForRequest")
     public String saveImageForRequest(@RequestParam("file") MultipartFile multipartFile ) throws IOException {
 		
-        String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename().replaceAll("\\s", "")); 
+        String file_name = StringUtils.cleanPath(multipartFile.getOriginalFilename().replaceAll("\\s", "")); 
         uploadDir2 = "verification-photos";
-        MediaUpload.saveFile(uploadDir2, fileName, multipartFile);
-        return fileName;
+        MediaUpload.saveFile(uploadDir2, file_name, multipartFile);
+        return file_name;
     }
 	
 	@PostMapping("/addNewPost")
